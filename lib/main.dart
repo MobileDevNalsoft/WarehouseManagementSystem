@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
+import 'package:warehouse_3d/pages/warehouse.dart';
 import 'package:warehouse_3d/pages/warehouse_test.dart';
 
 void main() async {
@@ -16,9 +17,9 @@ void main() async {
       BlocProvider(create: (_) => WarehouseInteractionBloc()),
     ],
     child: MaterialApp(
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
+        theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
       debugShowCheckedModeBanner: false,
-      home: const WarehouseTest(),
+      home: const Warehouse(),
     ),
   ));
 }
