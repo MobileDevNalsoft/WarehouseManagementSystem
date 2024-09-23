@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pointer_interceptor/pointer_interceptor.dart';
-import 'package:warehouse_3d/pages/racks3d.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webviewx_plus/webviewx_plus.dart';
 
 class Warehouse3d extends StatefulWidget {
   const Warehouse3d({super.key});
@@ -15,74 +14,104 @@ class Warehouse3d extends StatefulWidget {
 }
 
 class _Warehouse3dState extends State<Warehouse3d> {
-
   late Future _resources;
-    late WebViewController webViewController;
-
-
- Future<List<String>> loadJS() async {
+  Future<List<String>> loadJS() async {
     List<String> resources = [];
-
+    resources.add(await rootBundle.loadString('index.html'));
     resources.add(await rootBundle.loadString('assets/index.js'));
-    resources.add(await rootBundle.loadString('assets/styles.css'));
     return resources;
   }
-
+  late WebViewXController _controler;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _resources = loadJS();
+ 
+    //  _controler = WebViewControllerPlus()
+    //   ..loadFlutterAssetServer('assets/index.html')
+    //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
+       //   ..setBackgroundColor(const Color(0x00000000))
+    //   ..
+      
   }
+
   @override
   Widget build(BuildContext context) {
+    // final javascriptChannel = JavascriptChannel(
+    //   'flutterChannel',
+    //   onMessageReceived: (message) async {
+    //     print("message received");
+    //     Map<String, dynamic> data = jsonDecode(message.message);
 
-     final javascriptChannel = JavascriptChannel(
-      'flutterChannel',
-      onMessageReceived: (message) async {
-        Map<String, dynamic> data = jsonDecode(message.message);
+    //     if (data["type"] == "hotspot-create") {
+    //     } else if (data["type"] == "hotspot-click") {
+          
+    //     }
+   
+    //   },
+    // );
 
-        if (data["type"] == "hotspot-create") {
-          // await Future.delayed(Duration(seconds: 1));
-        
-        } else if (data["type"] == "hotspot-click") {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>Rack3d()));
-        }
-        // bottom sheet for diaplying hotspots, comments and images
-       
-       
-      },
-    );
-    return Scaffold(body: Container(child: FutureBuilder(
-        future: _resources,
-        builder: (context,snapshot) {
-
-          if(snapshot.hasData){
-          return  PointerInterceptor(
-            debug: true,
-            intercepting: true,
-            child: ModelViewer(
-               src: 'assets/glbs/wms1412.glb',
-                                    backgroundColor: Colors.black38,
-                                    relatedJs: snapshot.data![0],
-                                    relatedCss: snapshot.data![1],
-                                    disableZoom: false,
-                                    autoRotate: false,
-                                    disableTap: false,
-                                    disablePan: false,
-                                    javascriptChannels: {javascriptChannel},
-                                      onWebViewCreated: (value) {
-                                        
-                                      webViewController = value;
-                                    },
-                                    id: 'model',
-              ),
-          );}
-            else{
-              return CircularProgressIndicator();
+      Size size = MediaQuery.sizeOf(context);
+      print(size.height);
+      print(size.width);
+    return Scaffold(
+      body: Container(
+        child:
+         FutureBuilder(
+          future: _resources,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return  Center(
+                child: SizedBox(
+                  height: size.height,
+                  width: size.width,
+                  child: WebViewX(
+                      
+                      initialContent: snapshot.data[0],
+                      initialSourceType: SourceType.html,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      onWebViewCreated:  (controller) {_controler = controller;
+                      Future.delayed(Duration(seconds: 5),() {
+                        
+                         _controler.callJsMethod("test1", ["abc","def"]);
+                      },);
+                      },
+                      width: size.width,
+                      height: size.height,
+                      jsContent: {EmbeddedJsContent(js:snapshot.data[1])},
+                      dartCallBacks: { 
+                      DartCallback(name: "flutterChannel", callBack:(message) {
+                         Map<String, dynamic> data = jsonDecode(message);
+                        print(data);
+                      },)
+                      },
+                      
+                  ),
+                ),
+              );
+              // ModelViewer(
+              //   src: 'assets/glbs/wms1412.glb',
+              //   interactionPrompt: InteractionPrompt.none,
+              //   relatedJs: snapshot.data![0],
+              //   // relatedCss: snapshot.data![1],
+              //   disableZoom: false,
+              //   autoRotate: false,
+              //   disableTap: false,
+              //   // touchAction: Touch,
+              //   id: 'model',
+              //   onWebViewCreated: (value) {
+              //     // value.platform.
+              //     // webViewController = value;
+              //   },
+              //   // javascriptChannels: {javascriptChannel},
+              // );
+            } else {
+              return Center(child: CircularProgressIndicator());
             }
-        }
-      ),));
+          },
+        ),
+      ),
+    );
   }
 }
