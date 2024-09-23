@@ -1,102 +1,60 @@
-// import 'dart:html' as html;
-// import 'dart:ui_web';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
+class ThreeDTest extends StatefulWidget {
+  const ThreeDTest({super.key});
 
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     print('started building');
-    
-//     return MaterialApp(
-//       title: 'Flutter Web with Three.js',
-//       home: Scaffold(
-//         appBar: AppBar(title: Text('3D Model Viewer')),
-//         body: MyHtmlWidget(),
-//       ),
-//     );
-//   }
-// }
+  @override
+  State<ThreeDTest> createState() => _ThreeDTestState();
+}
 
-// class MyHtmlWidget extends StatefulWidget {
-//   @override
-//   _MyHtmlWidgetState createState() => _MyHtmlWidgetState();
-// }
+class _ThreeDTestState extends State<ThreeDTest> {
+  Future<String> loadWebCode() async {
+    return await rootBundle.loadString('assets/web_code/model1.html');
+  }
 
-// class _MyHtmlWidgetState extends State<MyHtmlWidget> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     print('in init state');
-//     registerElementFactory();
-//   }
+  @override
+  void initState() {
+    super.initState();
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return HtmlElementView(
-//       viewType: 'my-html-view',
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
 
-//   void registerElementFactory() {
-//     // Register the view factory for HtmlElementView.
-//     print('started execution');
-//     platformViewRegistry.registerViewFactory(
-//       'my-html-view',
-//       (int viewId) => html.DivElement()
-//         ..id = 'my-html-view'
-//         ..innerHtml = '''
-//           <!DOCTYPE html>
-//           <html lang="en">
-//           <head>
-//               <meta charset="UTF-8">
-//               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//               <title>Flutter Web with Three.js</title>
-//               <style>
-//                   body { margin: 0; }
-//                   canvas { display: block; }
-//               </style>
-//               <script type="application/javascript" src="/assets/packages/flutter_inappwebview/assets/web/web_support.js" defer></script>
-//           </head>
-//           <body>
-//               <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-//               <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/GLTFLoader.js"></script>
-//               <script>
-//                   let scene, camera, renderer;
-
-//                   function init() {
-//                       scene = new THREE.Scene();
-//                       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-//                       renderer = new THREE.WebGLRenderer();
-//                       renderer.setSize(window.innerWidth, window.innerHeight);
-//                       document.body.appendChild(renderer.domElement);
-
-//                       const loader = new THREE.GLTFLoader();
-//                       loader.load('path/to/your_model.glb', function(gltf) {
-//                           scene.add(gltf.scene);
-//                           animate();
-//                       });
-
-//                       camera.position.z = 5;
-//                       window.addEventListener('resize', onWindowResize);
-//                   }
-
-//                   function animate() {
-//                       requestAnimationFrame(animate);
-//                       renderer.render(scene, camera);
-//                   }
-
-//                   function onWindowResize() {
-//                       camera.aspect = window.innerWidth / window.innerHeight;
-//                       camera.updateProjectionMatrix();
-//                       renderer.setSize(window.innerWidth, window.innerHeight);
-//                   }
-
-//                   init();
-//               </script>
-//           </body>
-//           </html>
-//         ''',
-//     );
-//   }
-// }
+    return Scaffold(
+      body: FutureBuilder(
+          future: loadWebCode(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                return Container(
+                  height: size.height,
+                  width: size.width,
+                  child: InAppWebView(
+                    initialUrlRequest: URLRequest(
+                      url: WebUri.uri(Uri.parse('assets/web_code/model1.html'))
+                    ),
+                    initialSettings: InAppWebViewSettings(
+                      
+                    ),
+                    onWebViewCreated: (controller) {
+                      print('created');
+                    },
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
+              }
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+    );
+  }
+}

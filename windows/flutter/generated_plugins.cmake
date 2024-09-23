@@ -3,7 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  url_launcher_windows
+  audioplayers_windows
+  flutter_angle
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

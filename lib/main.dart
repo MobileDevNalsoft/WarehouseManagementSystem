@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/pages/3D_testing.dart';
-import 'package:warehouse_3d/pages/warehouse_test.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'pages/3JS_with_flutter.dart';
-void main() {
+
+final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
+Future main() async {
 
 WidgetsFlutterBinding.ensureInitialized();
 
@@ -19,9 +18,7 @@ WidgetsFlutterBinding.ensureInitialized();
     child: MaterialApp(
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(child: Text('text'),),
-      ),
+      home: ThreeDTest()
     ),
   ));
 }

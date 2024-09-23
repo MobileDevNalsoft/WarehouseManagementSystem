@@ -50,11 +50,10 @@ dependencies:
   gap: ^3.0.1
   lottie: ^3.1.2
   flutter_staggered_grid_view: ^0.7.0
-  model_viewer_plus: ^1.9.0
   file_picker: ^8.1.2
+  three_js: ^0.0.6
+  flutter_inappwebview: ^6.0.0
   # flutter_inappwebview: ^6.0.0
-  html_editor_enhanced: ^2.5.1
-  webview_flutter: ^4.9.0
 
 dev_dependencies:
   flutter_test:
@@ -84,7 +83,7 @@ flutter:
     - assets/jsons/
     - assets/lottie/
     - assets/3d_models/
-    - assets/
+    - assets/web_code/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
