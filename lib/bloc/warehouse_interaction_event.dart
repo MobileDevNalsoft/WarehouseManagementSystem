@@ -7,4 +7,12 @@ class SelectedRackOfIndex extends WarehouseInteractionEvent{
   int index;
  
   SelectedRackOfIndex({required this.index});
+
+ 
 }
+
+
+ class HotspotCreated extends WarehouseInteractionEvent{
+  int hotspot;
+  HotspotCreated({required this.hotspot});
+ }

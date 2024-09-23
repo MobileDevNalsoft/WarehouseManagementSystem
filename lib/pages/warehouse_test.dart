@@ -24,6 +24,7 @@ class _WarehouseTestState extends State<WarehouseTest>
 
   final ScrollController _listController =
       ScrollController(initialScrollOffset: 0);
+      
   final AutoScrollController _autoScrollController =
       AutoScrollController(initialScrollOffset: 0);
 
@@ -31,7 +32,7 @@ class _WarehouseTestState extends State<WarehouseTest>
 
   Future<WarehouseData> getWarehouseData() async {
     return WarehouseData.fromJson(jsonDecode(
-        await rootBundle.loadString("assets/jsons/warehouse_data.json")));;
+        await rootBundle.loadString("assets/jsons/warehouse_data.json")));
   }
 
   @override
