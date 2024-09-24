@@ -12,6 +12,7 @@
     <script type="module">
         import * as THREE from "three";
         import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
+        import { OrbitControls } from "https://unpkg.com/three@0.112/examples/jsm/controls/OrbitControls.js";
 
         var container;
         var camera, scene, renderer;
@@ -36,6 +37,10 @@
 
         var slowingFactor = 0.25;
 
+        renderer = new THREE.WebGLRenderer({
+                alpha: true
+            });
+
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
 
@@ -58,8 +63,12 @@
 
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-            camera.position.y = 150;
-            camera.position.z = 500;
+            camera.position.x = -20;
+            camera.position.y = 20;
+            camera.position.z = 50;
+
+            // controls
+            var controls = new OrbitControls( camera, renderer.domElement );
             scene.add(camera);
 
             // var materials = [];
@@ -72,13 +81,13 @@
 
             // }
             const Loader = new GLTFLoader();
-            Loader.load('../3d_models/3d_rack.glb', function (gltf) {
+            Loader.load('../3d_models/rack_3d_1535.glb', function (gltf) {
 
 
-                const Material = new THREE.MeshStandardMaterial({
-                    color: 'green', metalness: 0.1,
-                    roughness: 0.5
-                });
+                // const Material = new THREE.MeshStandardMaterial({
+                //     color: 'green', metalness: 0.1,
+                //     roughness: 0.5
+                // });
 
 
                 model = gltf.scene;
@@ -86,22 +95,20 @@
                 // Traverse the scene graph to find the specific mesh
                 model.traverse((child) => {
                     // Set up click event listener
-                    child.addEventListener('click', () => {
-                        console.log('Clicked on:', child.name.toString());
-                        // Add your desired functionality here
-                    });
+                    // child.addEventListener('click', () => {
+                    //     console.log('Clicked on:', child.name.toString());
+                    //     // Add your desired functionality here
+                    // });
 
-                    // console.log(child.name.toString());
+                    console.log(child.name.toString());
 
-                    if (child.isMesh && child.name === 'Node132') {
+                    if (child.isMesh && child.name === '3DGeom-11_3') {
                         // Access the material of the mesh
                         child.material.color.set(0xff0000); // Set the color to red
                     }
-                    if (child.isMesh && child.name === 'Node111') {
-                        // Access the material of the mesh
-                        child.material.color.set(0x00ff00); // Set the color to red
-                    }
                 });
+
+                // console.log(model.children[0].name.toString());
 
                 scene.add(model);
 
@@ -123,9 +130,6 @@
                 console.error(error);
             });
 
-            renderer = new THREE.WebGLRenderer({
-                alpha: true
-            });
             renderer.setSize(window.innerWidth, window.innerHeight);
 
             // const geometry = new THREE.BoxGeometry(100, 100, 100);
@@ -135,7 +139,7 @@
 
             container.appendChild(renderer.domElement);
 
-            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            // document.addEventListener('mousedown', onDocumentMouseDown, false);
         }
 
         function onDocumentMouseDown(event) {
@@ -189,7 +193,7 @@
 
         function render() {
 
-            rotateAroundWorldAxis(model, new THREE.Vector3(0, 1, 0), targetRotationX);
+            // rotateAroundWorldAxis(model, new THREE.Vector3(0, 1, 0), targetRotationX);
             // rotateAroundWorldAxis(model, new THREE.Vector3(1, 0, 0), targetRotationY);
 
             targetRotationY = targetRotationY * (1 - slowingFactor);
@@ -197,14 +201,14 @@
 
             raycaster.setFromCamera(pointer, camera);
             const intersects = raycaster.intersectObjects(scene.children, true);
-            if(intersects != null){
-                console.log(intersects.length);
-            }
-            for (let i = 0; i < intersects.length; i++) {
-                console.log(intersects[i].object.name.toString());
-                intersects[i].object.material.color.set(0xff0000);
+            // if(intersects != null){
+            //     console.log(intersects.length);
+            // }
+            // for (let i = 0; i < intersects.length; i++) {
+            //     console.log(intersects[i].object.name.toString());
+                // intersects[i].object.material.color.set(0xff0000);
 
-            }
+            // }
             renderer.render(scene, camera);
 
         }
