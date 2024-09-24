@@ -13,7 +13,7 @@
         import * as THREE from "three";
         import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
 
-        var container, stats;
+        var container;
         var camera, scene, renderer;
         var model;
 
@@ -36,6 +36,17 @@
 
         var slowingFactor = 0.25;
 
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+
+        function onPointerMove(event) {
+            console.log('moved pointer');
+            pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+            pointer.y = (event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        window.addEventListener('mousemove', onPointerMove);
+
         init();
 
         function init() {
@@ -45,43 +56,56 @@
 
             scene = new THREE.Scene();
 
-            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
             camera.position.y = 150;
             camera.position.z = 500;
             scene.add(camera);
 
-            var materials = [];
+            // var materials = [];
 
-            for (var i = 0; i < 6; i++) {
+            // for (var i = 0; i < 6; i++) {
 
-                materials.push(new THREE.MeshBasicMaterial({
-                    color: Math.random() * 0xffffff
-                }));
+            //     materials.push(new THREE.MeshBasicMaterial({
+            //         color: Math.random() * 0xffffff
+            //     }));
 
-            }
+            // }
             const Loader = new GLTFLoader();
             Loader.load('../3d_models/3d_rack.glb', function (gltf) {
 
 
                 const Material = new THREE.MeshStandardMaterial({
-                    color: 'white', metalness: 0.1,
+                    color: 'green', metalness: 0.1,
                     roughness: 0.5
                 });
 
 
                 model = gltf.scene;
 
+                // Traverse the scene graph to find the specific mesh
+                model.traverse((child) => {
+                    // Set up click event listener
+                    child.addEventListener('click', () => {
+                        console.log('Clicked on:', child.name.toString());
+                        // Add your desired functionality here
+                    });
 
+                    // console.log(child.name.toString());
 
-                model.traverse((child, i) => {
-                    if (child.isMesh) {
-                        child.material = Material;
-                        child.material.side = THREE.DoubleSide;
+                    if (child.isMesh && child.name === 'Node132') {
+                        // Access the material of the mesh
+                        child.material.color.set(0xff0000); // Set the color to red
+                    }
+                    if (child.isMesh && child.name === 'Node111') {
+                        // Access the material of the mesh
+                        child.material.color.set(0x00ff00); // Set the color to red
                     }
                 });
 
-
                 scene.add(model);
+
+
                 // Add ambient light
                 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
                 scene.add(ambientLight);
@@ -99,25 +123,15 @@
                 console.error(error);
             });
 
-
-
-
-            /*  cube = new THREE.Mesh(  new THREE.BoxGeometry( 200, 200, 200 ) , new THREE.MeshFaceMaterial(materials) );
-             cube.position.y = 150;
-             cube.overdraw = true;
-             scene.add( cube );        */
-
-
-            /* cube = new THREE.BoxGeometry(); */
-
-
-
-
-
             renderer = new THREE.WebGLRenderer({
                 alpha: true
             });
             renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // const geometry = new THREE.BoxGeometry(100, 100, 100);
+            // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            // const cube = new THREE.Mesh(geometry, material);
+            // scene.add(cube);
 
             container.appendChild(renderer.domElement);
 
@@ -164,7 +178,6 @@
             document.removeEventListener('mouseout', onDocumentMouseOut, false);
         }
 
-
         function animate() {
 
             requestAnimationFrame(animate);
@@ -181,6 +194,17 @@
 
             targetRotationY = targetRotationY * (1 - slowingFactor);
             targetRotationX = targetRotationX * (1 - slowingFactor);
+
+            raycaster.setFromCamera(pointer, camera);
+            const intersects = raycaster.intersectObjects(scene.children, true);
+            if(intersects != null){
+                console.log(intersects.length);
+            }
+            for (let i = 0; i < intersects.length; i++) {
+                console.log(intersects[i].object.name.toString());
+                intersects[i].object.material.color.set(0xff0000);
+
+            }
             renderer.render(scene, camera);
 
         }
