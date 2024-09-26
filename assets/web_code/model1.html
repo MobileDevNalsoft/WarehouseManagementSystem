@@ -1,0 +1,208 @@
+<html>
+
+<head>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
+          }
+        }
+      </script>
+    <!-- <script src="//cdn.jsdelivr.net/gh/mrdoob/three.js@r151/build/three.js"></script> -->
+    <script type="module">
+        import * as THREE from "three";
+        import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
+        import { OrbitControls } from "https://unpkg.com/three@0.112/examples/jsm/controls/OrbitControls.js";
+
+        var container, camera, scene, controls, model, port;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+        renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2))
+        renderer.outputEncoding = THREE.sRGBEncoding
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function onMouseMove(e) {
+            event.preventDefault();
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+            // raycaster.setFromCamera(mouse, camera);
+            // const intersects = raycaster.intersectObjects(scene.children, true);
+
+            // if(intersects.length > 0 & intersects[0].object.name.toString().includes('r1')){
+            //     intersects[0].object.material.color.set(0xff0000);
+            //     console.log(intersects[0].object.name.toString());
+            // }
+        }
+
+        function onMousedown(e) {
+            event.preventDefault();
+            console.log('mouse down');
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children, true);
+
+            if (intersects.length > 0 & intersects[0].object.name.toString().includes('r1')) {
+                intersects[0].object.material.color.set(0xff0000);
+                console.log(intersects[0].object.name.toString());
+            }
+            // for (let i = 0; i < intersects.length; i++) {
+            //     console.log('object name ', intersects[i].object.name.toString());
+            //     intersects[i].object.material.color.set(0xff0000);
+            // }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('mousemove', onMouseMove);
+
+        window.addEventListener('mousedown', onMousedown);
+
+        window.addEventListener('resize', onWindowResize);
+
+        init();
+
+        function init() {
+
+            container = document.createElement('div');
+            document.body.appendChild(container);
+
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.10, 1000);
+
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 80;
+
+            // controls
+            controls = new OrbitControls(camera, renderer.domElement);
+
+            // controls.maxPolarAngle = Math.PI / 2;
+
+            // controls.enableDamping = true;
+
+            scene.add(camera);
+
+            renderer.setClearColor(0x000000, 1); // Set clear color to black
+            scene.background = new THREE.Color(0x000000); // Set scene background to black
+
+            const Loader = new GLTFLoader();
+            Loader.load('../3d_models/warehouse_0347.glb', function (gltf) {
+
+                model = gltf.scene;
+
+                // Traverse the scene graph to find the specific mesh
+                model.traverse((child) => {
+                    // Set up click event listener
+                    // child.addEventListener('click', () => {
+                    //     console.log('Clicked on:', child.name.toString());
+                    //     // Add your desired functionality here
+                    // });
+
+                    console.log(child.name.toString());
+
+                    if (child.isMesh && child.name === ']') {
+                        // Access the material of the mesh
+                        child.material.color.set(0xff0000); // Set the color to red
+                    } else if (child.isMesh && child.name == 'r1rb33') {
+                        child.material.color.set(0x3cb371);
+                    } else if (child.isMesh && child.name == 'r1rb23') {
+                        child.material.color.set(0x3cb371);
+                    } else if (child.isMesh && child.name == 'r1lb33') {
+                        child.material.color.set(0xffa500);
+                    }
+                });
+
+                // console.log(model.children[0].name.toString());
+
+                scene.add(model);
+
+
+                // Add ambient light
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
+                scene.add(ambientLight);
+
+                // Add directional light
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
+                directionalLight.position.set(0, 1, 1).normalize(); // Position the light
+                scene.add(directionalLight);
+
+                animate();
+
+
+
+            }, undefined, function (error) {
+                console.error(error);
+            });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            container.appendChild(renderer.domElement);
+
+
+            window.requestAnimationFrame(animate);
+        }
+
+        function animate() {
+            controls.update();
+
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(animate);
+        }
+
+        //from flutter
+
+        // listen for messages
+        window.addEventListener('message', function (event) {
+            if (event.data == 'capturePort') {
+                // capture port2 coming from the Dart side
+                if (event.ports[0] != null) {
+                    // the port is ready for communication,
+                    // so you can use port.postMessage(message); wherever you want
+                    port = event.ports[0];
+                    // To listen to messages coming from the Dart side, set the onmessage event listener
+                    port.onmessage = function (event) {
+                        // event.data contains the message data coming from the Dart side 
+                        console.log(event.data);
+                    };
+                }
+            }
+        }, false);
+
+        // Function to send message to Dart side
+        function sendMessage() {
+            if (port) { // Check if port is defined
+                const inputValue = document.getElementById("input").value;
+                port.postMessage(inputValue); // Send message to Dart side
+            } else {
+                console.warn("Port is not defined.");
+            }
+        }
+
+        function test(){
+            console.log('testing');
+        }
+
+    </script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="button" onclick="sendMessage()">Send</button>
+    <br />
+    <input id="input" type="text" value="JavaScript To Native" />
+</body>
+
+</html>
