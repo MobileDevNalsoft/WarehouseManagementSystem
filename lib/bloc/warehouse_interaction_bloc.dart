@@ -9,10 +9,15 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<SelectedRackOfIndex>(_onSelectedRackOfIndex);
     on<HotspotCreated>(_onHotspotCreated);
     
+    on<SelectedBinOfIndex>(_onSelectedBinOfIndex);
   }
 
-  void _onSelectedRackOfIndex(SelectedRackOfIndex event, Emitter<WarehouseInteractionState> emit){
-    emit(state.copyWith(index: event.index));
+  void _onSelectedRackOfIndex(SelectedRackOfIndex event, Emitter<WarehouseInteractionState> emit) {
+    emit(state.copyWith(index: event.index, rackID: event.rackID));
+  }
+
+  void _onSelectedBinOfIndex(SelectedBinOfIndex event, Emitter<WarehouseInteractionState> emit) {
+    emit(state.copyWith(binIndex: event.index));
   }
 
     void _onHotspotCreated(HotspotCreated event, Emitter<WarehouseInteractionState> emit){

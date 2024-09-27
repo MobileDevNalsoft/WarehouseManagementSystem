@@ -1,16 +1,19 @@
 part of 'warehouse_interaction_bloc.dart';
 
 final class WarehouseInteractionState {
-  WarehouseInteractionState({this.index,this.selectedZone,this.hotspot=-1});
+  WarehouseInteractionState({this.index, this.zoneID, this.rackID, this.binIndex});
 
   int? index;
-   String? selectedZone;
-  int hotspot;
-  factory WarehouseInteractionState.initial(){
-    return WarehouseInteractionState(index: 0,selectedZone: "",hotspot: -1);
+  int? binIndex;
+  String? zoneID;
+  String? rackID;
+
+  factory WarehouseInteractionState.initial() {
+    return WarehouseInteractionState(index: 0, zoneID: 'Z1', rackID: 'R1', binIndex: 0);
   }
 
-  WarehouseInteractionState copyWith({int? index,int? hotspot}){
-    return WarehouseInteractionState(index: index ?? this.index,hotspot: hotspot??this.hotspot);
+  WarehouseInteractionState copyWith({int? index, String? zoneID, String? rackID, int? binIndex}) {
+    return WarehouseInteractionState(
+        index: index ?? this.index, zoneID: zoneID ?? this.zoneID, rackID: rackID ?? this.rackID, binIndex: binIndex ?? this.binIndex);
   }
 }
