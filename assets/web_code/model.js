@@ -39,34 +39,31 @@ function calculateDistance(x1, y1, x2, y2) {
 }
 
 // Function to smoothly move the camera to the clicked object
-function moveToObject(object) {
-    const targetPosition = new THREE.Vector3(object.position.x, object.position.y, object.position.z); // Adjust as needed
+function moveToObject(targetObject) {
+    const aabb = new THREE.Box3().setFromObject(targetObject);
+    const center = aabb.getCenter(new THREE.Vector3());
+    const size = aabb.getSize(new THREE.Vector3());
 
-    // Animate the transition (you can replace this with GSAP or another tweening library for smoother animation)
-    let startPosition = camera.position.clone();
-    let distance = targetPosition.distanceTo(startPosition);
-    let duration = distance / 5; // Adjust speed here
+    controls.enabled = false;
 
-    let startTime = null;
-
-    function animateCamera(timestamp) {
-        if (!startTime) startTime = timestamp;
-        let elapsed = (timestamp - startTime) / duration;
-
-        if (elapsed < 1) {
-            camera.position.lerpVectors(startPosition, targetPosition, elapsed); // Lerp for smooth transition
-            camera.lookAt(object.position); // Always look at the object
-            requestAnimationFrame(animateCamera);
-        } else {
-            camera.position.copy(targetPosition); // Ensure final position is set
-            camera.lookAt(object.position); // Look at the object
+    gsap.to(camera.position, {
+        duration: 3,
+        x: center.x,
+        y: center.y,
+        z: center.z,
+        onUpdate: function () {
+            camera.lookAt(center);
+            camera.updateProjectionMatrix();
+        },
+        onComplete: function () {
+            controls.enabled = true;
+            controls.target.set(center.x, center.y, center.z);
         }
-    }
+    });
 
-    requestAnimationFrame(animateCamera);
 }
 
-function onMouseDown(e){
+function onMouseDown(e) {
     lastPos.x = (e.clientX / window.innerWidth) * 2 - 1;
     lastPos.y = - (e.clientY / window.innerHeight) * 2 + 1;
 }
@@ -79,79 +76,17 @@ function onMouseUp(e) {
         // we get the objects from the model as list that are intersected by the casted ray.
 
         if (intersects.length > 0) {
-            console.log(intersects[0].object.position.x.toString() + ' ' + intersects[0].object.position.y.toString() + ' ' + intersects[0].object.position.z.toString());
-            if (intersects[0].object.name.toString().includes('r1')) {
-                intersects[0].object.material.color.set(0xff0000);
-                // moveToObject(intersects[0].object);
-                console.log(intersects[0].object.name.toString());
+            const targetObject = intersects[0].object;
+            console.log(targetObject.position.x.toString() + ' ' + targetObject.position.y.toString() + ' ' + targetObject.position.z.toString());
+            if (targetObject.name.toString().includes('r1')) {
+                targetObject.material.color.set(0xff0000);
+                console.log(targetObject.name.toString());
             }
-            // moveCamera(30.3100461959838867,20,-50);
-            // rotateCamera(0, 0, 0);
-            moveCam(intersects[0].object);
-            
+
+            moveToObject(targetObject);
         }
     }
 
-}
-
-// function moveCamera(x, y, z){
-//     gsap.to(camera.position, {
-//         x,
-//         y,
-//         z,
-//         duration: 3
-//     });
-// }
-
-// function rotateCamera(x, y, z){
-//     gsap.to(camera.rotation, {
-//         x,
-//         y,
-//         z,
-//         duration: 3.2
-//     })
-// }
-
-function moveCam(object){
-    var aabb = new THREE.Box3().setFromObject( object ); 
-  var center = aabb.getCenter( new THREE.Vector3() );
-  var size = aabb.getSize( new THREE.Vector3() );
-
-  console.log(center.x + ' ' + center.y + ' ' + center.z);
-  
-  var camPosition = camera.position.clone();  
-  var targPosition = object.position.clone();  
-  var distance = camPosition.sub(targPosition);  
-  var direction = distance.normalize();  
-  var offset = distance.clone().sub(direction.multiplyScalar(1.75));  
-  var newPos = object.position.clone().sub(offset);
-  newPos.y = camera.position.y;
-  
-  var pl = gsap.timeline( );
-  
-  pl.to( controls.target, {
-    duration: 1,
-    x: center.x,
-    y: center.y,
-    z: center.z,
-    // ease: "power4.in",
-    ease: "circ.in",
-    onUpdate: function() {
-      controls.update();
-    }
-  })
-    .to( camera.position, {
-    //delay: 1.3,
-    duration: 2,
-    ease: "power4.out",
-    // ease: "slow (0.7, 0.1, false)",    
-    x: newPos.x,
-    y: center.y,
-    z: center.z,
-    onUpdate: function() {
-      controls.update();
-    }
-  });
 }
 
 // for responsiveness
@@ -182,10 +117,6 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.10, 1000);
 
-    // Set initial camera position
-    camera.position.set(0, 0, 180);
-    camera.lookAt(0, 0, 0);
-
     // controls
     controls = new OrbitControls(camera, renderer.domElement);
 
@@ -196,10 +127,11 @@ function init() {
         RIGHT: THREE.MOUSE.PAN
     }
 
-    controls.zoomSpeed = 2.0;
-	controls.panSpeed = 0.5;
+    controls.zoomSpeed = 2;
+    controls.panSpeed = 2;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.5;
 
-    // controls.enableDamping = true;
 
     scene.add(camera);
 
@@ -207,7 +139,7 @@ function init() {
     scene.background = new THREE.Color(0x000000); // Set scene background to black
 
     const Loader = new GLTFLoader();
-    Loader.load('../3d_models/rack_3d_1535.glb', function (gltf) {
+    Loader.load('../3d_models/warehouse_0347.glb', function (gltf) {
 
         model = gltf.scene;
 
@@ -231,7 +163,7 @@ function init() {
             }
         });
 
-        // console.log(model.children[0].name.toString());
+        console.log(model.children[0].name.toString());
 
         scene.add(model);
 
@@ -255,6 +187,10 @@ function init() {
         console.error(error);
     });
 
+    // Set initial camera position
+    camera.position.set(0, 100, 0);
+    camera.lookAt(0, 0, 0);
+
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     container.appendChild(renderer.domElement);
@@ -264,7 +200,7 @@ function init() {
 }
 
 function animate() {
-    controls.update();
+    // controls.update();
 
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);

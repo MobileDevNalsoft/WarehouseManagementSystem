@@ -6,7 +6,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'pages/3JS_with_flutter.dart';
 
 final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
-Future main() async {
+main() async {
 
 WidgetsFlutterBinding.ensureInitialized();
 
