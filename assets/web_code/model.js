@@ -156,8 +156,7 @@ function switchCamera(name) {
             y: selectedCamera.position.y,
             z: selectedCamera.position.z,
             onUpdate: function () {
-                // camera.lookAt(center); // Update lookAt during animation
-                // controls.target.copy(center); // Adjust target if necessary
+                controls.target.copy(center); // Adjust target if necessary
                 controls.update();
             },
             ease: "power3.inOut"
@@ -170,10 +169,7 @@ function switchCamera(name) {
             z: selectedCamera.quaternion.z,
             w: selectedCamera.quaternion.w,
             onUpdate: function () {
-
-                camera.lookAt(center); // Ensure the camera continues looking at the center
                 controls.target.copy(center);
-                controls.update();
             },
             onComplete: () => {
                 controls.enabled = true;
