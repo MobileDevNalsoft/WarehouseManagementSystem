@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from "https://unpkg.com/three@0.112/examples/jsm/controls/OrbitControls.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/controls/OrbitControls.js";
 
-var container, camera, scene, controls, model = new THREE.Object3D(), cameraList = [];
+var container, camera, scene, controls, model = new THREE.Object3D(), cameraList = [], prevBinColor, prevBin;
 
 var main_cam;
 
@@ -32,8 +32,13 @@ function init() {
 
     scene = new THREE.Scene();
 
-    renderer.setClearColor(0x000000, 1); // Set clear color to black
-    scene.background = new THREE.Color(0x000000); // Set scene background to black
+
+    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x686868 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2; // Rotate to horizontal
+    scene.add(ground);
+
 
     const Loader = new GLTFLoader();
     Loader.load('../3d_models/warehouse_0347.glb', function (gltf) {
@@ -50,6 +55,8 @@ function init() {
 
 
         scene.add(model);
+
+        scene.getObjectByName('r1rb11004').material.color.set(0xff0000);
 
         scene.updateMatrixWorld(true);
 
@@ -105,7 +112,7 @@ function createNewCamera(importedCamera) {
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
     // Set the position of the new camera based on the imported camera's position
-    camera.position.copy(importedCamera.position);
+    camera.position.set(0, 250, 150);
     camera.quaternion.copy(importedCamera.quaternion);
     camera.rotation.copy(importedCamera.rotation); // Copy rotation if needed
 
@@ -118,6 +125,33 @@ function createNewCamera(importedCamera) {
     controls.zoomSpeed = 2;
     controls.panSpeed = 2;
     controls.screenSpacePanning = false;
+
+    // limiting vertical rotation around x axis
+    controls.minPolarAngle = 0;
+    controls.maxPolarAngle = Math.PI / 3;
+
+    // limiting horizontal rotation around y axis
+    controls.minAzimuthAngle = -Math.PI;
+    controls.maxAzimuthAngle = Math.PI;
+
+    // limiting zoom out
+    controls.maxDistance = 500;
+
+    var minPan = new THREE.Vector3(- 2, - 2, - 2);
+    var maxPan = new THREE.Vector3(2, 2, 2);
+
+    // Function to clamp target position
+    function clampTarget() {
+        controls.target.x = Math.max(minPan.x, Math.min(maxPan.x, controls.target.x));
+        controls.target.y = Math.max(minPan.y, Math.min(maxPan.y, controls.target.y));
+        controls.target.z = Math.max(minPan.z, Math.min(maxPan.z, controls.target.z));
+    }
+
+    // Listen for changes in controls
+    controls.addEventListener('change', clampTarget);
+
+    // Initial call to set target within bounds if necessary
+    clampTarget();
 
     // Make the camera look at a specific point (optional)
     const center = new THREE.Vector3(0, 0, 0); // Adjust this based on your scene
@@ -157,7 +191,6 @@ function switchCamera(name) {
             z: selectedCamera.position.z,
             onUpdate: function () {
                 controls.target.copy(center); // Adjust target if necessary
-                controls.update();
             },
             ease: "power3.inOut"
         });
@@ -184,6 +217,19 @@ function onMouseMove(e) {
     // regularly updating the position of mouse pointer when it is moved on rendered window.
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+    if (e.button === 0) {
+        raycaster.setFromCamera(mouse, camera);
+        // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        // we get the objects from the model as list that are intersected by the casted ray.
+
+        if (intersects.length > 0) {
+            const targetObject = intersects[0].object;
+            if (targetObject.name.toString().includes('navigation')) {
+                console.log(targetObject.name.toString());
+            }
+        }
+    }
 }
 
 function onMouseDown(e) {
@@ -205,40 +251,15 @@ function onMouseUp(e) {
                 console.log(targetObject.name.toString());
                 switchCamera(targetObject.name.toString());
             }
-            else {
+            else if (targetObject.name.toString().includes('b')) {
+                changeColor(targetObject);
+            } else {
                 switchCamera('main');
             }
-            // moveToObject(targetObject);
         }
     }
 
 }
-
-// Function to smoothly move the camera to the clicked object
-function moveToObject(targetObject) {
-    const aabb = new THREE.Box3().setFromObject(targetObject);
-    const center = aabb.getCenter(new THREE.Vector3());
-    const size = aabb.getSize(new THREE.Vector3());
-
-    controls.enabled = false;
-
-    gsap.to(camera.position, {
-        duration: 3,
-        x: center.x,
-        y: center.y,
-        z: center.z,
-        onUpdate: function () {
-            camera.lookAt(center);
-            camera.updateProjectionMatrix();
-        },
-        onComplete: function () {
-            controls.enabled = true;
-            controls.target.set(center.x, center.y, center.z);
-        }
-    });
-
-}
-
 
 // for responsiveness
 function onWindowResize() {
@@ -251,6 +272,29 @@ window.addEventListener('mousemove', onMouseMove); // triggered when mouse point
 window.addEventListener('mousedown', onMouseDown);
 window.addEventListener('mouseup', onMouseUp); // triggered when mouse pointer is clicked.
 window.addEventListener('resize', onWindowResize); // triggered when window is resized.
+
+function changeColor(object) {
+
+    if (prevBin != null) {
+        prevBin.material.color.copy(prevBinColor);
+    }
+
+    prevBinColor = object.material.color.clone();
+    if (prevBin != object) {
+        object.userData.active = true;
+        object.material.color.set(0xffffff);
+    } else {
+        if (object.userData.active == false) {
+            object.userData.active = true;
+            prevBinColor = object.material.color.clone();
+            prevBin = object;
+            object.material.color.set(0xffffff);
+        } else {
+            object.userData.active = false;
+        }
+    }
+    prevBin = object;
+}
 
 
 function frameArea(sizeToFitOnScreen, boxSize, boxCenter, camera) {
