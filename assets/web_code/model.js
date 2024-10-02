@@ -177,11 +177,12 @@ function switchCamera(name) {
         selectedCamera = cameraList.find((cam) => cam.name.toString().includes(object.name.toString()));
     }
 
-    if (selectedCamera != null) {
+    if (selectedCamera) {
         // Create a GSAP timeline for smoother transitions
         const timeline = gsap.timeline();
 
         controls.enabled = false;
+        controls.enableDamping = false;
 
         // Animate position and rotation simultaneously
         timeline.to(camera.position, {
@@ -189,25 +190,20 @@ function switchCamera(name) {
             x: selectedCamera.position.x,
             y: selectedCamera.position.y,
             z: selectedCamera.position.z,
-            onUpdate: function () {
-                controls.target.copy(center); // Adjust target if necessary
-            },
             ease: "power3.inOut"
-        });
-
-        timeline.to(camera.quaternion, {
+        }).to(camera.quaternion, {
             duration: 3,
             x: selectedCamera.quaternion.x,
             y: selectedCamera.quaternion.y,
             z: selectedCamera.quaternion.z,
             w: selectedCamera.quaternion.w,
-            onUpdate: function () {
+            ease: "power3.inOut",
+            onComplete: function(){
+                controls.enabled = true; // Enable controls after switching cameras
+                controls.enableDamping = true;
                 controls.target.copy(center);
-            },
-            onComplete: () => {
-                controls.enabled = true;
-            },
-            ease: "power3.inOut"
+                camera.lookAt(controls.target);
+            }
         }, 0); // Start rotation animation at the same time as position animation
     }
 }
