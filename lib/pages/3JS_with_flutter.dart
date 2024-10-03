@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,16 +44,16 @@ class _ThreeDTestState extends State<ThreeDTest> {
           child: Row(
         children: [
           SizedBox(
-            width: context.watch<WarehouseInteractionBloc>().state.selectedBinID != 'null' ? size.width*0.8 : size.width,
+            width: context.watch<WarehouseInteractionBloc>().state.selectedID != 'null' ? size.width*0.8 : size.width,
             child: InAppWebView(
               initialFile: 'assets/web_code/model1.html',
               onConsoleMessage: (controller, consoleMessage) {
                 try {
                   if(consoleMessage.messageLevel.toNativeValue() == 1){
-                    _warehouseInteractionBloc.add(SelectedBinID(binID: consoleMessage.message));
+                    _warehouseInteractionBloc.add(SelectedID(ID: consoleMessage.message));
                   }
                 } catch (e) {
-                  print("error $e   ");
+                  print("error $e");
                 }
               },
               onWebViewCreated: (controller) {
@@ -65,9 +66,15 @@ class _ThreeDTestState extends State<ThreeDTest> {
               },
             ),
           ),
-          if (context.watch<WarehouseInteractionBloc>().state.selectedBinID != 'null')
+          if (context.watch<WarehouseInteractionBloc>().state.selectedID != 'null')
             BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
               builder: (context, state) {
+                
+                if(state.selectedID!.contains('rack')){
+                  state.selectedRack = state.racksData!.where((e) => e.rackID == state.selectedID).first;
+                  print(state.selectedRack!.category);
+                }
+
                 return Skeletonizer(
                   enabled: state.getWarehouseDataState == GetRacksDataState.loading,
                   child: Container(
@@ -90,7 +97,7 @@ class _ThreeDTestState extends State<ThreeDTest> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     const Text(
-                                      "boxId",
+                                      'box',
                                       style: TextStyle(
                                           fontSize: 24,
                                           fontWeight: FontWeight.w500),
@@ -117,7 +124,6 @@ class _ThreeDTestState extends State<ThreeDTest> {
                                     ],
                                   ),
                                 ),
-                
                                 const Gap(16),
                                 const Row(
                                   mainAxisAlignment:

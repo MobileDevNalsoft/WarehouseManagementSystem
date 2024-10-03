@@ -15,7 +15,7 @@ part 'warehouse_interaction_state.dart';
 class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, WarehouseInteractionState> {
   WarehouseInteractionBloc() : super(WarehouseInteractionState.initial()) {
     on<SelectedRackOfIndex>(_onSelectedRackOfIndex);
-    on<SelectedBinID>(_onSelectedBinID);
+    on<SelectedID>(_onSelectedID);
     on<SelectedObject>(_onSelectedObject);
     on<GetRacksData>(_onGetRacksData);
   }
@@ -24,8 +24,8 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     emit(state.copyWith(index: event.index, rackID: event.rackID));
   }
 
-  void _onSelectedBinID(SelectedBinID event, Emitter<WarehouseInteractionState> emit) {
-    emit(state.copyWith(selectedBinID: event.binID));
+  void _onSelectedID(SelectedID event, Emitter<WarehouseInteractionState> emit) {
+    emit(state.copyWith(selectedID: event.ID));
   }
 
   void _onSelectedObject(SelectedObject event, Emitter<WarehouseInteractionState> emit) {

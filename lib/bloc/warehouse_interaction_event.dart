@@ -9,9 +9,9 @@ class SelectedRackOfIndex extends WarehouseInteractionEvent {
   SelectedRackOfIndex({required this.index, required this.rackID});
 }
 
-class SelectedBinID extends WarehouseInteractionEvent {
-  String binID;
-  SelectedBinID({required this.binID});
+class SelectedID extends WarehouseInteractionEvent {
+  String ID;
+  SelectedID({required this.ID});
 }
 
 class SelectedObject extends WarehouseInteractionEvent {
