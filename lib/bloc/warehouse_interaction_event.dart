@@ -13,3 +13,8 @@ class SelectedBinOfIndex extends WarehouseInteractionEvent {
   int index;
   SelectedBinOfIndex({required this.index});
 }
+
+class SelectedObject extends WarehouseInteractionEvent {
+  String? object;
+  SelectedObject({required this.object});
+}

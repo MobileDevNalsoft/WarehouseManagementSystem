@@ -1,8 +1,8 @@
 {
     "warehouse": {
-      "racks": [
+      "boxes": [
         {
-          "rackId": 1,
+          "boxId": "box-1",
           "category": "Electronics",
           "items": [
             {
@@ -20,7 +20,7 @@
           ]
         },
         {
-          "rackId": 2,
+          "boxId": "box-2",
           "category": "Furniture",
           "items": [
             {
@@ -38,7 +38,7 @@
           ]
         },
         {
-          "rackId": 3,
+          "boxId": "box-3",
           "category": "Clothing",
           "items": [
             {
@@ -60,7 +60,7 @@
           ]
         },
         {
-          "rackId": 4,
+          "boxId": "box-4",
           "category": "Stationery",
           "items": [
             {
@@ -70,7 +70,7 @@
           ]
         },
         {
-          "rackId": 5,
+          "boxId": "box-5",
           "category": "Kitchenware",
           "items": [
             {
@@ -84,7 +84,7 @@
           ]
         },
         {
-          "rackId": 6,
+          "boxId": "box-6",
           "category": "Toys",
           "items": [
             {
@@ -98,7 +98,7 @@
           ]
         },
         {
-          "rackId": 7,
+          "boxId": "box-7",
           "category": "Books",
           "items": [
             {
@@ -112,7 +112,7 @@
           ]
         },
         {
-          "rackId": 8,
+          "boxId": "box-8",
           "category": "Gardening",
           "items": [
             {
