@@ -1,0 +1,12 @@
+{
+    "activityArea": {
+      "Material In Activity": [
+        {
+          "Work Order Number": "WODEMODUTY",
+          "Work Order Type": "KITTING-Assembly",
+          "Status": "In Picking",
+          "Qty": 2
+        }
+      ]
+    }
+}

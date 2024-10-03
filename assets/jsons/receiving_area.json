@@ -1,0 +1,29 @@
+{
+    "receivingArea": {
+      "Material Under Receiving": [
+        {
+          "ASN": "SHPAID00000261",
+          "PO": [
+            "MMI-PO-108_Test"
+          ],
+          "Qty": 4920,
+          "LPNs": 10
+        },
+        {
+          "ASN": "SHDEMODEMOWH100000001",
+          "PO": "DEMO-PO-0001",
+          "Qty": "30 units",
+          "LPN’s": 7
+        },
+        {
+          "ASN": "SHDEMODEMOWH100000072",
+          "PO": [
+            "DEMO-PO-0010",
+            "DEMO-PO-009"
+          ],
+          "Qty": 12,
+          "LPN’s": 2
+        }
+      ]
+    }
+}
