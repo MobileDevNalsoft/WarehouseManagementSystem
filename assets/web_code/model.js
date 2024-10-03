@@ -1,8 +1,11 @@
 import * as THREE from "three";
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from "https://unpkg.com/three@0.112/examples/jsm/controls/OrbitControls.js";
-import { DragControls } from "https://cdn.jsdelivr.net/npm/three@0.114/examples/jsm/controls/DragControls.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/controls/OrbitControls.js";
 
+import { DragControls } from "https://cdn.jsdelivr.net/npm/three@0.114/examples/jsm/controls/DragControls.js";
+var container, camera, scene, controls, model = new THREE.Object3D(), cameraList = [], prevBinColor, prevBin;
+
+var main_cam;
 
 window.addEventListener('storage', (event) => {
     if (event.key) {
@@ -38,193 +41,8 @@ const raycaster = new THREE.Raycaster();
  
 // need mouse coordinates for raycasting.
 const mouse = new THREE.Vector2();
- 
 const lastPos = new THREE.Vector2();
-var camPos = new THREE.Vector3(0, 0, 0);       // Holds current camera position
-var targetPos = new THREE.Vector3(10, 10, -10);// Target position
-var origin = new THREE.Vector3(0, 0, 0)
- 
-function onMouseMove(e) {
-    // regularly updating the position of mouse pointer when it is moved on rendered window.
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
-    // console.log("mouse move");
- 
-}
-// Function to calculate distance between two points
- 
-// Function to smoothly move the camera to the clicked object
-//requestAnimationFrame(animateCamera);
- 
-function onMouseDown(e){
-    lastPos.x = (e.clientX / window.innerWidth) * 2 - 1;
-    lastPos.y = - (e.clientY / window.innerHeight) * 2 + 1;
-}
- 
-function onMouseUp(e) {
-    if (lastPos.distanceTo(mouse) === 0 & e.button === 0) {
-        raycaster.setFromCamera(mouse, camera);
-        // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
-        const intersects = raycaster.intersectObjects(scene.children, true);
-        // we get the objects from the model as list that are intersected by the casted ray.
- 
-        if (intersects.length > 0) {
-            // console.log(intersects[0].object.position.x.toString() + ' ' + intersects[0].object.position.y.toString() + ' ' + intersects[0].object.position.z.toString());
-           
-                intersects[0].object.material.color.set(0xff0000);
-                // moveToObject(intersects[0].object);
-                console.info(JSON.stringify({"type":"click","object":intersects[0].object.name.toString()}));
-                // console.log(intersects[0].object.name.toString());
-               
-                moveCam(intersects[0].object,intersects[0].object.name.toString());
-            
-        }
-    }
- 
-}   
-// set a new target for the camera
- 
-// on every update of the tween
- 
-function dragStartCallback(event) {
-    startColor = event.object.material.color.getHex();
-    event.object.material.color.setHex(0x000000);
-}
- 
-function dragendCallback(event) {
-    event.object.material.color.setHex(startColor);
-}
-function moveCam(object,name){
-    var aabb = new THREE.Box3().setFromObject( object );
-  var center = aabb.getCenter( new THREE.Vector3() );
-  var size = aabb.getSize( new THREE.Vector3() );
- 
-  console.log(center.x + ' ' + center.y + ' ' + center.z);
-  
-  var camPosition = camera.position.clone();  
-  var targPosition = object.position.clone();  
-  var distance = camPosition.sub(targPosition);  
-  var direction = distance.normalize();  
-  var offset = distance.clone().sub(direction.multiplyScalar(1));  
-  var newPos = object.position.clone().sub(offset);
-  newPos.y = camera.position.y;
-  
-  var pl = gsap.timeline( );
- 
- 
-  if(name.includes("r1r")){
-    gsap.to( camera.position, {
-        duration: 1,
-        x: center.x+size.x+1.5,
-        y: center.y+1, // place camera a bit higher than the object
-        z: center.z , // maybe adding even more offset depending on your model
-        onUpdate: function() {
-            // console.log("center"+center.x);
-            camera.lookAt( object.position );
-            //  /important
-        }
-    } );
-    
-    
-    gsap.to( orbitControls.target, {
-        duration: 1,
-        x: center.x,
-        y: center.y, //set the center of the controler to the zoomed object
-        z: center.z ,
-        onUpdate: function(){
-            // console.log("ANGLE "+center.x)
-            camera.lookAt(object.position);
-        },// no distance needed
-        onComplete: ()=>{
-            
-            
-            controls.enabled = true; // activate the controler again after animation
-        }
-    } );
-  }else if(name.includes("r1l")){
-    gsap.to( camera.position, {
-        duration: 1,
-        x: (center.x-size.x),
-        y: center.y+1, // place camera a bit higher than the object
-        z: center.z , // maybe adding even more offset depending on your model
-        onUpdate: function() {
-            // console.log("center"+center.x);
-            camera.lookAt( object.position );
-            //  /important
-        }
-    } );
-    
-    
-    gsap.to( orbitControls.target, {
-        duration: 1,
-        x: center.x,
-        y: center.y, //set the center of the controler to the zoomed object
-        z: center.z ,
-        onUpdate: function(){
-            // console.log("ANGLE "+center.x)
-            camera.lookAt(object.position);
-        },// no distance needed
-        onComplete: ()=>{
-            
-            
-            orbitControls.enabled = true; // activate the controler again after animation
-        }
-    } );
-  }else{
-    gsap.to( camera.position, {
-        duration: 1,
-        x: center.x,
-        y: center.y+25, // place camera a bit higher than the object
-        z: center.z , // maybe adding even more offset depending on your model
-        onUpdate: function() {
-            // console.log("center"+center.x);
-            camera.lookAt( object.position );
-            //  /important
-        }
-    } );
-    
-    
-    gsap.to( orbitControls.target, {
-        duration: 1,
-        x: center.x,
-        y: center.y, //set the center of the controler to the zoomed object
-        z: center.z ,
-        onUpdate: function(){
-            // console.log("ANGLE "+center.x)
-            camera.lookAt(object.position);
-        },// no distance needed
-        onComplete: ()=>{
-            
-            
-            orbitControls.enabled = true; // activate the controler again after animation
-        }
-    } );
-  }
- 
-}
-function onDragEvent(e) {
-    var plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-var raycaster = new THREE.Raycaster();
-var intersects = new THREE.Vector3();
-    raycaster.setFromCamera(mouse, camera);
-    raycaster.ray.intersectPlane(plane, intersects);
-    e.object.position.set(intersects.x, intersects.y, intersects.z);
-  }
- 
-// for responsiveness
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-}
- 
-window.addEventListener('mousemove', onMouseMove); // triggered when mouse pointer is moved.
- 
-window.addEventListener('mouseup', onMouseUp); // triggered when mouse pointer is clicked.
-window.addEventListener('mousedown', onMouseDown);
- 
-window.addEventListener('resize', onWindowResize); // triggered when window is resized.
- 
+
 init();
  
 function init() {
@@ -236,75 +54,36 @@ function init() {
     // assigning div to document's visible structure i.e. body.
  
     scene = new THREE.Scene();
- 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.10, 1000);
- 
-    // Set initial camera position
-    camera.position.set(0, 0, 180);
-    camera.lookAt(0, 0, 0);
- 
-    // controls
-     orbitControls = new OrbitControls( camera, renderer.domElement );
-        
-     dragControls = new DragControls( objects, camera, renderer.domElement );
-    
-   
- 
-    // controls.maxPolarAngle = Math.PI;
-    orbitControls.mouseButtons = {
-        LEFT: THREE.MOUSE.ROTATE,
-        MIDDLE: THREE.MOUSE.DOLLY,
-        RIGHT: THREE.MOUSE.PAN
-    }
- 
-    orbitControls.zoomSpeed = 2.0;
-    orbitControls.panSpeed = 0.5;
- 
-    // controls.enableDamping = true;
-    
-     dragControls.addEventListener( 'dragstart', function () {
-          
-        // console.log("drag start");
-        orbitControls.enabled = false; } );
-    dragControls.addEventListener( 'drag', onDragEvent );
-    dragControls.addEventListener( 'dragend', function () { orbitControls.enabled = true; } );
-   
- 
-    renderer.setClearColor(0x000000, 1); // Set clear color to black
-    scene.background = new THREE.Color(0x000000); // Set scene background to black
- 
+
+
+    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x686868 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2; // Rotate to horizontal
+    scene.add(ground);
+
+
     const Loader = new GLTFLoader();
     Loader.load('../3d_models/warehouse_0347.glb', function (gltf) {
  
         model = gltf.scene;
- 
-        // Traverse the scene graph to find the specific mesh
-        model.traverse((child) => {
-            // Set up click event listener
-            // child.addEventListener('click', () => {
-            //     console.log('Clicked on:', child.name.toString());
-            //     // Add your desired functionality here
-            // });
- 
-            if (child.isMesh && child.name === ']') {
-                // Access the material of the mesh
-                child.material.color.set(0xff0000); // Set the color to red
-            } else if (child.isMesh && child.name == 'r1rb11') {
-                child.material.visible = false;
-            } else if (child.isMesh && child.name == 'r1rb23') {
-                child.material.color.set(0x3cb371);
-            } else if (child.isMesh && child.name == 'r1lb33') {
-                child.material.color.set(0xffa500);
-            }
-        });
- 
-        // console.log(model.children[0].name.toString());
- 
+
+        cameraList = gltf.cameras;
+
+        main_cam = cameraList[0];
+
+        console.log(dumpObject(model).join('\n'));
+
+        createNewCamera(main_cam);
+
+
         scene.add(model);
- 
-       // scene.updateMatrixWorld(true);
- 
- 
+
+        scene.getObjectByName('r1rb11004').material.color.set(0xff0000);
+
+        scene.updateMatrixWorld(true);
+
+
         // Add ambient light
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         ambientLight.castShadow  = true// Soft white light
@@ -316,9 +95,6 @@ function init() {
         scene.add(directionalLight);
  
         animate();
- 
- 
- 
     }, undefined, function (error) {
         console.error(error);
     });
@@ -332,9 +108,239 @@ function init() {
 }
  
 function animate() {
-    orbitControls.update();
- 
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
 }
- 
+
+function dumpObject(obj, lines = [], isLast = true, prefix = '') {
+    const localPrefix = isLast ? '└─' : '├─';
+    lines.push(`${prefix}${prefix ? localPrefix : ''}${obj.name || '*no-name*'} [${obj.type}]`);
+    const newPrefix = prefix + (isLast ? '  ' : '│ ');
+    const lastNdx = obj.children.length - 1;
+    obj.children.forEach((child, ndx) => {
+        const isLast = ndx === lastNdx;
+        dumpObject(child, lines, isLast, newPrefix);
+    });
+    return lines;
+}
+
+
+function createNewCamera(importedCamera) {
+    const fov = importedCamera.fov; // Field of view
+    const aspect = window.innerWidth / window.innerHeight; // Aspect ratio
+    const near = importedCamera.near; // Near clipping plane
+    const far = importedCamera.far; // Far clipping plane
+
+    // Create a new Perspective Camera
+    camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
+    // Set the position of the new camera based on the imported camera's position
+    camera.position.set(0, 250, 150);
+    camera.quaternion.copy(importedCamera.quaternion);
+    camera.rotation.copy(importedCamera.rotation); // Copy rotation if needed
+
+    scene.add(camera);
+
+    // Set up OrbitControls with the new camera
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // Enable smooth movement
+    controls.dampingFactor = 0.25;
+    controls.zoomSpeed = 2;
+    controls.panSpeed = 2;
+    controls.screenSpacePanning = false;
+
+    // limiting vertical rotation around x axis
+    controls.minPolarAngle = 0;
+    controls.maxPolarAngle = Math.PI / 3;
+
+    // limiting horizontal rotation around y axis
+    controls.minAzimuthAngle = -Math.PI;
+    controls.maxAzimuthAngle = Math.PI;
+
+    // limiting zoom out
+    controls.maxDistance = 500;
+
+    var minPan = new THREE.Vector3(- 2, - 2, - 2);
+    var maxPan = new THREE.Vector3(2, 2, 2);
+
+    // Function to clamp target position
+    function clampTarget() {
+        controls.target.x = Math.max(minPan.x, Math.min(maxPan.x, controls.target.x));
+        controls.target.y = Math.max(minPan.y, Math.min(maxPan.y, controls.target.y));
+        controls.target.z = Math.max(minPan.z, Math.min(maxPan.z, controls.target.z));
+    }
+
+    // Listen for changes in controls
+    controls.addEventListener('change', clampTarget);
+
+    // Initial call to set target within bounds if necessary
+    clampTarget();
+
+    // Make the camera look at a specific point (optional)
+    const center = new THREE.Vector3(0, 0, 0); // Adjust this based on your scene
+    controls.target.copy(center);
+
+    // Update controls to reflect the target position
+    controls.update();
+}
+
+function switchCamera(name) {
+
+    let selectedCamera;
+    let center;
+
+    if (name == 'main') {
+        center = new THREE.Vector3(0, 0, 0);
+        selectedCamera = cameraList.find((cam) => cam.name.toString().includes(name));
+    } else {
+        const object = scene.getObjectByName(name.split('_')[0])
+        console.log(object.name.toString());
+        const aabb = new THREE.Box3().setFromObject(object);
+        center = aabb.getCenter(new THREE.Vector3());
+        selectedCamera = cameraList.find((cam) => cam.name.toString().includes(object.name.toString()));
+    }
+
+    if (selectedCamera) {
+        // Create a GSAP timeline for smoother transitions
+        const timeline = gsap.timeline();
+
+        controls.enabled = false;
+        controls.enableDamping = false;
+
+        // Animate position and rotation simultaneously
+        timeline.to(camera.position, {
+            duration: 3,
+            x: selectedCamera.position.x,
+            y: selectedCamera.position.y,
+            z: selectedCamera.position.z,
+            ease: "power3.inOut"
+        }).to(camera.quaternion, {
+            duration: 3,
+            x: selectedCamera.quaternion.x,
+            y: selectedCamera.quaternion.y,
+            z: selectedCamera.quaternion.z,
+            w: selectedCamera.quaternion.w,
+            ease: "power3.inOut",
+            onComplete: function(){
+                controls.enabled = true; // Enable controls after switching cameras
+                controls.enableDamping = true;
+                controls.target.copy(center);
+                camera.lookAt(controls.target);
+            }
+        }, 0); // Start rotation animation at the same time as position animation
+    }
+}
+
+
+function onMouseMove(e) {
+    // regularly updating the position of mouse pointer when it is moved on rendered window.
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+    if (e.button === 0) {
+        raycaster.setFromCamera(mouse, camera);
+        // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        // we get the objects from the model as list that are intersected by the casted ray.
+
+        if (intersects.length > 0) {
+            const targetObject = intersects[0].object;
+            if (targetObject.name.toString().includes('navigation')) {
+                console.log(targetObject.name.toString());
+            }
+        }
+    }
+}
+
+function onMouseDown(e) {
+    lastPos.x = (e.clientX / window.innerWidth) * 2 - 1;
+    lastPos.y = - (e.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onMouseUp(e) {
+    if (lastPos.distanceTo(mouse) === 0 & e.button === 0) {
+        raycaster.setFromCamera(mouse, camera);
+        // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        // we get the objects from the model as list that are intersected by the casted ray.
+
+        if (intersects.length > 0) {
+            const targetObject = intersects[0].object;
+            console.log(targetObject.position.x.toString() + ' ' + targetObject.position.y.toString() + ' ' + targetObject.position.z.toString());
+            if (targetObject.name.toString().includes('cam')) {
+                console.info(JSON.stringify({"type":"click","object":intersects[0].object.name.toString()}));
+                switchCamera(targetObject.name.toString());
+            }
+            else if (targetObject.name.toString().includes('b')) {
+                changeColor(targetObject);
+            } else {
+                switchCamera('main');
+            }
+        }
+    }
+
+}
+
+// for responsiveness
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+window.addEventListener('mousemove', onMouseMove); // triggered when mouse pointer is moved.
+window.addEventListener('mousedown', onMouseDown);
+window.addEventListener('mouseup', onMouseUp); // triggered when mouse pointer is clicked.
+window.addEventListener('resize', onWindowResize); // triggered when window is resized.
+
+function changeColor(object) {
+
+    if (prevBin != null) {
+        prevBin.material.color.copy(prevBinColor);
+    }
+
+    prevBinColor = object.material.color.clone();
+    if (prevBin != object) {
+        object.userData.active = true;
+        object.material.color.set(0xffffff);
+    } else {
+        if (object.userData.active == false) {
+            object.userData.active = true;
+            prevBinColor = object.material.color.clone();
+            prevBin = object;
+            object.material.color.set(0xffffff);
+        } else {
+            object.userData.active = false;
+        }
+    }
+    prevBin = object;
+}
+
+
+function frameArea(sizeToFitOnScreen, boxSize, boxCenter, camera) {
+
+    const halfSizeToFitOnScreen = sizeToFitOnScreen * 0.5;
+    const halfFovY = THREE.MathUtils.degToRad(camera.fov * .5);
+    const distance = halfSizeToFitOnScreen / Math.tan(halfFovY);
+    // compute a unit vector that points in the direction the camera is now
+    // in the xz plane from the center of the box
+    const direction = (new THREE.Vector3())
+        .subVectors(camera.position, boxCenter)
+        .multiply(new THREE.Vector3(1, 0, 1))
+        .normalize();
+
+    // move the camera to a position distance units way from the center
+    // in whatever direction the camera was from the center already
+    camera.position.copy(direction.multiplyScalar(distance).add(boxCenter));
+
+    // pick some near and far values for the frustum that
+    // will contain the box.
+    camera.near = boxSize / 100;
+    camera.far = boxSize * 100;
+
+    camera.updateProjectionMatrix();
+
+    // point the camera to look at the center of the box
+    camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
+
+}
+
