@@ -9,12 +9,31 @@ class SelectedRackOfIndex extends WarehouseInteractionEvent {
   SelectedRackOfIndex({required this.index, required this.rackID});
 }
 
-class SelectedBinOfIndex extends WarehouseInteractionEvent {
-  int index;
-  SelectedBinOfIndex({required this.index});
+class SelectedID extends WarehouseInteractionEvent {
+  String ID;
+  SelectedID({required this.ID});
 }
 
 class SelectedObject extends WarehouseInteractionEvent {
-  String? object;
-  SelectedObject({required this.object});
+  Map<String, dynamic> dataFromJS;
+  SelectedObject({required this.dataFromJS});
+}
+
+class GetRacksData extends WarehouseInteractionEvent {
+
+}
+
+class SelectedRack extends WarehouseInteractionEvent{
+  String rackID;
+  SelectedRack({required this.rackID});
+}
+
+class SelectedBin extends WarehouseInteractionEvent{
+  String binID;
+  SelectedBin({required this.binID});
+}
+
+class SelectedArea extends WarehouseInteractionEvent{
+  String areaName;
+  SelectedArea({required this.areaName});
 }

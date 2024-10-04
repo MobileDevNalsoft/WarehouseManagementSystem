@@ -7,6 +7,9 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 
 @JS()
+external _switchToMainCam();
+
+@JS()
 external _showAlert(String message);
 
 @JS()
@@ -25,6 +28,11 @@ external _getSomeAsyncData();
 external _shareImage(String url, String filename);
 
 class JsInteropService {
+
+  switchToMainCam(){
+    _switchToMainCam();
+  }
+
   showAlert(String message) {
     _showAlert(message);
   }

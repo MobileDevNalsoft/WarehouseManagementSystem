@@ -1,0 +1,11 @@
+{
+  "area_name": "activityArea",
+  "material": [
+    {
+      "work_order_number": "WODEMODUTY",
+      "work_order_type": "KITTING-Assembly",
+      "status": "In Picking",
+      "qty": 2
+    }
+  ]
+}

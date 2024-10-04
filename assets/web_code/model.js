@@ -2,33 +2,16 @@ import * as THREE from "three";
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/controls/OrbitControls.js";
 
-import { DragControls } from "https://cdn.jsdelivr.net/npm/three@0.114/examples/jsm/controls/DragControls.js";
-var container, camera, scene, controls, model = new THREE.Object3D(), cameraList = [], prevBinColor, prevBin;
+var container, camera, scene, controls, model = new THREE.Object3D(), cameraList = [], prevBinColor, prevBin, currentObject = new THREE.Object3D(), prevNav, port;
 
 var main_cam;
 
 window.addEventListener('storage', (event) => {
-    if (event.key) {
-    boxes[event.newValue].material.color.set(0x3cb371);
+    if (event.key === "switchToMainCam") {
+        switchCamera(event.newValue);
     }
 });
 
-var container, camera, scene, controls, model;
-var cameraPos0   // initial camera position
-var cameraUp0    // initial camera up
-var cameraZoom   // camera zoom
-var iniQ         // initial quaternion
-var endQ         // target quaternion
-var curQ         // temp quaternion during slerp
-var vec3         // generic vector object
-var tweenValue   // tweenable value
-var camera_is_moving ;
-var objects =[];
-var orbitControls;
-var dragControls;
- 
- 
- 
 // we use WebGL renderer for rendering 3d model efficiently
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
 renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2))
@@ -72,12 +55,14 @@ function init() {
 
         main_cam = cameraList[0];
 
-        console.log(dumpObject(model).join('\n'));
+        // console.log(dumpObject(model).join('\n'));
 
         createNewCamera(main_cam);
 
 
         scene.add(model);
+
+        currentObject = model;
 
         scene.getObjectByName('r1rb11004').material.color.set(0xff0000);
 
@@ -160,8 +145,8 @@ function createNewCamera(importedCamera) {
     // limiting zoom out
     controls.maxDistance = 500;
 
-    var minPan = new THREE.Vector3(- 2, - 2, - 2);
-    var maxPan = new THREE.Vector3(2, 2, 2);
+    var minPan = new THREE.Vector3(- 100, - 100, - 100);
+    var maxPan = new THREE.Vector3(100, 100, 100);
 
     // Function to clamp target position
     function clampTarget() {
@@ -191,10 +176,11 @@ function switchCamera(name) {
 
     if (name == 'main') {
         center = new THREE.Vector3(0, 0, 0);
+        console.log('{"object":"null"}');
         selectedCamera = cameraList.find((cam) => cam.name.toString().includes(name));
     } else {
         const object = scene.getObjectByName(name.split('_')[0])
-        console.log(object.name.toString());
+        currentObject = object;
         const aabb = new THREE.Box3().setFromObject(object);
         center = aabb.getCenter(new THREE.Vector3());
         selectedCamera = cameraList.find((cam) => cam.name.toString().includes(object.name.toString()));
@@ -213,6 +199,9 @@ function switchCamera(name) {
             x: selectedCamera.position.x,
             y: selectedCamera.position.y,
             z: selectedCamera.position.z,
+            onUpdate: function () {
+                controls.target.copy(center); // Adjust target if necessary
+            },
             ease: "power3.inOut"
         }).to(camera.quaternion, {
             duration: 3,
@@ -221,14 +210,55 @@ function switchCamera(name) {
             z: selectedCamera.quaternion.z,
             w: selectedCamera.quaternion.w,
             ease: "power3.inOut",
-            onComplete: function(){
-                controls.enabled = true; // Enable controls after switching cameras
-                controls.enableDamping = true;
-                controls.target.copy(center);
-                camera.lookAt(controls.target);
+            onUpdate: function () {
+                controls.target.copy(center); // Adjust target if necessary
+            },
+            onComplete: function () {
+                if (!selectedCamera.name.toString().includes('Area')) {
+                    controls.enabled = true; // Enable controls after switching cameras
+                    controls.enableDamping = true;
+                }
             }
         }, 0); // Start rotation animation at the same time as position animation
     }
+}
+
+function moveToBin(object) {
+    var aabb = new THREE.Box3().setFromObject(object);
+    var center = aabb.getCenter(new THREE.Vector3());
+    var size = aabb.getSize(new THREE.Vector3());
+    const regex = /r\d+r/;
+
+    // Create a GSAP timeline for smoother transitions
+    const timeline = gsap.timeline();
+
+    controls.enabled = false;
+    controls.enableDamping = false;
+
+    // Animate position and rotation simultaneously
+    timeline.to(camera.position, {
+        duration: 1,
+        x: regex.test(object.name.toString()) ? center.x + size.x * 2 : center.x - size.x * 2,
+        y: center.y,
+        z: center.z,
+        ease: "power1.out",
+        onUpdate: function () {
+            controls.target.copy(center);
+        },
+    }).to(controls.target, {
+        duration: 1,
+        x: center.x,
+        y: center.y,
+        z: center.z,
+        ease: "power1.out",
+        onUpdate: function () {
+            camera.lookAt(controls.target);
+        },
+        onComplete: function () {
+            controls.enabled = true; // Enable controls after switching cameras
+            controls.enableDamping = true;
+        }
+    }, 0); // Start rotation animation at the same time as position animation
 }
 
 
@@ -244,8 +274,19 @@ function onMouseMove(e) {
 
         if (intersects.length > 0) {
             const targetObject = intersects[0].object;
+            // Send the object name to Flutter
+            if (window.flutter_inappwebview) {
+                window.flutter_inappwebview.callHandler('sendObjectName', targetObject.name.toString());
+            }
             if (targetObject.name.toString().includes('navigation')) {
-                console.log(targetObject.name.toString());
+                tooltip.style.display = 'block';
+                tooltip.innerHTML = targetObject.name.toString().split('_')[0];
+
+                // Position tooltip at the mouse location
+                tooltip.style.left = `${e.clientX + 10}px`; // Offset for better visibility
+                tooltip.style.top = `${e.clientY + 10}px`;
+            }else{
+                tooltip.style.display = 'none';
             }
         }
     }
@@ -265,12 +306,16 @@ function onMouseUp(e) {
 
         if (intersects.length > 0) {
             const targetObject = intersects[0].object;
-            console.log(targetObject.position.x.toString() + ' ' + targetObject.position.y.toString() + ' ' + targetObject.position.z.toString());
             if (targetObject.name.toString().includes('cam')) {
-                console.info(JSON.stringify({"type":"click","object":intersects[0].object.name.toString()}));
+                if(targetObject.name.toString().includes('rack')){
+                    console.log('{"rack":"'+ targetObject.name.toString().split('_')[0] +'"}');
+                }else{
+                    console.log('{"area":"'+ targetObject.name.toString().split('_')[0] +'"}');
+                }
                 switchCamera(targetObject.name.toString());
+                prevNav = targetObject.name.toString();
             }
-            else if (targetObject.name.toString().includes('b')) {
+            else if (targetObject.name.toString().includes('b') && prevNav.includes('rack')) {
                 changeColor(targetObject);
             } else {
                 switchCamera('main');
@@ -302,14 +347,21 @@ function changeColor(object) {
     if (prevBin != object) {
         object.userData.active = true;
         object.material.color.set(0xffffff);
+        console.log('{"bin":"'+ object.name.toString() +'"}');
+        moveToBin(object);
     } else {
         if (object.userData.active == false) {
             object.userData.active = true;
             prevBinColor = object.material.color.clone();
             prevBin = object;
             object.material.color.set(0xffffff);
+            console.log('{"bin":"'+ object.name.toString() +'"}');
+            moveToBin(object);
         } else {
             object.userData.active = false;
+            console.log('{"rack":"'+ prevNav.split('_')[0] +'"}');
+            switchCamera(prevNav);
+            
         }
     }
     prevBin = object;

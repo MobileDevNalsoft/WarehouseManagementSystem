@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:js_interop';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,8 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/js_inter.dart';
 import 'package:warehouse_3d/main.dart';
+
+import 'package:skeletonizer/skeletonizer.dart';
+
+import '../js_inter.dart';
+import '../models/rack_model.dart';
 
 class ThreeDTest extends StatefulWidget {
   const ThreeDTest({super.key});
@@ -18,17 +23,17 @@ class ThreeDTest extends StatefulWidget {
 
 class _ThreeDTestState extends State<ThreeDTest> {
   final jsIteropService = JsInteropService();
-  late Map<dynamic, dynamic> _json;
+  late InAppWebViewController webViewController;
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
+  WebMessageChannel? webMessageChannel;
+  WebMessagePort? port1;
+  WebMessagePort? port2;
 
   @override
   void initState() {
     super.initState();
-
-    context.read<WarehouseInteractionBloc>().add(SelectedObject(object: "box-123"));
-  }
-
-  Future loadJson() async {
-    return jsonDecode(await DefaultAssetBundle.of(context).loadString("jsons/warehouse_data.json"));
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+    _warehouseInteractionBloc.add(GetRacksData());
   }
 
   @override
@@ -40,162 +45,328 @@ class _ThreeDTestState extends State<ThreeDTest> {
           // color: Colors.black,
           child: Row(
         children: [
-          Expanded(
+          SizedBox(
+            width: context
+                        .watch<WarehouseInteractionBloc>()
+                        .state
+                        .dataFromJS!
+                        .keys
+                        .first !=
+                    'object'
+                ? size.width * 0.8
+                : size.width,
             child: InAppWebView(
-                initialFile: 'assets/web_code/model1.html',
-                onConsoleMessage: (controller, consoleMessage) {
-                  try {
-                    print("meessage level ${consoleMessage.messageLevel}");
-                    var obj = jsonDecode(consoleMessage.message);
-                    print("obj $obj");
-                    context.read<WarehouseInteractionBloc>().add(SelectedObject(object: obj["object"]));
-                  } catch (e) {
-                    print("error $e   ");
+              initialFile: 'assets/web_code/model1.html',
+              onConsoleMessage: (controller, consoleMessage) {
+                try {
+                  if (consoleMessage.messageLevel.toNativeValue() == 1) {
+                    print('console message ${consoleMessage.message}');
+                    Map<String, dynamic> message =
+                        jsonDecode(consoleMessage.message);
+                    _warehouseInteractionBloc
+                        .add(SelectedObject(dataFromJS: message));
+                    if (message.keys.first == 'rack') {
+                      _warehouseInteractionBloc
+                          .add(SelectedRack(rackID: message['rack']));
+                    } else if (message.keys.first == 'bin') {
+                      
+                      _warehouseInteractionBloc
+                          .add(SelectedBin(binID: message['bin']));
+                    } else if(message.keys.first == 'area') {
+                      _warehouseInteractionBloc.add(SelectedArea(areaName: message['area']));
+                    }
                   }
-                }),
+                } catch (e) {
+                  print("error $e");
+                }
+              },
+              onWebViewCreated: (controller) {
+                webViewController = controller;
+              },
+              onLoadStop: (controller, url) async {},
+            ),
           ),
-          if (context.watch<WarehouseInteractionBloc>().state.object != null)
-          Padding(
-            padding: EdgeInsets.only(left: size.width * 0.78, top: size.height * 0.05, bottom: size.height * 0.05, right: size.width * 0.002),
-            child: FutureBuilder(
-                future: loadJson(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    print("data ${snapshot.data}");
-                    if (context.watch<WarehouseInteractionBloc>().state.object != null) {
-                      Map data = (snapshot.data["warehouse"]["boxes"] as List).firstWhere(
-                        (e) => e["boxId"] == context.watch<WarehouseInteractionBloc>().state.object,
-                        orElse: () {
-                          return snapshot.data["warehouse"]["boxes"][1];
-                        },
-                      );
-                      print("first obj ${snapshot.data["warehouse"]["boxes"][0]["boxId"]}");
-                      return Container(
-                        padding: EdgeInsets.all(16.0),
-                        decoration: BoxDecoration(
-                            // color: Colors.black45,
-                            border: Border.all(color: Colors.black),
-                            borderRadius: BorderRadius.all(Radius.circular(16)),
-                            boxShadow: [BoxShadow(color: Colors.white, blurRadius: 5, spreadRadius: 5)]),
-                        width: size.width * (0.2),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // SizedBox(),
-                                Text(
-                                  data["boxId"].toString().toUpperCase(),
-                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-                                ),
-                                // IconButton(
-                                //     onPressed: () {
-                                //       context.read<WarehouseInteractionBloc>().add(SelectedObject(object: null));
-                                //     },
-                                //     icon: Icon(
-                                //       Icons.cancel_rounded,
-                                //       // color: Colors.white,
-                                //     ))
-                              ],
-                            ),
-                             Container(
-                              child: Row(
+          if (context
+                  .watch<WarehouseInteractionBloc>()
+                  .state
+                  .dataFromJS!
+                  .keys
+                  .first !=
+              'object')
+            BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+                buildWhen: (previous, current) =>
+                    previous.getRacksDataState != current.getRacksDataState ||
+                    previous.dataFromJS != current.dataFromJS,
+                builder: (context, state) {
+                  if (state.getRacksDataState == GetRacksDataState.success) {
+                    print('selected bin in builder ${state.selectedBin}');
+                    
+                    print(
+                        'json from js ${_warehouseInteractionBloc.state.dataFromJS}');
+                  }
+                  if (state.dataFromJS!.keys.first == 'rack') {
+                    return Skeletonizer(
+                        enabled: state.getRacksDataState ==
+                            GetRacksDataState.loading,
+                        child: Container(
+                          width: size.width * 0.2,
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                              // color: Colors.black45,
+                              border: Border.all(color: Colors.black),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(16)),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.white,
+                                    blurRadius: 5,
+                                    spreadRadius: 5)
+                              ]),
+                          child: Column(
+                            children: [
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // Text("Category",style: TextStyle(fontSize: 18),),
                                   Text(
-                                    data["category"],
-                                    style: TextStyle(fontSize: 16),
+                                    'Storage Rack : ${state.dataFromJS!.values.first.toString().toUpperCase()}',
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w500),
                                   ),
+                                  IconButton(
+                                      onPressed: () {
+                                        _warehouseInteractionBloc.add(
+                                            SelectedObject(dataFromJS: const {
+                                          "object": "null"
+                                        }));
+                                        jsIteropService.switchToMainCam();
+                                      },
+                                      icon: const Icon(
+                                        Icons.cancel_rounded,
+                                      ))
                                 ],
                               ),
-                            ),
-
-                            Gap(16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "Capacity",
-                                        style: TextStyle(fontSize: 16, color: Colors.black54),
-                                      ),
-                                      Text("24", style: TextStyle(fontSize: 20))
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                    child: Column(
-                                  children: [Text("Quantity",style: TextStyle(fontSize: 16, color: Colors.black54),), Text("24", style: TextStyle(fontSize: 20))],
-                                ))
-                              ],
-                            ),
-                            Gap(8),
-                           
-                            // Gap(16),
-                            // Align(alignment: Alignment.centerLeft,child: Padding(
-                            //   padding: const EdgeInsets.all(8.0),
-                            //   child: Text("Capacity",style: TextStyle(fontSize: 18),),
-                            // )),
-                            Gap(16),
-                            Container(
-                              
-                              decoration: BoxDecoration(
-                                  // color: Colors.black12
-                                  ),
-                              child: Column(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Items",
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  SizedBox(
-                                    height: size.height*0.4,
-                                    child: ListView(
-                                      scrollDirection: Axis.vertical,
-                                        children: (data["items"] as List)
-                                            .map((element) => SizedBox(
-                                                height: size.height * 0.064,
-                                                child: Card(
-                                                    child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                      child: Text(element["itemName"].toString()),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                                                      child: Text(element["quantity"].toString()),
-                                                    )
-                                                  ],
-                                                ))))
-                                            .toList()),
+                                    state.selectedRack != null
+                                        ? 'Category : ${state.selectedRack!.category!}'
+                                        : 'Category : CHAMPAGNE',
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w500),
                                   )
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
+                              Container(
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Text("Category",style: TextStyle(fontSize: 18),),
+                                    Text(
+                                      "category",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Gap(16),
+                              const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Capacity",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black54),
+                                        ),
+                                        Text("24",
+                                            style: TextStyle(fontSize: 20))
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                      child: Column(
+                                    children: [
+                                      Text(
+                                        "Quantity",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black54),
+                                      ),
+                                      Text("24", style: TextStyle(fontSize: 20))
+                                    ],
+                                  ))
+                                ],
+                              ),
+                              const Gap(8),
 
-                        // ElevatedButton(
-                        //   child:
-                        //   onPressed: () {
-                        //     print(context.read<WarehouseInteractionBloc>().state.object.toString());
-                        //     jsIteropService.showAlert(context.read<WarehouseInteractionBloc>().state.object.toString());
-                        //   },
-                        // )
-                      );
-                    } else {
-                      return SizedBox();
-                    }
-                  } else {
-                    return CircularProgressIndicator();
+                              // Gap(16),
+                              // Align(alignment: Alignment.centerLeft,child: Padding(
+                              //   padding: const EdgeInsets.all(8.0),
+                              //   child: Text("Capacity",style: TextStyle(fontSize: 18),),
+                              // )),
+                              const Gap(16),
+                              Container(
+                                decoration: const BoxDecoration(
+                                    // color: Colors.black12
+                                    ),
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      "Items",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    SizedBox(
+                                      height: size.height * 0.4,
+                                      child: ListView(
+                                          scrollDirection: Axis.vertical,
+                                          children: ([] as List)
+                                              .map((element) => SizedBox(
+                                                  height: size.height * 0.064,
+                                                  child: Card(
+                                                      child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal:
+                                                                    16.0),
+                                                        child: Text(
+                                                            element["itemName"]
+                                                                .toString()),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal:
+                                                                    24.0),
+                                                        child: Text(
+                                                            element["quantity"]
+                                                                .toString()),
+                                                      )
+                                                    ],
+                                                  ))))
+                                              .toList()),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ));
+                  } else if (state.dataFromJS!.keys.first == 'bin') {
+                    print(
+                        'selected bin in builder ${state.selectedBin!.binID}');
+                    return Skeletonizer(
+                        enabled: state.getRacksDataState ==
+                            GetRacksDataState.loading,
+                        child: Container(
+                          width: size.width * 0.2,
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                              // color: Colors.black45,
+                              border: Border.all(color: Colors.black),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(16)),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.white,
+                                    blurRadius: 5,
+                                    spreadRadius: 5)
+                              ]),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Storage Bin : ${state.dataFromJS!.values.first.toString().toUpperCase()}',
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        _warehouseInteractionBloc.add(
+                                            SelectedObject(dataFromJS: const {
+                                          "object": "null"
+                                        }));
+                                        jsIteropService.switchToMainCam();
+                                      },
+                                      icon: const Icon(
+                                        Icons.cancel_rounded,
+                                      ))
+                                ],
+                              ),
+                              Container(
+                                decoration: const BoxDecoration(
+                                    // color: Colors.black12
+                                    ),
+                                child: Column(
+                                  children: [
+                                    const Text(
+                                      "Items",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    SizedBox(
+                                      height: size.height * 0.4,
+                                      child: ListView(
+                                          scrollDirection: Axis.vertical,
+                                          children: (state.selectedBin!.items!)
+                                              .map((element) => SizedBox(
+                                                  height: size.height * 0.064,
+                                                  child: Card(
+                                                      child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal:
+                                                                    16.0),
+                                                        child: Text(element
+                                                            .itemName
+                                                            .toString()),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal:
+                                                                    24.0),
+                                                        child: Text(element
+                                                            .quantity
+                                                            .toString()),
+                                                      )
+                                                    ],
+                                                  ))))
+                                              .toList()),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ));
+                  }else if(state.dataFromJS!['area'] == 'stagingArea'){
+                    
                   }
-                }),
-          )
+                  return SizedBox();
+                })
         ],
       )),
     );
