@@ -10,7 +10,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'pages/3JS_with_flutter.dart';
 
 final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
- main()  {
+main() {
 
 WidgetsFlutterBinding.ensureInitialized();
 

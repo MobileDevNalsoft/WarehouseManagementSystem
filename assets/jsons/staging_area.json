@@ -1,0 +1,11 @@
+{
+  "area_name": "stagingArea",
+  "material": [
+    {
+      "order_number": "MMI-SO-041",
+      "ob_load": "OSPAID00000085",
+      "item": "014948KA",
+      "qty": 4
+    }
+  ]
+}

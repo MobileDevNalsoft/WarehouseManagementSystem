@@ -1,0 +1,28 @@
+{
+  "area_name": "receivingArea",
+  "material": [
+    {
+      "asn": "SHPAID00000261",
+      "pos": [
+        "MMI-PO-108_Test"
+      ],
+      "qty": 4920,
+      "lpns": 10
+    },
+    {
+      "asn": "SHDEMODEMOWH100000001",
+      "pos": ["DEMO-PO-0001"],
+      "qty": "30 units",
+      "lpns": 7
+    },
+    {
+      "asn": "SHDEMODEMOWH100000072",
+      "pos": [
+        "DEMO-PO-0010",
+        "DEMO-PO-009"
+      ],
+      "qty": 12,
+      "lpns": 2
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "area_name": "inspectionArea",
+  "material": [
+      {
+        "asn": "SHDEMODEMOWH100000161",
+        "po": "PO1",
+        "item": "KEG",
+        "lpn": "CSDEMODEMOWH100000241",
+        "qty": 1
+      }
+    ]
+}

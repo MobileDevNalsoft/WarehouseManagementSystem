@@ -1,0 +1,31 @@
+{
+  "racks": [
+    {
+      "rack_id": "rack5r",
+      "category": "CHAMPAGNE",
+      "bins": [
+        {
+          "bin_id": "r1rb11004",
+          "items": [
+            {
+              "item_name": "Non-Vintage Champagne",
+              "quantity": 3
+            },
+            {
+              "item_name": "JeVintage Champagneans",
+              "quantity": 2
+            },
+            {
+              "item_name": "Rosé Champagne",
+              "quantity": 3
+            },
+            {
+              "item_name": "Shirt",
+              "quantity": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
