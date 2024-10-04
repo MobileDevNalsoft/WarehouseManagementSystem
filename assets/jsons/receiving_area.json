@@ -1,29 +1,28 @@
 {
-    "receivingArea": {
-      "Material Under Receiving": [
-        {
-          "ASN": "SHPAID00000261",
-          "PO": [
-            "MMI-PO-108_Test"
-          ],
-          "Qty": 4920,
-          "LPNs": 10
-        },
-        {
-          "ASN": "SHDEMODEMOWH100000001",
-          "PO": "DEMO-PO-0001",
-          "Qty": "30 units",
-          "LPN’s": 7
-        },
-        {
-          "ASN": "SHDEMODEMOWH100000072",
-          "PO": [
-            "DEMO-PO-0010",
-            "DEMO-PO-009"
-          ],
-          "Qty": 12,
-          "LPN’s": 2
-        }
-      ]
+  "area_name": "receivingArea",
+  "material": [
+    {
+      "asn": "SHPAID00000261",
+      "pos": [
+        "MMI-PO-108_Test"
+      ],
+      "qty": 4920,
+      "lpns": 10
+    },
+    {
+      "asn": "SHDEMODEMOWH100000001",
+      "pos": ["DEMO-PO-0001"],
+      "qty": "30 units",
+      "lpns": 7
+    },
+    {
+      "asn": "SHDEMODEMOWH100000072",
+      "pos": [
+        "DEMO-PO-0010",
+        "DEMO-PO-009"
+      ],
+      "qty": 12,
+      "lpns": 2
     }
+  ]
 }

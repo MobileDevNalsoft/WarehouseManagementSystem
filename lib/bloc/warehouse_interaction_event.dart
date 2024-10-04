@@ -15,10 +15,25 @@ class SelectedID extends WarehouseInteractionEvent {
 }
 
 class SelectedObject extends WarehouseInteractionEvent {
-  String? object;
-  SelectedObject({required this.object});
+  Map<String, dynamic> dataFromJS;
+  SelectedObject({required this.dataFromJS});
 }
 
 class GetRacksData extends WarehouseInteractionEvent {
 
+}
+
+class SelectedRack extends WarehouseInteractionEvent{
+  String rackID;
+  SelectedRack({required this.rackID});
+}
+
+class SelectedBin extends WarehouseInteractionEvent{
+  String binID;
+  SelectedBin({required this.binID});
+}
+
+class SelectedArea extends WarehouseInteractionEvent{
+  String areaName;
+  SelectedArea({required this.areaName});
 }

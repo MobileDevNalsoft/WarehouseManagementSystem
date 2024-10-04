@@ -6,6 +6,12 @@ var container, camera, scene, controls, model = new THREE.Object3D(), cameraList
 
 var main_cam;
 
+window.addEventListener('storage', (event) => {
+    if (event.key === "switchToMainCam") {
+        switchCamera(event.newValue);
+    }
+});
+
 // we use WebGL renderer for rendering 3d model efficiently
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
 renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2))
@@ -170,7 +176,7 @@ function switchCamera(name) {
 
     if (name == 'main') {
         center = new THREE.Vector3(0, 0, 0);
-        console.log('null');
+        console.log('{"object":"null"}');
         selectedCamera = cameraList.find((cam) => cam.name.toString().includes(name));
     } else {
         const object = scene.getObjectByName(name.split('_')[0])
@@ -301,7 +307,11 @@ function onMouseUp(e) {
         if (intersects.length > 0) {
             const targetObject = intersects[0].object;
             if (targetObject.name.toString().includes('cam')) {
-                console.log(targetObject.name.toString().split('_')[0]);
+                if(targetObject.name.toString().includes('rack')){
+                    console.log('{"rack":"'+ targetObject.name.toString().split('_')[0] +'"}');
+                }else{
+                    console.log('{"area":"'+ targetObject.name.toString().split('_')[0] +'"}');
+                }
                 switchCamera(targetObject.name.toString());
                 prevNav = targetObject.name.toString();
             }
@@ -337,7 +347,7 @@ function changeColor(object) {
     if (prevBin != object) {
         object.userData.active = true;
         object.material.color.set(0xffffff);
-        console.log(object.name.toString());
+        console.log('{"bin":"'+ object.name.toString() +'"}');
         moveToBin(object);
     } else {
         if (object.userData.active == false) {
@@ -345,11 +355,11 @@ function changeColor(object) {
             prevBinColor = object.material.color.clone();
             prevBin = object;
             object.material.color.set(0xffffff);
-            console.log(object.name.toString());
+            console.log('{"bin":"'+ object.name.toString() +'"}');
             moveToBin(object);
         } else {
             object.userData.active = false;
-            console.log(object.name.toString().split('_')[0]);
+            console.log('{"rack":"'+ prevNav.split('_')[0] +'"}');
             switchCamera(prevNav);
             
         }
@@ -385,3 +395,4 @@ function frameArea(sizeToFitOnScreen, boxSize, boxCenter, camera) {
     camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
 
 }
+
