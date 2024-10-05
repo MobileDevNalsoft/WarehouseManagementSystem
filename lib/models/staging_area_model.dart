@@ -1,9 +1,9 @@
-class StatingArea{
+class StagingArea{
   String? areaName;
   List<Material>? materials;
-  StatingArea({this.areaName, this.materials});
+  StagingArea({this.areaName, this.materials = const []});
 
-  StatingArea.fromJson(Map<String, dynamic> json){
+  StagingArea.fromJson(Map<String, dynamic> json){
     areaName = json['area_name'];
     materials = (json['materials'] as List).map((e) => Material.fromJson(e)).toList();
   }

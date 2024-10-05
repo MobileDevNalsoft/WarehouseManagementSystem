@@ -1,7 +1,7 @@
 class ReceivingArea{
   String? areaName;
   List<Material>? materials;
-  ReceivingArea({this.areaName, this.materials});
+  ReceivingArea({this.areaName, this.materials = const []});
 
   ReceivingArea.fromJson(Map<String, dynamic> json){
     areaName = json['area_name'];

@@ -52,7 +52,7 @@ class _Rack3dState extends State<Rack3d> {
 
         if (data["type"] == "hotspot-create") {
         //  Navigator.push(context, MaterialPageRoute(builder: (context)=>Rack3d()));
-          context.read<WarehouseInteractionBloc>().add(HotspotCreated(hotspot: data["cnt"]));
+          // context.read<WarehouseInteractionBloc>().add(HotspotCreated(hotspot: data["cnt"]));
         } else if (data["type"] == "hotspot-click") {
        
         }
@@ -88,7 +88,7 @@ class _Rack3dState extends State<Rack3d> {
                                         id: 'rackmodel',
                   ),
               ),
-              if(context.watch<WarehouseInteractionBloc>().state.hotspot!=-1)
+              // if(context.watch<WarehouseInteractionBloc>().state.hotspot!=-1)
                BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
                  builder: (context, state)  {
                    return Expanded(
@@ -109,7 +109,7 @@ class _Rack3dState extends State<Rack3d> {
                                         children: [
                                           Gap(size.width * 0.43),
                                           Text(
-                                            'Rack ${snapshot.data[2]!.racks![state.index!].rackId}',
+                                            'Rack snapshot.data[2]!.racks![state.index!].rackId}',
                                             // ignore: prefer_const_constructors
                                             style: TextStyle(
                                                 color: Colors.white, fontSize: 18),
@@ -123,12 +123,12 @@ class _Rack3dState extends State<Rack3d> {
                                         children: [
                                           Gap(size.height * 0.02),
                                           Text(
-                                            snapshot.data[2]!.racks![state.index!].categoryName!,
+                                           ' snapshot.data[2]!.racks![state.index!].categoryName!',
                                             style: const TextStyle(
                                                 color: Colors.white, fontSize: 18),
                                           ),
                                           Gap(size.height * 0.02),
-                                          ...snapshot.data[2]!.racks![state.index!].items!.map((e) => Container(
+                                          ...[].map((e) => Container(
                                             margin: EdgeInsets.symmetric(vertical: size.height*0.01),
                                             decoration: BoxDecoration(
                                               color: Colors.white,

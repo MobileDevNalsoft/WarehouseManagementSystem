@@ -10,6 +10,12 @@ import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/main.dart';
 
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:warehouse_3d/pages/data_sheets/activity_area_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/bin_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/rack_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/receiving_area_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/staging_area_data_sheet.dart';
 
 import '../js_inter.dart';
 import '../models/rack_model.dart';
@@ -33,7 +39,6 @@ class _ThreeDTestState extends State<ThreeDTest> {
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    _warehouseInteractionBloc.add(GetRacksData());
   }
 
   @override
@@ -41,49 +46,41 @@ class _ThreeDTestState extends State<ThreeDTest> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Container(
-          // color: Colors.black,
-          child: Row(
+      body: Stack(
+        alignment: Alignment.center,
         children: [
-          SizedBox(
-            width: context
-                        .watch<WarehouseInteractionBloc>()
-                        .state
-                        .dataFromJS!
-                        .keys
-                        .first !=
-                    'object'
-                ? size.width * 0.8
-                : size.width,
-            child: InAppWebView(
-              initialFile: 'assets/web_code/model1.html',
-              onConsoleMessage: (controller, consoleMessage) {
-                try {
-                  if (consoleMessage.messageLevel.toNativeValue() == 1) {
-                    print('console message ${consoleMessage.message}');
-                    Map<String, dynamic> message =
-                        jsonDecode(consoleMessage.message);
-                    _warehouseInteractionBloc
-                        .add(SelectedObject(dataFromJS: message));
-                    if (message.keys.first == 'rack') {
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: context
+                          .watch<WarehouseInteractionBloc>()
+                          .state
+                          .dataFromJS!
+                          .keys
+                          .first !=
+                      'object'
+                  ? size.width * 0.78
+                  : size.width,
+              child: InAppWebView(
+                initialFile: 'assets/web_code/model1.html',
+                onConsoleMessage: (controller, consoleMessage) {
+                  try {
+                    if (consoleMessage.messageLevel.toNativeValue() == 1) {
+                      print('console message ${consoleMessage.message}');
+                      Map<String, dynamic> message =
+                          jsonDecode(consoleMessage.message);
                       _warehouseInteractionBloc
-                          .add(SelectedRack(rackID: message['rack']));
-                    } else if (message.keys.first == 'bin') {
-                      
-                      _warehouseInteractionBloc
-                          .add(SelectedBin(binID: message['bin']));
-                    } else if(message.keys.first == 'area') {
-                      _warehouseInteractionBloc.add(SelectedArea(areaName: message['area']));
+                          .add(SelectedObject(dataFromJS: message));
                     }
+                  } catch (e) {
+                    print("error $e");
                   }
-                } catch (e) {
-                  print("error $e");
-                }
-              },
-              onWebViewCreated: (controller) {
-                webViewController = controller;
-              },
-              onLoadStop: (controller, url) async {},
+                },
+                onWebViewCreated: (controller) {
+                  webViewController = controller;
+                },
+                onLoadStop: (controller, url) async {},
+              ),
             ),
           ),
           if (context
@@ -93,282 +90,37 @@ class _ThreeDTestState extends State<ThreeDTest> {
                   .keys
                   .first !=
               'object')
-            BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-                buildWhen: (previous, current) =>
-                    previous.getRacksDataState != current.getRacksDataState ||
-                    previous.dataFromJS != current.dataFromJS,
-                builder: (context, state) {
-                  if (state.getRacksDataState == GetRacksDataState.success) {
-                    print('selected bin in builder ${state.selectedBin}');
-                    
-                    print(
-                        'json from js ${_warehouseInteractionBloc.state.dataFromJS}');
-                  }
-                  if (state.dataFromJS!.keys.first == 'rack') {
-                    return Skeletonizer(
-                        enabled: state.getRacksDataState ==
-                            GetRacksDataState.loading,
-                        child: Container(
-                          width: size.width * 0.2,
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                              // color: Colors.black45,
-                              border: Border.all(color: Colors.black),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(16)),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 5,
-                                    spreadRadius: 5)
-                              ]),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Storage Rack : ${state.dataFromJS!.values.first.toString().toUpperCase()}',
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  IconButton(
-                                      onPressed: () {
-                                        _warehouseInteractionBloc.add(
-                                            SelectedObject(dataFromJS: const {
-                                          "object": "null"
-                                        }));
-                                        jsIteropService.switchToMainCam();
-                                      },
-                                      icon: const Icon(
-                                        Icons.cancel_rounded,
-                                      ))
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    state.selectedRack != null
-                                        ? 'Category : ${state.selectedRack!.category!}'
-                                        : 'Category : CHAMPAGNE',
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ),
-                              Container(
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // Text("Category",style: TextStyle(fontSize: 18),),
-                                    Text(
-                                      "category",
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Gap(16),
-                              const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SizedBox(
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "Capacity",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black54),
-                                        ),
-                                        Text("24",
-                                            style: TextStyle(fontSize: 20))
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                      child: Column(
-                                    children: [
-                                      Text(
-                                        "Quantity",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black54),
-                                      ),
-                                      Text("24", style: TextStyle(fontSize: 20))
-                                    ],
-                                  ))
-                                ],
-                              ),
-                              const Gap(8),
-
-                              // Gap(16),
-                              // Align(alignment: Alignment.centerLeft,child: Padding(
-                              //   padding: const EdgeInsets.all(8.0),
-                              //   child: Text("Capacity",style: TextStyle(fontSize: 18),),
-                              // )),
-                              const Gap(16),
-                              Container(
-                                decoration: const BoxDecoration(
-                                    // color: Colors.black12
-                                    ),
-                                child: Column(
-                                  children: [
-                                    const Text(
-                                      "Items",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    SizedBox(
-                                      height: size.height * 0.4,
-                                      child: ListView(
-                                          scrollDirection: Axis.vertical,
-                                          children: ([] as List)
-                                              .map((element) => SizedBox(
-                                                  height: size.height * 0.064,
-                                                  child: Card(
-                                                      child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                    16.0),
-                                                        child: Text(
-                                                            element["itemName"]
-                                                                .toString()),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                    24.0),
-                                                        child: Text(
-                                                            element["quantity"]
-                                                                .toString()),
-                                                      )
-                                                    ],
-                                                  ))))
-                                              .toList()),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ));
-                  } else if (state.dataFromJS!.keys.first == 'bin') {
-                    print(
-                        'selected bin in builder ${state.selectedBin!.binID}');
-                    return Skeletonizer(
-                        enabled: state.getRacksDataState ==
-                            GetRacksDataState.loading,
-                        child: Container(
-                          width: size.width * 0.2,
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                              // color: Colors.black45,
-                              border: Border.all(color: Colors.black),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(16)),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.white,
-                                    blurRadius: 5,
-                                    spreadRadius: 5)
-                              ]),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Storage Bin : ${state.dataFromJS!.values.first.toString().toUpperCase()}',
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  IconButton(
-                                      onPressed: () {
-                                        _warehouseInteractionBloc.add(
-                                            SelectedObject(dataFromJS: const {
-                                          "object": "null"
-                                        }));
-                                        jsIteropService.switchToMainCam();
-                                      },
-                                      icon: const Icon(
-                                        Icons.cancel_rounded,
-                                      ))
-                                ],
-                              ),
-                              Container(
-                                decoration: const BoxDecoration(
-                                    // color: Colors.black12
-                                    ),
-                                child: Column(
-                                  children: [
-                                    const Text(
-                                      "Items",
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                                    SizedBox(
-                                      height: size.height * 0.4,
-                                      child: ListView(
-                                          scrollDirection: Axis.vertical,
-                                          children: (state.selectedBin!.items!)
-                                              .map((element) => SizedBox(
-                                                  height: size.height * 0.064,
-                                                  child: Card(
-                                                      child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                    16.0),
-                                                        child: Text(element
-                                                            .itemName
-                                                            .toString()),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal:
-                                                                    24.0),
-                                                        child: Text(element
-                                                            .quantity
-                                                            .toString()),
-                                                      )
-                                                    ],
-                                                  ))))
-                                              .toList()),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ));
-                  }else if(state.dataFromJS!['area'] == 'stagingArea'){
-                    
-                  }
-                  return SizedBox();
-                })
+            Align(
+              alignment: Alignment.centerRight,
+              child: getDataSheetFor(
+                      _warehouseInteractionBloc.state.dataFromJS!.keys.first,
+                      _warehouseInteractionBloc.state.dataFromJS!.values.first.toString()
+                          ) ??
+                  SizedBox(),
+            ),
+          
         ],
-      )),
+      ),
     );
+  }
+
+  Widget? getDataSheetFor(String objectName, String objectValue) {
+    switch(objectName){
+      case 'rack':
+        return RackDataSheet();
+      case 'bin':
+        return BinDataSheet();
+      case 'area':
+        switch(objectValue){
+          case 'stagingArea':
+            return StagingAreaDataSheet();
+          case 'activityArea':
+            return ActivityAreaDataSheet();
+          case 'receivingArea':
+            return ReceivingAreaDataSheet();
+          case 'inspectionArea':
+            return InspectionAreaDataSheet();
+        }
+    }
   }
 }

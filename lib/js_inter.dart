@@ -10,6 +10,9 @@ import 'package:js/js.dart';
 external _switchToMainCam();
 
 @JS()
+external _isRackDataLoaded(bool value);
+
+@JS()
 external _showAlert(String message);
 
 @JS()
@@ -31,6 +34,10 @@ class JsInteropService {
 
   switchToMainCam(){
     _switchToMainCam();
+  }
+
+  isRackDataLoaded(value){
+    _isRackDataLoaded(value);
   }
 
   showAlert(String message) {

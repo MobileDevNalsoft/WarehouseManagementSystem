@@ -11,13 +11,13 @@ import 'pages/3JS_with_flutter.dart';
 
 final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
 main() {
-
+init();
 WidgetsFlutterBinding.ensureInitialized();
 
   print('started');
   runApp(MultiBlocProvider(
     providers: [
-      BlocProvider(create: (_) => WarehouseInteractionBloc()),
+      BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt())),
     ],
     child: MaterialApp(
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),

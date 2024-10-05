@@ -55,6 +55,10 @@ dependencies:
   flutter_inappwebview: ^6.1.3
   js: ^0.7.1
   skeletonizer: ^1.4.2
+  model_viewer_plus: ^1.9.0
+  webview_flutter: ^4.9.0
+  webviewx_plus: ^0.5.0
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

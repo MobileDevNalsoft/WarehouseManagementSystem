@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
-import 'package:three_js/three_js.dart';
+import 'package:warehouse_3d/js_inter.dart';
 import 'package:warehouse_3d/models/activity_area_model.dart';
 import 'package:warehouse_3d/models/inspection_area_model.dart';
 import 'package:warehouse_3d/models/rack_model.dart';
@@ -18,21 +19,25 @@ part 'warehouse_interaction_state.dart';
 
 class WarehouseInteractionBloc
     extends Bloc<WarehouseInteractionEvent, WarehouseInteractionState> {
-  WarehouseInteractionBloc() : super(WarehouseInteractionState.initial()) {
-    on<SelectedRackOfIndex>(_onSelectedRackOfIndex);
-    on<SelectedID>(_onSelectedID);
+  JsInteropService? jsInteropService;
+  WarehouseInteractionBloc({this.jsInteropService}) : super(WarehouseInteractionState.initial()) {
     on<SelectedObject>(_onSelectedObject);
     on<GetRacksData>(_onGetRacksData);
     on<SelectedRack>(_onSelectedRack);
     on<SelectedBin>(_onSelectedBin);
-    on<SelectedArea>(_onSelectedArea);
+    on<GetStagingAreaData>(_onGetStagingAreaData);
+    on<GetActivityAreaData>(_onGetActivityAreaData);
+    on<GetReceivingAreaData>(_onGetReceivingAreaData);
+    on<GetInspectionAreaData>(_onGetInspectionAreaData);
   }
 
   void _onSelectedRack(
       SelectedRack event, Emitter<WarehouseInteractionState> emit) {
+    print('racks data on selected rack ${state.racksData}');
     emit(state.copyWith(
         selectedRack:
             state.racksData!.where((e) => e.rackID == event.rackID).first));
+    jsInteropService!.isRackDataLoaded(true);
   }
 
   void _onSelectedBin(
@@ -45,24 +50,26 @@ class WarehouseInteractionBloc
     print('selected bin ${state.selectedBin}');
   }
 
-  Future<void> _onSelectedArea(
-      SelectedArea event, Emitter<WarehouseInteractionState> emit) async {
-    if (event.areaName == 'stagingArea') {
+  Future<void> _onGetStagingAreaData(
+      GetStagingAreaData event, Emitter<WarehouseInteractionState> emit) async {
       emit(state.copyWith(getStagingAreaDataState: GetStagingAreaDataState.loading));
       await rootBundle.loadString("assets/jsons/staging_area.json").then(
         (value) {
           Log.d(value);
           emit(state.copyWith(
-              statingArea: StatingArea.fromJson(jsonDecode(value)),
+              stagingArea: StagingArea.fromJson(jsonDecode(value)),
               getStagingAreaDataState: GetStagingAreaDataState.success));
-          print('staging data ${state.statingArea}');
+          print('staging data ${state.stagingArea}');
         },
       ).onError(
         (error, stackTrace) {
           emit(state.copyWith(getStagingAreaDataState: GetStagingAreaDataState.failure));
         },
       );
-    } else if (event.areaName == 'activityArea') {
+  }
+
+  Future<void> _onGetActivityAreaData(
+      GetActivityAreaData event, Emitter<WarehouseInteractionState> emit) async {
       emit(state.copyWith(getActivityAreaDataState: GetActivityAreaDataState.loading));
       await rootBundle.loadString("assets/jsons/activity_area.json").then(
         (value) {
@@ -77,22 +84,29 @@ class WarehouseInteractionBloc
           emit(state.copyWith(getActivityAreaDataState: GetActivityAreaDataState.failure));
         },
       );
-    } else if (event.areaName == 'receivingArea') {
-      emit(state.copyWith(getReceivingAreaState: GetReceivingAreaDataState.loading));
+  }
+
+  Future<void> _onGetReceivingAreaData(
+      GetReceivingAreaData event, Emitter<WarehouseInteractionState> emit) async {
+      emit(state.copyWith(getReceivingAreaDataState: GetReceivingAreaDataState.loading));
       await rootBundle.loadString("assets/jsons/receiving_area.json").then(
         (value) {
           Log.d(value);
           emit(state.copyWith(
               receivingArea: ReceivingArea.fromJson(jsonDecode(value)),
-              getReceivingAreaState: GetReceivingAreaDataState.success));
+              getReceivingAreaDataState: GetReceivingAreaDataState.success));
           print('receiving data ${state.receivingArea}');
         },
       ).onError(
         (error, stackTrace) {
-          emit(state.copyWith(getReceivingAreaState: GetReceivingAreaDataState.failure));
+           print(error.toString());
+          emit(state.copyWith(getReceivingAreaDataState: GetReceivingAreaDataState.failure));
         },
       );
-    } else {
+  }
+
+  Future<void> _onGetInspectionAreaData(
+      GetInspectionAreaData event, Emitter<WarehouseInteractionState> emit) async {
       emit(state.copyWith(getInspectionAreaDataState: GetInspectionAreaDataState.loading));
       await rootBundle.loadString("assets/jsons/inspection_area.json").then(
         (value) {
@@ -107,41 +121,12 @@ class WarehouseInteractionBloc
           emit(state.copyWith(getInspectionAreaDataState: GetInspectionAreaDataState.failure));
         },
       );
-    }
-  }
-
-  void _onSelectedRackOfIndex(
-      SelectedRackOfIndex event, Emitter<WarehouseInteractionState> emit) {
-    emit(state.copyWith(index: event.index, rackID: event.rackID));
-  }
-
-  void _onSelectedID(
-      SelectedID event, Emitter<WarehouseInteractionState> emit) {
-    emit(state.copyWith(selectedID: event.ID));
-    if (event.ID.contains('rack')) {
-      emit(state.copyWith(
-          selectedRack: state.racksData!
-              .where((e) => e.rackID == state.selectedID)
-              .first));
-    } else {
-      print('selected rack ${state.selectedRack}');
-      emit(state.copyWith(
-          selectedBin: state.selectedRack!.bins!
-              .where((e) => e.binID == state.selectedID)
-              .first));
-      print('selected bin ${state.selectedBin}');
-    }
   }
 
   void _onSelectedObject(
       SelectedObject event, Emitter<WarehouseInteractionState> emit) {
     print('event ${event.dataFromJS}');
     emit(state.copyWith(dataFromJS: event.dataFromJS));
-    if (state.dataFromJS!.keys.first != 'object') {
-      if (state.getRacksDataState == GetRacksDataState.initial) {
-        add(GetRacksData());
-      }
-    }
   }
 
   Future<void> _onGetRacksData(

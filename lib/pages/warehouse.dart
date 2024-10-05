@@ -60,7 +60,7 @@ late WarehouseInteractionBloc _warehouseInteractionBloc;
                 children: [
                   InkWell(
                     onTap: (){
-                      _warehouseInteractionBloc.state.selectedZone="Storage Area 1";
+                      // _warehouseInteractionBloc.state.selectedZone="Storage Area 1";
                     },
                     child: Container(
                       
@@ -79,7 +79,7 @@ late WarehouseInteractionBloc _warehouseInteractionBloc;
                   ),
                   InkWell(
                     onTap: (){
-                         _warehouseInteractionBloc.state.selectedZone="Storage Area 2";
+                        //  _warehouseInteractionBloc.state.selectedZone="Storage Area 2";
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -97,7 +97,7 @@ late WarehouseInteractionBloc _warehouseInteractionBloc;
                   ),
                   InkWell(
                     onTap: (){
-                      _warehouseInteractionBloc.state.selectedZone="Storage Area 3";
+                      // _warehouseInteractionBloc.state.selectedZone="Storage Area 3";
                     },
                     child: Container(
                       alignment: Alignment.center,

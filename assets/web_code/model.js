@@ -2,13 +2,15 @@ import * as THREE from "three";
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/controls/OrbitControls.js";
 
-var container, camera, scene, controls, model = new THREE.Object3D(), cameraList = [], prevBinColor, prevBin, currentObject = new THREE.Object3D(), prevNav, port;
+var container, camera, scene, controls, model = new THREE.Object3D(), cameraList = [], prevBinColor, prevBin, currentObject = new THREE.Object3D(), prevNav, port, isRackDataLoaded = false;
 
 var main_cam;
 
 window.addEventListener('storage', (event) => {
     if (event.key === "switchToMainCam") {
         switchCamera(event.newValue);
+    }else if(event.key === "isRackDataLoaded"){
+        isRackDataLoaded = event.newValue;
     }
 });
 
@@ -318,7 +320,11 @@ function onMouseUp(e) {
             else if (targetObject.name.toString().includes('b') && prevNav.includes('rack')) {
                 changeColor(targetObject);
             } else {
+                if(prevBin){
+                    prevBin.material.color.copy(prevBinColor);
+                }
                 switchCamera('main');
+                prevNav = targetObject.name.toString();
             }
         }
     }
