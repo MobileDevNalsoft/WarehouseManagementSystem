@@ -1,22 +1,16 @@
 part of 'warehouse_interaction_bloc.dart';
 
-@immutable
-sealed class WarehouseInteractionEvent {}
-
-class SelectedRackOfIndex extends WarehouseInteractionEvent {
-  int index;
-  String rackID;
-  SelectedRackOfIndex({required this.index, required this.rackID});
-}
-
-class SelectedID extends WarehouseInteractionEvent {
-  String ID;
-  SelectedID({required this.ID});
+abstract class WarehouseInteractionEvent extends Equatable {
+  @override
+  List<Object> get props => [];
 }
 
 class SelectedObject extends WarehouseInteractionEvent {
-  Map<String, dynamic> dataFromJS;
+  final Map<String, dynamic> dataFromJS;
   SelectedObject({required this.dataFromJS});
+
+   @override
+  List<Object> get props => [dataFromJS];
 }
 
 class GetRacksData extends WarehouseInteractionEvent {
@@ -24,16 +18,49 @@ class GetRacksData extends WarehouseInteractionEvent {
 }
 
 class SelectedRack extends WarehouseInteractionEvent{
-  String rackID;
+  final String rackID;
   SelectedRack({required this.rackID});
+
+   @override
+  List<Object> get props => [rackID];
 }
 
 class SelectedBin extends WarehouseInteractionEvent{
-  String binID;
+  final String binID;
   SelectedBin({required this.binID});
+
+   @override
+  List<Object> get props => [binID];
 }
 
-class SelectedArea extends WarehouseInteractionEvent{
-  String areaName;
-  SelectedArea({required this.areaName});
+class GetStagingAreaData extends WarehouseInteractionEvent{
+  final String areaName;
+  GetStagingAreaData({required this.areaName});
+
+   @override
+  List<Object> get props => [areaName];
+}
+
+class GetReceivingAreaData extends WarehouseInteractionEvent{
+  final String areaName;
+  GetReceivingAreaData ({required this.areaName});
+
+   @override
+  List<Object> get props => [areaName];
+}
+
+class GetActivityAreaData extends WarehouseInteractionEvent{
+  final String areaName;
+  GetActivityAreaData({required this.areaName});
+
+   @override
+  List<Object> get props => [areaName];
+}
+
+class GetInspectionAreaData extends WarehouseInteractionEvent{
+  final String areaName;
+  GetInspectionAreaData({required this.areaName});
+
+   @override
+  List<Object> get props => [areaName];
 }

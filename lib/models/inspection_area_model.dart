@@ -1,7 +1,7 @@
 class InspectionArea{
   String? areaName;
   List<Material>? materials;
-  InspectionArea({this.areaName, this.materials});
+  InspectionArea({this.areaName, this.materials = const []});
 
   InspectionArea.fromJson(Map<String, dynamic> json){
     areaName = json['area_name'];

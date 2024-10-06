@@ -1,6 +1,6 @@
 {
   "area_name": "inspectionArea",
-  "material": [
+  "materials": [
       {
         "asn": "SHDEMODEMOWH100000161",
         "po": "PO1",

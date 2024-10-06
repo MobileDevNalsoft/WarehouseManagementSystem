@@ -1,7 +1,7 @@
 class ActivityArea{
   String? areaName;
   List<Material>? materials;
-  ActivityArea({this.areaName, this.materials});
+  ActivityArea({this.areaName, this.materials = const []});
 
   ActivityArea.fromJson(Map<String, dynamic> json){
     areaName = json['area_name'];
