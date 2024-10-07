@@ -4,8 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/js_inter.dart';
-import 'package:warehouse_3d/pages/custom_widget.dart/customs.dart';
+import 'package:warehouse_3d/js_interop_service/js_inter.dart';
+import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class StagingAreaDataSheet extends StatefulWidget {
   const StagingAreaDataSheet({super.key});
@@ -22,8 +22,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
     super.initState();
 
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    if (_warehouseInteractionBloc.state.getStagingAreaDataState ==
-        GetStagingAreaDataState.initial) {
+    if (_warehouseInteractionBloc.state.getStagingAreaDataState == GetStagingAreaDataState.initial) {
       _warehouseInteractionBloc.add(GetStagingAreaData(areaName: _warehouseInteractionBloc.state.dataFromJS!.values.first.toString()));
     }
   }
@@ -36,19 +35,40 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
       size: size,
       child: Column(
         children: [
-          Customs.SheetAppBar(size: size, title: 'Staging Area',
+          Customs.SheetAppBar(
+            size: size,
+            title: 'Staging Area',
           ),
-          Gap(size.height*0.02),
-          const Text('Materials', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16), textAlign: TextAlign.center,),
-          Gap(size.height*0.02),
+          Gap(size.height * 0.02),
+          const Text(
+            'Materials',
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+          Gap(size.height * 0.02),
           BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
               bool isEnabled = state.getStagingAreaDataState != GetStagingAreaDataState.success;
               return Skeletonizer(
-                enabled: isEnabled,
-                enableSwitchAnimation: true,
-                child: SizedBox(height: size.height*0.6, child: ListView.separated(itemBuilder: (context, index) => Customs.MapInfo(size: size, keys: ['Order Number', 'OB Load', 'Item', 'Quantity'], values: [isEnabled ? 'Order Number' : state.stagingArea!.materials![index].orderNumber!,isEnabled ?  'OB Load'  : state.stagingArea!.materials![index].obLoad!,isEnabled ?  'Item' : state.stagingArea!.materials![index].item!,isEnabled ?  'Quantity' : state.stagingArea!.materials![index].quantity!.toString()]), separatorBuilder: (context, index) => Gap(size.height*0.025), itemCount: isEnabled ? 8 : state.stagingArea!.materials!.length),)
-                );
+                  enabled: isEnabled,
+                  enableSwitchAnimation: true,
+                  child: SizedBox(
+                    height: size.height * 0.6,
+                    child: ListView.separated(
+                        itemBuilder: (context, index) => Customs.MapInfo(size: size, keys: [
+                              'Order Number',
+                              'OB Load',
+                              'Item',
+                              'Quantity'
+                            ], values: [
+                              isEnabled ? 'Order Number' : state.stagingArea!.materials![index].orderNumber!,
+                              isEnabled ? 'OB Load' : state.stagingArea!.materials![index].obLoad!,
+                              isEnabled ? 'Item' : state.stagingArea!.materials![index].item!,
+                              isEnabled ? 'Quantity' : state.stagingArea!.materials![index].quantity!.toString()
+                            ]),
+                        separatorBuilder: (context, index) => Gap(size.height * 0.025),
+                        itemCount: isEnabled ? 8 : state.stagingArea!.materials!.length),
+                  ));
             },
           )
         ],

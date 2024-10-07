@@ -1,8 +1,7 @@
-
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
-import 'package:warehouse_3d/js_inter.dart';
+import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 
 final getIt = GetIt.instance;
 

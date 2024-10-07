@@ -9,58 +9,56 @@ class SelectedObject extends WarehouseInteractionEvent {
   final Map<String, dynamic> dataFromJS;
   SelectedObject({required this.dataFromJS});
 
-   @override
+  @override
   List<Object> get props => [dataFromJS];
 }
 
-class GetRacksData extends WarehouseInteractionEvent {
+class GetRacksData extends WarehouseInteractionEvent {}
 
-}
-
-class SelectedRack extends WarehouseInteractionEvent{
+class SelectedRack extends WarehouseInteractionEvent {
   final String rackID;
   SelectedRack({required this.rackID});
 
-   @override
+  @override
   List<Object> get props => [rackID];
 }
 
-class SelectedBin extends WarehouseInteractionEvent{
+class SelectedBin extends WarehouseInteractionEvent {
   final String binID;
   SelectedBin({required this.binID});
 
-   @override
+  @override
   List<Object> get props => [binID];
 }
 
-class GetStagingAreaData extends WarehouseInteractionEvent{
+class GetStagingAreaData extends WarehouseInteractionEvent {
   final String areaName;
   GetStagingAreaData({required this.areaName});
 
-   @override
+  @override
   List<Object> get props => [areaName];
 }
 
-class GetReceivingAreaData extends WarehouseInteractionEvent{
+class GetReceivingAreaData extends WarehouseInteractionEvent {
   final String areaName;
-  GetReceivingAreaData ({required this.areaName});
+  GetReceivingAreaData({required this.areaName});
 
-   @override
+  @override
   List<Object> get props => [areaName];
 }
 
-class GetActivityAreaData extends WarehouseInteractionEvent{
+class GetActivityAreaData extends WarehouseInteractionEvent {
   final String areaName;
   GetActivityAreaData({required this.areaName});
 
-   @override
+  @override
   List<Object> get props => [areaName];
 }
 
-class GetInspectionAreaData extends WarehouseInteractionEvent{
+class GetInspectionAreaData extends WarehouseInteractionEvent {
   final String areaName;
   GetInspectionAreaData({required this.areaName});
 
-   @override
+  @override
   List<Object> get props => [areaName];
 }

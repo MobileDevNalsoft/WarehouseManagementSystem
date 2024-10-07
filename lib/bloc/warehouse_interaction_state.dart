@@ -10,35 +10,35 @@ enum GetReceivingAreaDataState { initial, loading, success, failure }
 
 enum GetInspectionAreaDataState { initial, loading, success, failure }
 
-final class WarehouseInteractionState extends Equatable{
+final class WarehouseInteractionState extends Equatable {
   WarehouseInteractionState(
-      {this.getRacksDataState,
-      this.racksData,
+      {this.racksData,
+      this.getRacksDataState,
       this.selectedRack,
       this.selectedBin,
-      this.dataFromJS,
-      this.receivingArea,
-      this.inspectionArea,
-      this.activityArea,
       this.stagingArea,
       this.getStagingAreaDataState,
+      this.activityArea,
       this.getActivityAreaDataState,
+      this.receivingArea,
       this.getReceivingAreaDataState,
-      this.getInspectionAreaDataState});
+      this.inspectionArea,
+      this.getInspectionAreaDataState,
+      this.dataFromJS});
 
+  List<Rack>? racksData;
+  GetRacksDataState? getRacksDataState;
   Rack? selectedRack;
   Bin? selectedBin;
-  ReceivingArea? receivingArea;
-  InspectionArea? inspectionArea;
-  ActivityArea? activityArea;
   StagingArea? stagingArea;
-  Map<String, dynamic>? dataFromJS;
-  GetRacksDataState? getRacksDataState;
   GetStagingAreaDataState? getStagingAreaDataState;
+  ActivityArea? activityArea;
   GetActivityAreaDataState? getActivityAreaDataState;
+  ReceivingArea? receivingArea;
   GetReceivingAreaDataState? getReceivingAreaDataState;
+  InspectionArea? inspectionArea;
   GetInspectionAreaDataState? getInspectionAreaDataState;
-  List<Rack>? racksData;
+  Map<String, dynamic>? dataFromJS;
 
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
@@ -50,37 +50,36 @@ final class WarehouseInteractionState extends Equatable{
         dataFromJS: const {"object": "null"});
   }
 
-  WarehouseInteractionState copyWith(
-      {GetRacksDataState? getRacksDataState,
-      GetStagingAreaDataState? getStagingAreaDataState,
-      GetActivityAreaDataState? getActivityAreaDataState,
-      GetReceivingAreaDataState? getReceivingAreaDataState,
-      GetInspectionAreaDataState? getInspectionAreaDataState,
-      List<Rack>? racksData,
-      Rack? selectedRack,
-      Map<String, dynamic>? dataFromJS,
-      Bin? selectedBin,
-      ReceivingArea? receivingArea,
-      InspectionArea? inspectionArea,
-      ActivityArea? activityArea,
-      StagingArea? stagingArea}) {
+  WarehouseInteractionState copyWith({
+    List<Rack>? racksData,
+    GetRacksDataState? getRacksDataState,
+    Rack? selectedRack,
+    Bin? selectedBin,
+    StagingArea? stagingArea,
+    GetStagingAreaDataState? getStagingAreaDataState,
+    ActivityArea? activityArea,
+    GetActivityAreaDataState? getActivityAreaDataState,
+    ReceivingArea? receivingArea,
+    GetReceivingAreaDataState? getReceivingAreaDataState,
+    InspectionArea? inspectionArea,
+    GetInspectionAreaDataState? getInspectionAreaDataState,
+    Map<String, dynamic>? dataFromJS,
+  }) {
     return WarehouseInteractionState(
-        getRacksDataState: getRacksDataState ?? this.getRacksDataState,
-        getStagingAreaDataState:
-            getStagingAreaDataState ?? this.getStagingAreaDataState,
-        getActivityAreaDataState:
-            getActivityAreaDataState ?? this.getActivityAreaDataState,
-        getReceivingAreaDataState: getReceivingAreaDataState ?? this.getReceivingAreaDataState,
-        getInspectionAreaDataState:
-            getInspectionAreaDataState ?? this.getInspectionAreaDataState,
-        racksData: racksData ?? this.racksData,
-        selectedRack: selectedRack ?? this.selectedRack,
-        dataFromJS: dataFromJS ?? this.dataFromJS,
-        selectedBin: selectedBin ?? this.selectedBin,
-        receivingArea: receivingArea ?? this.receivingArea,
-        inspectionArea: inspectionArea ?? this.inspectionArea,
-        activityArea: activityArea ?? this.activityArea,
-        stagingArea: stagingArea ?? this.stagingArea);
+      racksData: racksData ?? this.racksData,
+      getRacksDataState: getRacksDataState ?? this.getRacksDataState,
+      selectedRack: selectedRack ?? this.selectedRack,
+      selectedBin: selectedBin ?? this.selectedBin,
+      stagingArea: stagingArea ?? this.stagingArea,
+      getStagingAreaDataState: getStagingAreaDataState ?? this.getStagingAreaDataState,
+      activityArea: activityArea ?? this.activityArea,
+      getActivityAreaDataState: getActivityAreaDataState ?? this.getActivityAreaDataState,
+      receivingArea: receivingArea ?? this.receivingArea,
+      getReceivingAreaDataState: getReceivingAreaDataState ?? this.getReceivingAreaDataState,
+      inspectionArea: inspectionArea ?? this.inspectionArea,
+      getInspectionAreaDataState: getInspectionAreaDataState ?? this.getInspectionAreaDataState,
+      dataFromJS: dataFromJS ?? this.dataFromJS,
+    );
   }
 
   @override
