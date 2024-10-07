@@ -31,16 +31,11 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Customs.SheetBody(
+    return Customs.DataSheet(
       size: size,
-      child: Column(
-        children: [
-          Customs.SheetAppBar(
-            size: size,
-            title: 'Receiving Area',
-          ),
-          Gap(size.height * 0.02),
-          const Text(
+      title: 'Receiving Area',
+      children: [
+        const Text(
             'Materials',
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
             textAlign: TextAlign.center,
@@ -71,8 +66,7 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
                   ));
             },
           )
-        ],
-      ),
+      ]
     );
   }
 }

@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class RackDataSheet extends StatefulWidget {
@@ -14,8 +12,9 @@ class RackDataSheet extends StatefulWidget {
   State<RackDataSheet> createState() => _RackDataSheetState();
 }
 
-class _RackDataSheetState extends State<RackDataSheet> {
+class _RackDataSheetState extends State<RackDataSheet> with TickerProviderStateMixin{
   late WarehouseInteractionBloc _warehouseInteractionBloc;
+
 
   @override
   void initState() {
@@ -31,15 +30,10 @@ class _RackDataSheetState extends State<RackDataSheet> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Customs.SheetBody(
+    return Customs.DataSheet(
       size: size,
-      child: Column(
-        children: [
-          Customs.SheetAppBar(
-            size: size,
-            title: 'Storage Rack',
-          ),
-          Gap(size.height * 0.02),
+      title: 'Storage Rack',
+      children: [
           BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(
             listenWhen: (previous, current) => previous.getRacksDataState != current.getRacksDataState,
             listener: (context, state) {
@@ -68,7 +62,6 @@ class _RackDataSheetState extends State<RackDataSheet> {
             },
           )
         ],
-      ),
     );
   }
 }

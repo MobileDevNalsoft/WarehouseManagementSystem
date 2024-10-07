@@ -5,9 +5,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
-import '../../inits/init.dart';
-import '../../js_interop_service/js_inter.dart';
-
 class BinDataSheet extends StatefulWidget {
   const BinDataSheet({super.key});
 
@@ -21,7 +18,6 @@ class _BinDataSheetState extends State<BinDataSheet> {
   @override
   void initState() {
     super.initState();
-
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _warehouseInteractionBloc.add(SelectedBin(binID: _warehouseInteractionBloc.state.dataFromJS!['bin']));
   }
@@ -30,47 +26,51 @@ class _BinDataSheetState extends State<BinDataSheet> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Customs.SheetBody(
-      size: size,
-      child: Column(
-        children: [
-          Customs.SheetAppBar(size: size, title: 'Storage Bin'),
-          Gap(size.height * 0.02),
-          BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-            builder: (context, state) {
-              bool isEnabled = state.selectedBin == null;
-              return Skeletonizer(
-                enabled: isEnabled,
-                child: Column(
-                  children: [
-                    Text(
-                      isEnabled ? 'Bin ID' : state.selectedBin!.binID!,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    Gap(size.height * 0.02),
-                    SizedBox(
-                      height: size.height * 0.6,
-                      child: ListView.separated(
-                        itemCount: isEnabled ? 8 : state.selectedBin!.items!.length,
-                        itemBuilder: (context, index) => isEnabled
-                            ? SizedBox(
-                                width: size.width * 0.1,
-                                height: size.height * 0.05,
-                              )
-                            : Customs.MapInfo(
-                                size: size,
-                                keys: ['Item Name', 'Quantity'],
-                                values: [state.selectedBin!.items![index].itemName!, state.selectedBin!.items![index].quantity!.toString()]),
-                        separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                      ),
-                    )
-                  ],
+    return Customs.DataSheet(
+      size: size, 
+      title: 'Storage Bin', children: [
+      BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+        builder: (context, state) {
+          bool isEnabled = false;
+          // state.selectedBin == null;
+          return Skeletonizer(
+            enabled: isEnabled,
+            child: Column(
+              children: [
+                Text(
+                  isEnabled ? 'Bin ID' : state.dataFromJS!.values.first,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
-              );
-            },
-          )
-        ],
+                Gap(size.height * 0.02),
+                if (context.watch<WarehouseInteractionBloc>().state.selectedBin != null)
+                  SizedBox(
+                    height: size.height * 0.6,
+                    child: ListView.separated(
+                      itemCount: isEnabled ? 8 : state.selectedBin!.items!.length,
+                      itemBuilder: (context, index) => isEnabled
+                          ? SizedBox(
+                              width: size.width * 0.1,
+                              height: size.height * 0.05,
+                            )
+                          : Customs.MapInfo(
+                              size: size,
+                              keys: ['Item Name', 'Quantity'],
+                              values: [state.selectedBin!.items![index].itemName!, state.selectedBin!.items![index].quantity!.toString()]),
+                      separatorBuilder: (context, index) => Gap(size.height * 0.05),
+                    ),
+                  ),
+                if (context.watch<WarehouseInteractionBloc>().state.selectedBin == null)
+                  SizedBox(
+                    height: size.height * 0.2,
+                    child: const Center(
+                      child: Text('This Bin is Empty'),
+                    ),
+                  )
+              ],
+            ),
+          );
+        },
       ),
-    );
+    ]);
   }
 }

@@ -29,15 +29,13 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
   }
 
   void _onSelectedRack(SelectedRack event, Emitter<WarehouseInteractionState> emit) {
-    print('racks data on selected rack ${state.racksData}');
     emit(state.copyWith(selectedRack: state.racksData!.where((e) => e.rackID == event.rackID).first));
     jsInteropService!.isRackDataLoaded(true);
   }
 
   void _onSelectedBin(SelectedBin event, Emitter<WarehouseInteractionState> emit) {
-    print('selected rack in selected bin ${state.selectedRack}');
-    emit(state.copyWith(selectedBin: state.selectedRack!.bins!.where((e) => e.binID == event.binID).first));
-    print('selected bin ${state.selectedBin}');
+    List<Bin>? selectedBins = state.selectedRack!.bins!.where((e) => e.binID == event.binID).toList();
+    emit(state.copyWith(selectedBin: selectedBins.isNotEmpty ? selectedBins.first : null));
   }
 
   Future<void> _onGetStagingAreaData(GetStagingAreaData event, Emitter<WarehouseInteractionState> emit) async {

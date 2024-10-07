@@ -31,18 +31,13 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Customs.SheetBody(
+    return Customs.DataSheet(
       size: size,
-      child: Column(
-        children: [
-          Customs.SheetAppBar(
-            size: size,
-            title: 'Inspection Area',
-          ),
-          Gap(size.height * 0.02),
-          const Text(
+      title: 'Inspection Area',
+      children: [
+        const Text(
             'Materials',
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             textAlign: TextAlign.center,
           ),
           Gap(size.height * 0.02),
@@ -73,8 +68,7 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
                   ));
             },
           )
-        ],
-      ),
+      ]
     );
   }
 }

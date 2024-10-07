@@ -69,7 +69,7 @@ final class WarehouseInteractionState extends Equatable {
       racksData: racksData ?? this.racksData,
       getRacksDataState: getRacksDataState ?? this.getRacksDataState,
       selectedRack: selectedRack ?? this.selectedRack,
-      selectedBin: selectedBin ?? this.selectedBin,
+      selectedBin: selectedBin,
       stagingArea: stagingArea ?? this.stagingArea,
       getStagingAreaDataState: getStagingAreaDataState ?? this.getStagingAreaDataState,
       activityArea: activityArea ?? this.activityArea,

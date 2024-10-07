@@ -20,18 +20,33 @@ class ThreeJsWebView extends StatefulWidget {
   State<ThreeJsWebView> createState() => _ThreeJsWebViewState();
 }
 
-class _ThreeJsWebViewState extends State<ThreeJsWebView> {
+class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStateMixin {
   final jsIteropService = JsInteropService();
   late InAppWebViewController webViewController;
   late WarehouseInteractionBloc _warehouseInteractionBloc;
-  WebMessageChannel? webMessageChannel;
-  WebMessagePort? port1;
-  WebMessagePort? port2;
+
+  // for animation
+  late AnimationController animationController;
+  late Animation<double> widthAnimation;
+  late Animation<double> positionAnimation;
 
   @override
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+
+    animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
+    widthAnimation = Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    positionAnimation = Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+
+    // Listen for changes in the state
+    _warehouseInteractionBloc.stream.listen((state) {
+      if (state.dataFromJS!.keys.first != 'object') {
+        animationController.forward(); // Start animation when data sheet is visible
+      } else{
+        animationController.reverse(); // Reverse when not visible
+      }
+    });
   }
 
   @override
@@ -44,35 +59,45 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first != 'object' ? size.width * 0.78 : size.width,
-              child: InAppWebView(
-                initialFile: 'assets/web_code/model.html',
-                onConsoleMessage: (controller, consoleMessage) {
-                  try {
-                    if (consoleMessage.messageLevel.toNativeValue() == 1) {
-                      print('console message ${consoleMessage.message}');
-                      Map<String, dynamic> message = jsonDecode(consoleMessage.message);
-                      _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message));
-                    }
-                  } catch (e) {
-                    print("error $e");
-                  }
-                },
-                onWebViewCreated: (controller) {
-                  webViewController = controller;
-                },
-                onLoadStop: (controller, url) async {},
-              ),
+            child: AnimatedBuilder(
+              animation: widthAnimation,
+              builder: (context, child) {
+                return SizedBox(
+                  width: size.width*widthAnimation.value,
+                  child: InAppWebView(
+                    initialFile: 'assets/web_code/model.html',
+                    onConsoleMessage: (controller, consoleMessage) {
+                      try {
+                        if (consoleMessage.messageLevel.toNativeValue() == 1) {
+                          print('console message ${consoleMessage.message}');
+                          Map<String, dynamic> message = jsonDecode(consoleMessage.message);
+                          _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message));
+                        }
+                      } catch (e) {
+                        print("error $e");
+                      }
+                    },
+                    onWebViewCreated: (controller) {
+                      webViewController = controller;
+                    },
+                    onLoadStop: (controller, url) async {},
+                  ),
+                );
+              }
             ),
           ),
-          if (context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first != 'object')
-            Align(
-              alignment: Alignment.centerRight,
-              child: getDataSheetFor(
-                      _warehouseInteractionBloc.state.dataFromJS!.keys.first, _warehouseInteractionBloc.state.dataFromJS!.values.first.toString()) ??
-                  SizedBox(),
-            ),
+          AnimatedBuilder(
+            animation: positionAnimation,
+            builder: (context, child) {
+              return Positioned(
+                right: positionAnimation.value,
+                child: 
+                getDataSheetFor(
+                        context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first, context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) ??
+                    const SizedBox(),
+              );
+            }
+          ),
         ],
       ),
     );
@@ -81,19 +106,19 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> {
   Widget? getDataSheetFor(String objectName, String objectValue) {
     switch (objectName) {
       case 'rack':
-        return RackDataSheet();
+        return const RackDataSheet();
       case 'bin':
-        return BinDataSheet();
+        return const BinDataSheet();
       case 'area':
         switch (objectValue) {
           case 'stagingArea':
-            return StagingAreaDataSheet();
+            return const StagingAreaDataSheet();
           case 'activityArea':
-            return ActivityAreaDataSheet();
+            return const ActivityAreaDataSheet();
           case 'receivingArea':
-            return ReceivingAreaDataSheet();
+            return const ReceivingAreaDataSheet();
           case 'inspectionArea':
-            return InspectionAreaDataSheet();
+            return const InspectionAreaDataSheet();
         }
     }
   }

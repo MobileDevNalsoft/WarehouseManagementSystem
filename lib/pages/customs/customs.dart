@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:warehouse_3d/inits/init.dart';
+import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 
 class Customs {
-  static Widget SheetBody({required Size size, Widget? child}) {
+  
+  static Widget DataSheet({required Size size, required String title,required List<Widget> children}) {
     return Container(
       height: size.height,
-      width: size.width * 0.26,
+      width: size.width * 0.22,
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -13,27 +16,29 @@ class Customs {
             bottomLeft: Radius.circular(20),
           ),
           border: Border(left: BorderSide(), top: BorderSide(), bottom: BorderSide())),
-      child: child,
-    );
-  }
-
-  static Widget SheetAppBar({required Size size, required String title}) {
-    return Container(
-      height: size.height * 0.08,
-      width: size.width * 0.18,
-      margin: EdgeInsets.symmetric(vertical: size.height * 0.005),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: Color.fromRGBO(92, 63, 182, 1), borderRadius: BorderRadius.all(Radius.circular(20))),
-      child: Text(
-        title,
-        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+      child: Column(
+        children: [
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [IconButton(onPressed: () => getIt<JsInteropService>().switchToMainCam(), icon: Icon(Icons.close_rounded))],),
+          Container(
+            height: size.height * 0.06,
+            width: size.width * 0.12,
+            margin: EdgeInsets.symmetric(vertical: size.height * 0.005),
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(color: Color.fromRGBO(92, 63, 182, 1), borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: Text(
+              title,
+              style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+          ),
+          Gap(size.height * 0.02),
+          ...children
+        ],
       ),
     );
   }
 
   static Widget MapInfo({required Size size, required List<String> keys, required List<String> values}) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Gap(size.width * 0.025),
         Column(
@@ -46,7 +51,7 @@ class Customs {
         Column(
             children: List.generate(
           keys.length * 2 - 1,
-          (index) => index % 2 == 0 ? Text(':') : Gap(size.height * 0.02),
+          (index) => index % 2 == 0 ? const Text(':') : Gap(size.height * 0.02),
         )),
         Gap(size.width * 0.01),
         Column(

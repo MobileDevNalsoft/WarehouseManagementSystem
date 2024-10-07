@@ -15,7 +15,7 @@ window.addEventListener('storage', (event) => {
 });
 
 // we use WebGL renderer for rendering 3d model efficiently
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true, preserveDrawingBuffer: true,})
 renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2))
 //  This line sets the pixel ratio for the renderer based on the device's pixel density.
 renderer.outputEncoding = THREE.sRGBEncoding
@@ -40,6 +40,7 @@ function init() {
  
     scene = new THREE.Scene();
 
+    scene.background = new THREE.Color(0xcccccc); // Set your desired background
 
     const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
     const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x686868 });
@@ -49,7 +50,7 @@ function init() {
 
 
     const Loader = new GLTFLoader();
-    Loader.load('../3d_models/warehouse_0347.glb', function (gltf) {
+    Loader.load('../3d_models/warehouse_1020.glb', function (gltf) {
  
         model = gltf.scene;
 
@@ -60,7 +61,6 @@ function init() {
         // console.log(dumpObject(model).join('\n'));
 
         createNewCamera(main_cam);
-
 
         scene.add(model);
 
@@ -116,7 +116,7 @@ function createNewCamera(importedCamera) {
     const fov = importedCamera.fov; // Field of view
     const aspect = window.innerWidth / window.innerHeight; // Aspect ratio
     const near = importedCamera.near; // Near clipping plane
-    const far = importedCamera.far; // Far clipping plane
+    const far = 2000; // Far clipping plane
 
     // Create a new Perspective Camera
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
@@ -130,25 +130,25 @@ function createNewCamera(importedCamera) {
 
     // Set up OrbitControls with the new camera
     controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // Enable smooth movement
-    controls.dampingFactor = 0.25;
+    // controls.enableDamping = true; // Enable smooth movement
+    // controls.dampingFactor = 0.25;
     controls.zoomSpeed = 2;
     controls.panSpeed = 2;
     controls.screenSpacePanning = false;
 
     // limiting vertical rotation around x axis
     controls.minPolarAngle = 0;
-    controls.maxPolarAngle = Math.PI / 3;
+    controls.maxPolarAngle = Math.PI / 2;
 
     // limiting horizontal rotation around y axis
     controls.minAzimuthAngle = -Math.PI;
     controls.maxAzimuthAngle = Math.PI;
 
     // limiting zoom out
-    controls.maxDistance = 500;
+    controls.maxDistance = 1500;
 
-    var minPan = new THREE.Vector3(- 100, - 100, - 100);
-    var maxPan = new THREE.Vector3(100, 100, 100);
+    var minPan = new THREE.Vector3(- 200, - 200, - 200);
+    var maxPan = new THREE.Vector3(200, 200, 200);
 
     // Function to clamp target position
     function clampTarget() {
@@ -315,10 +315,12 @@ function onMouseUp(e) {
                     console.log('{"area":"'+ targetObject.name.toString().split('_')[0] +'"}');
                 }
                 switchCamera(targetObject.name.toString());
+                window.localStorage.setItem("switchToMainCam", "null")
                 prevNav = targetObject.name.toString();
             }
             else if (targetObject.name.toString().includes('b') && prevNav.includes('rack')) {
                 changeColor(targetObject);
+                window.localStorage.setItem("switchToMainCam", "null")
             } else {
                 if(prevBin){
                     prevBin.material.color.copy(prevBinColor);
@@ -333,9 +335,9 @@ function onMouseUp(e) {
 
 // for responsiveness
 function onWindowResize() {
+    renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 window.addEventListener('mousemove', onMouseMove); // triggered when mouse pointer is moved.
