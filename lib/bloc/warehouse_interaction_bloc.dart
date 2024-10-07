@@ -148,4 +148,10 @@ class WarehouseInteractionBloc
       },
     );
   }
+  
+  void _onSelectedObject(SelectedObject event, Emitter<WarehouseInteractionState> emit) {
+    
+    emit(state.copyWith(object: event.object));
+  }
+  
 }
