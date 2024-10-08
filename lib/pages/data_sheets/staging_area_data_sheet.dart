@@ -32,6 +32,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
     Size size = MediaQuery.of(context).size;
 
     return Customs.DataSheet(
+      context: context,
       size: size,
       title: 'Staging Area',
       children: [

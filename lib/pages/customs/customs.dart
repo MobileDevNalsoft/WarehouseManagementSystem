@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 
 class Customs {
   
-  static Widget DataSheet({required Size size, required String title,required List<Widget> children}) {
+  static Widget DataSheet({required Size size, required String title,required List<Widget> children,controller,required BuildContext context}) {
     return Container(
       height: size.height,
       width: size.width * 0.22,

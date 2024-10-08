@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:touchable/touchable.dart';
 import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
+import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/bin_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
@@ -28,6 +31,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   late AnimationController animationController;
   late Animation<double> widthAnimation;
   late Animation<double> positionAnimation;
+  final StreamController<String?> _storageStreamController = StreamController<String?>();
+  // late Stream<String> localStorageStream;
+  late StreamSubscription<String>  _subscription;
+
 
   @override
   void initState() {
@@ -35,23 +42,27 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
 
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
-    widthAnimation = Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-    positionAnimation = Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-
+    widthAnimation =
+        Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    positionAnimation =
+        Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
     // Listen for changes in the state
     _warehouseInteractionBloc.stream.listen((state) {
       if (state.dataFromJS!.keys.first != 'object') {
         animationController.forward(); // Start animation when data sheet is visible
-      } else{
+      } else {
         animationController.reverse(); // Reverse when not visible
       }
     });
+    _storageStreamController.onListen = () {
+      print("messageFromJS");
+    };
   }
+
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       
       body: Stack(
@@ -78,8 +89,25 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                       }
                     },
                     onWebViewCreated: (controller) async {
-                      webViewController = controller;
-                    },
+                          _warehouseInteractionBloc.state.inAppWebViewController=controller;
+                         
+                          Timer.periodic(Duration(milliseconds: 500), (timer) async{
+                            _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value){
+                              value.forEach((e){print(e);});
+                            });
+                            String? rack =  await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"rack");
+                            String? area = await  _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"area");
+                            
+                            if((rack??"").contains("rack")){
+                            _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"rack":rack}));
+                            }
+                            else if((area??"").contains("area")){
+                              _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area":area}));
+                            }
+                          
+                          },);
+                         
+                        },
                     onLoadStop: (controller, url) async {},
                   ),
                 );
@@ -91,7 +119,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             builder: (context, child) {
               return Positioned(
                 right: positionAnimation.value,
-                child: 
+                child:
                 getDataSheetFor(
                         context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first, context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) ??
                     const SizedBox(),
@@ -103,12 +131,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     );
   }
 
-  Widget? getDataSheetFor(String objectName, String objectValue) {
+  Widget? getDataSheetFor(String objectName, String objectValue,) {
     switch (objectName) {
       case 'rack':
         return const RackDataSheet();
       case 'bin':
-        return const BinDataSheet();
+        return const BinDataSheet( );
       case 'area':
         switch (objectValue) {
           case 'stagingArea':

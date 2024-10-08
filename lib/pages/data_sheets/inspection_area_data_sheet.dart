@@ -32,6 +32,7 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
     Size size = MediaQuery.of(context).size;
 
     return Customs.DataSheet(
+      context: context,
       size: size,
       title: 'Inspection Area',
       children: [

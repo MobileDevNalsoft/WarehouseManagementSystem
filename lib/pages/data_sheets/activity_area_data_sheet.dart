@@ -32,6 +32,7 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
     Size size = MediaQuery.of(context).size;
 
     return Customs.DataSheet(
+      context: context,
       size: size,
       title: 'Activity Area',
       children: [
