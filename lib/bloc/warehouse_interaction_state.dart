@@ -24,7 +24,8 @@ final class WarehouseInteractionState extends Equatable {
       this.getReceivingAreaDataState,
       this.inspectionArea,
       this.getInspectionAreaDataState,
-      this.dataFromJS});
+      this.dataFromJS,
+      this.inAppWebViewController});
 
   List<Rack>? racksData;
   GetRacksDataState? getRacksDataState;
@@ -39,6 +40,7 @@ final class WarehouseInteractionState extends Equatable {
   InspectionArea? inspectionArea;
   GetInspectionAreaDataState? getInspectionAreaDataState;
   Map<String, dynamic>? dataFromJS;
+  InAppWebViewController? inAppWebViewController;
 
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
@@ -64,6 +66,7 @@ final class WarehouseInteractionState extends Equatable {
     InspectionArea? inspectionArea,
     GetInspectionAreaDataState? getInspectionAreaDataState,
     Map<String, dynamic>? dataFromJS,
+    InAppWebViewController? inAppWebViewController
   }) {
     return WarehouseInteractionState(
       racksData: racksData ?? this.racksData,
@@ -79,6 +82,7 @@ final class WarehouseInteractionState extends Equatable {
       inspectionArea: inspectionArea ?? this.inspectionArea,
       getInspectionAreaDataState: getInspectionAreaDataState ?? this.getInspectionAreaDataState,
       dataFromJS: dataFromJS ?? this.dataFromJS,
+      inAppWebViewController: inAppWebViewController?? this.inAppWebViewController
     );
   }
 
