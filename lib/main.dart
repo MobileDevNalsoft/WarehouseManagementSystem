@@ -4,11 +4,12 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 
-import 'pages/three_js/three_js.dart';
+import 'navigations/navigator_service.dart';
+import 'navigations/route_generator.dart';
 
 final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
-main() {
-  init();
+main() async {
+  await init();
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MultiBlocProvider(
@@ -16,8 +17,38 @@ main() {
       BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt())),
     ],
     child: MaterialApp(
+        navigatorKey: getIt<NavigatorService>().navigatorkey,
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        home: const ThreeJsWebView()),
+        initialRoute: '/home',
+        onGenerateRoute: RouteGenerator.generateRoute,
+        navigatorObservers: [MyNavigationObserver()],
+        ),
   ));
+}
+
+class MyNavigationObserver extends NavigatorObserver {
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    super.didPush(route, previousRoute);
+    print('Pushed Route: ${route.settings.name}');
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    super.didPop(route, previousRoute);
+    print('Popped Route: ${route.settings.name}');
+  }
+
+  @override
+  void didRemove(Route route, Route? previousRoute) {
+    super.didRemove(route, previousRoute);
+    print('Removed Route: ${route.settings.name}');
+  }
+
+  @override
+  void didReplace({Route? newRoute, Route? oldRoute}) {
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    print("newRoute:  ${newRoute!.settings.name} oldRoute: ${oldRoute!.settings.name}");
+  }
 }

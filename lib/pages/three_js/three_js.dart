@@ -10,7 +10,6 @@ import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/rack_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/staging_area_data_sheet.dart';
-
 import '../../js_interop_service/js_inter.dart';
 
 class ThreeJsWebView extends StatefulWidget {
@@ -54,6 +53,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      
       body: Stack(
         alignment: Alignment.center,
         children: [
@@ -77,7 +77,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         print("error $e");
                       }
                     },
-                    onWebViewCreated: (controller) {
+                    onWebViewCreated: (controller) async {
                       webViewController = controller;
                     },
                     onLoadStop: (controller, url) async {},
@@ -97,7 +97,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     const SizedBox(),
               );
             }
-          ),
+          )
         ],
       ),
     );

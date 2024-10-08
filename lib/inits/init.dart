@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
+
+import '../navigations/navigator_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -16,8 +19,8 @@ Future<void> init() async {
   //   () => Repository(api: getIt()),
   // );
 
-  //Navigator Service
-  // getIt.registerLazySingleton<NavigatorService>(() => NavigatorService());
+  // Navigator Service
+  getIt.registerLazySingleton<NavigatorService>(() => NavigatorService());
 
   //js interop service
   getIt.registerFactory(() => JsInteropService());

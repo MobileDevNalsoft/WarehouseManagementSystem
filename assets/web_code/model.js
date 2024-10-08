@@ -6,6 +6,8 @@ var container, camera, scene, controls, model = new THREE.Object3D(), cameraList
 
 var main_cam;
 
+window.localStorage.setItem("switchToMainCam", "null")
+
 window.addEventListener('storage', (event) => {
     if (event.key === "switchToMainCam") {
         switchCamera(event.newValue);
@@ -42,7 +44,7 @@ function init() {
 
     scene.background = new THREE.Color(0xcccccc); // Set your desired background
 
-    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const groundGeometry = new THREE.PlaneGeometry(600, 600);
     const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x686868 });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2; // Rotate to horizontal
@@ -50,7 +52,7 @@ function init() {
 
 
     const Loader = new GLTFLoader();
-    Loader.load('../3d_models/warehouse_1020.glb', function (gltf) {
+    Loader.load('../3d_models/warehouse_1723.glb', function (gltf) {
  
         model = gltf.scene;
 
@@ -116,7 +118,7 @@ function createNewCamera(importedCamera) {
     const fov = importedCamera.fov; // Field of view
     const aspect = window.innerWidth / window.innerHeight; // Aspect ratio
     const near = importedCamera.near; // Near clipping plane
-    const far = 2000; // Far clipping plane
+    const far = 3000; // Far clipping plane
 
     // Create a new Perspective Camera
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
@@ -130,8 +132,8 @@ function createNewCamera(importedCamera) {
 
     // Set up OrbitControls with the new camera
     controls = new OrbitControls(camera, renderer.domElement);
-    // controls.enableDamping = true; // Enable smooth movement
-    // controls.dampingFactor = 0.25;
+    controls.enableDamping = true; // Enable smooth movement
+    controls.dampingFactor = 0.25;
     controls.zoomSpeed = 2;
     controls.panSpeed = 2;
     controls.screenSpacePanning = false;
