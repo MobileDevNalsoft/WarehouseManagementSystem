@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/loaders/GLTFLoader.js';
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js";
 
 var container, camera, scene, controls, model = new THREE.Object3D(), cameraList = [], prevBinColor, prevBin, currentObject = new THREE.Object3D(), prevNav, port, isRackDataLoaded = false;
 
@@ -11,49 +11,50 @@ window.localStorage.setItem("switchToMainCam", "null")
 window.addEventListener('storage', (event) => {
     if (event.key === "switchToMainCam") {
         switchCamera(event.newValue);
-    }else if(event.key === "isRackDataLoaded"){
+    } else if (event.key === "isRackDataLoaded") {
         isRackDataLoaded = event.newValue;
     }
 });
 
 // we use WebGL renderer for rendering 3d model efficiently
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true, preserveDrawingBuffer: true,})
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true, preserveDrawingBuffer: true, })
 renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2))
 //  This line sets the pixel ratio for the renderer based on the device's pixel density.
-renderer.outputEncoding = THREE.sRGBEncoding
+// renderer.outputEncoding = THREE.sRGBEncoding
 // This line specifies how colors are encoded when rendered to the screen.
- 
+
 // we use raycasting to add hovering or onclick functionality to 3d model.
 const raycaster = new THREE.Raycaster();
- 
+
 // need mouse coordinates for raycasting.
 const mouse = new THREE.Vector2();
 const lastPos = new THREE.Vector2();
 
+// PMREM Generator for improved environment lighting
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+pmremGenerator.compileEquirectangularShader();
+
 init();
- 
+
 function init() {
- 
- 
+
+
     container = document.createElement('div');
     // creating a container section(division) on our html page(not yet visible).
     document.body.appendChild(container);
     // assigning div to document's visible structure i.e. body.
- 
+
     scene = new THREE.Scene();
 
     scene.background = new THREE.Color(0xcccccc); // Set your desired background
 
-    const groundGeometry = new THREE.PlaneGeometry(600, 600);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x686868 });
-    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-    ground.rotation.x = -Math.PI / 2; // Rotate to horizontal
-    scene.add(ground);
-
 
     const Loader = new GLTFLoader();
-    Loader.load('../3d_models/warehouse_1723.glb', function (gltf) {
- 
+
+    // Configure the loader to load textures
+    Loader.loadTexture = true;
+    Loader.load('../3d_models/model_with_textures.glb', function (gltf) {
+
         model = gltf.scene;
 
         cameraList = gltf.cameras;
@@ -66,36 +67,66 @@ function init() {
 
         scene.add(model);
 
+    //     const textureLoader = new THREE.TextureLoader();
+    //   let texture = textureLoader.load('../images/wall.jpg'); // texture_A and B to change
+    //   texture.encoding = THREE.sRGBEncoding;
+    //   scene.getObjectByName('walls').material.map = texture;
+
+        model.traverse((child) => {
+            if (child.isMesh) {
+                const material = child.material;
+
+                // If the material has a map (texture), set encoding and update flag
+                if (material.map) {
+                    // material.map.encoding = THREE.sRGBEncoding;
+                    material.map.minFilter = THREE.LinearFilter;
+                    material.map.magFilter = THREE.LinearFilter;
+                    material.needsUpdate = true;
+                }
+
+                // Other map types if they exist (normal, roughness, etc.)
+                if (material.emissiveMap) {
+                    // material.emissiveMap.encoding = THREE.sRGBEncoding;
+                }
+                if (material.roughnessMap) {
+                    // material.roughnessMap.encoding = THREE.sRGBEncoding;
+                }
+                if (material.metalnessMap) {
+                    // material.metalnessMap.encoding = THREE.sRGBEncoding;
+                }
+            }
+        });
+
         currentObject = model;
 
-        scene.getObjectByName('r1rb11004').material.color.set(0xff0000);
+        // scene.getObjectByName('r1rb11004').material.color.set(0xff0000);
 
         scene.updateMatrixWorld(true);
 
 
         // Add ambient light
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        ambientLight.castShadow  = true// Soft white light
+        ambientLight.castShadow = false// Soft white light
         scene.add(ambientLight);
- 
-        // Add directional light
+
+        // // Add directional light
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
-        directionalLight.position.set(0, 1, 1).normalize(); // Position the light
+        directionalLight.position.set(5, 5, 5); // Position the light
         scene.add(directionalLight);
- 
+
         animate();
     }, undefined, function (error) {
         console.error(error);
     });
- 
+
     renderer.setSize(window.innerWidth, window.innerHeight);
- 
+
     container.appendChild(renderer.domElement);
- 
- 
+
+
     window.requestAnimationFrame(animate);
 }
- 
+
 function animate() {
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
@@ -270,30 +301,30 @@ function onMouseMove(e) {
     // regularly updating the position of mouse pointer when it is moved on rendered window.
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
-    if (e.button === 0) {
-        raycaster.setFromCamera(mouse, camera);
-        // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
-        const intersects = raycaster.intersectObjects(scene.children, true);
-        // we get the objects from the model as list that are intersected by the casted ray.
+    // if (e.button === 0) {
+    //     raycaster.setFromCamera(mouse, camera);
+    //     // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
+    //     const intersects = raycaster.intersectObjects(scene.children, true);
+    //     // we get the objects from the model as list that are intersected by the casted ray.
 
-        if (intersects.length > 0) {
-            const targetObject = intersects[0].object;
-            // Send the object name to Flutter
-            if (window.flutter_inappwebview) {
-                window.flutter_inappwebview.callHandler('sendObjectName', targetObject.name.toString());
-            }
-            if (targetObject.name.toString().includes('navigation')) {
-                tooltip.style.display = 'block';
-                tooltip.innerHTML = targetObject.name.toString().split('_')[0];
+    //     if (intersects.length > 0) {
+    //         const targetObject = intersects[0].object;
+    //         // Send the object name to Flutter
+    //         if (window.flutter_inappwebview) {
+    //             window.flutter_inappwebview.callHandler('sendObjectName', targetObject.name.toString());
+    //         }
+    //         if (targetObject.name.toString().includes('navigation')) {
+    //             tooltip.style.display = 'block';
+    //             tooltip.innerHTML = targetObject.name.toString().split('_')[0];
 
-                // Position tooltip at the mouse location
-                tooltip.style.left = `${e.clientX + 10}px`; // Offset for better visibility
-                tooltip.style.top = `${e.clientY + 10}px`;
-            }else{
-                tooltip.style.display = 'none';
-            }
-        }
-    }
+    //             // Position tooltip at the mouse location
+    //             tooltip.style.left = `${e.clientX + 10}px`; // Offset for better visibility
+    //             tooltip.style.top = `${e.clientY + 10}px`;
+    //         } else {
+    //             tooltip.style.display = 'none';
+    //         }
+    //     }
+    // }
 }
 
 function onMouseDown(e) {
@@ -311,10 +342,10 @@ function onMouseUp(e) {
         if (intersects.length > 0) {
             const targetObject = intersects[0].object;
             if (targetObject.name.toString().includes('cam')) {
-                if(targetObject.name.toString().includes('rack')){
-                    console.log('{"rack":"'+ targetObject.name.toString().split('_')[0] +'"}');
-                }else{
-                    console.log('{"area":"'+ targetObject.name.toString().split('_')[0] +'"}');
+                if (targetObject.name.toString().includes('rack')) {
+                    console.log('{"rack":"' + targetObject.name.toString().split('_')[0] + '"}');
+                } else {
+                    console.log('{"area":"' + targetObject.name.toString().split('_')[0] + '"}');
                 }
                 switchCamera(targetObject.name.toString());
                 window.localStorage.setItem("switchToMainCam", "null")
@@ -324,7 +355,7 @@ function onMouseUp(e) {
                 changeColor(targetObject);
                 window.localStorage.setItem("switchToMainCam", "null")
             } else {
-                if(prevBin){
+                if (prevBin) {
                     prevBin.material.color.copy(prevBinColor);
                 }
                 switchCamera('main');
@@ -357,7 +388,7 @@ function changeColor(object) {
     if (prevBin != object) {
         object.userData.active = true;
         object.material.color.set(0xffffff);
-        console.log('{"bin":"'+ object.name.toString() +'"}');
+        console.log('{"bin":"' + object.name.toString() + '"}');
         moveToBin(object);
     } else {
         if (object.userData.active == false) {
@@ -365,13 +396,13 @@ function changeColor(object) {
             prevBinColor = object.material.color.clone();
             prevBin = object;
             object.material.color.set(0xffffff);
-            console.log('{"bin":"'+ object.name.toString() +'"}');
+            console.log('{"bin":"' + object.name.toString() + '"}');
             moveToBin(object);
         } else {
             object.userData.active = false;
-            console.log('{"rack":"'+ prevNav.split('_')[0] +'"}');
+            console.log('{"rack":"' + prevNav.split('_')[0] + '"}');
             switchCamera(prevNav);
-            
+
         }
     }
     prevBin = object;
