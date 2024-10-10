@@ -30,7 +30,8 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
   }
 
   void _onSelectedRack(SelectedRack event, Emitter<WarehouseInteractionState> emit) {
-    emit(state.copyWith(selectedRack: state.racksData!.where((e) => e.rackID == event.rackID).first));
+    List<Rack> selectedRacks = state.racksData!.where((e) => e.rackID == event.rackID).toList();
+    emit(state.copyWith(selectedRack:  selectedRacks.first));
     jsInteropService!.isRackDataLoaded(true);
   }
 
@@ -45,7 +46,6 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       (value) {
         Log.d(value);
         emit(state.copyWith(stagingArea: StagingArea.fromJson(jsonDecode(value)), getStagingAreaDataState: GetStagingAreaDataState.success));
-        print('staging data ${state.stagingArea}');
       },
     ).onError(
       (error, stackTrace) {
@@ -112,7 +112,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
         Log.d(value);
         emit(state.copyWith(
             racksData: (jsonDecode(value)["racks"] as List).map((e) => Rack.fromJson(e)).toList(), getRacksDataState: GetRacksDataState.success));
-        print('racks data ${state.racksData}');
+        add(SelectedRack(rackID: state.dataFromJS!['rack']));
       },
     ).onError(
       (error, stackTrace) {

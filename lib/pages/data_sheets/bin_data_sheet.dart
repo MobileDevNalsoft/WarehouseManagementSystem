@@ -60,6 +60,15 @@ class _BinDataSheetState extends State<BinDataSheet> {
                       separatorBuilder: (context, index) => Gap(size.height * 0.05),
                     ),
                   ),
+                if (context.watch<WarehouseInteractionBloc>().state.selectedBin != null)
+                  Align(alignment: Alignment.bottomRight, child: Padding(
+                    padding:  EdgeInsets.only(right: size.width*0.01),
+                    child: InkWell(
+                      onTap: () {
+                        
+                      },
+                      child: Text('view more details', style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),)),
+                  ),),
                 if (context.watch<WarehouseInteractionBloc>().state.selectedBin == null)
                   SizedBox(
                     height: size.height * 0.2,

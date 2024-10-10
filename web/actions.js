@@ -1,6 +1,6 @@
 const init = () => {
     const switchToMainCam = () => {
-        window.localStorage.setItem("switchToMainCam", "main")
+        window.localStorage.setItem("switchToMainCam", "warehouse")
     }
 
     const isRacksDataLoaded = (value) => {

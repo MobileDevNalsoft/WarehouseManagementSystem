@@ -103,9 +103,23 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: size.width * 0.25, top: size.height * 0.01),
-                          child: Text(
-                            'Unlock your warehouse POTENTIAL',
-                            style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w900),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Unlock your warehouse ',
+                                style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w900),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  navigator.push('/warehouse');
+                                },
+                                child: Text(
+                                'POTENTIAL',
+                                style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w900, decoration: TextDecoration.underline),
+                                
+                              ),
+                              )
+                            ],
                           ),
                         ),
                       ],
@@ -121,18 +135,6 @@ class _HomePageState extends State<HomePage> {
                             height: size.height * 0.5,
                             width: size.width * 0.4,
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: size.height*0.1, right: size.width*0.02),
-                          child: InkWell(onTap: () {
-                            navigator.push('/warehouse');
-                          }, child: Row(
-                            children: [
-                              Text('Get Started', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),),
-                              Gap(size.width*0.005),
-                              Icon(Icons.arrow_forward_rounded, color: Colors.white,)
-                            ],
-                          )),
                         )
                       ],
                     )

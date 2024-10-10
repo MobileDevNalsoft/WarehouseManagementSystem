@@ -99,7 +99,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                             String? area = await  _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"area");
                             
                             if((rack??"").contains("rack")){
-                            _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"rack":rack}));
+                              _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"rack":rack}));
                             }
                             else if((area??"").contains("area")){
                               _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area":area}));
@@ -134,6 +134,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   Widget? getDataSheetFor(String objectName, String objectValue,) {
     switch (objectName) {
       case 'rack':
+        print('name $objectName value $objectValue');
         return const RackDataSheet();
       case 'bin':
         return const BinDataSheet( );
