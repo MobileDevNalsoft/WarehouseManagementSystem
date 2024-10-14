@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../3d_models/warehouse_1010_1721.glb",
+      "../3d_models/warehouse_1110_1557.glb",
       function (gltf) {
         model = gltf.scene;
 
@@ -98,8 +98,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
         directionalLight.position.set(5, 5, 5); // Position the light
         scene.add(directionalLight);
+         // Set up animation mixer
+    const mixer = new THREE.AnimationMixer(gltf.scene);
+    gltf.animations.forEach((clip) => {
+        mixer.clipAction(clip).play();
+    });
 
+    // Render loop
+    const clock = new THREE.Clock();
+    function animate() {
+        requestAnimationFrame(animate);
+        const delta = clock.getDelta(); // seconds.
+        mixer.update(delta); // Update the animation mixer
+        renderer.render(scene, camera);
+    }
         animate();
+        window.localStorage.setItem("isLoaded", true);
+
       },
       undefined,
       function (error) {
@@ -118,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
   }
+  renderer.setAnimationLoop( animate );
 
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
     const localPrefix = isLast ? "└─" : "├─";

@@ -25,7 +25,8 @@ final class WarehouseInteractionState extends Equatable {
       this.inspectionArea,
       this.getInspectionAreaDataState,
       this.dataFromJS,
-      this.inAppWebViewController});
+      this.inAppWebViewController,
+      this.isModelLoaded=false});
 
   List<Rack>? racksData;
   GetRacksDataState? getRacksDataState;
@@ -41,6 +42,7 @@ final class WarehouseInteractionState extends Equatable {
   GetInspectionAreaDataState? getInspectionAreaDataState;
   Map<String, dynamic>? dataFromJS;
   InAppWebViewController? inAppWebViewController;
+  bool isModelLoaded;
 
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
@@ -49,7 +51,9 @@ final class WarehouseInteractionState extends Equatable {
         getActivityAreaDataState: GetActivityAreaDataState.initial,
         getReceivingAreaDataState: GetReceivingAreaDataState.initial,
         getInspectionAreaDataState: GetInspectionAreaDataState.initial,
-        dataFromJS: const {"object": "null"});
+        dataFromJS: const {"object": "null"},
+        isModelLoaded: false
+        );
   }
 
   WarehouseInteractionState copyWith({
@@ -66,7 +70,8 @@ final class WarehouseInteractionState extends Equatable {
     InspectionArea? inspectionArea,
     GetInspectionAreaDataState? getInspectionAreaDataState,
     Map<String, dynamic>? dataFromJS,
-    InAppWebViewController? inAppWebViewController
+    InAppWebViewController? inAppWebViewController,
+    bool? isModelLoaded
   }) {
     return WarehouseInteractionState(
       racksData: racksData ?? this.racksData,
@@ -82,7 +87,8 @@ final class WarehouseInteractionState extends Equatable {
       inspectionArea: inspectionArea ?? this.inspectionArea,
       getInspectionAreaDataState: getInspectionAreaDataState ?? this.getInspectionAreaDataState,
       dataFromJS: dataFromJS ?? this.dataFromJS,
-      inAppWebViewController: inAppWebViewController?? this.inAppWebViewController
+      inAppWebViewController: inAppWebViewController?? this.inAppWebViewController,
+      isModelLoaded: isModelLoaded??this.isModelLoaded
     );
   }
 
@@ -100,6 +106,7 @@ final class WarehouseInteractionState extends Equatable {
         getActivityAreaDataState,
         getReceivingAreaDataState,
         getInspectionAreaDataState,
-        racksData
+        racksData,
+        isModelLoaded
       ];
 }

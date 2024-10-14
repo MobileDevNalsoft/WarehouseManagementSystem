@@ -62,3 +62,11 @@ class GetInspectionAreaData extends WarehouseInteractionEvent {
   @override
   List<Object> get props => [areaName];
 }
+
+class ModelLoaded extends WarehouseInteractionEvent {
+  final bool isLoaded;
+  ModelLoaded({required this.isLoaded});
+
+  @override
+  List<Object> get props => [isLoaded];
+}
