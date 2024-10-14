@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 import '../inits/init.dart';
@@ -16,6 +17,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // Service to handle navigation within the app
   final NavigatorService navigator = getIt<NavigatorService>();
+
+  final SharedPreferences sharedPreferences = getIt();
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +54,13 @@ class _HomePageState extends State<HomePage> {
                     Gap(size.width*0.015),
                     Image.asset('assets/images/nalsoft_logo.png', scale: 4, isAntiAlias: true,),
                     MaxGap(size.width),
+                    if(!sharedPreferences.containsKey('username'))
                     TextButton(
                       onPressed: () {
-                        
+                        navigator.push('/login');
                       },
                       style: TextButton.styleFrom(
+                        overlayColor: Colors.transparent,
                           side: BorderSide(
                             color: Colors.blue.shade900,
                           ),
@@ -71,20 +76,20 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Gap(size.width * 0.005),
-                    TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue.shade900,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            minimumSize: Size(size.width * 0.05, size.height * 0.05)),
-                        child: Text(
-                          'Sign up',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                        )),
-                    Gap(size.width * 0.02)
+                    if(sharedPreferences.containsKey('username'))
+                    IconButton(
+                      onPressed: () {
+                      setState(() {
+                        sharedPreferences.remove('username');
+                      });
+                    },
+                    tooltip: 'Logout',
+                    style: IconButton.styleFrom(
+                      overlayColor: Colors.transparent,
+                      
+                    ),
+                    icon: Icon(Icons.person_pin, size: size.width*0.02,)),
+                    Gap(size.width*0.018)
                   ],
                 ),
                 Divider(indent: size.width*0.02, endIndent: size.width*0.02, color: Colors.blue.shade900,),
@@ -111,7 +116,11 @@ class _HomePageState extends State<HomePage> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  navigator.push('/warehouse');
+                                  if(sharedPreferences.containsKey('username')){
+                                    navigator.push('/warehouse');
+                                  }else{
+                                    Customs.WMSFlushbar(size, context, message: 'Please login');
+                                  }
                                 },
                                 child: Text(
                                 'POTENTIAL',

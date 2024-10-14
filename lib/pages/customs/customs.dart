@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:warehouse_3d/bloc/warehouse_interaction_bloc.dart';
+import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
+import 'package:another_flushbar/flushbar.dart';
+
 
 class Customs {
   
@@ -64,6 +66,27 @@ class Customs {
             ))
       ],
     );
+  }
+
+  // This function displays a custom flushbar message on the screen
+  static Future WMSFlushbar(Size size, BuildContext context, {String message = 'message', Widget? icon}) async {
+
+    // Show the flushbar using Flushbar package
+    await Flushbar(
+      backgroundColor: Colors.white,
+      blockBackgroundInteraction: true,
+      messageColor: Colors.black,
+      message: message,
+      padding: EdgeInsets.symmetric(vertical: size.height * 0.015, horizontal: size.width * 0.005),
+      messageSize: 16,
+      flushbarPosition: FlushbarPosition.TOP,
+      duration: const Duration(seconds: 2),
+      borderRadius: BorderRadius.circular(8),
+      icon: icon,
+      boxShadows: [BoxShadow(blurRadius: 12, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.blue.shade900, offset: const Offset(0, 0))],
+      margin: EdgeInsets.only(
+          top: size.height * 0.016, left: size.width * 0.8, right: size.width * 0.02),
+    ).show(context);
   }
 }
 

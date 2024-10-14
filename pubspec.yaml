@@ -57,6 +57,7 @@ dependencies:
   skeletonizer: ^1.4.2
   equatable: ^2.0.5
   pointer_interceptor: ^0.10.1+2
+  another_flushbar: ^1.12.30
 
 dev_dependencies:
   flutter_test:

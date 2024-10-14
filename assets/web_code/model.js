@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // regularly updating the position of mouse pointer when it is moved on rendered window.
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    if (model) {
+    if (model != null && camera != null) {
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
