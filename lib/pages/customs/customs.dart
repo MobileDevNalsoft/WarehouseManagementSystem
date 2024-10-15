@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:another_flushbar/flushbar.dart';
 
-
 class Customs {
-  
-  static Widget DataSheet({required Size size, required String title,required List<Widget> children,controller,required BuildContext context}) {
+  static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
     return Container(
       height: size.height,
       width: size.width * 0.22,
@@ -22,7 +21,10 @@ class Customs {
           border: Border(left: BorderSide(), top: BorderSide(), bottom: BorderSide())),
       child: Column(
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [IconButton(onPressed: () => getIt<JsInteropService>().switchToMainCam(), icon: Icon(Icons.close_rounded))],),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [IconButton(onPressed: () => getIt<JsInteropService>().switchToMainCam(), icon: const Icon(Icons.close_rounded))],
+          ),
           Container(
             height: size.height * 0.06,
             width: size.width * 0.12,
@@ -68,9 +70,80 @@ class Customs {
     );
   }
 
+  static void AnimatedDialog({required BuildContext context, required Widget header, required List<Widget> content, }) {
+    Size size = MediaQuery.of(context).size;
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.bounceInOut.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return IntrinsicHeight(
+          child: Container(
+            margin: EdgeInsets.only(top: size.height * 0.4),
+            alignment: Alignment.topCenter,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Material(
+                  color: Colors.transparent,
+                  child: IntrinsicHeight(
+                    child: Container(
+                        margin: EdgeInsets.only(top: size.height * 0.035),
+                        padding: EdgeInsets.only(bottom: size.height * 0.02,),
+                        width: size.width * 0.16,
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                        child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(5.0),
+                                              child: InkWell(
+                                                onTap: () => Navigator.pop(context),
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  size: 20,
+                                                  weight: 1,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Gap(size.height * 0.01),
+                                        ...content
+                                      ],
+                                    ),),
+                  ),
+                ),
+                CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 35,
+                  child: header,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   // This function displays a custom flushbar message on the screen
   static Future WMSFlushbar(Size size, BuildContext context, {String message = 'message', Widget? icon}) async {
-
     // Show the flushbar using Flushbar package
     await Flushbar(
       backgroundColor: Colors.white,
@@ -84,12 +157,10 @@ class Customs {
       borderRadius: BorderRadius.circular(8),
       icon: icon,
       boxShadows: [BoxShadow(blurRadius: 12, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.blue.shade900, offset: const Offset(0, 0))],
-      margin: EdgeInsets.only(
-          top: size.height * 0.016, left: size.width * 0.8, right: size.width * 0.02),
+      margin: EdgeInsets.only(top: size.height * 0.016, left: size.width * 0.8, right: size.width * 0.02),
     ).show(context);
   }
 }
-
 
 // this class is used to add shadow along the clipped path
 @immutable

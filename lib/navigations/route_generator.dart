@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:warehouse_3d/pages/home.dart';
+import 'package:warehouse_3d/pages/select_warehouse.dart';
 import 'package:warehouse_3d/pages/three_js/three_js.dart';
 
 import '../pages/login.dart';
@@ -43,6 +44,21 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const ThreeJsWebView(),
+          transitionDuration: const Duration(seconds: 1),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
+            final fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+      case '/selectWarehouse':
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => SelectWarehouse(),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

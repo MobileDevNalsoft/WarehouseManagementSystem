@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
 
@@ -28,18 +28,17 @@ class _HomePageState extends State<HomePage> {
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Colors.blue.shade100, Colors.white], begin: Alignment.centerLeft, end: Alignment.centerRight, stops: [0.5, 1])
-        ),
+            gradient: LinearGradient(colors: [Colors.blue.shade100, Colors.white], begin: Alignment.centerLeft, end: Alignment.centerRight, stops: [0.5, 1])),
         child: Stack(
           children: [
             Align(
               alignment: Alignment.bottomRight,
               child: ClipShadowPath(
-                shadow: BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.black, offset: const Offset(0, 0)),
+                shadow: const BoxShadow(blurRadius: 20, blurStyle: BlurStyle.outer, spreadRadius: 25, color: Colors.black, offset: Offset(0, 0)),
                 clipper: BackGroundClipper(),
                 child: Container(
-                  height: size.height*0.93,
-                  width: size.width*0.45,
+                  height: size.height * 0.93,
+                  width: size.width * 0.45,
                   decoration: BoxDecoration(color: Colors.blue.shade900),
                 ),
               ),
@@ -51,48 +50,58 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Gap(size.width*0.015),
-                    Image.asset('assets/images/nalsoft_logo.png', scale: 4, isAntiAlias: true,),
+                    Gap(size.width * 0.015),
+                    Image.asset(
+                      'assets/images/nalsoft_logo.png',
+                      scale: 4,
+                      isAntiAlias: true,
+                    ),
                     MaxGap(size.width),
-                    if(!sharedPreferences.containsKey('username'))
-                    TextButton(
-                      onPressed: () {
-                        navigator.push('/login');
-                      },
-                      style: TextButton.styleFrom(
-                        overlayColor: Colors.transparent,
-                          side: BorderSide(
+                    if (!sharedPreferences.containsKey('username'))
+                      TextButton(
+                        onPressed: () {
+                          navigator.push('/login');
+                        },
+                        style: TextButton.styleFrom(
+                            overlayColor: Colors.transparent,
+                            side: BorderSide(
+                              color: Colors.blue.shade900,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            minimumSize: Size(size.width * 0.05, size.height * 0.05)),
+                        child: Text(
+                          'Log in',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                             color: Colors.blue.shade900,
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          minimumSize: Size(size.width * 0.05, size.height * 0.05)),
-                      child: Text(
-                        'Log in',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade900,
                         ),
                       ),
-                    ),
-                    if(sharedPreferences.containsKey('username'))
-                    IconButton(
-                      onPressed: () {
-                      setState(() {
-                        sharedPreferences.remove('username');
-                      });
-                    },
-                    tooltip: 'Logout',
-                    style: IconButton.styleFrom(
-                      overlayColor: Colors.transparent,
-                      
-                    ),
-                    icon: Icon(Icons.person_pin, size: size.width*0.02,)),
-                    Gap(size.width*0.018)
+                    if (sharedPreferences.containsKey('username'))
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              sharedPreferences.remove('username');
+                            });
+                          },
+                          tooltip: 'Logout',
+                          style: IconButton.styleFrom(
+                            overlayColor: Colors.transparent,
+                          ),
+                          icon: Icon(
+                            Icons.person_pin,
+                            size: size.width * 0.02,
+                          )),
+                    Gap(size.width * 0.018)
                   ],
                 ),
-                Divider(indent: size.width*0.02, endIndent: size.width*0.02, color: Colors.blue.shade900,),
+                Divider(
+                  indent: size.width * 0.02,
+                  endIndent: size.width * 0.02,
+                  color: Colors.blue.shade900,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,23 +119,33 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.only(left: size.width * 0.25, top: size.height * 0.01),
                           child: Row(
                             children: [
-                              Text(
+                              const Text(
                                 'Unlock your warehouse ',
                                 style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w900),
                               ),
                               InkWell(
                                 onTap: () {
-                                  if(sharedPreferences.containsKey('username')){
-                                    navigator.push('/warehouse');
-                                  }else{
-                                    Customs.WMSFlushbar(size, context, message: 'Please login');
+                                  if (sharedPreferences.containsKey('username')) {
+                                    navigator.push('/selectWarehouse');
+                                  } else {
+                                    Customs.AnimatedDialog(
+                                      context: context,
+                                      header: const Icon(
+                                        Icons.person_2_rounded,
+                                        size: 60,
+                                      ),
+                                      content: const [Text(
+                                            'Please Login to your account',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 18),
+                                          )],
+                                    );
                                   }
                                 },
-                                child: Text(
-                                'POTENTIAL',
-                                style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w900, decoration: TextDecoration.underline),
-                                
-                              ),
+                                child: const Text(
+                                  'POTENTIAL',
+                                  style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w900, decoration: TextDecoration.underline),
+                                ),
                               )
                             ],
                           ),
@@ -136,9 +155,9 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Gap(size.height*0.18),
+                        Gap(size.height * 0.18),
                         Padding(
-                          padding: EdgeInsets.only(right: size.width*0.03),
+                          padding: EdgeInsets.only(right: size.width * 0.03),
                           child: LottieBuilder.asset(
                             'assets/lottie/home_warehouse.json',
                             height: size.height * 0.5,
@@ -158,18 +177,17 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-
-class BackGroundClipper extends CustomClipper<Path>{
+class BackGroundClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
     path.moveTo(size.width, 0);
-    path.lineTo(size.width*0.7, size.height*0.2);
-    path.lineTo(size.width*0.96, size.height*0.2);
-    path.lineTo(size.width*0.96, size.height*0.75);
-    path.lineTo(size.width*0.23, size.height*0.75);
-    path.lineTo(0, size.height*0.87);
-    path.lineTo(size.width*0.3, size.height);
+    path.lineTo(size.width * 0.7, size.height * 0.2);
+    path.lineTo(size.width * 0.96, size.height * 0.2);
+    path.lineTo(size.width * 0.96, size.height * 0.75);
+    path.lineTo(size.width * 0.23, size.height * 0.75);
+    path.lineTo(0, size.height * 0.87);
+    path.lineTo(size.width * 0.3, size.height);
     path.lineTo(size.width, size.height);
     path.close();
     return path;

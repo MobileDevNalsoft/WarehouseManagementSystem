@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../3d_models/warehouse_1010_1721.glb",
+      "../3d_models/warehouse_1110_0948.glb",
       function (gltf) {
         model = gltf.scene;
 

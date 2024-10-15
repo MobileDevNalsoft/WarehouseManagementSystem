@@ -34,7 +34,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
               'Content-Type': 'application/json'
             }, data: {
               "op": "credSubmit",
-              "credentials": {"username": 'madhankumar.ch@nalsoft.net', "password": 'Madhan@12345'},
+              "credentials": {"username": event.username, "password": event.password},
               "requestState": requestState
             }).then((apiResponse) {
               if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
@@ -50,6 +50,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
           navigator!.pushReplacement('/home');
         } else {
+          print('invalid');
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.invalidCredentials));
         }
       },

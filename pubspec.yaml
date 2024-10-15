@@ -58,6 +58,7 @@ dependencies:
   equatable: ^2.0.5
   pointer_interceptor: ^0.10.1+2
   another_flushbar: ^1.12.30
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
