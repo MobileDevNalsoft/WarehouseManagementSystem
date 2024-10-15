@@ -65,7 +65,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       
-      body: Stack(
+      body: 
+      
+      Stack(
         alignment: Alignment.center,
         children: [
           Align(
@@ -95,14 +97,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                             _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value){
                               value.forEach((e){print(e);});
                             });
-                            String? rack =  await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"rack");
-                            String? area = await  _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"area");
-                            
-                            if((rack??"").contains("rack")){
-                              _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"rack":rack}));
-                            }
-                            else if((area??"").contains("area")){
-                              _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area":area}));
+                            bool? isLoaded =  await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"isLoaded");
+                            if(isLoaded!=null){
+                              _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                               _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+
                             }
                           
                           },);
@@ -125,9 +124,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     const SizedBox(),
               );
             }
-          )
+          ),
+          if(!context.watch<WarehouseInteractionBloc>().state.isModelLoaded)Center(child: CircularProgressIndicator(),)
         ],
-      ),
+      )
+      
     );
   }
 

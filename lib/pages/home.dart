@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
 

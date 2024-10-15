@@ -27,6 +27,8 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<GetActivityAreaData>(_onGetActivityAreaData);
     on<GetReceivingAreaData>(_onGetReceivingAreaData);
     on<GetInspectionAreaData>(_onGetInspectionAreaData);
+    on<ModelLoaded>(_onModelLoaded);
+
   }
 
   void _onSelectedRack(SelectedRack event, Emitter<WarehouseInteractionState> emit) {
@@ -120,4 +122,10 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       },
     );
   }
+  
+  void _onModelLoaded(ModelLoaded event, Emitter<WarehouseInteractionState> emit) {
+    print('event ${event.isLoaded}');
+    emit(state.copyWith(isModelLoaded: event.isLoaded));
+  }
+
 }
