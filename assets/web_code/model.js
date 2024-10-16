@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js";
+import { Sky } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/objects/Sky.js";
 
 // Global variables
 
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../3d_models/warehouse_1110_0948.glb",
+      "../glbs/warehouse_1610_1537.glb",
       function (gltf) {
         model = gltf.scene;
 
@@ -80,6 +81,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // console.log(dumpObject(model).join('\n'));
 
         createNewCamera(world_cam);
+
+        const sky = new Sky();
+        sky.scale.setScalar(10000);
+        scene.add(sky);
 
         scene.add(model);
 

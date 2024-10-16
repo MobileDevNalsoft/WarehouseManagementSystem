@@ -92,6 +92,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     },
                     onWebViewCreated: (controller) async {
                           _warehouseInteractionBloc.state.inAppWebViewController=controller;
+                          _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));// remove for loading indicator
                          
                           Timer.periodic(const Duration(milliseconds: 500), (timer) async{
                             _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value){
