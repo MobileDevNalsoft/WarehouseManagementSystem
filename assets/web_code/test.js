@@ -1,9 +1,18 @@
+// Import Three.js core from the import map
 import * as THREE from "three";
-import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js";
+
+// Import loaders and controls from the same version on jsDelivr
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js";
+import { FontLoader } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/geometries/TextGeometry.js";
 
 //Global Variables
-var env, controls, rack = new THREE.Object3D(), warehouseDepth, warehouseWidth;
+var env,
+  controls,
+  rack = new THREE.Object3D(),
+  warehouseDepth,
+  warehouseWidth;
 
 document.addEventListener("DOMContentLoaded", function () {
   env = new Environment(
@@ -15,7 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
       3000
     ),
     new THREE.WebGLRenderer({
-      antialias: true, alpha: true,
+      antialias: true,
+      alpha: true,
       logarithmicDepthBuffer: true,
       preserveDrawingBuffer: true,
     })
@@ -48,7 +58,13 @@ document.addEventListener("DOMContentLoaded", function () {
     env.renderer.render(env.scene, env.camera);
   }
 
-  function buildPlane(width, depth, textureImg, repeatHorizontal, repeatVertical) {
+  function buildPlane(
+    width,
+    depth,
+    textureImg,
+    repeatHorizontal,
+    repeatVertical
+  ) {
     // Create Plane Geometry
     const geometry = new THREE.PlaneGeometry(width, depth);
 
@@ -147,7 +163,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add Walls to Scene
     env.scene.add(compundWalls);
 
-    const flooring = buildPlane(roomWidth, roomDepth, "../images/compound_flooring.jpg", 50, 100);
+    const flooring = buildPlane(
+      roomWidth,
+      roomDepth,
+      "../images/compound_flooring.jpg",
+      50,
+      100
+    );
 
     flooring.position.set(0, 0.005, 0);
 
@@ -189,39 +211,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const warehouseWalls = new THREE.Group();
 
-    
     // Front Wall
     const frontWallLeft = new THREE.Mesh(
-      new THREE.BoxGeometry(warehouseWidth/3 + 2, wallHeight, wallThickness),
+      new THREE.BoxGeometry(warehouseWidth / 3 + 2, wallHeight, wallThickness),
       wallMaterial
     );
-    frontWallLeft.position.set(-warehouseWidth/3, wallHeight / 2, warehouseDepth / 2); // Position at front
+    frontWallLeft.position.set(
+      -warehouseWidth / 3,
+      wallHeight / 2,
+      warehouseDepth / 2
+    ); // Position at front
     const frontWallRight = new THREE.Mesh(
-      new THREE.BoxGeometry(warehouseWidth/3 + 2, wallHeight, wallThickness),
+      new THREE.BoxGeometry(warehouseWidth / 3 + 2, wallHeight, wallThickness),
       wallMaterial
     );
-    frontWallRight.position.set(warehouseWidth/3, wallHeight / 2, warehouseDepth / 2); // Position at front
+    frontWallRight.position.set(
+      warehouseWidth / 3,
+      wallHeight / 2,
+      warehouseDepth / 2
+    ); // Position at front
     const frontWallMiddle = new THREE.Mesh(
-      new THREE.BoxGeometry(warehouseWidth/3 + 2, wallHeight, wallThickness),
+      new THREE.BoxGeometry(warehouseWidth / 3 + 2, wallHeight, wallThickness),
       wallMaterial
     );
-    frontWallMiddle.position.set(0, wallHeight / 2, warehouseDepth / 2-10); // Position at front
+    frontWallMiddle.position.set(0, wallHeight / 2, warehouseDepth / 2 - 10); // Position at front
     const frontWallLeftTurn = new THREE.Mesh(
-      new THREE.BoxGeometry(wallThickness,wallHeight,8),
+      new THREE.BoxGeometry(wallThickness, wallHeight, 8),
       wallMaterial
     );
-    frontWallLeftTurn.position.set(-warehouseWidth/6, wallHeight / 2, warehouseDepth / 2-5); // Position at front
+    frontWallLeftTurn.position.set(
+      -warehouseWidth / 6,
+      wallHeight / 2,
+      warehouseDepth / 2 - 5
+    ); // Position at front
     const frontWallRightTurn = new THREE.Mesh(
-      new THREE.BoxGeometry(wallThickness,wallHeight,8),
+      new THREE.BoxGeometry(wallThickness, wallHeight, 8),
       wallMaterial
     );
-    frontWallRightTurn.position.set(warehouseWidth/6, wallHeight / 2, warehouseDepth / 2-5); // Position at front
+    frontWallRightTurn.position.set(
+      warehouseWidth / 6,
+      wallHeight / 2,
+      warehouseDepth / 2 - 5
+    ); // Position at front
     warehouseWalls.add(frontWallLeft);
     warehouseWalls.add(frontWallRight);
     warehouseWalls.add(frontWallMiddle);
     warehouseWalls.add(frontWallLeftTurn);
     warehouseWalls.add(frontWallRightTurn);
-    
+
     // Back Wall
     const backWall = new THREE.Mesh(
       new THREE.BoxGeometry(warehouseWidth + 2, wallHeight, wallThickness),
@@ -253,11 +290,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function buildWarehouseAreas() {
-    const storageArea = buildPlane(130, 50);
-    console.log('area');
-    storageArea.material.color.set(0xff0000);
-    storageArea.position.set(-74, 0.01, -84);
+    const storageArea = buildPlane(140, 50);
+    console.log("area");
+    storageArea.material.color.set(0x8fb0a9);
+    storageArea.position.set(-70, 0.01, -84);
     env.scene.add(storageArea);
+
+    write3DText("Storage Area", (textMesh) => {
+      console.log("text name", textMesh.name.toString()); // Should log the name without error
+      env.scene.add(textMesh); // Add to the scene if desired
+    });
   }
 
   function addRacks() {
@@ -285,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
           rackClone.traverse((obj) => {
             if (obj.isMesh) {
               if (obj.name.includes("rack")) {
-                obj.name = 'rack' + i;
+                obj.name = "rack" + i;
               }
             }
           });
@@ -293,7 +335,11 @@ document.addEventListener("DOMContentLoaded", function () {
           // console.log(dumpObject(rackClone).join('\n'));
 
           // Set position for each clone
-          rackClone.position.set(-warehouseWidth * 11 / 20 + i * spacing, 0, -warehouseDepth * 2 / 3);
+          rackClone.position.set(
+            (-warehouseWidth * 11) / 20 + i * spacing,
+            0,
+            (-warehouseDepth * 2) / 3
+          );
 
           // Add cloned rack to the scene
           env.scene.add(rackClone);
@@ -370,7 +416,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
     const localPrefix = isLast ? "└─" : "├─";
     lines.push(
-      `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${obj.type
+      `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${
+        obj.type
       }]`
     );
     const newPrefix = prefix + (isLast ? "  " : "│ ");
@@ -382,6 +429,29 @@ document.addEventListener("DOMContentLoaded", function () {
     return lines;
   }
 });
+
+function write3DText(text, callback) {
+  const fontLoader = new FontLoader();
+  fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+    // Create the 3D text using the loaded font
+    const textGeometry = new TextGeometry(text, {
+      font: font,
+      size: 1,
+      depth: 0.2,
+      curveSegments: 5,
+      bevelEnabled: true,
+      bevelThickness: 0.03,
+      bevelSize: 0.02,
+      bevelSegments: 3,
+    });
+
+    const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    textMesh.name = "3D text";
+    textMesh.position.set(0,10,10);
+    callback(textMesh);
+  });
+}
 
 class Environment {
   constructor(scene, camera, renderer) {
@@ -399,7 +469,9 @@ class Environment {
   }
 
   addRendererToDocument() {
-    this.renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2));
+    this.renderer.setPixelRatio(
+      Math.min(Math.max(1, window.devicePixelRatio), 2)
+    );
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
   }
