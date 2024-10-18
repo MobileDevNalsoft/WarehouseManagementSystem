@@ -2,60 +2,177 @@
 import * as THREE from "three";
 
 // Import loaders and controls from the same version on jsDelivr
-import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js";
 import { FontLoader } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/geometries/TextGeometry.js";
 
 //Global Variables
-var env,
+var container,
+  renderer,
+  raycaster,
+  mouse,
+  lastPos,
+  scene,
+  camera,
   controls,
+  ambientLight,
+  directionalLight,
+  clock,
+  walkAction,
   rack = new THREE.Object3D(),
   warehouseDepth,
-  warehouseWidth;
+  warehouseWidth,
+  mixers = [],
+  manOriginalmixer,
+  animations;
 
 document.addEventListener("DOMContentLoaded", function () {
-  env = new Environment(
-    new THREE.Scene(),
-    new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      3000
-    ),
-    new THREE.WebGLRenderer({
+  function init() {
+    container = document.createElement("div");
+    // creating a container section(division) on our html page(not yet visible).
+    document.body.appendChild(container);
+    // assigning div to document's visible structure i.e. body.
+
+    renderingSetup();
+    sceneSetup();
+    cameraSetup();
+    controlsSetup();
+    lightSetup();
+    raycastingSetup();
+    clockSetup();
+
+    buildGround();
+    buildCompund();
+    buildWarehouse();
+    addRacks();
+    container.appendChild(renderer.domElement);
+
+    animate();
+  }
+
+  init();
+
+  function renderingSetup() {
+    renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
       logarithmicDepthBuffer: true,
       preserveDrawingBuffer: true,
-    })
-  );
+    });
+    renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setAnimationLoop(animate);
+    // PMREM Generator for improved environment lighting
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+  }
 
-  // Environment Setup
-  // PMREM Generator for improved environment lighting
-  const pmremGenerator = new THREE.PMREMGenerator(env.renderer);
-  pmremGenerator.compileEquirectangularShader();
+  function raycastingSetup() {
+    raycaster = new THREE.Raycaster();
+    // need mouse coordinates for raycasting.
+    mouse = new THREE.Vector2();
+    lastPos = new THREE.Vector2();
+  }
 
-  env.sceneSetup();
-  env.cameraSetup();
-  env.addRendererToDocument();
+  function sceneSetup() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xcccccc);
+  }
 
-  buildGround();
-  buildCompund();
-  buildWarehouse();
-  addRacks();
+  function cameraSetup() {
+    camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      3000
+    );
+    camera.position.z = 500;
+    camera.position.y = 500;
+    scene.add(camera);
+  }
 
-  lightSetup();
+  function controlsSetup() {
+    // Initialize OrbitControls
+    controls = new OrbitControls(camera, renderer.domElement);
 
-  addOrbitControls();
+    // Optional: Enable damping (inertia)
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.screenSpacePanning = false;
 
-  // Start Animation Loop
-  animate();
+    // Optional: Set limits for zooming and rotating
+    controls.minDistance = 10; // Minimum zoom distance
+    controls.maxDistance = 1500; // Maximum zoom distance
 
-  // Animation Loop
+    // limiting vertical rotation around x axis
+    controls.minPolarAngle = 0;
+    controls.maxPolarAngle = Math.PI / 2.2;
+
+    // limiting horizontal rotation around y axis
+    controls.minAzimuthAngle = -Math.PI;
+    controls.maxAzimuthAngle = Math.PI;
+
+    var minPan = new THREE.Vector3(-300, -300, -300);
+    var maxPan = new THREE.Vector3(300, 300, 300);
+
+    // Function to clamp target position
+    function clampTarget() {
+      controls.target.x = Math.max(
+        minPan.x,
+        Math.min(maxPan.x, controls.target.x)
+      );
+      controls.target.y = Math.max(
+        minPan.y,
+        Math.min(maxPan.y, controls.target.y)
+      );
+      controls.target.z = Math.max(
+        minPan.z,
+        Math.min(maxPan.z, controls.target.z)
+      );
+    }
+
+    // Listen for changes in controls
+    controls.addEventListener("change", clampTarget);
+
+    // Initial call to set target within bounds if necessary
+    clampTarget();
+
+    // Make the camera look at a specific point (optional)
+    const center = new THREE.Vector3(0, 0, 0); // Adjust this based on your scene
+    controls.target.copy(center);
+
+    // Update controls to reflect the target position
+    controls.update();
+  }
+
+  function lightSetup() {
+    // Add ambient light
+    ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    // // Add directional light
+    directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
+    directionalLight.position.set(0, 100, 100); // Position the light
+    scene.add(directionalLight);
+  }
+
+  function clockSetup() {
+    // Render loop
+    clock = new THREE.Clock();
+  }
+
   function animate() {
     requestAnimationFrame(animate);
-    env.renderer.render(env.scene, env.camera);
+    const delta = clock.getDelta(); // seconds.
+    // Update all mixers
+    mixers.forEach((mixer) => {
+      mixer.update(delta); // Update each mixer with delta time
+    });
+
+    // Update controls
+    controls.update();  // This will use OrbitControls damping if enabled
+    renderer.render(scene, camera);
   }
 
   function buildPlane(
@@ -101,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //ground model
   function buildGround() {
     // Add Plane to Scene
-    env.scene.add(buildPlane(900, 700, "../images/ground.png", 10, 10));
+    scene.add(buildPlane(900, 700, "../images/ground.png", 10, 10));
   }
 
   function buildCompund() {
@@ -161,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
     compundWalls.add(rightWall);
 
     // Add Walls to Scene
-    env.scene.add(compundWalls);
+    scene.add(compundWalls);
 
     const flooring = buildPlane(
       roomWidth,
@@ -175,7 +292,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     flooring.rotation.x = -Math.PI / 2;
 
-    env.scene.add(flooring);
+    scene.add(flooring);
   }
 
   function buildWarehouse() {
@@ -286,19 +403,58 @@ document.addEventListener("DOMContentLoaded", function () {
     warehouseWalls.position.set(-warehouseDepth / 3, 0, -warehouseWidth / 4);
 
     // Add Walls to Scene
-    env.scene.add(warehouseWalls);
+    scene.add(warehouseWalls);
   }
 
   function buildWarehouseAreas() {
-    const storageArea = buildPlane(140, 50);
-    console.log("area");
+    const storageArea = buildPlane(135, 62);
     storageArea.material.color.set(0x8fb0a9);
-    storageArea.position.set(-70, 0.01, -84);
-    env.scene.add(storageArea);
+    storageArea.position.set(-72, 0.01, -80);
+    scene.add(storageArea);
 
     write3DText("Storage Area", (textMesh) => {
-      console.log("text name", textMesh.name.toString()); // Should log the name without error
-      env.scene.add(textMesh); // Add to the scene if desired
+      textMesh.position.set(-90, 0.015, -60);
+      scene.add(textMesh); // Add to the scene if desired
+    });
+
+    const inspectionArea = buildPlane(65, 62);
+    inspectionArea.material.color.set(0x9fc4ea);
+    inspectionArea.position.set(27, 0.015, -80);
+    scene.add(inspectionArea);
+
+    write3DText("Inspection Area", (textMesh) => {
+      textMesh.position.set(3, 0.015, -60);
+      scene.add(textMesh); // Add to the scene if desired
+    });
+
+    const stagingArea = buildPlane(66, 58);
+    stagingArea.material.color.set(0xdcf0ac);
+    stagingArea.position.set(-107, 0.015, -20);
+    scene.add(stagingArea);
+
+    write3DText("Staging Area", (textMesh) => {
+      textMesh.position.set(-125, 0.015, -38);
+      scene.add(textMesh); // Add to the scene if desired
+    });
+
+    const receivingArea = buildPlane(66, 58);
+    receivingArea.material.color.set(0xafe8d8);
+    receivingArea.position.set(27, 0.015, -20);
+    scene.add(receivingArea);
+
+    write3DText("Receving Area", (textMesh) => {
+      textMesh.position.set(4, 0.015, -38);
+      scene.add(textMesh); // Add to the scene if desired
+    });
+
+    const activityArea = buildPlane(68, 48);
+    activityArea.material.color.set(0xe8dfaf);
+    activityArea.position.set(-40, 0.015, -25);
+    scene.add(activityArea);
+
+    write3DText("Activity Area", (textMesh) => {
+      textMesh.position.set(-60, 0.015, -38);
+      scene.add(textMesh); // Add to the scene if desired
     });
   }
 
@@ -336,16 +492,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
           // Set position for each clone
           rackClone.position.set(
-            (-warehouseWidth * 11) / 20 + i * spacing,
+            (-warehouseWidth * 11.5) / 20 + i * spacing,
             0,
             (-warehouseDepth * 2) / 3
           );
 
           // Add cloned rack to the scene
-          env.scene.add(rackClone);
+          scene.add(rackClone);
         }
 
-        env.scene.updateMatrixWorld(true);
+        scene.updateMatrixWorld(true);
       },
       undefined,
       function (error) {
@@ -354,63 +510,38 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  function lightSetup() {
-    // Add ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    env.scene.add(ambientLight);
+  function addWorker() {
+    const Loader = new GLTFLoader();
 
-    // // Add directional light
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
-    directionalLight.position.set(0, 100, 100); // Position the light
-    env.scene.add(directionalLight);
-  }
+    // Configure the loader to load textures
+    Loader.loadTexture = true;
+    Loader.load(
+      "../glbs/walk.glb",
+      function (gltf) {
+        var man = gltf.scene;
 
-  //orbit controls
-  function addOrbitControls() {
-    // Initialize OrbitControls
-    controls = new OrbitControls(env.camera, env.renderer.domElement);
+        man.position.set(-90, 0, -60);
+        man.scale.set(2.5, 2.5, 2.5);
 
-    // Optional: Enable damping (inertia)
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
-    controls.screenSpacePanning = false;
+        scene.add(man);
 
-    // Optional: Set limits for zooming and rotating
-    controls.minDistance = 10; // Minimum zoom distance
-    controls.maxDistance = 1500; // Maximum zoom distance
+        animations = gltf.animations;
 
-    // limiting vertical rotation around x axis
-    controls.minPolarAngle = 0;
-    controls.maxPolarAngle = Math.PI / 2.2;
+        // Set up animation mixer
+        manOriginalmixer = new THREE.AnimationMixer(man);
+        const clip = animations[0];
+        walkAction = manOriginalmixer.clipAction(clip);
+        walkAction.play();
 
-    // limiting horizontal rotation around y axis
-    controls.minAzimuthAngle = -Math.PI;
-    controls.maxAzimuthAngle = Math.PI;
-
-    var minPan = new THREE.Vector3(-300, -300, -300);
-    var maxPan = new THREE.Vector3(300, 300, 300);
-
-    // Function to clamp target position
-    function clampTarget() {
-      controls.target.x = Math.max(
-        minPan.x,
-        Math.min(maxPan.x, controls.target.x)
-      );
-      controls.target.y = Math.max(
-        minPan.y,
-        Math.min(maxPan.y, controls.target.y)
-      );
-      controls.target.z = Math.max(
-        minPan.z,
-        Math.min(maxPan.z, controls.target.z)
-      );
-    }
-
-    // Listen for changes in controls
-    controls.addEventListener("change", clampTarget);
-
-    // Initial call to set target within bounds if necessary
-    clampTarget();
+        mixers.push(manOriginalmixer);
+        scene.updateMatrixWorld(true);
+        animate();
+      },
+      undefined,
+      function (error) {
+        console.error(error.toString());
+      }
+    );
   }
 
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
@@ -432,47 +563,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function write3DText(text, callback) {
   const fontLoader = new FontLoader();
-  fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-    // Create the 3D text using the loaded font
-    const textGeometry = new TextGeometry(text, {
-      font: font,
-      size: 1,
-      depth: 0.2,
-      curveSegments: 5,
-      bevelEnabled: true,
-      bevelThickness: 0.03,
-      bevelSize: 0.02,
-      bevelSegments: 3,
-    });
+  fontLoader.load(
+    "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+    (font) => {
+      // Create the 3D text using the loaded font
+      const textGeometry = new TextGeometry(text, {
+        font: font,
+        size: 5,
+        depth: 0.001,
+        curveSegments: 4,
+        bevelEnabled: false,
+      });
 
-    const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-    textMesh.name = "3D text";
-    textMesh.position.set(0,10,10);
-    callback(textMesh);
-  });
-}
-
-class Environment {
-  constructor(scene, camera, renderer) {
-    this.scene = scene;
-    this.camera = camera;
-    this.renderer = renderer;
-  }
-  sceneSetup() {
-    this.scene.background = new THREE.Color(0xcccccc); // Set your desired background
-  }
-
-  cameraSetup() {
-    this.camera.position.z = 500;
-    this.camera.position.y = 500;
-  }
-
-  addRendererToDocument() {
-    this.renderer.setPixelRatio(
-      Math.min(Math.max(1, window.devicePixelRatio), 2)
-    );
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(this.renderer.domElement);
-  }
+      const textMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      textMesh.rotation.x = -Math.PI / 2;
+      callback(textMesh);
+    }
+  );
 }

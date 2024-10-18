@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js";
-import { Sky } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/objects/Sky.js";
 
 // Global variables
 
@@ -16,11 +15,19 @@ var cameraList = [],
   currentObject = new THREE.Object3D();
 var prevNav,
   isRackDataLoaded = false,
-  world_cam,
-  mixer;
+  world_cam;
 
 document.addEventListener("DOMContentLoaded", function () {
-  localStorageSetup();
+  // Local Storage Setup
+  window.localStorage.setItem("switchToMainCam", "null");
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === "switchToMainCam") {
+      switchCamera(event.newValue);
+    } else if (event.key === "isRackDataLoaded") {
+      isRackDataLoaded = event.newValue;
+    }
+  });
 
   // Rendering Setup
   // we use WebGL renderer for rendering 3d model efficiently
@@ -32,11 +39,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2));
 
-  scene = new THREE.Scene();
-
   //Raycasting Setup
   // we use raycasting to add hovering or onclick functionality to 3d model.
-  const raycaster = new THREE.Raycaster();
+const raycaster = new THREE.Raycaster();
 
   // need mouse coordinates for raycasting.
   const mouse = new THREE.Vector2();
@@ -55,6 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.appendChild(container);
     // assigning div to document's visible structure i.e. body.
 
+    scene = new THREE.Scene();
+
     scene.background = new THREE.Color(0xcccccc); // Set your desired background
 
     const Loader = new GLTFLoader();
@@ -62,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../glbs/warehouse_1710_1005.glb",
+      "../glbs/warehouse_1710_1124.glb",
       function (gltf) {
         model = gltf.scene;
 
@@ -82,16 +89,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
         scene.updateMatrixWorld(true);
 
-        lightSetup();
+        // Add ambient light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        ambientLight.castShadow = false; // Soft white light
+        scene.add(ambientLight);
 
-        // Set up animation mixer
-        mixer = new THREE.AnimationMixer(gltf.scene);
-        gltf.animations.forEach((clip) => {
-          mixer.clipAction(clip).play();
-        });
+        // // Add directional light
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
+        directionalLight.position.set(5, 5, 5); // Position the light
+        scene.add(directionalLight);
+         // Set up animation mixer
+    const mixer = new THREE.AnimationMixer(gltf.scene);
+    gltf.animations.forEach((clip) => {
+        mixer.clipAction(clip).play();
+    });
 
+    // Render loop
+    const clock = new THREE.Clock();
+    function animate() {
+        requestAnimationFrame(animate);
+        const delta = clock.getDelta(); // seconds.
+        mixer.update(delta); // Update the animation mixer
+        renderer.render(scene, camera);
+    }
         animate();
         window.localStorage.setItem("isLoaded", true);
+
       },
       undefined,
       function (error) {
@@ -102,34 +125,9 @@ document.addEventListener("DOMContentLoaded", function () {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     container.appendChild(renderer.domElement);
+
+    window.requestAnimationFrame(animate);
   }
-
-  function animate() {
-    // Render loop
-    renderer.render(scene, camera);
-    const clock = new THREE.Clock();
-    requestAnimationFrame(animate);
-    const delta = clock.getDelta(); // seconds.
-    mixer.update(delta); // Update the animation mixer
-
-    // const box = scene.getObjectByName("fork_lift_main");
-    // const lift = scene.getObjectByName("fork_lift");
-    // // Assuming `object` is the 3D object you want to measure
-    // const dimBox = new THREE.Box3().setFromObject(box);
-    // const liftBox = new THREE.Box3().setFromObject(lift);
-
-    // // Calculate dimensions
-    // const width = dimBox.max.x - dimBox.min.x;
-    // const height = dimBox.max.y - dimBox.min.y;
-    // const depth = dimBox.max.z - dimBox.min.z;
-    // // Calculate dimensions
-    // const liftwidth = liftBox.max.x - liftBox.min.x;
-    // const liftheight = liftBox.max.y - liftBox.min.y;
-    // const liftdepth = liftBox.max.z - liftBox.min.z;
-    // box.position.lerp(new THREE.Vector3(0, height*1.6, -120), 0.01);
-    // lift.position.lerp(new THREE.Vector3(0, height*1.6, -122), 0.01);
-  }
-  renderer.setAnimationLoop(animate);
 
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
     const localPrefix = isLast ? "└─" : "├─";
@@ -145,18 +143,6 @@ document.addEventListener("DOMContentLoaded", function () {
       dumpObject(child, lines, isLast, newPrefix);
     });
     return lines;
-  }
-
-  function lightSetup() {
-    // Add ambient light
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    ambientLight.castShadow = false; // Soft white light
-    scene.add(ambientLight);
-
-    // // Add directional light
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
-    directionalLight.position.set(5, 5, 5); // Position the light
-    scene.add(directionalLight);
   }
 
   // Creating first camera with world cam properties to show entire model and adding orbit controls to interact with model.
@@ -387,9 +373,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
-        console.log(
-          `Target Position: x=${targetObject.position.x}, y=${targetObject.position.y}, z=${targetObject.position.z}`
-        );
         if (targetObject.name.toString().includes("cam")) {
           if (targetObject.name.toString().includes("rack")) {
             console.log(
@@ -441,8 +424,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (prevBin != object) {
       object.userData.active = true;
       // Set transparent blue color
-      object.material.color.set(0xadd8e6); // Blue color
-      object.material.opacity = 0.5; // Adjust opacity for transparency
+    object.material.color.set(0xadd8e6); // Blue color
+    object.material.opacity = 0.5; // Adjust opacity for transparency
       console.log('{"bin":"' + object.name.toString() + '"}');
       moveToBin(object);
     } else {
@@ -451,8 +434,8 @@ document.addEventListener("DOMContentLoaded", function () {
         prevBinColor = object.material.color.clone();
         prevBin = object;
         // Set transparent blue color
-        object.material.color.set(0xadd8e6); // Blue color
-        object.material.opacity = 0.5; // Adjust opacity for transparency
+    object.material.color.set(0xadd8e6); // Blue color
+    object.material.opacity = 0.5; // Adjust opacity for transparency
         console.log('{"bin":"' + object.name.toString() + '"}');
         moveToBin(object);
       } else {
@@ -488,19 +471,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // point the camera to look at the center of the box
     camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
-  }
-
-  function localStorageSetup() {
-    // Local Storage Setup
-    window.localStorage.setItem("switchToMainCam", "null");
-
-    window.addEventListener("storage", (event) => {
-      if (event.key === "switchToMainCam") {
-        switchCamera(event.newValue);
-      } else if (event.key === "isRackDataLoaded") {
-        isRackDataLoaded = event.newValue;
-      }
-    });
   }
 });
 
