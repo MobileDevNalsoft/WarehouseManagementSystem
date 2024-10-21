@@ -9,7 +9,7 @@ import 'package:warehouse_3d/inits/init.dart';
 import 'navigations/navigator_service.dart';
 import 'navigations/route_generator.dart';
 
-final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
+final localhostServer = InAppLocalhostServer(documentRoot: 'assets');                           
 main() async {
   await init();
   WidgetsFlutterBinding.ensureInitialized();

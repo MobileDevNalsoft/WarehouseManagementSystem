@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //Raycasting Setup
   // we use raycasting to add hovering or onclick functionality to 3d model.
-const raycaster = new THREE.Raycaster();
+  const raycaster = new THREE.Raycaster();
 
   // need mouse coordinates for raycasting.
   const mouse = new THREE.Vector2();
@@ -69,7 +69,7 @@ const raycaster = new THREE.Raycaster();
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../glbs/warehouse_1710_1124.glb",
+      "../3d_models/warehouse_1110_0948.glb",
       function (gltf) {
         model = gltf.scene;
 
@@ -128,6 +128,12 @@ const raycaster = new THREE.Raycaster();
 
     window.requestAnimationFrame(animate);
   }
+
+  function animate() {
+    renderer.render(scene, camera);
+    window.requestAnimationFrame(animate);
+  }
+  renderer.setAnimationLoop( animate );
 
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
     const localPrefix = isLast ? "└─" : "├─";

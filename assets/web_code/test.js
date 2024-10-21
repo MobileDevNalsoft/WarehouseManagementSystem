@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     renderingSetup();
     sceneSetup();
+    addSkyDome();
     cameraSetup();
     controlsSetup();
     lightSetup();
@@ -62,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     renderer.setPixelRatio(Math.min(Math.max(1, window.devicePixelRatio), 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setAnimationLoop(animate);
     // PMREM Generator for improved environment lighting
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
@@ -77,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function sceneSetup() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xcccccc);
   }
 
   function cameraSetup() {
@@ -103,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Optional: Set limits for zooming and rotating
     controls.minDistance = 10; // Minimum zoom distance
-    controls.maxDistance = 1500; // Maximum zoom distance
+    controls.maxDistance = 1000; // Maximum zoom distance
 
     // limiting vertical rotation around x axis
     controls.minPolarAngle = 0;
@@ -171,8 +170,37 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Update controls
-    controls.update();  // This will use OrbitControls damping if enabled
+    controls.update(); // This will use OrbitControls damping if enabled
     renderer.render(scene, camera);
+  }
+
+  function addSkyDome() {
+    // Load the skydome texture
+    const loader = new THREE.TextureLoader();
+    loader.load("../images/sky_box.jpg", function (texture) {
+      // Create a large sphere geometry for the skydome
+      const geometry = new THREE.SphereGeometry(1000, 32, 32);
+
+      texture.wrapS = THREE.RepeatWrapping; // Ensure the texture wraps horizontally
+      texture.wrapT = THREE.ClampToEdgeWrapping; // Optionally clamp vertically to prevent top/bottom seams
+      texture.minFilter = THREE.LinearFilter; // Smooth out texture if it's low-res
+
+      // Create a material using the loaded texture
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        side: THREE.BackSide, // Render the inside of the sphere
+      });
+
+      // Create the skydome mesh
+      const skydome = new THREE.Mesh(geometry, material);
+
+      skydome.rotation.y = Math.PI/2;
+
+      skydome.position.y = 100;
+
+      // Add the skydome to the scene
+      scene.add(skydome);
+    });
   }
 
   function buildPlane(
@@ -218,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //ground model
   function buildGround() {
     // Add Plane to Scene
-    scene.add(buildPlane(900, 700, "../images/ground.png", 10, 10));
+    scene.add(buildPlane(2000, 2000, "../images/ground.png", 10, 10));
   }
 
   function buildCompund() {
@@ -502,6 +530,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         scene.updateMatrixWorld(true);
+
+        addWorker();
       },
       undefined,
       function (error) {
