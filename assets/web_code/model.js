@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../glbs/warehouse_2310_1145.glb",
+      "../glbs/warehouse_2310_1830.glb",
       function (gltf) {
         model = gltf.scene;
 
@@ -139,8 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
     const localPrefix = isLast ? "└─" : "├─";
     lines.push(
-      `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${
-        obj.type
+      `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${obj.type
       }]`
     );
     const newPrefix = prefix + (isLast ? "  " : "│ ");
@@ -525,6 +524,39 @@ document.addEventListener("DOMContentLoaded", function () {
   leftPanel.appendChild(receivingAreaButton);
 
   container.appendChild(leftPanel);
+
+  const personIcon = document.querySelector(".person-icon");
+  const overlay = document.querySelector(".overlay");
+
+  // Show overlay on mouse enter
+  personIcon.addEventListener("mouseenter", () => {
+    overlay.classList.add("active");
+  });
+
+  // Hide overlay when mouse leaves both icon and overlay
+  personIcon.addEventListener("mouseleave", () => {
+    if (!overlay.contains(document.activeElement)) {
+      overlay.classList.remove("active");
+    }
+  });
+
+  overlay.addEventListener("mouseleave", () => {
+    overlay.classList.remove("active");
+  });
+
+  // Optional: Handle clicks on overlay buttons
+  document
+    .querySelector(".overlay-button")
+    .addEventListener("click", function () {
+      alert("Dashboard clicked!");
+    });
+
+  document
+    .querySelectorAll(".overlay-button")[1]
+    .addEventListener("click", function () {
+      alert("Logout clicked!");
+    });
+
 });
 
 // functions
@@ -541,34 +573,3 @@ function findCameraByName(name) {
   }
 }
 
-const personIcon = document.querySelector(".person-icon");
-const overlay = document.querySelector(".overlay");
-
-// Show overlay on mouse enter
-personIcon.addEventListener("mouseenter", () => {
-  overlay.classList.add("active");
-});
-
-// Hide overlay when mouse leaves both icon and overlay
-personIcon.addEventListener("mouseleave", () => {
-  if (!overlay.contains(document.activeElement)) {
-    overlay.classList.remove("active");
-  }
-});
-
-overlay.addEventListener("mouseleave", () => {
-  overlay.classList.remove("active");
-});
-
-// Optional: Handle clicks on overlay buttons
-document
-  .querySelector(".overlay-button")
-  .addEventListener("click", function () {
-    alert("Dashboard clicked!");
-  });
-
-document
-  .querySelectorAll(".overlay-button")[1]
-  .addEventListener("click", function () {
-    alert("Logout clicked!");
-  });

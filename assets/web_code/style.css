@@ -66,10 +66,9 @@ body {
 .navbar {
     position: relative;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background-color: #0d47a1;
-    padding: 20px 20px;
+    padding: 18px 20px;
     position: relative;
     z-index: 100;
 }
@@ -88,8 +87,16 @@ body {
 }
 
 .nav-item {
-    color: white;
-    padding: 10px;
+    height: 25px;
+    width: 85px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: #fff;
+    color: black;
+    border-radius: 10px;
+    margin-right: 10px;
+    padding: 5px;
     position: relative;
     cursor: pointer;
 }
@@ -101,26 +108,53 @@ body {
 
 /* Dropdown */
 .dropdown {
+    position: relative;
+    margin-right: 15px;
+}
+  
+  .dropdown-toggle {
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .dropdown-menu {
     display: none;
     position: absolute;
-    background-color: white;
-    min-width: 150px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    top: 100%;
+    left: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1;
-}
-
-.dropdown-item {
-    color: black;
-    padding: 10px;
-    text-align: left;
-    text-decoration: none;
+  }
+  
+  .dropdown-menu li {
+    padding: 10px 20px;
+  }
+  
+  .dropdown-menu a {
     display: block;
-}
-
-.dropdown-item:hover {
-    background-color: #f1f1f1;
-    /* Highlight on hover */
-}
+    text-decoration: none;
+    color: #333;
+    padding: 10px 20px;
+  }
+  
+  .dropdown-menu a:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
 
 /* Person Icon and Overlay */
 .person-icon {
@@ -132,7 +166,7 @@ body {
     display: none;
     position: absolute;
     right: 20px;
-    top: 50px;
+    top: 40px;
     background-color: white;
     min-width: 150px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -156,4 +190,16 @@ body {
 .overlay-button:hover {
     background-color: #f1f1f1;
     /* Highlight on hover */
+}
+
+#img {
+    height: 40px;
+    width: 140px;
+    margin-left: 900px;
+    margin-right: 10px;
+}
+
+#profile {
+    height: 40px;
+    width: 40px;
 }

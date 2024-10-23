@@ -33,24 +33,26 @@
 </body>
 <div class="navbar">
         <div class="nav-links">
-            <div class="nav-item">
-                Menu 1
-                <div class="dropdown">
-                    <a href="#" class="dropdown-item">Submenu 1-1</a>
-                    <a href="#" class="dropdown-item">Submenu 1-2</a>
-                </div>
-            </div>
-            <div class="nav-item">
-                Menu 2
-                <div class="dropdown">
-                    <a href="#" class="dropdown-item">Submenu 2-1</a>
-                    <a href="#" class="dropdown-item">Submenu 2-2</a>
-                </div>
-            </div>
+            <div class="dropdown">
+                <button class="dropdown-toggle">Company</button>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Company 1</a></li>
+                  <li><a href="#">Company 2</a></li>
+                  <li><a href="#">Company 3</a></li>
+                </ul>
+              </div>
+              <div class="dropdown">
+                <button class="dropdown-toggle">Warehouse</button>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Warehouse 1</a></li>
+                  <li><a href="#">Warehouse 2</a></li>
+                  <li><a href="#">Warehouse 3</a></li>
+                </ul>
+              </div>
         </div>
-        <div class="logo">My Logo</div>
+        <img id="img" src="nalsoft_logo.png"/>
         <div class="person-icon">
-            <img src="https://via.placeholder.com/30" alt="User Icon" />
+            <img id="profile" src="profile.png" alt="User Icon" />
             <div class="overlay">
                 <button class="overlay-button">Dashboard</button>
                 <button class="overlay-button">Logout</button>
