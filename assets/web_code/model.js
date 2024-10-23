@@ -57,6 +57,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function init() {
     container = document.createElement("div");
     // creating a container section(division) on our html page(not yet visible).
+    container.id = "container";
+    container.style.height = "80%";
     document.body.appendChild(container);
     // assigning div to document's visible structure i.e. body.
 
@@ -69,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../3d_models/warehouse_1110_0948.glb",
+      "../glbs/warehouse_2310_1145.glb",
       function (gltf) {
         model = gltf.scene;
 
@@ -98,23 +100,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
         directionalLight.position.set(5, 5, 5); // Position the light
         scene.add(directionalLight);
-         // Set up animation mixer
-    const mixer = new THREE.AnimationMixer(gltf.scene);
-    gltf.animations.forEach((clip) => {
-        mixer.clipAction(clip).play();
-    });
+        // Set up animation mixer
+        const mixer = new THREE.AnimationMixer(gltf.scene);
+        gltf.animations.forEach((clip) => {
+          mixer.clipAction(clip).play();
+        });
 
-    // Render loop
-    const clock = new THREE.Clock();
-    function animate() {
-        requestAnimationFrame(animate);
-        const delta = clock.getDelta(); // seconds.
-        mixer.update(delta); // Update the animation mixer
-        renderer.render(scene, camera);
-    }
+        // Render loop
+        const clock = new THREE.Clock();
+        function animate() {
+          requestAnimationFrame(animate);
+          const delta = clock.getDelta(); // seconds.
+          mixer.update(delta); // Update the animation mixer
+          renderer.render(scene, camera);
+        }
         animate();
         window.localStorage.setItem("isLoaded", true);
-
       },
       undefined,
       function (error) {
@@ -122,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     );
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(container.clientWidth, container.clientHeight);
 
     container.appendChild(renderer.domElement);
 
@@ -133,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
   }
-  renderer.setAnimationLoop( animate );
+  renderer.setAnimationLoop(animate);
 
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
     const localPrefix = isLast ? "└─" : "├─";
@@ -154,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Creating first camera with world cam properties to show entire model and adding orbit controls to interact with model.
   function createNewCamera(importedCamera) {
     const fov = importedCamera.fov; // Field of view
-    const aspect = window.innerWidth / window.innerHeight; // Aspect ratio
+    const aspect = container.clientWidth / container.clientHeight; // Aspect ratio
     const near = importedCamera.near; // Near clipping plane
     const far = 3000; // Far clipping plane
 
@@ -333,9 +334,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function onMouseMove(e) {
-    // regularly updating the position of mouse pointer when it is moved on rendered window.
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    const rect = container.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     if (model != null && camera != null) {
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
@@ -366,8 +367,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function onMouseDown(e) {
-    lastPos.x = (e.clientX / window.innerWidth) * 2 - 1;
-    lastPos.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    lastPos.x = (e.clientX / container.clientWidth) * 2 - 1;
+    lastPos.y = -(e.clientY / window.container.clientHeight) * 2 + 1;
   }
 
   function onMouseUp(e) {
@@ -411,8 +412,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // for responsiveness
   function onWindowResize() {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
   }
 
@@ -430,8 +431,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (prevBin != object) {
       object.userData.active = true;
       // Set transparent blue color
-    object.material.color.set(0xadd8e6); // Blue color
-    object.material.opacity = 0.5; // Adjust opacity for transparency
+      object.material.color.set(0xadd8e6); // Blue color
+      object.material.opacity = 0.5; // Adjust opacity for transparency
       console.log('{"bin":"' + object.name.toString() + '"}');
       moveToBin(object);
     } else {
@@ -440,8 +441,8 @@ document.addEventListener("DOMContentLoaded", function () {
         prevBinColor = object.material.color.clone();
         prevBin = object;
         // Set transparent blue color
-    object.material.color.set(0xadd8e6); // Blue color
-    object.material.opacity = 0.5; // Adjust opacity for transparency
+        object.material.color.set(0xadd8e6); // Blue color
+        object.material.opacity = 0.5; // Adjust opacity for transparency
         console.log('{"bin":"' + object.name.toString() + '"}');
         moveToBin(object);
       } else {
@@ -478,6 +479,52 @@ document.addEventListener("DOMContentLoaded", function () {
     // point the camera to look at the center of the box
     camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
   }
+
+  const leftPanel = document.createElement("div");
+  leftPanel.id = "leftPanel";
+
+  const inspectionAreaButton = document.createElement("button");
+  inspectionAreaButton.classList.add("areaButton");
+  inspectionAreaButton.textContent = "Inspection Area";
+  inspectionAreaButton.onclick = function () {
+    const areaName = "inspectionArea";
+    switchCamera(areaName);
+    console.log('{"area":"' + areaName + '"}');
+  };
+
+  const stagingAreaButton = document.createElement("button");
+  stagingAreaButton.classList.add("areaButton");
+  stagingAreaButton.textContent = "Staging Area";
+  stagingAreaButton.onclick = function () {
+    const areaName = "stagingArea";
+    switchCamera(areaName);
+    console.log('{"area":"' + areaName + '"}');
+  };
+
+  const activityAreaButton = document.createElement("button");
+  activityAreaButton.classList.add("areaButton");
+  activityAreaButton.textContent = "Activity Area";
+  activityAreaButton.onclick = function () {
+    const areaName = "activityArea";
+    switchCamera(areaName);
+    console.log('{"area":"' + areaName + '"}');
+  };
+
+  const receivingAreaButton = document.createElement("button");
+  receivingAreaButton.classList.add("areaButton");
+  receivingAreaButton.textContent = "Receiving Area";
+  receivingAreaButton.onclick = function () {
+    const areaName = "receivingArea";
+    switchCamera(areaName);
+    console.log('{"area":"' + areaName + '"}');
+  };
+
+  leftPanel.appendChild(inspectionAreaButton);
+  leftPanel.appendChild(stagingAreaButton);
+  leftPanel.appendChild(activityAreaButton);
+  leftPanel.appendChild(receivingAreaButton);
+
+  container.appendChild(leftPanel);
 });
 
 // functions
@@ -493,3 +540,35 @@ function findCameraByName(name) {
     return null;
   }
 }
+
+const personIcon = document.querySelector(".person-icon");
+const overlay = document.querySelector(".overlay");
+
+// Show overlay on mouse enter
+personIcon.addEventListener("mouseenter", () => {
+  overlay.classList.add("active");
+});
+
+// Hide overlay when mouse leaves both icon and overlay
+personIcon.addEventListener("mouseleave", () => {
+  if (!overlay.contains(document.activeElement)) {
+    overlay.classList.remove("active");
+  }
+});
+
+overlay.addEventListener("mouseleave", () => {
+  overlay.classList.remove("active");
+});
+
+// Optional: Handle clicks on overlay buttons
+document
+  .querySelector(".overlay-button")
+  .addEventListener("click", function () {
+    alert("Dashboard clicked!");
+  });
+
+document
+  .querySelectorAll(".overlay-button")[1]
+  .addEventListener("click", function () {
+    alert("Logout clicked!");
+  });

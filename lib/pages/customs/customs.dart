@@ -10,7 +10,7 @@ import 'package:another_flushbar/flushbar.dart';
 class Customs {
   static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
     return Container(
-      height: size.height,
+      height: size.height*0.92,
       width: size.width * 0.22,
       decoration: const BoxDecoration(
           color: Colors.white,
@@ -30,7 +30,7 @@ class Customs {
             width: size.width * 0.12,
             margin: EdgeInsets.symmetric(vertical: size.height * 0.005),
             alignment: Alignment.center,
-            decoration: const BoxDecoration(color: Color.fromRGBO(92, 63, 182, 1), borderRadius: BorderRadius.all(Radius.circular(20))),
+            decoration: BoxDecoration(color: Colors.blue.shade900, borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Text(
               title,
               style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),

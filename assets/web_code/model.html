@@ -17,8 +17,6 @@
       }
       </script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  </script>
-  <script type="module" src="./model.js"></script>
   <style>
     body {
       margin: 0;
@@ -26,10 +24,38 @@
       width: 100vw;
       height: 100vh;
     }
-  </style>
+    </style>
 </head>
 
 <body>
+  
+  <script type="module" src="./model.js"></script>
 </body>
+<div class="navbar">
+        <div class="nav-links">
+            <div class="nav-item">
+                Menu 1
+                <div class="dropdown">
+                    <a href="#" class="dropdown-item">Submenu 1-1</a>
+                    <a href="#" class="dropdown-item">Submenu 1-2</a>
+                </div>
+            </div>
+            <div class="nav-item">
+                Menu 2
+                <div class="dropdown">
+                    <a href="#" class="dropdown-item">Submenu 2-1</a>
+                    <a href="#" class="dropdown-item">Submenu 2-2</a>
+                </div>
+            </div>
+        </div>
+        <div class="logo">My Logo</div>
+        <div class="person-icon">
+            <img src="https://via.placeholder.com/30" alt="User Icon" />
+            <div class="overlay">
+                <button class="overlay-button">Dashboard</button>
+                <button class="overlay-button">Logout</button>
+            </div>
+        </div>
+    </div>
 
 </html>
