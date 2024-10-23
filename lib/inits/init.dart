@@ -14,7 +14,7 @@ Future<void> init() async {
   getIt.allowReassignment = true;
 
   // Api
-  getIt.registerLazySingleton<NetworkCalls>(() => NetworkCalls(AppConstants.APEX_URL, getIt(), connectTimeout: 30, receiveTimeout: 30));
+  // getIt.registerLazySingleton<NetworkCalls>(() => NetworkCalls(AppConstants.BASEURL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30,username: "nalsoft_adm",password: "P@s\$w0rd2024"));
 
   // Navigator Service
   getIt.registerLazySingleton<NavigatorService>(() => NavigatorService());
@@ -22,6 +22,8 @@ Future<void> init() async {
   //js interop service
   getIt.registerFactory(() => JsInteropService());
 
+  //app constants
+ getIt.registerFactory(() => AppConstants());
   //Initializations
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);

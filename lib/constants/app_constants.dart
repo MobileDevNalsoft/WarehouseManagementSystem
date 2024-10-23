@@ -13,6 +13,7 @@ class AppConstants {
   static const String AUTHENTICATION_USERNAME = 'a07dc2a022db4c458397118abb543e57';
   static const String AUTHENTICATION_PASSWORD = 'bf06245f-33ae-4b6c-9d0e-27fc0d89f514';
 
+
   static const Map<String, String> TOKEN_DATA = {
       'grant_type': 'client_credentials',
       'scope': 'urn:opc:idm:__myscopes__',
@@ -24,9 +25,13 @@ class AppConstants {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
 
-  static const String USERNAME = "username";
-
+  static const String USERNAME = "nalsoft_adm";
+  static const String PASSWORD = "P@s\$w0rd2024";
 
   // apex constants
-  static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxma/dms/';
+   static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxma/dms/';
+   static const BASEURL = 'https://tg1.wms.ocs.oraclecloud.com:443/emg_test/wms/lgfapi/v10/entity/';
+   static const INVENTORY_HISTORY = 'inventory_history/';
 }
+
+ 
