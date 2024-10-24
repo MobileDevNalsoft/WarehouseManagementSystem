@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/pages/entry_point.dart';
 
 class HoverDropdown extends StatefulWidget {
-  const HoverDropdown({super.key});
+  HoverDropdown({super.key, required this.size});
+  Size size;
 
   @override
   State<HoverDropdown> createState() => _HoverDropdownState();
 }
 
 class _HoverDropdownState extends State<HoverDropdown> {
-  double height = 80;
-  double bottomHeight = 70;
+
+  double? height;
+  double? bottomHeight;
   double turns = 1;
+  
+  @override
+  void initState() {
+    super.initState();
+    height = widget.size.height*0.08;
+    bottomHeight = widget.size.height*0.07;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +31,13 @@ class _HoverDropdownState extends State<HoverDropdown> {
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
       height: height,
-      width: size.width * 0.1,
+      width: size.width * 0.12,
       child: Stack(
         children: [
           AnimatedContainer(
             duration: Duration(milliseconds: 200),
             height: bottomHeight,
-            width: size.width * 0.1,
+            width: size.width * 0.12,
             child: SingleChildScrollView(
               physics: NeverScrollableScrollPhysics(),
               child: Column(
@@ -38,8 +47,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
                       child: InkWell(
                           onTap: () {
                             setState(() {
-                              height = height == 180 ? 80 : 180; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == 180 ? 70 : 180;
+                              height = height == size.height*0.2 ? size.height*0.08 : size.height*0.2; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                              bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.07 : size.height*0.2;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
                             Navigator.push(context, MaterialPageRoute(builder: (context) => EntryPoint(),));
@@ -49,8 +58,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
                       child: InkWell(
                           onTap: () {
                             setState(() {
-                              height = height == 180 ? 80 : 180; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == 180 ? 70 : 180;
+                              height = height == size.height*0.2 ? size.height*0.08 : size.height*0.2; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                              bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.07 : size.height*0.2;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
                             launch('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/',isNewTab: true);
@@ -66,8 +75,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
             child: InkWell(
               onTap: () {
                 setState(() {
-                  height = height == 80 ? 180 : 80; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                  bottomHeight = bottomHeight == 70 ? 180 : 70;
+                  height = height == size.height*0.08 ? size.height*0.2 : size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                  bottomHeight = bottomHeight == size.height*0.07 ? size.height*0.2 : size.height*0.07;
                   turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                 });
               },
@@ -76,7 +85,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                 children: [
                   Image.asset(
                     'assets/images/profile.png',
-                    scale: 6,
+                    scale: widget.size.height*0.012,
                   ),
                   Gap(size.width * 0.003),
                   AnimatedRotation(
@@ -97,10 +106,10 @@ class _HoverDropdownState extends State<HoverDropdown> {
     );
   }
   Future<void> launch(String url, {bool isNewTab = true}) async {
-    await launchUrl(
-      Uri.parse(url),
-      webOnlyWindowName: isNewTab ? '_blank' : '_self',
-    );
+    // await launchUrl(
+    //   Uri.parse(url),
+    //   webOnlyWindowName: isNewTab ? '_blank' : '_self',
+    // );
   }
 }
 
@@ -114,10 +123,11 @@ class ForHover extends StatefulWidget {
 }
 
 class _ForHoverState extends State<ForHover> {
-  Color? hoverColor;
-  Color? textColor;
+  Color? hoverColor = Colors.white;
+  Color? textColor = Colors.black;
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return MouseRegion(
       onEnter: (event) {
         // change color on hover
@@ -135,9 +145,10 @@ class _ForHoverState extends State<ForHover> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
+        height: size.height*0.06,
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        margin: EdgeInsets.only(right: 25),
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(right: size.width*0.01),
         color: hoverColor,
         child: Text(
           widget.text,

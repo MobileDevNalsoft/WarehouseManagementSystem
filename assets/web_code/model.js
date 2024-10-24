@@ -616,7 +616,7 @@ const togglePanel = document.getElementById("togglePanel");
 toggleButton.addEventListener("mouseover", function () {
   if(!leftPanel.classList.contains("open")){
     tooltip.style.opacity = 1; // Show tooltip on hover
-  tooltip.style.left = "220px";
+  tooltip.style.left = "22.5vw";
   }
 });
 
@@ -635,8 +635,8 @@ toggleButton.addEventListener("click", function () {
     // Slide the panel out when clicked
     if (leftPanel.classList.contains("open")) {
         leftPanel.style.left = "0"; // Panel moves out
-        togglePanel.style.left = "160px"; // Button moves to the edge of the panel
-        tooltip.style.left = "200px"
+        togglePanel.style.left = "10vw"; // Button moves to the edge of the panel
+        tooltip.style.left = "12.5vw"
         tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
 
         // Hide tooltip during the animation
@@ -652,11 +652,11 @@ toggleButton.addEventListener("click", function () {
     } else {
         leftPanel.style.left = "-180px"; // Hide panel
         togglePanel.style.left = "0"; // Reset button position
-        tooltip.style.left = "220px"
-        tooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
+        // tooltip.style.left = "0px"
+        // tooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
 
-        // Hide tooltip during the animation
-        tooltip.style.opacity = 0;
+        // // Hide tooltip during the animation
+        // tooltip.style.opacity = 0;
 
         // Wait for the animation to finish
         togglePanel.addEventListener("transitionend", function (event) {

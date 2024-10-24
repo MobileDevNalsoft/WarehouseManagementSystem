@@ -26,27 +26,26 @@ body {
     /* Ensure it appears above other elements */
 }
 
-/* Style for the left panel */
 #leftPanel {
     position: fixed;
-    top: 100px;
-    left: -180px; /* Initially hide the panel off-screen */
-    width: 150px;
+    top: 8vh; /* Use vh to make it responsive */
+    left: -20vw; /* Panel width now based on viewport width */
+    width: 9vw; /* Width as a percentage of viewport */
     height: auto;
     background-color: rgba(255, 255, 255, 0.8);
     z-index: 1000;
-    padding: 10px;
+    padding: 1vw; /* Adjust padding based on viewport width */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-    transition: left 0.4s ease; /* Smooth sliding animation */
+    border-top-right-radius: 1.5vw;
+    border-bottom-right-radius: 1.5vw;
+    transition: left 0.4s ease;
 }
 
 /* Style for the chevron button */
 #togglePanel {
     position: fixed;
     left: 0; /* Button initially visible at screen edge */
-    top: 30%;
+    top: 31vh;
     transform: translateY(-50%);
     background-color: #0d47a1;
     color: white;
@@ -80,96 +79,47 @@ body {
     display: block;
 }
 
+.areaButton{
+    border-radius: 15px;
+    color: #090909;
+    align-items: center;
+    font-size: 15px;
+    height: 5vh;
+    border: none;
+    cursor: pointer;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 1vh;
+    width: 98%;
+    opacity: 0; /* Buttons are hidden initially */
+    transform: translateX(-50px); /* Slide-in effect for buttons */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
 /* Button style inside the left panel */
 #inspectionArea_cam{
     background-color: #6997dc;
-    border-radius: 15px;
-    color: #090909;
-    font-size: 16px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    padding: 10px;
-    width: 90%;
-    opacity: 0; /* Buttons are hidden initially */
-    transform: translateX(-50px); /* Slide-in effect for buttons */
-    transition: opacity 0.4s ease, transform 0.4s ease;
 }
+
 #stagingArea_cam{
     background-color: #a1e793;
-    border-radius: 15px;
-    color: #0f0f0f;
-    font-size: 16px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    padding: 10px;
-    width: 90%;
-    opacity: 0; /* Buttons are hidden initially */
-    transform: translateX(-50px); /* Slide-in effect for buttons */
-    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 #activityArea_cam{
     background-color: #bd976f;
-    border-radius: 15px;
-    color: #0c0c0c;
-    font-size: 16px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    padding: 10px;
-    width: 90%;
-    opacity: 0; /* Buttons are hidden initially */
-    transform: translateX(-50px); /* Slide-in effect for buttons */
-    transition: opacity 0.4s ease, transform 0.4s ease;
 }
+
 #receivingArea_cam{
     background-color: #6fbdb4;
-    border-radius: 15px;
-    color: #0c0c0c;
-    font-size: 16px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    padding: 10px;
-    width: 90%;
-    opacity: 0; /* Buttons are hidden initially */
-    transform: translateX(-50px); /* Slide-in effect for buttons */
-    transition: opacity 0.4s ease, transform 0.4s ease;
 }
+
 #storageArea_cam{
     background-color: #6bd370;
-    border-radius: 15px;
-    color: #0c0c0c;
-    font-size: 16px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    padding: 10px;
-    width: 90%;
-    opacity: 0; /* Buttons are hidden initially */
-    transform: translateX(-50px); /* Slide-in effect for buttons */
-    transition: opacity 0.4s ease, transform 0.4s ease;
 }
+
 #yardArea_cam{
     background-color: #e18851;
-    border-radius: 15px;
-    color: #0c0c0c;
-    font-size: 16px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
-    padding: 10px;
-    width: 90%;
-    opacity: 0; /* Buttons are hidden initially */
-    transform: translateX(-50px); /* Slide-in effect for buttons */
-    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 /* When the panel is open, buttons will slide in */
