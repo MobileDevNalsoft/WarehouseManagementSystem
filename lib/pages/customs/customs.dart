@@ -23,7 +23,9 @@ class Customs {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [IconButton(onPressed: () => getIt<JsInteropService>().switchToMainCam(), icon: const Icon(Icons.close_rounded))],
+            children: [IconButton(onPressed: (){getIt<JsInteropService>().switchToMainCam();
+            getIt<JsInteropService>().resetTrucks();
+            }, icon: const Icon(Icons.close_rounded))],
           ),
           Container(
             height: size.height * 0.06,

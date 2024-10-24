@@ -9,3 +9,8 @@ abstract class YardEvent extends Equatable {
 class AddYardData extends YardEvent{
   const AddYardData();
 }
+
+class YardTruckExpanded extends YardEvent{
+  int index;
+   YardTruckExpanded({required this.index});
+}

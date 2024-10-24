@@ -13,6 +13,12 @@ external _switchToMainCam();
 external _isRackDataLoaded(bool value);
 
 @JS()
+external _setNumberOfTrucks(String message);
+
+@JS()
+external _resetTrucks();
+
+@JS()
 external _showAlert(String message);
 
 @JS()
@@ -37,6 +43,14 @@ class JsInteropService {
 
   isRackDataLoaded(value) {
     _isRackDataLoaded(value);
+  }
+
+  setNumberOfTrucks(message){
+    _setNumberOfTrucks(message);
+  }
+
+  resetTrucks(){
+    _resetTrucks();
   }
 
   showAlert(String message) {

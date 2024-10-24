@@ -29,9 +29,11 @@ class AppConstants {
   static const String PASSWORD = "P@s\$w0rd2024";
 
   // apex constants
-   static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxma/dms/';
+   static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxwms/';
    static const BASEURL = 'https://tg1.wms.ocs.oraclecloud.com:443/emg_test/wms/lgfapi/v10/entity/';
+
    static const INVENTORY_HISTORY = 'inventory_history/';
+   static const LOCATION = 'location/';
 }
 
  
