@@ -168,12 +168,14 @@ function resetTrucksAnimation(){
     container.appendChild(renderer.domElement);
 
     window.requestAnimationFrame(animate);
+    resetTrucksAnimation();
   }
 
   function animate() {
     renderer.render(scene, camera);
     window.requestAnimationFrame(animate);
   }
+
   renderer.setAnimationLoop(animate);
 
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
@@ -459,7 +461,7 @@ function resetTrucksAnimation(){
           } else {
 
             console.log(
-              '{"area":"' + targetObject.name.toString().split("_")[0] + '", "getData":"'+targetObject.name.toString().split("_")[0]+'"}');
+              '{"area":"' + targetObject.name.toString().split("_")[0] + '"}');
               window.localStorage.setItem("getData",targetObject.name.toString().split("_")[0]);
               if(targetObject.name.toString().split("_")[0]=="yardArea"){
                 for(let i=1; i<=20;i++){
@@ -575,7 +577,16 @@ function resetTrucksAnimation(){
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].onclick = function () {
         switchCamera(buttons[i].id);
-        console.log('{"area":"' + buttons[i].id + '"}');
+        console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
+        if(buttons[i].id.includes("yard")){
+          window.localStorage.setItem("getData","yardArea");
+          for(let i=1; i<=20;i++){
+            scene.getObjectByName("truck_Y"+i).visible=false;
+          }
+          scene.getObjectByName("truck_A1").visible=false;
+          scene.getObjectByName("truck_A2").visible=false;
+          scene.getObjectByName("truck_A3").visible=false;
+        }
       };
   }
 });

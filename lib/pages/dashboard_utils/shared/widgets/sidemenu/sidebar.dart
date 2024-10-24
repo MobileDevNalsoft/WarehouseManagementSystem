@@ -19,31 +19,8 @@ class Sidebar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // if (Responsive.isMobile(context))
-                //   Padding(
-                //     padding: const EdgeInsets.symmetric(
-                //       horizontal: AppDefaults.padding,
-                //     ),
-                //     child: IconButton(
-                //       onPressed: () {
-                //         Navigator.pop(context);
-                //       },
-                //       icon: SvgPicture.asset('assets/icons/close_filled.svg'),
-                //     ),
-                //   ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(
-                //     horizontal: AppDefaults.padding,
-                //     vertical: AppDefaults.padding * 1.5,
-                //   ),
-                //   child: SvgPicture.asset(AppConfig.logo),
-                // ),
-              ],
-            ),
-            const Divider(),
+            Text("Dashboard",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black),),
+            
             gapH16,
             Expanded(
               child: Padding(

@@ -29,7 +29,7 @@ body {
 /* Style for the left panel */
 #leftPanel {
     position: fixed;
-    top: 200px;
+    top: 100px;
     left: -180px; /* Initially hide the panel off-screen */
     width: 150px;
     height: auto;
@@ -46,7 +46,7 @@ body {
 #togglePanel {
     position: fixed;
     left: 0; /* Button initially visible at screen edge */
-    top: 38%;
+    top: 30%;
     transform: translateY(-50%);
     background-color: #0d47a1;
     color: white;
@@ -81,10 +81,85 @@ body {
 }
 
 /* Button style inside the left panel */
-.areaButton {
-    background-color: #0d47a1;
+#inspectionArea_cam{
+    background-color: #6997dc;
     border-radius: 15px;
-    color: #fff;
+    color: #090909;
+    font-size: 16px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    padding: 10px;
+    width: 90%;
+    opacity: 0; /* Buttons are hidden initially */
+    transform: translateX(-50px); /* Slide-in effect for buttons */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#stagingArea_cam{
+    background-color: #a1e793;
+    border-radius: 15px;
+    color: #0f0f0f;
+    font-size: 16px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    padding: 10px;
+    width: 90%;
+    opacity: 0; /* Buttons are hidden initially */
+    transform: translateX(-50px); /* Slide-in effect for buttons */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#activityArea_cam{
+    background-color: #bd976f;
+    border-radius: 15px;
+    color: #0c0c0c;
+    font-size: 16px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    padding: 10px;
+    width: 90%;
+    opacity: 0; /* Buttons are hidden initially */
+    transform: translateX(-50px); /* Slide-in effect for buttons */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#receivingArea_cam{
+    background-color: #6fbdb4;
+    border-radius: 15px;
+    color: #0c0c0c;
+    font-size: 16px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    padding: 10px;
+    width: 90%;
+    opacity: 0; /* Buttons are hidden initially */
+    transform: translateX(-50px); /* Slide-in effect for buttons */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#storageArea_cam{
+    background-color: #6bd370;
+    border-radius: 15px;
+    color: #0c0c0c;
+    font-size: 16px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+    padding: 10px;
+    width: 90%;
+    opacity: 0; /* Buttons are hidden initially */
+    transform: translateX(-50px); /* Slide-in effect for buttons */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#yardArea_cam{
+    background-color: #e18851;
+    border-radius: 15px;
+    color: #0c0c0c;
     font-size: 16px;
     height: 40px;
     border: none;

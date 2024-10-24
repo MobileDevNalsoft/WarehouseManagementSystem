@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/pages/entry_point.dart';
 
 class HoverDropdown extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
       height: height,
-      width: size.width * 0.08,
+      width: size.width * 0.1,
       child: Stack(
         children: [
           AnimatedContainer(
@@ -43,7 +44,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                             });
                             Navigator.push(context, MaterialPageRoute(builder: (context) => EntryPoint(),));
                           },
-                          child: ForHover(text: "DashBoard"))),
+                          child: ForHover(text: "Dashboard"))),
                   PointerInterceptor(
                       child: InkWell(
                           onTap: () {
@@ -52,6 +53,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                               bottomHeight = bottomHeight == 180 ? 70 : 180;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
+                            launch('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/',isNewTab: true);
                           },
                           child: ForHover(text: "WMS Cloud"))),
                 ],
@@ -92,6 +94,12 @@ class _HoverDropdownState extends State<HoverDropdown> {
           )
         ],
       ),
+    );
+  }
+  Future<void> launch(String url, {bool isNewTab = true}) async {
+    await launchUrl(
+      Uri.parse(url),
+      webOnlyWindowName: isNewTab ? '_blank' : '_self',
     );
   }
 }

@@ -18,6 +18,7 @@ class EntryPoint extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.black54,
       key: _drawerKey,
       drawer: Responsive.isMobile(context) ? const Sidebar() : null,
       body: Row(
