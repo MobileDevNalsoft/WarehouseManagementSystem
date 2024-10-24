@@ -22,12 +22,52 @@ document.addEventListener("DOMContentLoaded", function () {
   window.localStorage.setItem("switchToMainCam", "null");
 
   window.addEventListener("storage", (event) => {
-    if (event.key === "switchToMainCam") {
-      switchCamera(event.newValue);
-    } else if (event.key === "isRackDataLoaded") {
-      isRackDataLoaded = event.newValue;
+    switch (event.key) {
+
+      case "switchToMainCam":
+        switchCamera(event.newValue);
+
+        
+
+        break;
+      case "isRackDataLoaded":
+        isRackDataLoaded = event.newValue;
+        break;
+      case "setNumberOfTrucks":
+        
+        for(let i=1; i<=parseInt(event.newValue);i++){
+          scene.getObjectByName("truck_Y"+i).visible=true;
+        }
+        window.localStorage.removeItem("setNumberOfTrucks");
+break;
+
+        case "resetTrucks":
+          resetTrucksAnimation();
+          break;
+      default:
+        break;
     }
+   
+
   });
+
+
+function resetTrucksAnimation(){
+  for(let i=1; i<=20;i++){
+    if(i==10||i==15||i==20){
+      scene.getObjectByName("truck_Y10").visible=false;
+      scene.getObjectByName("truck_Y15").visible=false;
+      scene.getObjectByName("truck_Y20").visible=false;
+    }
+    else{
+    scene.getObjectByName("truck_Y"+i).visible=true;  }
+  }
+
+  scene.getObjectByName("truck_A1").visible=true;
+        scene.getObjectByName("truck_A2").visible=true;
+        scene.getObjectByName("truck_A3").visible=true;
+  window.localStorage.removeItem("resetTrucks");
+}
 
   // Rendering Setup
   // we use WebGL renderer for rendering 3d model efficiently
@@ -70,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../glbs/warehouse_2310_1145.glb",
+      "../glbs/warehouse_2410_1125.glb",
       function (gltf) {
         model = gltf.scene;
 
@@ -99,11 +139,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
         directionalLight.position.set(5, 5, 5); // Position the light
         scene.add(directionalLight);
-        // Set up animation mixer
-        const mixer = new THREE.AnimationMixer(gltf.scene);
-        gltf.animations.forEach((clip) => {
-          mixer.clipAction(clip).play();
-        });
+        // addSkyDome();
+         // Set up animation mixer
+    const mixer = new THREE.AnimationMixer(gltf.scene);
+    gltf.animations.forEach((clip) => {
+        mixer.clipAction(clip).play();
+    });
 
         // Render loop
         const clock = new THREE.Clock();
@@ -150,6 +191,34 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     return lines;
   }
+  function addSkyDome() {
+    // Load the skydome texture
+    const loader = new THREE.TextureLoader();
+    loader.load("../images/sky_box.jpg", function (texture) {
+      // Create a large sphere geometry for the skydome
+      const geometry = new THREE.SphereGeometry(650, 32, 32);
+ 
+      texture.wrapS = THREE.RepeatWrapping; // Ensure the texture wraps horizontally
+      texture.wrapT = THREE.ClampToEdgeWrapping; // Optionally clamp vertically to prevent top/bottom seams
+      texture.minFilter = THREE.LinearFilter; // Smooth out texture if it's low-res
+ 
+      // Create a material using the loaded texture
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        side: THREE.BackSide, // Render the inside of the sphere
+      });
+ 
+      // Create the skydome mesh
+      const skydome = new THREE.Mesh(geometry, material);
+ 
+      skydome.rotation.y = Math.PI/2;
+ 
+      skydome.position.y = 100;
+ 
+      // Add the skydome to the scene
+      scene.add(skydome);
+    });
+  }
 
   // Creating first camera with world cam properties to show entire model and adding orbit controls to interact with model.
   function createNewCamera(importedCamera) {
@@ -178,17 +247,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // limiting vertical rotation around x axis
     controls.minPolarAngle = 0;
-    controls.maxPolarAngle = Math.PI / 2;
+    controls.maxPolarAngle = Math.PI / 2.8;
 
     // limiting horizontal rotation around y axis
     controls.minAzimuthAngle = -Math.PI;
     controls.maxAzimuthAngle = Math.PI;
 
     // limiting zoom out
-    controls.maxDistance = 1500;
+    controls.maxDistance = 1000;
 
     var minPan = new THREE.Vector3(-300, -300, -300);
-    var maxPan = new THREE.Vector3(300, 300, 300);
+    var maxPan = new THREE.Vector3(50, 50, 50);
 
     // Function to clamp target position
     function clampTarget() {
@@ -234,7 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cam.name.toString().includes(name)
       );
     } else {
-      const object = scene.getObjectByName(name.split("_")[0]);
+      const object = scene.getObjectByName(name);
       currentObject = object;
       const aabb = new THREE.Box3().setFromObject(object);
       center = aabb.getCenter(new THREE.Vector3());
@@ -386,12 +455,27 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(
               '{"rack":"' + targetObject.name.toString().split("_")[0] + '"}'
             );
+            window.localStorage.setItem("getData",targetObject.name.toString().split("_")[0]);
           } else {
+
             console.log(
-              '{"area":"' + targetObject.name.toString().split("_")[0] + '"}'
-            );
+              '{"area":"' + targetObject.name.toString().split("_")[0] + '", "getData":"'+targetObject.name.toString().split("_")[0]+'"}');
+              window.localStorage.setItem("getData",targetObject.name.toString().split("_")[0]);
+              if(targetObject.name.toString().split("_")[0]=="yardArea"){
+                for(let i=1; i<=20;i++){
+                  scene.getObjectByName("truck_Y"+i).visible=false;
+                }
+                scene.getObjectByName("truck_A1").visible=false;
+                scene.getObjectByName("truck_A2").visible=false;
+                scene.getObjectByName("truck_A3").visible=false;
+
+              } 
+           
+            
           }
-          switchCamera(targetObject.name.toString());
+          switchCamera(targetObject.name.toString().split("_").slice(0, 2).join('_'));
+          // switchCamera(targetObject.name.toString().split("_").slice(0, 2).join('_'));
+          
           window.localStorage.setItem("switchToMainCam", "null");
           prevNav = targetObject.name.toString();
         } else if (
@@ -405,6 +489,9 @@ document.addEventListener("DOMContentLoaded", function () {
             prevBin.material.color.copy(prevBinColor);
           }
           switchCamera("warehouse");
+          if(prevNav.includes("yard")){
+            resetTrucksAnimation();
+          }
           prevNav = targetObject.name.toString();
         }
       }

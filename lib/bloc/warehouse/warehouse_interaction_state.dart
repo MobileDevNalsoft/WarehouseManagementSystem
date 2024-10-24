@@ -43,7 +43,10 @@ final class WarehouseInteractionState extends Equatable {
   Map<String, dynamic>? dataFromJS;
   InAppWebViewController? inAppWebViewController;
   bool isModelLoaded;
-
+  int? companyId;
+  int? facilityId;
+  int? historyActivityId;
+  int? statusId;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
         getRacksDataState: GetRacksDataState.initial,

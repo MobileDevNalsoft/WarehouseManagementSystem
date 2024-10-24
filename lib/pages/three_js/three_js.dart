@@ -8,15 +8,21 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:three_js/three_js.dart';
 import 'package:touchable/touchable.dart';
+import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
+import 'package:warehouse_3d/models/yard_area_model.dart';
 import 'package:warehouse_3d/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/bin_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/rack_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/staging_area_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/storage_area_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/yard_area_data_sheet.dart';
 import '../../js_interop_service/js_inter.dart';
 import '../../navigations/navigator_service.dart';
 import '../customs/hover_dropdown.dart';
@@ -215,25 +221,36 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               }
                             },
                             onWebViewCreated: (controller) async {
-                              _warehouseInteractionBloc.state.inAppWebViewController = controller;
-                              // _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));// remove for loading indicator
-            
-                              Timer.periodic(
-                                const Duration(milliseconds: 500),
-                                (timer) async {
-                                  _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
-                                    value.forEach((e) {
-                                      print(e);
-                                    });
-                                  });
-                                  bool? isLoaded = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                  if (isLoaded != null) {
-                                    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
-                                  }
-                                },
-                              );
-                            },
+                          _warehouseInteractionBloc.state.inAppWebViewController=controller;
+                         
+                          Timer.periodic(const Duration(milliseconds: 500), (timer) async{
+                            _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value){
+                              value.forEach((e){print(e);});
+                            });
+                            
+                            bool? isLoaded =  await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"isLoaded");
+                            if(isLoaded!=null){
+                              _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                               _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                            }
+
+                            String? requestedData =  await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"getData");
+                            if(requestedData!=null){
+                              // _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                              if(requestedData.toLowerCase()=="yardarea"){
+                                 context.read<YardBloc>().add(AddYardData());
+                               _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
+}
+else if(requestedData.contains("rack")){
+  print("rack selected ${requestedData.split("rack").last}");
+   context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
+                               _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
+}
+                            }
+                          
+                          },);
+                         
+                        },
                             onLoadStop: (controller, url) async {},
                           ),
                         );
@@ -303,6 +320,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             return const ReceivingAreaDataSheet();
           case 'inspectionArea':
             return const InspectionAreaDataSheet();
+          case 'yardArea' :
+            return YardAreaDataSheet();    
+         
+         default:
+         return null;
+
         }
     }
   }
