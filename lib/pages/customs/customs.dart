@@ -10,7 +10,7 @@ import 'package:another_flushbar/flushbar.dart';
 class Customs {
   static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
     return Container(
-      height: size.height*0.92,
+      height: size.height * 0.92,
       width: size.width * 0.22,
       decoration: const BoxDecoration(
           color: Colors.white,
@@ -70,7 +70,11 @@ class Customs {
     );
   }
 
-  static void AnimatedDialog({required BuildContext context, required Widget header, required List<Widget> content, }) {
+  static void AnimatedDialog({
+    required BuildContext context,
+    required Widget header,
+    required List<Widget> content,
+  }) {
     Size size = MediaQuery.of(context).size;
     showGeneralDialog(
       context: context,
@@ -100,33 +104,36 @@ class Customs {
                   color: Colors.transparent,
                   child: IntrinsicHeight(
                     child: Container(
-                        margin: EdgeInsets.only(top: size.height * 0.035),
-                        padding: EdgeInsets.only(bottom: size.height * 0.02,),
-                        width: size.width * 0.16,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                        child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: InkWell(
-                                                onTap: () => Navigator.pop(context),
-                                                child: const Icon(
-                                                  Icons.close,
-                                                  size: 20,
-                                                  weight: 1,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Gap(size.height * 0.01),
-                                        ...content
-                                      ],
-                                    ),),
+                      margin: EdgeInsets.only(top: size.height * 0.035),
+                      padding: EdgeInsets.only(
+                        bottom: size.height * 0.02,
+                      ),
+                      width: size.width * 0.16,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: InkWell(
+                                  onTap: () => Navigator.pop(context),
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 20,
+                                    weight: 1,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(size.height * 0.01),
+                          ...content
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 CircleAvatar(

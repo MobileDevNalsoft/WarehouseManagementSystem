@@ -55,10 +55,9 @@ document.addEventListener("DOMContentLoaded", function () {
   init();
 
   function init() {
-    container = document.createElement("div");
+    container = document.getElementById("container");
     // creating a container section(division) on our html page(not yet visible).
     container.id = "container";
-    container.style.height = "80%";
     document.body.appendChild(container);
     // assigning div to document's visible structure i.e. body.
 
@@ -71,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Configure the loader to load textures
     Loader.loadTexture = true;
     Loader.load(
-      "../glbs/warehouse_2310_1830.glb",
+      "../glbs/warehouse_2310_1145.glb",
       function (gltf) {
         model = gltf.scene;
 
@@ -139,7 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function dumpObject(obj, lines = [], isLast = true, prefix = "") {
     const localPrefix = isLast ? "└─" : "├─";
     lines.push(
-      `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${obj.type
+      `${prefix}${prefix ? localPrefix : ""}${obj.name || "*no-name*"} [${
+        obj.type
       }]`
     );
     const newPrefix = prefix + (isLast ? "  " : "│ ");
@@ -336,6 +336,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const rect = container.getBoundingClientRect();
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    const tooltip = document.getElementById("tooltip");
     if (model != null && camera != null) {
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
@@ -367,7 +369,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function onMouseDown(e) {
     lastPos.x = (e.clientX / container.clientWidth) * 2 - 1;
-    lastPos.y = -(e.clientY / window.container.clientHeight) * 2 + 1;
+    lastPos.y = -(e.clientY / container.clientHeight) * 2 + 1;
   }
 
   function onMouseUp(e) {
@@ -479,84 +481,16 @@ document.addEventListener("DOMContentLoaded", function () {
     camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
   }
 
-  const leftPanel = document.createElement("div");
-  leftPanel.id = "leftPanel";
+  // Get all elements with the class name "areaButton"
+  let buttons = document.getElementsByClassName("areaButton");
 
-  const inspectionAreaButton = document.createElement("button");
-  inspectionAreaButton.classList.add("areaButton");
-  inspectionAreaButton.textContent = "Inspection Area";
-  inspectionAreaButton.onclick = function () {
-    const areaName = "inspectionArea";
-    switchCamera(areaName);
-    console.log('{"area":"' + areaName + '"}');
-  };
-
-  const stagingAreaButton = document.createElement("button");
-  stagingAreaButton.classList.add("areaButton");
-  stagingAreaButton.textContent = "Staging Area";
-  stagingAreaButton.onclick = function () {
-    const areaName = "stagingArea";
-    switchCamera(areaName);
-    console.log('{"area":"' + areaName + '"}');
-  };
-
-  const activityAreaButton = document.createElement("button");
-  activityAreaButton.classList.add("areaButton");
-  activityAreaButton.textContent = "Activity Area";
-  activityAreaButton.onclick = function () {
-    const areaName = "activityArea";
-    switchCamera(areaName);
-    console.log('{"area":"' + areaName + '"}');
-  };
-
-  const receivingAreaButton = document.createElement("button");
-  receivingAreaButton.classList.add("areaButton");
-  receivingAreaButton.textContent = "Receiving Area";
-  receivingAreaButton.onclick = function () {
-    const areaName = "receivingArea";
-    switchCamera(areaName);
-    console.log('{"area":"' + areaName + '"}');
-  };
-
-  leftPanel.appendChild(inspectionAreaButton);
-  leftPanel.appendChild(stagingAreaButton);
-  leftPanel.appendChild(activityAreaButton);
-  leftPanel.appendChild(receivingAreaButton);
-
-  container.appendChild(leftPanel);
-
-  const personIcon = document.querySelector(".person-icon");
-  const overlay = document.querySelector(".overlay");
-
-  // Show overlay on mouse enter
-  personIcon.addEventListener("mouseenter", () => {
-    overlay.classList.add("active");
-  });
-
-  // Hide overlay when mouse leaves both icon and overlay
-  personIcon.addEventListener("mouseleave", () => {
-    if (!overlay.contains(document.activeElement)) {
-      overlay.classList.remove("active");
-    }
-  });
-
-  overlay.addEventListener("mouseleave", () => {
-    overlay.classList.remove("active");
-  });
-
-  // Optional: Handle clicks on overlay buttons
-  document
-    .querySelector(".overlay-button")
-    .addEventListener("click", function () {
-      alert("Dashboard clicked!");
-    });
-
-  document
-    .querySelectorAll(".overlay-button")[1]
-    .addEventListener("click", function () {
-      alert("Logout clicked!");
-    });
-
+  // Loop through the buttons collection and log each element
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].onclick = function () {
+        switchCamera(buttons[i].id);
+        console.log('{"area":"' + buttons[i].id + '"}');
+      };
+  }
 });
 
 // functions
@@ -573,3 +507,64 @@ function findCameraByName(name) {
   }
 }
 
+
+// JavaScript to handle the panel toggle
+const toggleButton = document.getElementById('togglePanel');
+const tooltip = document.getElementById("toggleTooltip");
+const leftPanel = document.getElementById("leftPanel");
+const togglePanel = document.getElementById("togglePanel");
+
+// Show tooltip on hover
+toggleButton.addEventListener("mouseover", function () {
+  if(!leftPanel.classList.contains("open")){
+    tooltip.style.opacity = 1; // Show tooltip on hover
+  tooltip.style.left = "220px";
+  }
+});
+
+toggleButton.addEventListener("mouseout", function () {
+  if (!leftPanel.classList.contains("open")) {
+      tooltip.style.opacity = 0; // Hide tooltip if panel is closed
+  }
+});
+
+// Toggle the panel when the button is clicked
+toggleButton.addEventListener("click", function () {
+    // Toggle the 'open' class for both the panel and chevron
+    leftPanel.classList.toggle("open");
+    togglePanel.classList.toggle("open");
+
+    // Slide the panel out when clicked
+    if (leftPanel.classList.contains("open")) {
+        leftPanel.style.left = "0"; // Panel moves out
+        togglePanel.style.left = "160px"; // Button moves to the edge of the panel
+        tooltip.style.left = "200px"
+        tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
+
+        // Hide tooltip during the animation
+        tooltip.style.opacity = 0;
+
+        // Wait for the animation to finish
+        togglePanel.addEventListener("transitionend", function (event) {
+            if (event.propertyName === "left" && leftPanel.classList.contains("open")) {
+                tooltip.style.opacity = 1; // Show the tooltip after animation completes
+            }
+        }, { once: true }); // Ensure this runs only once after the transition
+
+    } else {
+        leftPanel.style.left = "-180px"; // Hide panel
+        togglePanel.style.left = "0"; // Reset button position
+        tooltip.style.left = "220px"
+        tooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
+
+        // Hide tooltip during the animation
+        tooltip.style.opacity = 0;
+
+        // Wait for the animation to finish
+        togglePanel.addEventListener("transitionend", function (event) {
+            if (event.propertyName === "left" && !leftPanel.classList.contains("open")) {
+                tooltip.style.opacity = 1; // Show the tooltip after animation completes
+            }
+        }, { once: true }); // Ensure this runs only once after the transition
+    }
+});

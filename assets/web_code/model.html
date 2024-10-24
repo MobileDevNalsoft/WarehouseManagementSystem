@@ -1,63 +1,32 @@
 <html>
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Model</title>
-  <link rel="stylesheet" type="text/css" href="style.css" />
-  <div id="tooltip"
-    style="position: absolute; display: none; background-color: white; border: 1px solid black; padding: 5px;">
-    Tooltip Data
-  </div>
-  <script type="importmap">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Model</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="importmap">
       {
         "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
+          "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
         }
       }
-      </script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      width: 100vw;
-      height: 100vh;
-    }
-    </style>
-</head>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  </head>
 
-<body>
-  
-  <script type="module" src="./model.js"></script>
-</body>
-<div class="navbar">
-        <div class="nav-links">
-            <div class="dropdown">
-                <button class="dropdown-toggle">Company</button>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Company 1</a></li>
-                  <li><a href="#">Company 2</a></li>
-                  <li><a href="#">Company 3</a></li>
-                </ul>
-              </div>
-              <div class="dropdown">
-                <button class="dropdown-toggle">Warehouse</button>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Warehouse 1</a></li>
-                  <li><a href="#">Warehouse 2</a></li>
-                  <li><a href="#">Warehouse 3</a></li>
-                </ul>
-              </div>
-        </div>
-        <img id="img" src="nalsoft_logo.png"/>
-        <div class="person-icon">
-            <img id="profile" src="profile.png" alt="User Icon" />
-            <div class="overlay">
-                <button class="overlay-button">Dashboard</button>
-                <button class="overlay-button">Logout</button>
-            </div>
-        </div>
+  <body>
+    <div id="container">
+      <div id="leftPanel">
+        <button class="areaButton" id="inspectionArea">Inspection Area</button>
+        <button class="areaButton" id="stagingArea">Staging Area</button>
+        <button class="areaButton" id="activityArea">Activity Area</button>
+        <button class="areaButton" id="receivingArea">Receiving Area</button>
+        <button id="togglePanel">&#x25B6;</button>
+        <!-- Chevron right symbol -->
+        <div id="toggleTooltip">Open Controls</div>
+      </div>
     </div>
-
+    <div id="tooltip" style="display: none">Tooltip Data</div>
+    <script type="module" src="./model.js"></script>
+  </body>
 </html>
