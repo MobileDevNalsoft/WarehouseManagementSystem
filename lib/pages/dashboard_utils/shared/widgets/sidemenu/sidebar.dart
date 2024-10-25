@@ -38,39 +38,33 @@ class Sidebar extends StatelessWidget {
                     MenuTile(
                       isActive: true,
                       title: "Yard",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                    
                       onPressed: () {},
                     ),
                     MenuTile(
                       
                       title: "Storage",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                      
                       onPressed: () {},
                     ),
                     MenuTile(
                       title: "Staging",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                      
                       onPressed: () {},
                     ),
                     MenuTile(
                       title: "Activity",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                      
                       onPressed: () {},
                     ),
                     MenuTile(
                       title: "Receiving",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                     
                       onPressed: () {},
                     ),
                     MenuTile(
                       title: "Inspection",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                      
                       onPressed: () {},
                     ),
                    

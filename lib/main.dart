@@ -29,7 +29,7 @@ main() async {
         navigatorKey: getIt<NavigatorService>().navigatorkey,
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/warehouse',
+        initialRoute: '/home',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
         ),

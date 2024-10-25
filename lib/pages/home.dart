@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                       isAntiAlias: true,
                     ),
                     MaxGap(size.width),
-                    if (!sharedPreferences.containsKey('username'))
+                    if (!sharedPreferences.containsKey('uname'))
                       TextButton(
                         onPressed: () {
                           navigator.push('/login');
@@ -88,11 +88,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                    if (sharedPreferences.containsKey('username'))
+                    if (sharedPreferences.containsKey('uname'))
                       IconButton(
                           onPressed: () {
                             setState(() {
-                              sharedPreferences.remove('username');
+                              sharedPreferences.remove('uname');
                             });
                           },
                           tooltip: 'Logout',
@@ -134,11 +134,11 @@ class _HomePageState extends State<HomePage> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  if (sharedPreferences.containsKey('username')) {
-                                    navigator.push('/selectWarehouse');
+                                  if (sharedPreferences.containsKey('uname')) {
+                                    navigator.push('/warehouse');
                                   } else {
                                     Customs.AnimatedDialog(
-                                      context: context,
+                                      context: context, 
                                       header: const Icon(
                                         Icons.person_2_rounded,
                                         size: 60,

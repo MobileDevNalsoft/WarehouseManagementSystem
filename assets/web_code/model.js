@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       undefined,
       function (error) {
-        console.error(error.toString());
+        
       }
     );
 
@@ -306,7 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cam.name.toString().includes(object.name.toString())
       );
     }
-    console.log("selected camera", selectedCamera.name.toString());
+
     if (selectedCamera) {
       // Create a GSAP timeline for smoother transitions
       const timeline = gsap.timeline();
@@ -340,7 +340,6 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             onComplete: function () {
               if (!selectedCamera.name.toString().includes("Area")) {
-                console.log("true");
                 controls.enabled = true; // Enable controls after switching cameras
                 controls.enableDamping = true;
               }
@@ -605,7 +604,8 @@ function findCameraByName(name) {
   if (foundCamera) {
     return foundCamera;
   } else {
-    console.log("Camera not found:", name);
+  
+
     return null;
   }
 }
