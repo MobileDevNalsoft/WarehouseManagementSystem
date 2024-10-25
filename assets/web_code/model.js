@@ -127,6 +127,7 @@ function resetTrucksAnimation(){
         currentObject = model;
 
         scene.getObjectByName("r1rb11004").material.color.set(0xff0000);
+        resetTrucksAnimation();
 
         scene.updateMatrixWorld(true);
 
@@ -168,7 +169,6 @@ function resetTrucksAnimation(){
     container.appendChild(renderer.domElement);
 
     window.requestAnimationFrame(animate);
-    resetTrucksAnimation();
   }
 
   function animate() {
@@ -458,7 +458,7 @@ function resetTrucksAnimation(){
               '{"rack":"' + targetObject.name.toString().split("_")[0] + '"}'
             );
             window.localStorage.setItem("getData",targetObject.name.toString().split("_")[0]);
-          } else {
+          } else if(!targetObject.name.toString().includes("storage")){
 
             console.log(
               '{"area":"' + targetObject.name.toString().split("_")[0] + '"}');
@@ -577,7 +577,10 @@ function resetTrucksAnimation(){
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].onclick = function () {
         switchCamera(buttons[i].id);
-        console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
+        window.localStorage.setItem("switchToMainCam","null");
+        if(!buttons[i].id.includes("storage")){
+          console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
+        }
         if(buttons[i].id.includes("yard")){
           window.localStorage.setItem("getData","yardArea");
           for(let i=1; i<=20;i++){
@@ -613,19 +616,20 @@ const leftPanel = document.getElementById("leftPanel");
 const togglePanel = document.getElementById("togglePanel");
 
 // Show tooltip on hover
-toggleButton.addEventListener("mouseover", function () {
-  if(!leftPanel.classList.contains("open")){
-    tooltip.style.opacity = 1; // Show tooltip on hover
-  tooltip.style.left = "22.5vw";
-  }
-});
+// toggleButton.addEventListener("mouseover", function () {
+//   if(!leftPanel.classList.contains("open")){
+//     tooltip.style.opacity = 1; // Show tooltip on hover
+//     tooltip.textContent = "Open Controls";
+//     tooltip.style.left = "22.5vw";
+//   }
+// });
 
-toggleButton.addEventListener("mouseout", function () {
-  if (!leftPanel.classList.contains("open")) {
-      tooltip.style.opacity = 0; // Hide tooltip if panel is closed
-  }
-});
-
+// toggleButton.addEventListener("mouseout", function () {
+//   if (!leftPanel.classList.contains("open")) {
+//       tooltip.style.opacity = 0; // Hide tooltip if panel is closed
+//   }
+// });
+tooltip.style.opacity = 0;
 // Toggle the panel when the button is clicked
 toggleButton.addEventListener("click", function () {
     // Toggle the 'open' class for both the panel and chevron
@@ -636,23 +640,23 @@ toggleButton.addEventListener("click", function () {
     if (leftPanel.classList.contains("open")) {
         leftPanel.style.left = "0"; // Panel moves out
         togglePanel.style.left = "10vw"; // Button moves to the edge of the panel
-        tooltip.style.left = "12.5vw"
-        tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
+        // tooltip.style.left = "12.5vw"
+        // tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
 
         // Hide tooltip during the animation
-        tooltip.style.opacity = 0;
+        // tooltip.style.opacity = 0;
 
         // Wait for the animation to finish
         togglePanel.addEventListener("transitionend", function (event) {
             if (event.propertyName === "left" && leftPanel.classList.contains("open")) {
-                tooltip.style.opacity = 1; // Show the tooltip after animation completes
+                // tooltip.style.opacity = 1; // Show the tooltip after animation completes
             }
         }, { once: true }); // Ensure this runs only once after the transition
 
     } else {
-        leftPanel.style.left = "-180px"; // Hide panel
+        leftPanel.style.left = "-220px"; // Hide panel
         togglePanel.style.left = "0"; // Reset button position
-        // tooltip.style.left = "0px"
+        // tooltip.style.left = "-100px"
         // tooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
 
         // // Hide tooltip during the animation
@@ -661,7 +665,7 @@ toggleButton.addEventListener("click", function () {
         // Wait for the animation to finish
         togglePanel.addEventListener("transitionend", function (event) {
             if (event.propertyName === "left" && !leftPanel.classList.contains("open")) {
-                tooltip.style.opacity = 1; // Show the tooltip after animation completes
+                // tooltip.style.opacity = 1; // Show the tooltip after animation completes
             }
         }, { once: true }); // Ensure this runs only once after the transition
     }
