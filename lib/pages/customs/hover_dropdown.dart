@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
-// import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/pages/entry_point.dart';
 
 class HoverDropdown extends StatefulWidget {
@@ -85,7 +85,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                 children: [
                   Image.asset(
                     'assets/images/profile.png',
-                    scale: widget.size.height*0.012,
+                    scale: widget.size.height*0.005,
                   ),
                   Gap(size.width * 0.003),
                   AnimatedRotation(
@@ -106,10 +106,10 @@ class _HoverDropdownState extends State<HoverDropdown> {
     );
   }
   Future<void> launch(String url, {bool isNewTab = true}) async {
-    // await launchUrl(
-    //   Uri.parse(url),
-    //   webOnlyWindowName: isNewTab ? '_blank' : '_self',
-    // );
+    await launchUrl(
+      Uri.parse(url),
+      webOnlyWindowName: isNewTab ? '_blank' : '_self',
+    );
   }
 }
 

@@ -79,9 +79,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: Stack(
+      children: [
+        Column(
           children: [
-            Column(
-                  children: [
             Container(
               height: size.height * 0.08,
               width: size.width,
@@ -102,7 +102,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               child: Text(
                                 'company 1',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: size.height*0.022),
+                                style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
                               ),
                             )),
                         DropdownMenuItem<String>(
@@ -113,7 +113,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               child: Text(
                                 'company 2',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: size.height*0.022),
+                                style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
                               ),
                             ))
                       ],
@@ -137,8 +137,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                         selectedMenuItemBuilder: (context, child) {
                           return Container(
-                            height: size.height*0.06,
-                            decoration: BoxDecoration(color: Colors.grey.shade300),child: child,);
+                            height: size.height * 0.06,
+                            decoration: BoxDecoration(color: Colors.grey.shade300),
+                            child: child,
+                          );
                         },
                       ),
                     ),
@@ -157,7 +159,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               child: Text(
                                 'warehouse 1',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: size.height*0.022),
+                                style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
                               ),
                             )),
                         DropdownMenuItem<String>(
@@ -168,7 +170,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               child: Text(
                                 'warehouse 2',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: size.height*0.022),
+                                style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
                               ),
                             ))
                       ],
@@ -192,8 +194,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                         selectedMenuItemBuilder: (context, child) {
                           return Container(
-                            height: size.height*0.06,
-                            decoration: BoxDecoration(color: Colors.grey.shade300),child: child,);
+                            height: size.height * 0.06,
+                            decoration: BoxDecoration(color: Colors.grey.shade300),
+                            child: child,
+                          );
                         },
                       ),
                     ),
@@ -201,7 +205,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   const Spacer(),
                   Image.asset(
                     'assets/images/nalsoft_logo.png',
-                    scale: size.height*0.01,
+                    scale: size.height * 0.006,
                     isAntiAlias: true,
                   ),
                   Gap(size.width * 0.06),
@@ -217,7 +221,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                       animation: widthAnimation,
                       builder: (context, child) {
                         return SizedBox(
-                          height: size.height*0.92,
+                          height: size.height * 0.92,
                           width: size.width * widthAnimation.value,
                           child: InAppWebView(
                             initialFile: 'assets/web_code/model.html',
@@ -233,36 +237,40 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               }
                             },
                             onWebViewCreated: (controller) async {
-                          _warehouseInteractionBloc.state.inAppWebViewController=controller;
-                         
-                          Timer.periodic(const Duration(milliseconds: 500), (timer) async{
-                            _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value){
-                              value.forEach((e){print(e);});
-                            });
-                            
-                            bool? isLoaded =  await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"isLoaded");
-                            if(isLoaded!=null){
-                              _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                               _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
-                            }
+                              _warehouseInteractionBloc.state.inAppWebViewController = controller;
 
-                            String? requestedData =  await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key:"getData");
-                            if(requestedData!=null){
-                              // _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                              if(requestedData.toLowerCase()=="yardarea"){
-                                 context.read<YardBloc>().add(AddYardData());
-                               _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
-}
-else if(requestedData.contains("rack")){
-  print("rack selected ${requestedData.split("rack").last}");
-   context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
-                               _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
-}
-                            }
-                          
-                          },);
-                         
-                        },
+                              Timer.periodic(
+                                const Duration(milliseconds: 500),
+                                (timer) async {
+                                  _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
+                                    value.forEach((e) {
+                                      print(e);
+                                    });
+                                  });
+
+                                  bool? isLoaded =
+                                      await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
+                                  if (isLoaded != null) {
+                                    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                  }
+
+                                  String? requestedData =
+                                      await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "getData");
+                                  if (requestedData != null) {
+                                    // _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                                    if (requestedData.toLowerCase() == "yardarea") {
+                                      context.read<YardBloc>().add(AddYardData());
+                                      _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
+                                    } else if (requestedData.contains("rack")) {
+                                      print("rack selected ${requestedData.split("rack").last}");
+                                      context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
+                                      _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
+                                    }
+                                  }
+                                },
+                              );
+                            },
                             onLoadStop: (controller, url) async {},
                           ),
                         );
@@ -300,16 +308,19 @@ else if(requestedData.contains("rack")){
                 // ))
               ],
             ),
-                  ],
-                ),
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: PointerInterceptor(child:                 HoverDropdown(size: size,),
-                  ),
-                )
           ],
-        ));
+        ),
+        Positioned(
+          right: 0,
+          top: 0,
+          child: PointerInterceptor(
+            child: HoverDropdown(
+              size: size,
+            ),
+          ),
+        )
+      ],
+    ));
   }
 
   Widget? getDataSheetFor(
@@ -332,12 +343,11 @@ else if(requestedData.contains("rack")){
             return const ReceivingAreaDataSheet();
           case 'inspectionArea':
             return const InspectionAreaDataSheet();
-          case 'yardArea' :
-            return YardAreaDataSheet();    
-         
-         default:
-         return null;
+          case 'yardArea':
+            return YardAreaDataSheet();
 
+          default:
+            return null;
         }
     }
   }
