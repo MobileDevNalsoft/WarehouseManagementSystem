@@ -13,7 +13,7 @@ var cameraList = [],
   prevBinColor,
   prevBin,
   currentObject = new THREE.Object3D();
-var prevNav,
+var prevNav = "warehouse",
   isRackDataLoaded = false,
   world_cam;
 
@@ -23,51 +23,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.addEventListener("storage", (event) => {
     switch (event.key) {
-
       case "switchToMainCam":
         switchCamera(event.newValue);
-
-        
 
         break;
       case "isRackDataLoaded":
         isRackDataLoaded = event.newValue;
         break;
       case "setNumberOfTrucks":
-        
-        for(let i=1; i<=parseInt(event.newValue);i++){
-          scene.getObjectByName("truck_Y"+i).visible=true;
+        for (let i = 1; i <= parseInt(event.newValue); i++) {
+          scene.getObjectByName("truck_Y" + i).visible = true;
         }
         window.localStorage.removeItem("setNumberOfTrucks");
-break;
+        break;
 
-        case "resetTrucks":
-          resetTrucksAnimation();
-          break;
+      case "resetTrucks":
+        resetTrucksAnimation();
+        break;
       default:
         break;
     }
-   
-
   });
 
-
-function resetTrucksAnimation(){
-  for(let i=1; i<=20;i++){
-    if(i==10||i==15||i==20){
-      scene.getObjectByName("truck_Y10").visible=false;
-      scene.getObjectByName("truck_Y15").visible=false;
-      scene.getObjectByName("truck_Y20").visible=false;
+  function resetTrucksAnimation() {
+    for (let i = 1; i <= 20; i++) {
+      if (i == 10 || i == 15 || i == 20) {
+        scene.getObjectByName("truck_Y10").visible = false;
+        scene.getObjectByName("truck_Y15").visible = false;
+        scene.getObjectByName("truck_Y20").visible = false;
+      } else {
+        scene.getObjectByName("truck_Y" + i).visible = true;
+      }
     }
-    else{
-    scene.getObjectByName("truck_Y"+i).visible=true;  }
-  }
 
-  scene.getObjectByName("truck_A1").visible=true;
-        scene.getObjectByName("truck_A2").visible=true;
-        scene.getObjectByName("truck_A3").visible=true;
-  window.localStorage.removeItem("resetTrucks");
-}
+    scene.getObjectByName("truck_A1").visible = true;
+    scene.getObjectByName("truck_A2").visible = true;
+    scene.getObjectByName("truck_A3").visible = true;
+    window.localStorage.removeItem("resetTrucks");
+  }
 
   // Rendering Setup
   // we use WebGL renderer for rendering 3d model efficiently
@@ -141,11 +134,11 @@ function resetTrucksAnimation(){
         directionalLight.position.set(5, 5, 5); // Position the light
         scene.add(directionalLight);
         // addSkyDome();
-         // Set up animation mixer
-    const mixer = new THREE.AnimationMixer(gltf.scene);
-    gltf.animations.forEach((clip) => {
-        mixer.clipAction(clip).play();
-    });
+        // Set up animation mixer
+        const mixer = new THREE.AnimationMixer(gltf.scene);
+        gltf.animations.forEach((clip) => {
+          mixer.clipAction(clip).play();
+        });
 
         // Render loop
         const clock = new THREE.Clock();
@@ -199,24 +192,24 @@ function resetTrucksAnimation(){
     loader.load("../images/sky_box.jpg", function (texture) {
       // Create a large sphere geometry for the skydome
       const geometry = new THREE.SphereGeometry(650, 32, 32);
- 
+
       texture.wrapS = THREE.RepeatWrapping; // Ensure the texture wraps horizontally
       texture.wrapT = THREE.ClampToEdgeWrapping; // Optionally clamp vertically to prevent top/bottom seams
       texture.minFilter = THREE.LinearFilter; // Smooth out texture if it's low-res
- 
+
       // Create a material using the loaded texture
       const material = new THREE.MeshBasicMaterial({
         map: texture,
         side: THREE.BackSide, // Render the inside of the sphere
       });
- 
+
       // Create the skydome mesh
       const skydome = new THREE.Mesh(geometry, material);
- 
-      skydome.rotation.y = Math.PI/2;
- 
+
+      skydome.rotation.y = Math.PI / 2;
+
       skydome.position.y = 100;
- 
+
       // Add the skydome to the scene
       scene.add(skydome);
     });
@@ -313,7 +306,7 @@ function resetTrucksAnimation(){
         cam.name.toString().includes(object.name.toString())
       );
     }
-
+    console.log("selected camera", selectedCamera.name.toString());
     if (selectedCamera) {
       // Create a GSAP timeline for smoother transitions
       const timeline = gsap.timeline();
@@ -347,6 +340,7 @@ function resetTrucksAnimation(){
             },
             onComplete: function () {
               if (!selectedCamera.name.toString().includes("Area")) {
+                console.log("true");
                 controls.enabled = true; // Enable controls after switching cameras
                 controls.enableDamping = true;
               }
@@ -445,6 +439,9 @@ function resetTrucksAnimation(){
 
   function onMouseUp(e) {
     if ((lastPos.distanceTo(mouse) === 0) & (e.button === 0)) {
+      // Check if the mouse event is over a button
+      if (e.target.classList.contains("areaButton")) return;
+
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
@@ -457,27 +454,32 @@ function resetTrucksAnimation(){
             console.log(
               '{"rack":"' + targetObject.name.toString().split("_")[0] + '"}'
             );
-            window.localStorage.setItem("getData",targetObject.name.toString().split("_")[0]);
-          } else if(!targetObject.name.toString().includes("storage")){
-
+            window.localStorage.setItem(
+              "getData",
+              targetObject.name.toString().split("_")[0]
+            );
+          } else if (!targetObject.name.toString().includes("storage")) {
             console.log(
-              '{"area":"' + targetObject.name.toString().split("_")[0] + '"}');
-              window.localStorage.setItem("getData",targetObject.name.toString().split("_")[0]);
-              if(targetObject.name.toString().split("_")[0]=="yardArea"){
-                for(let i=1; i<=20;i++){
-                  scene.getObjectByName("truck_Y"+i).visible=false;
-                }
-                scene.getObjectByName("truck_A1").visible=false;
-                scene.getObjectByName("truck_A2").visible=false;
-                scene.getObjectByName("truck_A3").visible=false;
-
-              } 
-           
-            
+              '{"area":"' + targetObject.name.toString().split("_")[0] + '"}'
+            );
+            window.localStorage.setItem(
+              "getData",
+              targetObject.name.toString().split("_")[0]
+            );
+            if (targetObject.name.toString().split("_")[0] == "yardArea") {
+              for (let i = 1; i <= 20; i++) {
+                scene.getObjectByName("truck_Y" + i).visible = false;
+              }
+              scene.getObjectByName("truck_A1").visible = false;
+              scene.getObjectByName("truck_A2").visible = false;
+              scene.getObjectByName("truck_A3").visible = false;
+            }
           }
-          switchCamera(targetObject.name.toString().split("_").slice(0, 2).join('_'));
+          switchCamera(
+            targetObject.name.toString().split("_").slice(0, 2).join("_")
+          );
           // switchCamera(targetObject.name.toString().split("_").slice(0, 2).join('_'));
-          
+
           window.localStorage.setItem("switchToMainCam", "null");
           prevNav = targetObject.name.toString();
         } else if (
@@ -491,7 +493,7 @@ function resetTrucksAnimation(){
             prevBin.material.color.copy(prevBinColor);
           }
           switchCamera("warehouse");
-          if(prevNav.includes("yard")){
+          if (prevNav.includes("yard")) {
             resetTrucksAnimation();
           }
           prevNav = targetObject.name.toString();
@@ -576,21 +578,21 @@ function resetTrucksAnimation(){
   // Loop through the buttons collection and log each element
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].onclick = function () {
-        switchCamera(buttons[i].id);
-        window.localStorage.setItem("switchToMainCam","null");
-        if(!buttons[i].id.includes("storage")){
-          console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
+      switchCamera(buttons[i].id);
+      window.localStorage.setItem("switchToMainCam", "null");
+      if (!buttons[i].id.includes("storage")) {
+        console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
+      }
+      if (buttons[i].id.includes("yard")) {
+        window.localStorage.setItem("getData", "yardArea");
+        for (let i = 1; i <= 20; i++) {
+          scene.getObjectByName("truck_Y" + i).visible = false;
         }
-        if(buttons[i].id.includes("yard")){
-          window.localStorage.setItem("getData","yardArea");
-          for(let i=1; i<=20;i++){
-            scene.getObjectByName("truck_Y"+i).visible=false;
-          }
-          scene.getObjectByName("truck_A1").visible=false;
-          scene.getObjectByName("truck_A2").visible=false;
-          scene.getObjectByName("truck_A3").visible=false;
-        }
-      };
+        scene.getObjectByName("truck_A1").visible = false;
+        scene.getObjectByName("truck_A2").visible = false;
+        scene.getObjectByName("truck_A3").visible = false;
+      }
+    };
   }
 });
 
@@ -608,9 +610,8 @@ function findCameraByName(name) {
   }
 }
 
-
 // JavaScript to handle the panel toggle
-const toggleButton = document.getElementById('togglePanel');
+const toggleButton = document.getElementById("togglePanel");
 const tooltip = document.getElementById("toggleTooltip");
 const leftPanel = document.getElementById("leftPanel");
 const togglePanel = document.getElementById("togglePanel");
@@ -632,41 +633,54 @@ const togglePanel = document.getElementById("togglePanel");
 tooltip.style.opacity = 0;
 // Toggle the panel when the button is clicked
 toggleButton.addEventListener("click", function () {
-    // Toggle the 'open' class for both the panel and chevron
-    leftPanel.classList.toggle("open");
-    togglePanel.classList.toggle("open");
+  // Toggle the 'open' class for both the panel and chevron
+  leftPanel.classList.toggle("open");
+  togglePanel.classList.toggle("open");
 
-    // Slide the panel out when clicked
-    if (leftPanel.classList.contains("open")) {
-        leftPanel.style.left = "0"; // Panel moves out
-        togglePanel.style.left = "10vw"; // Button moves to the edge of the panel
-        // tooltip.style.left = "12.5vw"
-        // tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
+  // Slide the panel out when clicked
+  if (leftPanel.classList.contains("open")) {
+    leftPanel.style.left = "0"; // Panel moves out
+    togglePanel.style.left = "10vw"; // Button moves to the edge of the panel
+    // tooltip.style.left = "12.5vw"
+    // tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
 
-        // Hide tooltip during the animation
-        // tooltip.style.opacity = 0;
+    // Hide tooltip during the animation
+    // tooltip.style.opacity = 0;
 
-        // Wait for the animation to finish
-        togglePanel.addEventListener("transitionend", function (event) {
-            if (event.propertyName === "left" && leftPanel.classList.contains("open")) {
-                // tooltip.style.opacity = 1; // Show the tooltip after animation completes
-            }
-        }, { once: true }); // Ensure this runs only once after the transition
+    // Wait for the animation to finish
+    togglePanel.addEventListener(
+      "transitionend",
+      function (event) {
+        if (
+          event.propertyName === "left" &&
+          leftPanel.classList.contains("open")
+        ) {
+          // tooltip.style.opacity = 1; // Show the tooltip after animation completes
+        }
+      },
+      { once: true }
+    ); // Ensure this runs only once after the transition
+  } else {
+    leftPanel.style.left = "-220px"; // Hide panel
+    togglePanel.style.left = "0"; // Reset button position
+    // tooltip.style.left = "-100px"
+    // tooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
 
-    } else {
-        leftPanel.style.left = "-220px"; // Hide panel
-        togglePanel.style.left = "0"; // Reset button position
-        // tooltip.style.left = "-100px"
-        // tooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
+    // // Hide tooltip during the animation
+    // tooltip.style.opacity = 0;
 
-        // // Hide tooltip during the animation
-        // tooltip.style.opacity = 0;
-
-        // Wait for the animation to finish
-        togglePanel.addEventListener("transitionend", function (event) {
-            if (event.propertyName === "left" && !leftPanel.classList.contains("open")) {
-                // tooltip.style.opacity = 1; // Show the tooltip after animation completes
-            }
-        }, { once: true }); // Ensure this runs only once after the transition
-    }
+    // Wait for the animation to finish
+    togglePanel.addEventListener(
+      "transitionend",
+      function (event) {
+        if (
+          event.propertyName === "left" &&
+          !leftPanel.classList.contains("open")
+        ) {
+          // tooltip.style.opacity = 1; // Show the tooltip after animation completes
+        }
+      },
+      { once: true }
+    ); // Ensure this runs only once after the transition
+  }
 });
