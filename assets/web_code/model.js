@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // limiting zoom out
     controls.maxDistance = 1000;
 
-    var minPan = new THREE.Vector3(-300, -300, -300);
+    var minPan = new THREE.Vector3(-50, -50, -50);
     var maxPan = new THREE.Vector3(50, 50, 50);
 
     // Function to clamp target position

@@ -85,7 +85,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             Container(
               height: size.height * 0.08,
               width: size.width,
-              decoration: BoxDecoration(color: Colors.blue.shade900),
+              color: Colors.blueAccent.shade100,
               child: Row(
                 children: [
                   Gap(size.width * 0.006),
@@ -180,11 +180,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
                         height: size.height * (0.045),
-                        width: size.width * 0.1,
+                        width: size.width * 0.12,
                         padding: EdgeInsets.only(left: size.width * 0.015, right: size.width * 0.003),
                       ),
                       dropdownStyleData: DropdownStyleData(
-                          width: size.width * (0.1),
+                          width: size.width * (0.12),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white,
@@ -205,7 +205,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   const Spacer(),
                   Image.asset(
                     'assets/images/nalsoft_logo.png',
-                    scale: size.height * 0.006,
+                    scale: size.height * 0.004,
                     isAntiAlias: true,
                   ),
                   Gap(size.width * 0.06),
