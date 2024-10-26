@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:network_calls/src.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:warehouse_3d/local_network_calls.dart';
 
 import '../../constants/app_constants.dart';
 import '../../inits/init.dart';
@@ -46,7 +47,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           });
         }
         if (token.isNotEmpty) {
-          await sharedPreferences.setString(AppConstants.USERNAME, event.username);
+          await sharedPreferences.setString("uname", event.username);
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
           navigator!.pushReplacement('/home');
         } else {

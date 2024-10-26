@@ -13,7 +13,7 @@ var cameraList = [],
   prevBinColor,
   prevBin,
   currentObject = new THREE.Object3D();
-var prevNav,
+var prevNav = "warehouse",
   isRackDataLoaded = false,
   world_cam;
 
@@ -23,18 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   window.addEventListener("storage", (event) => {
     switch (event.key) {
-
       case "switchToMainCam":
         switchCamera(event.newValue);
-
-
 
         break;
       case "isRackDataLoaded":
         isRackDataLoaded = event.newValue;
         break;
       case "setNumberOfTrucks":
-
         for (let i = 1; i <= parseInt(event.newValue); i++) {
           scene.getObjectByName("truck_Y" + i).visible = true;
         }
@@ -47,10 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
       default:
         break;
     }
-
-
   });
-
 
   function resetTrucksAnimation() {
     for (let i = 1; i <= 20; i++) {
@@ -58,8 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
         scene.getObjectByName("truck_Y10").visible = false;
         scene.getObjectByName("truck_Y15").visible = false;
         scene.getObjectByName("truck_Y20").visible = false;
-      }
-      else {
+      } else {
         scene.getObjectByName("truck_Y" + i).visible = true;
       }
     }
@@ -128,6 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
         currentObject = model;
 
         scene.getObjectByName("r1rb11004").material.color.set(0xff0000);
+        resetTrucksAnimation();
 
         scene.updateMatrixWorld(true);
 
@@ -160,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       undefined,
       function (error) {
-        console.error(error.toString());
+        
       }
     );
 
@@ -169,7 +162,6 @@ document.addEventListener("DOMContentLoaded", function () {
     container.appendChild(renderer.domElement);
 
     window.requestAnimationFrame(animate);
-    resetTrucksAnimation();
   }
 
   function animate() {
@@ -258,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // limiting zoom out
     controls.maxDistance = 1000;
 
-    var minPan = new THREE.Vector3(-300, -300, -300);
+    var minPan = new THREE.Vector3(-50, -50, -50);
     var maxPan = new THREE.Vector3(50, 50, 50);
 
     // Function to clamp target position
@@ -445,6 +437,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function onMouseUp(e) {
     if ((lastPos.distanceTo(mouse) === 0) & (e.button === 0)) {
+      // Check if the mouse event is over a button
+      if (e.target.classList.contains("areaButton")) return;
+
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
@@ -457,12 +452,18 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(
               '{"rack":"' + targetObject.name.toString().split("_")[0] + '"}'
             );
-            window.localStorage.setItem("getData", targetObject.name.toString().split("_")[0]);
-          } else {
-
+            window.localStorage.setItem(
+              "getData",
+              targetObject.name.toString().split("_")[0]
+            );
+          } else if (!targetObject.name.toString().includes("storage")) {
             console.log(
-              '{"area":"' + targetObject.name.toString().split("_")[0] + '"}');
-            window.localStorage.setItem("getData", targetObject.name.toString().split("_")[0]);
+              '{"area":"' + targetObject.name.toString().split("_")[0] + '"}'
+            );
+            window.localStorage.setItem(
+              "getData",
+              targetObject.name.toString().split("_")[0]
+            );
             if (targetObject.name.toString().split("_")[0] == "yardArea") {
               for (let i = 1; i <= 20; i++) {
                 scene.getObjectByName("truck_Y" + i).visible = false;
@@ -470,12 +471,11 @@ document.addEventListener("DOMContentLoaded", function () {
               scene.getObjectByName("truck_A1").visible = false;
               scene.getObjectByName("truck_A2").visible = false;
               scene.getObjectByName("truck_A3").visible = false;
-
             }
-
-
           }
-          switchCamera(targetObject.name.toString().split("_").slice(0, 2).join('_'));
+          switchCamera(
+            targetObject.name.toString().split("_").slice(0, 2).join("_")
+          );
           // switchCamera(targetObject.name.toString().split("_").slice(0, 2).join('_'));
 
           window.localStorage.setItem("switchToMainCam", "null");
@@ -577,7 +577,10 @@ document.addEventListener("DOMContentLoaded", function () {
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].onclick = function () {
       switchCamera(buttons[i].id);
-      console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
+      window.localStorage.setItem("switchToMainCam", "null");
+      if (!buttons[i].id.includes("storage")) {
+        console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
+      }
       if (buttons[i].id.includes("yard")) {
         window.localStorage.setItem("getData", "yardArea");
         for (let i = 1; i <= 20; i++) {
@@ -600,32 +603,33 @@ function findCameraByName(name) {
   if (foundCamera) {
     return foundCamera;
   } else {
-    console.log("Camera not found:", name);
+  
+
     return null;
   }
 }
 
-
 // JavaScript to handle the panel toggle
-const toggleButton = document.getElementById('togglePanel');
+const toggleButton = document.getElementById("togglePanel");
 const tooltip = document.getElementById("toggleTooltip");
 const leftPanel = document.getElementById("leftPanel");
 const togglePanel = document.getElementById("togglePanel");
 
 // Show tooltip on hover
-toggleButton.addEventListener("mouseover", function () {
-  if (!leftPanel.classList.contains("open")) {
-    tooltip.style.opacity = 1; // Show tooltip on hover
-    tooltip.style.left = "22.5vw";
-  }
-});
+// toggleButton.addEventListener("mouseover", function () {
+//   if(!leftPanel.classList.contains("open")){
+//     tooltip.style.opacity = 1; // Show tooltip on hover
+//     tooltip.textContent = "Open Controls";
+//     tooltip.style.left = "22.5vw";
+//   }
+// });
 
-toggleButton.addEventListener("mouseout", function () {
-  if (!leftPanel.classList.contains("open")) {
-    tooltip.style.opacity = 0; // Hide tooltip if panel is closed
-  }
-});
-
+// toggleButton.addEventListener("mouseout", function () {
+//   if (!leftPanel.classList.contains("open")) {
+//       tooltip.style.opacity = 0; // Hide tooltip if panel is closed
+//   }
+// });
+tooltip.style.opacity = 0;
 // Toggle the panel when the button is clicked
 toggleButton.addEventListener("click", function () {
   // Toggle the 'open' class for both the panel and chevron
@@ -636,33 +640,46 @@ toggleButton.addEventListener("click", function () {
   if (leftPanel.classList.contains("open")) {
     leftPanel.style.left = "0"; // Panel moves out
     togglePanel.style.left = "10vw"; // Button moves to the edge of the panel
-    tooltip.style.left = "12.5vw"
-    tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
+    // tooltip.style.left = "12.5vw"
+    // tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
 
     // Hide tooltip during the animation
-    tooltip.style.opacity = 0;
+    // tooltip.style.opacity = 0;
 
     // Wait for the animation to finish
-    togglePanel.addEventListener("transitionend", function (event) {
-      if (event.propertyName === "left" && leftPanel.classList.contains("open")) {
-        tooltip.style.opacity = 1; // Show the tooltip after animation completes
-      }
-    }, { once: true }); // Ensure this runs only once after the transition
-
+    togglePanel.addEventListener(
+      "transitionend",
+      function (event) {
+        if (
+          event.propertyName === "left" &&
+          leftPanel.classList.contains("open")
+        ) {
+          // tooltip.style.opacity = 1; // Show the tooltip after animation completes
+        }
+      },
+      { once: true }
+    ); // Ensure this runs only once after the transition
   } else {
-    leftPanel.style.left = "-180px"; // Hide panel
+    leftPanel.style.left = "-220px"; // Hide panel
     togglePanel.style.left = "0"; // Reset button position
-    // tooltip.style.left = "0px"
+    // tooltip.style.left = "-100px"
     // tooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
 
     // // Hide tooltip during the animation
     // tooltip.style.opacity = 0;
 
     // Wait for the animation to finish
-    togglePanel.addEventListener("transitionend", function (event) {
-      if (event.propertyName === "left" && !leftPanel.classList.contains("open")) {
-        tooltip.style.opacity = 1; // Show the tooltip after animation completes
-      }
-    }, { once: true }); // Ensure this runs only once after the transition
+    togglePanel.addEventListener(
+      "transitionend",
+      function (event) {
+        if (
+          event.propertyName === "left" &&
+          !leftPanel.classList.contains("open")
+        ) {
+          // tooltip.style.opacity = 1; // Show the tooltip after animation completes
+        }
+      },
+      { once: true }
+    ); // Ensure this runs only once after the transition
   }
 });

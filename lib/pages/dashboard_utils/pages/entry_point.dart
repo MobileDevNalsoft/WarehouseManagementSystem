@@ -18,7 +18,7 @@ class EntryPoint extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.white,
       key: _drawerKey,
       drawer: Responsive.isMobile(context) ? const Sidebar() : null,
       body: Row(
@@ -30,7 +30,7 @@ class EntryPoint extends StatelessWidget {
               children: [
                 // Header(drawerKey: _drawerKey),
                 Gap(size.height*0.03),
-                Row(mainAxisAlignment: MainAxisAlignment.center,children: [Text('DashBoard', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)],),
+                Row(mainAxisAlignment: MainAxisAlignment.center,children: [Text('Yard Dashboard', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)],),
                 Gap(size.height*0.03),
                 Expanded(
                   child: ConstrainedBox(
