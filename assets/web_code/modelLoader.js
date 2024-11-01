@@ -1,11 +1,19 @@
-import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js";
+import * as GLTFLoader from "gltfLoader";
 
 export function loadModel() {
-    const loader = new GLTFLoader();
-    
-    loader.load("../glbs/warehouse_2410_1125.glb", function (gltf) {
-        return gltf.scene;
-    }, undefined, function (error) {
-        console.error('{"Error":"' + error.toString() + '"}');
+    const loader = new GLTFLoader.GLTFLoader();
+
+    return new Promise((resolve, reject) => {
+        loader.load(
+            "../glbs/warehouse_2410_1125.glb",
+            function (gltf) {
+                resolve(gltf); // Resolve with the loaded glTF model
+            },
+            undefined,
+            function (error) {
+                console.error('{"Error":"' + error.toString() + '"}');
+                reject(error); // Reject if there's an error
+            }
+        );
     });
 }

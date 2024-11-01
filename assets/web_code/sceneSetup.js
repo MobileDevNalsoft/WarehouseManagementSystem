@@ -1,23 +1,39 @@
 import * as THREE from "three";
-import { setupLights } from "./lights";
-import { createCamera } from "./camera";
-import { loadModel } from "./modelLoader";
-import { animationMixer } from "./aniMaster";
+import { loadModel } from "loader";
+import { setupLights } from "lights";
+import { animationMixer } from "aniMaster";
+import { createCamera } from "camera";
+import { addControls } from "controls";
+import { addInteractions } from "interactions";
+import { localStorageSetup } from "localStorage";
 
-export function initScene(container, renderer) {
+export async function initScene(renderer) {
+    const container = document.getElementById("container");
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xcccccc); // Set your desired background
 
     renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement());
+    container.appendChild(renderer.domElement);
 
     setupLights(scene);
 
-    const model = loadModel();
+    const gltf = await loadModel();
 
-    const camera = createCamera(model, container);
+    const model = gltf.scene;
+
+    const mixer = animationMixer(gltf);
+
+    const camera = createCamera(gltf);
+
+    const controls = addControls(camera, renderer);
+
+    localStorageSetup(scene, gltf.cameras, camera, controls);
+
+    addInteractions(scene, model, camera, gltf.cameras, controls);
 
     scene.add(model);
+
+    scene.add(camera);
 
     scene.updateMatrixWorld(true);
 
@@ -27,17 +43,5 @@ export function initScene(container, renderer) {
         camera.updateProjectionMatrix();
     });
 
-    const { mixer, clock } = animationMixer(model);
-
-    animate(renderer, scene, camera, mixer, clock);
-
-
-    return scene;
-}
-
-function animate(renderer, scene, camera) {
-    requestAnimationFrame(() => animate(renderer, scene, camera));
-    const delta = clock.getDelta(); // seconds.
-    mixer.update(delta); // Update the animation mixer
-    renderer.render(scene, camera);
+    return {scene, camera, mixer, controls};
 }
