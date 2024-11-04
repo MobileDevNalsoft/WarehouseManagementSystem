@@ -76,7 +76,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -85,56 +84,80 @@ import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class RackDataSheet extends StatefulWidget {
-  const RackDataSheet({super.key});
+  RackDataSheet({super.key, required this.objectNames});
+  List objectNames;
 
   @override
   State<RackDataSheet> createState() => _RackDataSheetState();
 }
 
 class _RackDataSheetState extends State<RackDataSheet> {
+
+  TextEditingController dropDownController = TextEditingController();
+
+  String? selectedBin;
+
   @override
   Widget build(BuildContext context) {
-     Size size = MediaQuery.of(context).size;
-    return  Customs.DataSheet(
-      context: context,
-      size: size,
-      title: 'Storage Area',
-      children: [
-        
-          Gap(size.height * 0.02),
-          Expanded(
-            child: BlocBuilder<StorageBloc, StorageState>(
-            buildWhen: (previous, current) => current.storageAreaStatus==StorageAreaStatus.success,
-            builder: (context, state) {
-              bool isEnabled = state.storageAreaStatus != StorageAreaStatus.success;
-              if(state.storageAreaStatus == StorageAreaStatus.success){
+    Size size = MediaQuery.of(context).size;
+    return Customs.DataSheet(context: context, size: size, title: 'Storage Area', children: [
+      Gap(size.height * 0.02),
+      Expanded(
+        child: BlocBuilder<StorageBloc, StorageState>(
+          buildWhen: (previous, current) => current.storageAreaStatus == StorageAreaStatus.success,
+          builder: (context, state) {
+            bool isEnabled = state.storageAreaStatus != StorageAreaStatus.success;
+            if (state.storageAreaStatus == StorageAreaStatus.success) {
               return Skeletonizer(
-                  enabled: isEnabled,
-                  enableSwitchAnimation: true,
-                  child: 
-                 Customs.MapInfo(size: size, keys: [
-                              'Asile',
-                              'Type',
-                              'Number of bins'
-                            ], values: [
-                              isEnabled ? 'Asile' : state.storageArea!.results![0].aisle!,
-                              isEnabled ? 'Type' : state.storageArea!.results![0].locnSizeTypeId!.key!,
-                              isEnabled ? 'Number of bins' : state.storageArea!.resultCount.toString(),
-                              
-                            ]),
-                      );
-                      }
-                  else{
-                    return Center(child: SizedBox(
-                      height: size.height*0.05,
-                      width: size.width*0.02,
-                      child: CircularProgressIndicator()));
-                  }
-            },
-            ),
-          )
-      ]
-    );
-  
+                enabled: isEnabled,
+                enableSwitchAnimation: true,
+                child: Column(
+                  children: [
+                    Customs.MapInfo(size: size, keys: [
+                      'Asile',
+                      'Type',
+                      'Number of bins'
+                    ], values: [
+                      isEnabled ? 'Asile' : state.storageArea!.results![0].aisle!,
+                      isEnabled ? 'Type' : state.storageArea!.results![0].locnSizeTypeId!.key!,
+                      isEnabled ? 'Number of bins' : state.storageArea!.resultCount.toString(),
+                    ]),
+                    Gap(size.height*0.05),
+                    DropdownMenu<String>(
+                //initialSelection: menuItems.first,
+                controller: dropDownController,
+                width: size.width*0.16,
+                hintText: "Select Bin",
+                requestFocusOnTap: true,
+                enableFilter: true,
+                menuStyle: MenuStyle(
+                  backgroundColor: WidgetStatePropertyAll<Color>(
+                      Colors.lightBlue.shade50),
+                ),
+
+                label: const Text('Select Menu'),
+                onSelected: (String? bin) {
+                  setState(() {
+                    selectedBin = bin;
+                  });
+                },
+                dropdownMenuEntries:
+                    widget.objectNames.map<DropdownMenuEntry<String>>((binName) {
+                  return DropdownMenuEntry<String>(
+                      value: binName,
+                      label: binName,
+                      leadingIcon: Icon(Icons.abc));
+                }).toList(),
+              ),
+                  ],
+                ),
+              );
+            } else {
+              return Center(child: SizedBox(height: size.height * 0.05, width: size.width * 0.02, child: CircularProgressIndicator()));
+            }
+          },
+        ),
+      )
+    ]);
   }
 }

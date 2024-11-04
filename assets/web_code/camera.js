@@ -25,6 +25,8 @@ export function createCamera(gltf){
 export function switchCamera(scene, name, cameraList, camera, controls) {
   let selectedCamera;
   let center;
+  const dropdown = document.querySelector(".dropdown-container");
+  dropdown.style.display = "none";
 
   if (name == "warehouse") {
     const object = scene.getObjectByName("warehouse_wall");
@@ -45,6 +47,10 @@ export function switchCamera(scene, name, cameraList, camera, controls) {
       object.position.z
     );
     selectedCamera = findCameraByName(cameraList, name);
+    if(name === "storageArea_cam"){
+      dropdown.style.display = "block";
+      console.log('{"object":"null"}');
+    }
   }
 
   if (selectedCamera) {
@@ -130,8 +136,6 @@ export function moveToBin(object, camera, controls) {
         onComplete: function () {
           controls.enabled = true; // Enable controls after switching cameras
           controls.enableDamping = true;
-          controls.target.copy(center);
-          controls.reset();
         },
       },
       0
