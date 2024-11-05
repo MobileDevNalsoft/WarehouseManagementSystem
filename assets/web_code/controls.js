@@ -7,6 +7,7 @@ export function addControls(camera, renderer) {
   controls.enableDamping = true; // Enable smooth movement
   controls.dampingFactor = 0.25;
   controls.zoomSpeed = 2;
+  controls.screenSpacePanning = false;
   controls.panSpeed = 2;
 
   // limiting vertical rotation around x axis
@@ -18,10 +19,11 @@ export function addControls(camera, renderer) {
   controls.maxAzimuthAngle = Math.PI;
 
   // limiting zoom out
+  controls.minDistance = 10;
   controls.maxDistance = 1000;
 
-  var minPan = new THREE.Vector3(-50, -50, -50);
-  var maxPan = new THREE.Vector3(50, 50, 50);
+  var minPan = new THREE.Vector3(-150, -150, -150);
+  var maxPan = new THREE.Vector3(150, 150, 150);
 
   // Function to clamp target position
   function clampTarget() {
