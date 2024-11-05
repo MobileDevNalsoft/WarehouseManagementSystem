@@ -38,7 +38,7 @@ export function addInteractions(scene, model, camera, cameraList, controls) {
       window.localStorage.setItem("switchToMainCam", "null");
       window.localStorage.setItem("rack_cam", "storageArea");
       prevNav = name;
-      switchCamera(scene, name, cameraList, camera, controls);
+      switchCamera(scene, name, camera, controls);
       console.log('{"rack":"' + name + '"}');
       window.localStorage.setItem(
         "getData",
@@ -158,7 +158,6 @@ export function addInteractions(scene, model, camera, cameraList, controls) {
           switchCamera(
             scene,
             targetObject.name,
-            cameraList,
             camera,
             controls
           );
@@ -181,7 +180,7 @@ export function addInteractions(scene, model, camera, cameraList, controls) {
           if (prevBin) {
             prevBin.material.color.copy(prevBinColor);
           }
-          switchCamera(scene, "warehouse", cameraList, camera, controls);
+          switchCamera(scene, "warehouse", camera, controls);
           if (prevNav.includes("yard")) {
             resetTrucksAnimation();
           }
@@ -221,7 +220,7 @@ export function addInteractions(scene, model, camera, cameraList, controls) {
       } else {
         object.userData.active = false;
         console.log('{"rack":"' + prevNav.split("_")[0] + '"}');
-        switchCamera(scene, prevNav.split("_")[0], cameraList, camera, controls);
+        switchCamera(scene, prevNav.split("_")[0], camera, controls);
       }
     }
     prevBin = object;
@@ -233,7 +232,7 @@ let buttons = document.getElementsByClassName("areaButton");
 // Loop through the buttons collection and log each element
 for (let i = 0; i < buttons.length; i++) {
   buttons[i].onclick = function () {
-    switchCamera(scene, buttons[i].id+"_cam_navigation", cameraList, camera, controls);
+    switchCamera(scene, buttons[i].id+"_cam_navigation", camera, controls);
     window.localStorage.setItem("switchToMainCam", "null");
     if (!buttons[i].id.includes("storage")) {
       console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');

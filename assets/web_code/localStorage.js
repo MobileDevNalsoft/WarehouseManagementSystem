@@ -8,7 +8,7 @@ export function localStorageSetup(scene, cameraList, camera, controls) {
   window.addEventListener("storage", (event) => {
     switch (event.key) {
       case "switchToMainCam":
-        switchCamera(scene, event.newValue, cameraList, camera, controls);
+        switchCamera(scene, event.newValue, camera, controls);
         break;
       case "isRackDataLoaded":
         isRackDataLoaded = event.newValue;

@@ -2,11 +2,8 @@ import * as THREE from "three";
 
 export function createCamera(gltf) {
   const container = document.getElementById("container");
-  const cameraList = gltf.cameras;
 
-  const worldCam = findCameraByName(cameraList, "warehouse_cam");
-
-  const fov = worldCam.fov; // Field of view
+  const fov = 30; // Field of view
   const aspect = container.clientWidth / container.clientHeight; // Aspect ratio
   const near = 0.1; // Near clipping plane
   const far = 3000; // Far clipping plane
@@ -15,46 +12,18 @@ export function createCamera(gltf) {
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   // Set the position of the new camera based on the imported camera's position
-  camera.position.copy(worldCam.position);
-  camera.quaternion.copy(worldCam.quaternion);
-  // camera.rotation.copy(worldCam.rotation); // Copy rotation if needed
+  camera.position.set(0,350,600);
+  camera.lookAt(0,0,0);
 
   return camera;
 }
 
-export function switchCamera(scene, name, cameraList, camera, controls) {
-  const {position, target} = getPositionAndTarget(scene, "world");
-  let selectedCamera;
-  let center = new THREE.Vector3();
+export function switchCamera(scene, name, camera, controls) {
+  const { position, target } = getPositionAndTarget(scene, name, name.toString().split("_").slice(0, 2).join("_"));
+  
   const dropdown = document.querySelector(".dropdown-container");
   dropdown.style.display = "none";
 
-  if (name.toString().split("_").slice(0, 2).join("_") == "warehouse") {
-    const object = scene.getObjectByName("warehouse_wall");
-    object.updateWorldMatrix(true, true);
-    const box = new THREE.Box3().setFromObject(object);
-    box.getCenter(center);
-    console.log('{"object":"null"}');
-    selectedCamera = findCameraByName(
-      cameraList,
-      name.toString().split("_").slice(0, 2).join("_")
-    );
-  } else {
-    const object = scene.getObjectByName(name);
-    object.updateWorldMatrix(true, true);
-    const box = new THREE.Box3().setFromObject(object);
-    box.getCenter(center);
-    selectedCamera = findCameraByName(
-      cameraList,
-      name.toString().split("_").slice(0, 2).join("_")
-    );
-    if (name.toString().split("_").slice(0, 2).join("_") === "storageArea") {
-      dropdown.style.display = "block";
-      console.log('{"object":"null"}');
-    }
-  }
-
-  if (selectedCamera) {
     // Create a GSAP timeline for smoother transitions
     const timeline = gsap.timeline();
 
@@ -68,20 +37,24 @@ export function switchCamera(scene, name, cameraList, camera, controls) {
       y: position.y,
       z: position.z,
       ease: "power3.inOut",
+    }).to(controls.target, {
+      duration: 3,
+      x: target.x,
+      y: target.y,
+      z: target.z,
+      ease: "power3.inOut",
       onUpdate: function () {
-        controls.target.copy(target); // Adjust target if necessary
-        camera.lookAt(target);
-      },
-      onComplete: function () {
-        // if (!selectedCamera.name.toString().includes("Area")) {
-        controls.enabled = true;
-        controls.enableDamping = true;
-        controls.target.copy(target); // Adjust target if necessary
+        camera.lookAt(controls.target); // Smoothly look at the target
         controls.update();
-        // }
+        camera.updateWorldMatrix();
       },
-    }); // Start rotation animation at the same time as position animation
-  }
+    }, "<")
+
+    // Callbacks after animation completes
+    timeline.call(() => {
+      controls.enabled = true; // Re-enable controls after animation
+      controls.enableDamping = true; // Re-enable damping after animation
+    });
 }
 
 export function moveToBin(object, camera, controls) {
@@ -177,21 +150,25 @@ function findCameraByName(cameraList, name) {
   }
 }
 
-function getPositionAndTarget(scene, view) {
+function getPositionAndTarget(scene, name, view) {
+  console.log(name);
   let position = new THREE.Vector3();
-  let target = new THREE.Vector3(0,0,0);
+  let target = new THREE.Vector3(0, 0, 0);
   let object = new THREE.Object3D();
 
   switch (view) {
-    case "world":
-      position.set(0, 500, 0);
-
-      object = scene.getObjectByName("flooring");
-      object.updateWorldMatrix(true, true);
+    case "warehouse":
+      position.set(0, 500, 200);
+      target.set(0,0,-50);
+      console.log('{"object":"null"}');
+      break;
+    case "storageArea":
+      position.set(-100,-200,100);
+      object = scene.getObjectByName(name);
       const box = new THREE.Box3().setFromObject(object);
-      // box.getCenter(target);
+      box.getCenter(target);
       break;
   }
 
-  return {position, target};
+  return { position, target };
 }
