@@ -45,27 +45,27 @@ class YardArea {
 class Results {
   int? id;
   int? seqNbr;
-  String? toLocation;
+  String? vehicleLocation;
   String? shipmentNbr;
-  String? trailerNbr;
+  String? truckNbr;
   String? poNbr;
   String? vendorCode;
 
   Results(
       {this.id,
       this.seqNbr,
-      this.toLocation,
+      this.vehicleLocation,
       this.shipmentNbr,
-      this.trailerNbr,
+      this.truckNbr,
       this.poNbr,
       this.vendorCode});
 
   Results.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     seqNbr = json['seq_nbr'];
-    toLocation = json['to_location'];
+    vehicleLocation = json['to_location'];
     shipmentNbr = json['shipment_nbr'];
-    trailerNbr = json['trailer_nbr'];
+    truckNbr = json['trailer_nbr'];
     poNbr = json['po_nbr'];
     vendorCode = json['vendor_code'];
   }
@@ -74,9 +74,9 @@ class Results {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['seq_nbr'] = this.seqNbr;
-    data['to_location'] = this.toLocation;
+    data['to_location'] = this.vehicleLocation;
     data['shipment_nbr'] = this.shipmentNbr;
-    data['trailer_nbr'] = this.trailerNbr;
+    data['trailer_nbr'] = this.truckNbr;
     data['po_nbr'] = this.poNbr;
     data['vendor_code'] = this.vendorCode;
     return data;

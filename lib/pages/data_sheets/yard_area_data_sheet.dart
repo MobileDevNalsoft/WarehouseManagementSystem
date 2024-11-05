@@ -72,23 +72,19 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
               //         ,)
                   
                   ListView.separated(
-                    
                       itemBuilder: (context, index) => Card(
-                        
                         child: Customs.MapInfo(size: size, keys: [
-                              'trailer_nbr',
-                              'to_location',
-                              'vendor_code',
-                              'po_nbr',
-                              'shipment_nbr'
+                              'Truck number',
+                              'Vehicle location',
+                              'Vendor code',
+                              'PO number',
+                              'Shipment number'
                             ], values: [
-                              isEnabled ? 'trailer_nbr' : state.yardArea!.results![index].trailerNbr!,
-                              isEnabled ? 'to_location' : state.yardArea!.results![index].toLocation!,
-                              isEnabled ? 'vendor_code' : state.yardArea!.results![index].vendorCode!,
-                              isEnabled ? 'po_nbr' : state.yardArea!.results![index].poNbr!,
-                              isEnabled ? 'shipment_nbr' : state.yardArea!.results![index].shipmentNbr!,
-                              
-                              
+                              isEnabled ? 'Truck number' : state.yardArea!.results![index].truckNbr!,
+                              isEnabled ? 'Vehicle location' : state.yardArea!.results![index].vehicleLocation!,
+                              isEnabled ? 'Vendor code' : state.yardArea!.results![index].vendorCode!,
+                              isEnabled ? 'PO number' : state.yardArea!.results![index].poNbr!,
+                              isEnabled ? 'Shipment number' : state.yardArea!.results![index].shipmentNbr!,
                             ]),
                       ),
                       separatorBuilder: (context, index) => Gap(size.height * 0.025),
