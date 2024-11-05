@@ -2,10 +2,12 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:network_calls/src.dart';
+
 import 'package:warehouse_3d/constants/app_constants.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/models/storage_area_model.dart';
+
+import '../../local_network_calls.dart';
 
 part 'storage_event.dart';
 part 'storage_state.dart';

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gap/gap.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/ghaps.dart';
 
 import '../../constants/config.dart';
@@ -17,11 +18,16 @@ class Sidebar extends StatelessWidget {
       // width: MediaQuery.of(context).size.width < 1300 ? 260 : null,
       child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Dashboard",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black),),
+            gapH16,
+            Text("Dashboard's",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black),textAlign: TextAlign.center,),
             
             gapH16,
+            Divider(
+              thickness: 2,
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -30,39 +36,35 @@ class Sidebar extends StatelessWidget {
                 child: ListView(
                   children: [
                     MenuTile(
+                      isActive: true,
                       title: "Yard",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                    
                       onPressed: () {},
                     ),
                     MenuTile(
+                      
                       title: "Storage",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                      
                       onPressed: () {},
                     ),
                     MenuTile(
                       title: "Staging",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                      
                       onPressed: () {},
                     ),
                     MenuTile(
                       title: "Activity",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                      
                       onPressed: () {},
                     ),
                     MenuTile(
                       title: "Receiving",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                     
                       onPressed: () {},
                     ),
                     MenuTile(
                       title: "Inspection",
-                      activeIconSrc: "assets/icons/store_light.svg",
-                      inactiveIconSrc: "assets/icons/store_filled.svg",
+                      
                       onPressed: () {},
                     ),
                    

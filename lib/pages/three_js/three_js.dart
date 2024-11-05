@@ -39,6 +39,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   late InAppWebViewController webViewController;
   late WarehouseInteractionBloc _warehouseInteractionBloc;
   final SharedPreferences sharedPreferences = getIt();
+  List? objectNames;
 
   // for animation
   late AnimationController animationController;
@@ -85,7 +86,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             Container(
               height: size.height * 0.08,
               width: size.width,
-              decoration: BoxDecoration(color: Colors.blue.shade900),
+              color: Colors.blueAccent.shade100,
               child: Row(
                 children: [
                   Gap(size.width * 0.006),
@@ -180,11 +181,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
                         height: size.height * (0.045),
-                        width: size.width * 0.1,
+                        width: size.width * 0.12,
                         padding: EdgeInsets.only(left: size.width * 0.015, right: size.width * 0.003),
                       ),
                       dropdownStyleData: DropdownStyleData(
-                          width: size.width * (0.1),
+                          width: size.width * (0.12),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white,
@@ -205,7 +206,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   const Spacer(),
                   Image.asset(
                     'assets/images/nalsoft_logo.png',
-                    scale: size.height * 0.006,
+                    scale: size.height * 0.004,
                     isAntiAlias: true,
                   ),
                   Gap(size.width * 0.06),
@@ -228,7 +229,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                             onConsoleMessage: (controller, consoleMessage) {
                               try {
                                 if (consoleMessage.messageLevel.toNativeValue() == 1) {
-                                  print('console message ${consoleMessage.message}');
                                   Map<String, dynamic> message = jsonDecode(consoleMessage.message);
                                   _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message));
                                 }
@@ -242,11 +242,17 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               Timer.periodic(
                                 const Duration(milliseconds: 500),
                                 (timer) async {
-                                  _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
-                                    value.forEach((e) {
-                                      print(e);
-                                    });
-                                  });
+                                  // _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
+                                  //   value.forEach((e) {
+                                  //     print(e);
+                                  //   });
+                                  // });
+
+                                  // ignore: prefer_conditional_assignment
+                                  if (objectNames == null) {
+                                    objectNames =
+                                        await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "modelObjectNames");
+                                  }
 
                                   bool? isLoaded =
                                       await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
@@ -258,12 +264,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                   String? requestedData =
                                       await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "getData");
                                   if (requestedData != null) {
-                                    // _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
                                     if (requestedData.toLowerCase() == "yardarea") {
                                       context.read<YardBloc>().add(AddYardData());
                                       _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
                                     } else if (requestedData.contains("rack")) {
-                                      print("rack selected ${requestedData.split("rack").last}");
                                       context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
                                       _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
                                     }
@@ -329,8 +333,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   ) {
     switch (objectName) {
       case 'rack':
-        print('name $objectName value $objectValue');
-        return const RackDataSheet();
+        return RackDataSheet(objectNames: objectNames!,);
       case 'bin':
         return const BinDataSheet();
       case 'area':

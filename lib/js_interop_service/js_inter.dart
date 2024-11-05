@@ -7,7 +7,7 @@ import 'dart:js_util';
 import 'package:js/js.dart';
 
 @JS()
-external _switchToMainCam();
+external _switchToMainCam(String camName);
 
 @JS()
 external _isRackDataLoaded(bool value);
@@ -37,8 +37,8 @@ external _getSomeAsyncData();
 external _shareImage(String url, String filename);
 
 class JsInteropService {
-  switchToMainCam() {
-    _switchToMainCam();
+  switchToMainCam(String camName) {
+    _switchToMainCam(camName);
   }
 
   isRackDataLoaded(value) {

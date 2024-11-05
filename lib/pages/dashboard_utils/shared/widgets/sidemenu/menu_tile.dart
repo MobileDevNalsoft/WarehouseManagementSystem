@@ -33,7 +33,7 @@ class MenuTile extends StatelessWidget {
           right: isSubmenu ? AppDefaults.padding : 0),
       child: Container(
         decoration: BoxDecoration(
-          color: isActive ? AppColors.highlightLight : null,
+          color: isActive ? const Color.fromARGB(255, 135, 145, 221) : null,
           borderRadius: BorderRadius.circular(AppDefaults.borderRadius),
           boxShadow: [
             if (isActive)
