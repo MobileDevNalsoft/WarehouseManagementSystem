@@ -1,11 +1,12 @@
 import * as THREE from "three";
 import { loadModel } from "loader";
 import { setupLights } from "lights";
-import { animationMixer } from "aniMaster";
+import { animationMixer } from "animations";
 import { createCamera } from "camera";
 import { addControls } from "controls";
 import { addInteractions } from "interactions";
 import { localStorageSetup } from "localStorage";
+import { addSkyDome } from "skyDome";
 
 export async function initScene(renderer) {
   const container = document.getElementById("container");
@@ -19,17 +20,19 @@ export async function initScene(renderer) {
 
   const gltf = await loadModel();
 
+  addSkyDome(scene);
+
   const model = gltf.scene;
 
   const mixer = animationMixer(gltf);
 
-  const camera = createCamera(gltf);
+  const camera = createCamera();
 
   const controls = addControls(camera, renderer);
 
-  localStorageSetup(scene, gltf.cameras, camera, controls);
+  localStorageSetup(scene, camera, controls);
 
-  addInteractions(scene, model, camera, gltf.cameras, controls);
+  addInteractions(scene, model, camera, controls);
 
   scene.add(model);
 

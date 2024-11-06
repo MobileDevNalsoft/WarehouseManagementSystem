@@ -1,7 +1,7 @@
-import { resetTrucksAnimation } from "aniMaster";
+import { resetTrucksAnimation } from "animations";
 import { switchCamera } from "camera";
 
-export function localStorageSetup(scene, cameraList, camera, controls) {
+export function localStorageSetup(scene, camera, controls) {
   // Local Storage Setup
   window.localStorage.setItem("switchToMainCam", "null");
 

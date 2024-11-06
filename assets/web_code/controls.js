@@ -12,7 +12,7 @@ export function addControls(camera, renderer) {
 
   // limiting vertical rotation around x axis
   controls.minPolarAngle = 0;
-  controls.maxPolarAngle = Math.PI / 2.8;
+  controls.maxPolarAngle = Math.PI / 2.2;
 
   // limiting horizontal rotation around y axis
   controls.minAzimuthAngle = -Math.PI;
@@ -22,8 +22,8 @@ export function addControls(camera, renderer) {
   controls.minDistance = 10;
   controls.maxDistance = 1000;
 
-  var minPan = new THREE.Vector3(-150, -150, -150);
-  var maxPan = new THREE.Vector3(150, 150, 150);
+  var minPan = new THREE.Vector3(-150, -50, -150);
+  var maxPan = new THREE.Vector3(150, 50, 150);
 
   // Function to clamp target position
   function clampTarget() {

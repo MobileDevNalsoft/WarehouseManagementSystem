@@ -1,9 +1,18 @@
-export function addSkyDome() {
+import * as THREE from "three";
+
+export function addSkyDome(scene) {
     // Load the skydome texture
     const loader = new THREE.TextureLoader();
-    loader.load("../images/sky_box.jpg", function (texture) {
+    loader.load("./sky_new.jpg", function (texture) {
       // Create a large sphere geometry for the skydome
-      const geometry = new THREE.SphereGeometry(650, 32, 32);
+      const geometry = new THREE.SphereGeometry(650,  // Radius of the hemisphere
+        32,   // Width segments
+        32,   // Height segments
+        0,    // phiStart: Start angle in the X axis
+        Math.PI * 2,  // phiLength: Full horizontal circle
+        0,    // thetaStart: Start angle in the Y axis
+        Math.PI / 1.75  // thetaLength: Only upper half to create a dome
+        );
 
       texture.wrapS = THREE.RepeatWrapping; // Ensure the texture wraps horizontally
       texture.wrapT = THREE.ClampToEdgeWrapping; // Optionally clamp vertically to prevent top/bottom seams
