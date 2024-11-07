@@ -6,8 +6,8 @@ abstract class YardEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddYardData extends YardEvent{
-  const AddYardData();
+class GetYardData extends YardEvent{
+  const GetYardData();
 }
 
 class YardTruckExpanded extends YardEvent{

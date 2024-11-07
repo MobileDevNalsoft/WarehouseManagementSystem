@@ -273,7 +273,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "getData");
                                       if (requestedData != null) {
                                         if (requestedData.toLowerCase() == "yardarea") {
-                                          context.read<YardBloc>().add(AddYardData());
+                                          context.read<YardBloc>().add(GetYardData());
                                           _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
                                         } else if (requestedData.contains("rack")) {
                                           context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
