@@ -1,27 +1,18 @@
-class InspectionArea {
-  String? areaName;
-  List<Material>? materials;
-  InspectionArea({this.areaName, this.materials = const []});
-
-  InspectionArea.fromJson(Map<String, dynamic> json) {
-    areaName = json['area_name'];
-    materials = (json['materials'] as List).map((e) => Material.fromJson(e)).toList();
-  }
-}
-
-class Material {
+class InspectionAreaItem {
   String? asn;
-  String? po;
+  String? poNum;
+  String? vendor;
+  String? lpnNum;
   String? item;
-  String? lpn;
-  int? quantity;
-  Material({this.asn, this.po, this.item, this.lpn, this.quantity});
+  int? qty;
+  InspectionAreaItem({this.asn, this.poNum, this.vendor, this.lpnNum, this.item, this.qty});
 
-  Material.fromJson(Map<String, dynamic> json) {
+  InspectionAreaItem.fromJson(Map<String, dynamic> json) {
     asn = json['asn'];
-    po = json['po'];
+    poNum = json['po_num'];
+    vendor = json['vendor'];
+    lpnNum = json['lpn_num'];
     item = json['item'];
-    lpn = json['lpn'];
-    quantity = json['qty'];
+    qty = int.parse(json['qty']);
   }
 }

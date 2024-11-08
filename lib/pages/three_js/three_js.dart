@@ -10,8 +10,8 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:three_js/three_js.dart';
 import 'package:touchable/touchable.dart';
+import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
-import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/models/yard_area_model.dart';
@@ -24,6 +24,7 @@ import 'package:warehouse_3d/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/staging_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/storage_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/yard_area_data_sheet.dart';
+import '../../bloc/warehouse/warehouse_interaction_bloc.dart';
 import '../../js_interop_service/js_inter.dart';
 import '../../navigations/navigator_service.dart';
 import '../customs/hover_dropdown.dart';
@@ -275,7 +276,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                         if (requestedData.toLowerCase() == "yardarea") {
                                           context.read<YardBloc>().add(GetYardData());
                                           _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
-                                        } else if (requestedData.contains("rack")) {
+                                        }else if (requestedData.contains("rack")) {
                                           context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
                                           _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
                                         }

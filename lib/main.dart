@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
 import 'package:warehouse_3d/bloc/authentication/authentication_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 
+import 'bloc/inspection_area/inspection_area_bloc.dart';
 import 'navigations/navigator_service.dart';
 import 'navigations/route_generator.dart';
 
@@ -21,6 +23,8 @@ main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt())),
+      BlocProvider(create: (_) => ActivityAreaBloc(customApi: getIt())),
+      BlocProvider(create: (_) => InspectionAreaBloc(customApi: getIt())),
       BlocProvider(create: (_) => AuthenticationBloc(navigator: getIt())),
        BlocProvider(create: (_) => YardBloc(customApi: getIt())),
         BlocProvider(create: (_) => StorageBloc()),

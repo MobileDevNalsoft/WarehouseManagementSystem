@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/js_interop_service/js_inter.dart';
+import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class InspectionAreaDataSheet extends StatefulWidget {
@@ -15,15 +13,15 @@ class InspectionAreaDataSheet extends StatefulWidget {
 }
 
 class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
-  late WarehouseInteractionBloc _warehouseInteractionBloc;
+  late InspectionAreaBloc _inspectionAreaBloc;
 
   @override
   void initState() {
     super.initState();
 
-    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    if (_warehouseInteractionBloc.state.getInspectionAreaDataState == GetInspectionAreaDataState.initial) {
-      _warehouseInteractionBloc.add(GetInspectionAreaData(areaName: _warehouseInteractionBloc.state.dataFromJS!.values.first.toString()));
+    _inspectionAreaBloc = context.read<InspectionAreaBloc>();
+    if (_inspectionAreaBloc.state.getDataState == GetDataState.initial) {
+      _inspectionAreaBloc.add(const GetInspectionAreaData());
     }
   }
 
@@ -42,9 +40,9 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
             textAlign: TextAlign.center,
           ),
           Gap(size.height * 0.02),
-          BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+          BlocBuilder<InspectionAreaBloc, InspectionAreaState>(
             builder: (context, state) {
-              bool isEnabled = state.getInspectionAreaDataState != GetInspectionAreaDataState.success;
+              bool isEnabled = state.getDataState != GetDataState.success;
               return Skeletonizer(
                   enabled: isEnabled,
                   enableSwitchAnimation: true,
@@ -54,18 +52,20 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
                         itemBuilder: (context, index) => Customs.MapInfo(size: size, keys: [
                               'ASN',
                               'PO',
-                              'Item',
+                              'Vendor',
                               'LPN',
+                              'Item',
                               'Quantity'
                             ], values: [
-                              isEnabled ? 'ASN' : state.inspectionArea!.materials![index].asn!,
-                              isEnabled ? 'PO' : state.inspectionArea!.materials![index].po!,
-                              isEnabled ? 'Item' : state.inspectionArea!.materials![index].item!,
-                              isEnabled ? 'LPN' : state.inspectionArea!.materials![index].lpn!.toString(),
-                              isEnabled ? 'Quantity' : state.inspectionArea!.materials![index].quantity!.toString()
+                              isEnabled ? 'ASN' : state.inspectionAreaItems![index].asn!,
+                              isEnabled ? 'PO' : state.inspectionAreaItems![index].poNum!,
+                              isEnabled ? 'Vendor' : state.inspectionAreaItems![index].vendor!,
+                              isEnabled ? 'LPN' : state.inspectionAreaItems![index].lpnNum!.toString(),
+                              isEnabled ? 'Item' : state.inspectionAreaItems![index].item!,
+                              isEnabled ? 'Quantity' : state.inspectionAreaItems![index].qty!.toString()
                             ]),
                         separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                        itemCount: isEnabled ? 8 : state.inspectionArea!.materials!.length),
+                        itemCount: isEnabled ? 8 : state.inspectionAreaItems!.length),
                   ));
             },
           )

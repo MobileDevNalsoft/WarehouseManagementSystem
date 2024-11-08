@@ -39,6 +39,7 @@ class AppConstants {
    
   // methods
   static const ACTIVITY_AREA = 'activity_area';
+  static const INSPECTION_AREA = 'inspection_area';
   static const YARD_AREA = 'yard_area';
 }
 

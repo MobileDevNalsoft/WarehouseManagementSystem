@@ -22,9 +22,9 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
     super.initState();
 
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    if (_warehouseInteractionBloc.state.getReceivingAreaDataState == GetReceivingAreaDataState.initial) {
-      _warehouseInteractionBloc.add(GetReceivingAreaData(areaName: _warehouseInteractionBloc.state.dataFromJS!.values.first.toString()));
-    }
+    // if (_warehouseInteractionBloc.state.getReceivingAreaDataState == GetReceivingAreaDataState.initial) {
+    //   _warehouseInteractionBloc.add(GetReceivingAreaData(areaName: _warehouseInteractionBloc.state.dataFromJS!.values.first.toString()));
+    // }
   }
 
   @override
@@ -42,31 +42,31 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
             textAlign: TextAlign.center,
           ),
           Gap(size.height * 0.02),
-          BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-            builder: (context, state) {
-              bool isEnabled = state.getReceivingAreaDataState != GetReceivingAreaDataState.success;
-              return Skeletonizer(
-                  enabled: isEnabled,
-                  enableSwitchAnimation: true,
-                  child: SizedBox(
-                    height: size.height * 0.6,
-                    child: ListView.separated(
-                        itemBuilder: (context, index) => Customs.MapInfo(size: size, keys: [
-                              'ASN',
-                              'POs',
-                              'LPN',
-                              'Quantity'
-                            ], values: [
-                              isEnabled ? 'ASN' : state.receivingArea!.materials![index].asn!,
-                              isEnabled ? 'POs' : state.receivingArea!.materials![index].pos!.first,
-                              isEnabled ? 'LPN' : state.receivingArea!.materials![index].lpns!.toString(),
-                              isEnabled ? 'Quantity' : state.receivingArea!.materials![index].quantity!.toString()
-                            ]),
-                        separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                        itemCount: isEnabled ? 8 : state.receivingArea!.materials!.length),
-                  ));
-            },
-          )
+          // BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+          //   builder: (context, state) {
+          //     bool isEnabled = state.getReceivingAreaDataState != GetReceivingAreaDataState.success;
+          //     return Skeletonizer(
+          //         enabled: isEnabled,
+          //         enableSwitchAnimation: true,
+          //         child: SizedBox(
+          //           height: size.height * 0.6,
+          //           child: ListView.separated(
+          //               itemBuilder: (context, index) => Customs.MapInfo(size: size, keys: [
+          //                     'ASN',
+          //                     'POs',
+          //                     'LPN',
+          //                     'Quantity'
+          //                   ], values: [
+          //                     isEnabled ? 'ASN' : state.receivingArea!.materials![index].asn!,
+          //                     isEnabled ? 'POs' : state.receivingArea!.materials![index].pos!.first,
+          //                     isEnabled ? 'LPN' : state.receivingArea!.materials![index].lpns!.toString(),
+          //                     isEnabled ? 'Quantity' : state.receivingArea!.materials![index].quantity!.toString()
+          //                   ]),
+          //               separatorBuilder: (context, index) => Gap(size.height * 0.025),
+          //               itemCount: isEnabled ? 8 : state.receivingArea!.materials!.length),
+          //         ));
+          //   },
+          // )
       ]
     );
   }

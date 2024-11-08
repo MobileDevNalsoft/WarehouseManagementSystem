@@ -1,25 +1,14 @@
-class ActivityArea {
-  String? areaName;
-  List<Material>? materials;
-  ActivityArea({this.areaName, this.materials = const []});
-
-  ActivityArea.fromJson(Map<String, dynamic> json) {
-    areaName = json['area_name'];
-    materials = (json['materials'] as List).map((e) => Material.fromJson(e)).toList();
-  }
-}
-
-class Material {
-  String? workOrderNumber;
+class ActivityAreaItem {
+  String? workOrderNum;
   String? workOrderType;
-  String? status;
-  int? quantity;
-  Material({this.workOrderNumber, this.workOrderType, this.status, this.quantity});
+  String? item;
+  int? qty;
+  ActivityAreaItem({this.workOrderNum, this.workOrderType, this.item, this.qty});
 
-  Material.fromJson(Map<String, dynamic> json) {
-    workOrderNumber = json['work_order_number'];
+  ActivityAreaItem.fromJson(Map<String, dynamic> json) {
+    workOrderNum = json['work_order_num'];
     workOrderType = json['work_order_type'];
-    status = json['status'];
-    quantity = json['qty'];
+    item = json['item'];
+    qty = int.parse(json['qty']);
   }
 }
