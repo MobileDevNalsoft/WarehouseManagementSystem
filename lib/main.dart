@@ -23,7 +23,7 @@ main() async {
       BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt())),
       BlocProvider(create: (_) => AuthenticationBloc(navigator: getIt())),
        BlocProvider(create: (_) => YardBloc(customApi: getIt())),
-        BlocProvider(create: (_) => StorageBloc()),
+        BlocProvider(create: (_) => StorageBloc(customApi: getIt())),
     ],
     child: MaterialApp(
         navigatorKey: getIt<NavigatorService>().navigatorkey,

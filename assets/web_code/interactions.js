@@ -48,10 +48,9 @@ export function addInteractions(scene, model, camera, controls) {
 
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
-        if (targetObject.name.toString().includes("navigation") || targetObject.name.toString().includes("Area")) {
+        if (targetObject.name.toString().includes("navigation")) {
           tooltip.style.display = "block";
-          tooltip.innerHTML = targetObject.name;
-
+          tooltip.innerHTML = targetObject.name.toString().split("_")[0];
           // Position tooltip at the mouse location
           tooltip.style.left = `${e.clientX + 10}px`; // Offset for better visibility
           tooltip.style.top = `${e.clientY + 10}px`;

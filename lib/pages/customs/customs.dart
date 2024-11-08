@@ -66,7 +66,7 @@ class Customs {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: List.generate(
               keys.length * 2 - 1,
-              (index) => index % 2 == 0 ? Text(values[index ~/ 2]) : Gap(size.height * 0.02),
+              (index) => index % 2 == 0 ? SizedBox(width: size.width*0.01, child: Text(values[index ~/ 2],style: TextStyle(overflow:TextOverflow.ellipsis),)) : Gap(size.height * 0.02),
             ))
       ],
     );

@@ -32,7 +32,7 @@ class AppConstants {
 
   // urls
   static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxwms/wms/';
-  static const BASEURL = 'https://tg1.wms.ocs.oraclecloud.com:443/emg_test/wms/lgfapi/v10/entity/';
+  static const BASEURL = 'https://paas.nalsoft.net:4443/ords/xxwms/wms/';
 
   static const INVENTORY_HISTORY = 'inventory_history/';
   static const LOCATION = 'location/';
@@ -40,6 +40,7 @@ class AppConstants {
   // methods
   static const ACTIVITY_AREA = 'activity_area';
   static const YARD_AREA = 'yard_area';
+  static const STORAGE_AISLE = 'storage_aisle';
 }
 
  

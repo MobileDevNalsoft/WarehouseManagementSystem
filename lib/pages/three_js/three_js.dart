@@ -22,7 +22,6 @@ import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/rack_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/staging_area_data_sheet.dart';
-import 'package:warehouse_3d/pages/data_sheets/storage_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/yard_area_data_sheet.dart';
 import '../../js_interop_service/js_inter.dart';
 import '../../navigations/navigator_service.dart';
@@ -276,6 +275,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           context.read<YardBloc>().add(GetYardData());
                                           _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
                                         } else if (requestedData.contains("rack")) {
+                                          
                                           context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
                                           _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
                                         }
