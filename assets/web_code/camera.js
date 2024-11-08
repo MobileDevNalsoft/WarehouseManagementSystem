@@ -183,7 +183,7 @@ function getPositionAndTarget(scene, name) {
         arrow.style.display = "none";
       });
       position.set(-83, 70, -20);
-      object = scene.getObjectByName(name);
+      object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       target.y = target.y + 10;
@@ -197,7 +197,7 @@ function getPositionAndTarget(scene, name) {
       break;
     case "stagingArea":
       position.set(-114, 80, 0);
-      object = scene.getObjectByName(name);
+      object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       break;

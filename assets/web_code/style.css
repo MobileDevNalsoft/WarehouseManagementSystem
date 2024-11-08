@@ -47,6 +47,7 @@ body {
 
 /* Style for the chevron button */
 #togglePanel {
+    display: none;
     position: fixed;
     left: 0;
     /* Button initially visible at screen edge */
@@ -109,27 +110,27 @@ body {
 }
 
 /* Button style inside the left panel */
-#inspectionArea_cam {
+#inspectionArea {
     background-color: #6997dc;
 }
 
-#stagingArea_cam {
+#stagingArea {
     background-color: #a1e793;
 }
 
-#activityArea_cam {
+#activityArea {
     background-color: #bd976f;
 }
 
-#receivingArea_cam {
+#receivingArea {
     background-color: #6fbdb4;
 }
 
-#storageArea_cam {
+#storageArea {
     background-color: #6bd370;
 }
 
-#yardArea_cam {
+#yardArea {
     background-color: #e18851;
 }
 

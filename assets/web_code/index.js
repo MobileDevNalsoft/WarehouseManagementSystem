@@ -18,7 +18,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     renderer.render(scene, camera);
   }
 
-  window.localStorage.setItem("isLoaded", true);
+  initAfterModelLoaded();
   animate();
 
 });
+
+function initAfterModelLoaded(){
+  window.localStorage.setItem("isLoaded", true);
+
+  const toggleButton = document.getElementById('togglePanel');
+  toggleButton.style.display = "block";
+}

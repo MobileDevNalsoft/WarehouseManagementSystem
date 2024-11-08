@@ -23,7 +23,7 @@ class Customs {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [IconButton(onPressed: ()async{getIt<JsInteropService>().switchToMainCam(await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea_1" ? "storageArea" : "compoundArea");
+            children: [IconButton(onPressed: ()async{getIt<JsInteropService>().switchToMainCam(await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea" ? "storageArea" : "compoundArea");
             getIt<JsInteropService>().resetTrucks();
             }, icon: const Icon(Icons.close_rounded))],
           ),
