@@ -28,6 +28,7 @@ import '../../bloc/warehouse/warehouse_interaction_bloc.dart';
 import '../../js_interop_service/js_inter.dart';
 import '../../navigations/navigator_service.dart';
 import '../customs/hover_dropdown.dart';
+import '../data_sheets/dock_area_data_sheet.dart';
 
 class ThreeJsWebView extends StatefulWidget {
   const ThreeJsWebView({super.key});
@@ -361,6 +362,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             return const ReceivingAreaDataSheet();
           case 'inspectionArea':
             return const InspectionAreaDataSheet();
+          case 'dockArea-IN':
+            return const DockAreaDataSheet();
+          case 'dockArea-OUT':
+            return const DockAreaDataSheet();
           case 'yardArea':
             return YardAreaDataSheet();
 

@@ -5,7 +5,7 @@ export function loadModel() {
 
     return new Promise((resolve, reject) => {
         loader.load(
-            "../glbs/warehouse_2410_1125.glb",
+            "../glbs/final.glb",
             function (gltf) {
                 resolve(gltf); // Resolve with the loaded glTF model
             },

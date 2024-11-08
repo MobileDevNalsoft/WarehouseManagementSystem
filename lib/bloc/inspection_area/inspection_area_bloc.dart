@@ -7,6 +7,7 @@ import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/logger/logger.dart';
 
 import '../../local_network_calls.dart';
+import '../../models/area_response.dart';
 import '../../models/inspection_area_model.dart';
 
 part 'inspection_area_event.dart';
@@ -28,7 +29,8 @@ class InspectionAreaBloc extends Bloc<InspectionEvent, InspectionAreaState> {
     while (checkList.isNotEmpty) {
       try {
         await _customApi.get(AppConstants.INSPECTION_AREA, queryParameters: {"facility_id": 243, "page_num": pageNum}).then((apiResponse) {
-          state.inspectionAreaItems!.addAll((jsonDecode(apiResponse.response!.data)["data"] as List).map((e) => InspectionAreaItem.fromJson(e)).toList());
+          AreaResponse<InspectionAreaItem> inspectionAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data),(json) => InspectionAreaItem.fromJson(json));
+          state.inspectionAreaItems!.addAll(inspectionAreaResponse.data!);
           emit(state.copyWith(inspectionAreaItems: state.inspectionAreaItems, getDataState: GetDataState.success));
           checkList = jsonDecode(apiResponse.response!.data)["data"];
           pageNum += 1;

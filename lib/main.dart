@@ -4,6 +4,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
 import 'package:warehouse_3d/bloc/authentication/authentication_bloc.dart';
+import 'package:warehouse_3d/bloc/dock_area/dock_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
@@ -25,9 +26,10 @@ main() async {
       BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt())),
       BlocProvider(create: (_) => ActivityAreaBloc(customApi: getIt())),
       BlocProvider(create: (_) => InspectionAreaBloc(customApi: getIt())),
+      BlocProvider(create: (_) => DockAreaBloc(customApi: getIt())),
       BlocProvider(create: (_) => AuthenticationBloc(navigator: getIt())),
-       BlocProvider(create: (_) => YardBloc(customApi: getIt())),
-        BlocProvider(create: (_) => StorageBloc()),
+      BlocProvider(create: (_) => YardBloc(customApi: getIt())),
+      BlocProvider(create: (_) => StorageBloc()),
     ],
     child: MaterialApp(
         navigatorKey: getIt<NavigatorService>().navigatorkey,

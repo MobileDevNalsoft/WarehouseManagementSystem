@@ -48,7 +48,10 @@ export function addInteractions(scene, model, camera, controls) {
 
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
-        if (targetObject.name.toString().includes("navigation")) {
+        if (
+          targetObject.name.toString().includes("nav") ||
+          targetObject.name.toString().includes("Area")
+        ) {
           tooltip.style.display = "block";
           tooltip.innerHTML = targetObject.name.toString().split("_")[0];
 
@@ -78,24 +81,18 @@ export function addInteractions(scene, model, camera, controls) {
 
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
-        if (targetObject.name.toString().includes("cam")) {
-          if (targetObject.name.toString().includes("rack")) {
-            console.log(
-              '{"rack":"' + targetObject.name.toString().split("_")[0] + '"}'
-            );
-            window.localStorage.setItem(
-              "getData",
-              targetObject.name.toString().split("_")[0]
-            );
-          } else if (!targetObject.name.toString().includes("storage")) {
-            console.log(
-              '{"area":"' + targetObject.name.toString().split("_")[0] + '"}'
-            );
-            window.localStorage.setItem(
-              "getData",
-              targetObject.name.toString().split("_")[0]
-            );
-            if (targetObject.name.toString().split("_")[0] == "yardArea") {
+        const name = targetObject.name.toString().split("_")[0];
+        if (
+          targetObject.name.toString().includes("nav") ||
+          targetObject.name.toString().includes("Area")
+        ) {
+          if (name.includes("rack")) {
+            console.log('{"rack":"' + name + '"}');
+            window.localStorage.setItem("getData", name);
+          } else if (!name.includes("storage")) {
+            console.log('{"area":"' + name + '"}');
+            window.localStorage.setItem( "getData", name );
+            if (name == "yardArea") {
               for (let i = 1; i <= 20; i++) {
                 scene.getObjectByName("truck_Y" + i).visible = false;
               }
@@ -114,8 +111,8 @@ export function addInteractions(scene, model, camera, controls) {
             window.localStorage.setItem("rack_cam", "warehouse");
           }
         } else if (
-          targetObject.name.toString().includes("b") &&
-          targetObject.name.toString().includes("r") &&
+          name.includes("b") &&
+          name.includes("r") &&
           prevNav.includes("rack")
         ) {
           changeColor(targetObject);
@@ -124,11 +121,11 @@ export function addInteractions(scene, model, camera, controls) {
           if (prevBin) {
             prevBin.material.color.copy(prevBinColor);
           }
-          switchCamera(scene, "warehouse", camera, controls);
+          switchCamera(scene, "compoundArea", camera, controls);
           if (prevNav.includes("yard")) {
             resetTrucksAnimation();
           }
-          prevNav = targetObject.name.toString();
+          prevNav = name;
         }
       }
     }

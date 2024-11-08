@@ -23,7 +23,7 @@ class Customs {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [IconButton(onPressed: ()async{getIt<JsInteropService>().switchToMainCam(await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea" ? "storageArea_cam_navigation" : "warehouse");
+            children: [IconButton(onPressed: ()async{getIt<JsInteropService>().switchToMainCam(await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea_1" ? "storageArea" : "compoundArea");
             getIt<JsInteropService>().resetTrucks();
             }, icon: const Icon(Icons.close_rounded))],
           ),
@@ -46,29 +46,31 @@ class Customs {
   }
 
   static Widget MapInfo({required Size size, required List<String> keys, required List<String> values}) {
-    return Row(
-      children: [
-        Gap(size.width * 0.025),
-        Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(
-              keys.length * 2 - 1,
-              (index) => index % 2 == 0 ? Text(keys[index ~/ 2]) : Gap(size.height * 0.02),
-            )),
-        Gap(size.width * 0.01),
-        Column(
-            children: List.generate(
-          keys.length * 2 - 1,
-          (index) => index % 2 == 0 ? const Text(':') : Gap(size.height * 0.02),
-        )),
-        Gap(size.width * 0.01),
-        Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(
-              keys.length * 2 - 1,
-              (index) => index % 2 == 0 ? Text(values[index ~/ 2]) : Gap(size.height * 0.02),
-            ))
-      ],
+    return Card(
+      child: Row(
+        children: [
+          Gap(size.width * 0.025),
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                keys.length * 2 - 1,
+                (index) => index % 2 == 0 ? Text(keys[index ~/ 2]) : Gap(size.height * 0.02),
+              )),
+          Gap(size.width * 0.01),
+          Column(
+              children: List.generate(
+            keys.length * 2 - 1,
+            (index) => index % 2 == 0 ? const Text(':') : Gap(size.height * 0.02),
+          )),
+          Gap(size.width * 0.01),
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                keys.length * 2 - 1,
+                (index) => index % 2 == 0 ? Text(values[index ~/ 2]) : Gap(size.height * 0.02),
+              ))
+        ],
+      ),
     );
   }
 

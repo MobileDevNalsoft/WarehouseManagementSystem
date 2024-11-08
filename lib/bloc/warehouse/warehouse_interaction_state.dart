@@ -33,7 +33,8 @@ final class WarehouseInteractionState extends Equatable {
   }) {
     return WarehouseInteractionState(
       dataFromJS: dataFromJS ?? this.dataFromJS,
-      isModelLoaded: isModelLoaded??this.isModelLoaded
+      isModelLoaded: isModelLoaded??this.isModelLoaded,
+      inAppWebViewController: inAppWebViewController
     );
   }
 

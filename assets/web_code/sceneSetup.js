@@ -20,7 +20,7 @@ export async function initScene(renderer) {
 
   const gltf = await loadModel();
 
-  addSkyDome(scene);
+  // addSkyDome(scene);
 
   const model = gltf.scene;
 

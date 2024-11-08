@@ -18,7 +18,6 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
   }
 
 NetworkCalls _customApi = NetworkCalls(AppConstants.BASEURL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30,username: "nalsoft_adm",password: "P@s\$w0rd2024");
-  AppConstants appConstants = getIt<AppConstants>();
 
   void _onAddStorageAreaData(AddStorageAreaData event,Emitter<StorageState> emit)async{
     try{

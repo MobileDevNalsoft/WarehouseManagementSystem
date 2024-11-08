@@ -21,8 +21,7 @@ export function createCamera() {
 export function switchCamera(scene, name, camera, controls) {
   const { position, target } = getPositionAndTarget(
     scene,
-    name,
-    name.toString().split("_")[0]
+    name
   );
 
   // Create a GSAP timeline for smoother transitions
@@ -155,11 +154,12 @@ function findCameraByName(cameraList, name) {
   }
 }
 
-function getPositionAndTarget(scene, name, view) {
+function getPositionAndTarget(scene, name) {
   let position = new THREE.Vector3();
   let target = new THREE.Vector3(0, 0, 0);
   let object = new THREE.Object3D();
   let box;
+  let view = name.toString().split("_")[0];
   let number;
 
   // if(name.includes("rack")){
@@ -170,7 +170,7 @@ function getPositionAndTarget(scene, name, view) {
   // }
 
   switch (view) {
-    case "warehouse":
+    case "compoundArea":
       position.set(0, 500, 200);
       target.set(0, 0, -50);
       console.log('{"object":"null"}');
@@ -191,7 +191,7 @@ function getPositionAndTarget(scene, name, view) {
       break;
     case "inspectionArea":
       position.set(18, 50, -50);
-      object = scene.getObjectByName(name);
+      object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       break;
@@ -203,19 +203,31 @@ function getPositionAndTarget(scene, name, view) {
       break;
     case "activityArea":
       position.set(-45, 80, -20);
-      object = scene.getObjectByName(name);
+      object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       break;
     case "receivingArea":
       position.set(22, 80, 0);
-      object = scene.getObjectByName(name);
+      object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       break;
     case "yardArea":
       position.set(50, 270, -34);
-      object = scene.getObjectByName(name);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "dockArea-IN":
+      position.set(22, 80, 0);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "dockArea-OUT":
+      position.set(22, 80, 0);
+      object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       break;
