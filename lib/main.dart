@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
 import 'package:warehouse_3d/bloc/authentication/authentication_bloc.dart';
 import 'package:warehouse_3d/bloc/dock_area/dock_area_bloc.dart';
+import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
+import 'package:warehouse_3d/bloc/staging/staging_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
@@ -30,6 +32,10 @@ main() async {
       BlocProvider(create: (_) => AuthenticationBloc(navigator: getIt())),
       BlocProvider(create: (_) => YardBloc(customApi: getIt())),
       BlocProvider(create: (_) => StorageBloc()),
+       BlocProvider(create: (_) => YardBloc(customApi: getIt())),
+        BlocProvider(create: (_) => StorageBloc()),
+        BlocProvider(create: (_) => ReceivingBloc(customApi: getIt())),
+        BlocProvider(create: (_) => StagingBloc(customApi: getIt()))
     ],
     child: MaterialApp(
         navigatorKey: getIt<NavigatorService>().navigatorkey,

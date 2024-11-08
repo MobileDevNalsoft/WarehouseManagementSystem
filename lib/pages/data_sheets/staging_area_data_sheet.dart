@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:warehouse_3d/bloc/staging/staging_bloc.dart';
+import 'package:warehouse_3d/bloc/staging/staging_event.dart';
+import 'package:warehouse_3d/bloc/staging/staging_state.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
@@ -15,16 +18,42 @@ class StagingAreaDataSheet extends StatefulWidget {
 }
 
 class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
-  late WarehouseInteractionBloc _warehouseInteractionBloc;
+   final ScrollController _controller = ScrollController();
+   StagingBloc? _stagingBloc;
 
   @override
   void initState() {
     super.initState();
+     _stagingBloc = context.read<StagingBloc>();
 
-    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    // if (_warehouseInteractionBloc.state.getStagingAreaDataState == GetStagingAreaDataState.initial) {
-    //   _warehouseInteractionBloc.add(GetStagingAreaData(areaName: _warehouseInteractionBloc.state.dataFromJS!.values.first.toString()));
+    if(_stagingBloc!.state.stagingStatus == StagingAreaStatus.initial){
+
+       _stagingBloc!.add(GetStagingData());
+    }
+
+    _controller.addListener(_scrollListener);
+
+   
+    // if (_warehouseInteractionBloc.state.getReceivingAreaDataState == GetReceivingAreaDataState.initial) {
+    //   _warehouseInteractionBloc.add(GetReceivingAreaData(areaName: _warehouseInteractionBloc.state.dataFromJS!.values.first.toString()));
     // }
+  }
+
+
+
+  void _scrollListener() async {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+      print("reached end of the screen");
+
+        _stagingBloc!.state.pageNum = _stagingBloc!.state.pageNum! + 1;
+
+        print("before api call in scroll");
+
+       _stagingBloc!.add(GetStagingData());
+
+
+    
+    }
   }
 
   @override
@@ -42,31 +71,34 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
             textAlign: TextAlign.center,
           ),
           Gap(size.height * 0.02),
-          // BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-          //   builder: (context, state) {
-          //     bool isEnabled = state.getStagingAreaDataState != GetStagingAreaDataState.success;
-          //     return Skeletonizer(
-          //         enabled: isEnabled,
-          //         enableSwitchAnimation: true,
-          //         child: SizedBox(
-          //           height: size.height * 0.6,
-          //           child: ListView.separated(
-          //               itemBuilder: (context, index) => Customs.MapInfo(size: size, keys: [
-          //                     'Order Number',
-          //                     'OB Load',
-          //                     'Item',
-          //                     'Quantity'
-          //                   ], values: [
-          //                     isEnabled ? 'Order Number' : state.stagingArea!.materials![index].orderNumber!,
-          //                     isEnabled ? 'OB Load' : state.stagingArea!.materials![index].obLoad!,
-          //                     isEnabled ? 'Item' : state.stagingArea!.materials![index].item!,
-          //                     isEnabled ? 'Quantity' : state.stagingArea!.materials![index].quantity!.toString()
-          //                   ]),
-          //               separatorBuilder: (context, index) => Gap(size.height * 0.025),
-          //               itemCount: isEnabled ? 8 : state.stagingArea!.materials!.length),
-          //         ));
-          //   },
-          // )
+          BlocBuilder<StagingBloc, StagingState>(
+            builder: (context, state) {
+              bool isEnabled = state.stagingStatus != StagingAreaStatus.success;
+              return Skeletonizer(
+                  enabled: isEnabled,
+                  enableSwitchAnimation: true,
+                  child: SizedBox(
+                    height: size.height * 0.6,
+                    child: ListView.separated(
+                      controller: _controller,
+                        itemBuilder: (context, index) => Card(
+                          child: Customs.MapInfo(size: size, keys: [
+                                'Order Number',
+                                'Customer Name',
+                                'Item',
+                                'Quantity'
+                              ], values: [
+                                isEnabled ? 'Order Number' : state.stagingList![index].orderNum!,
+                                isEnabled ? 'Customer Name' : state.stagingList![index].custName!,
+                                isEnabled ? 'Item' : state.stagingList![index].item!,
+                                isEnabled ? 'Quantity' : state.stagingList![index].qty!.toString()
+                              ]),
+                        ),
+                        separatorBuilder: (context, index) => Gap(size.height * 0.025),
+                        itemCount: isEnabled ? 8 : state.stagingList!.length),
+                  ));
+            },
+          )
       ]
     );
   }

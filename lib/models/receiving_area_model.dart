@@ -1,25 +1,56 @@
 class ReceivingArea {
-  String? areaName;
-  List<Material>? materials;
-  ReceivingArea({this.areaName, this.materials = const []});
+  int? responseCode;
+  String? responseMessage;
+  List<ReceiveData>? data;
+
+  ReceivingArea({this.responseCode, this.responseMessage, this.data});
 
   ReceivingArea.fromJson(Map<String, dynamic> json) {
-    areaName = json['area_name'];
-    materials = (json['materials'] as List).map((e) => Material.fromJson(e)).toList();
+    responseCode = json['response_code'];
+    responseMessage = json['response_message'];
+    if (json['data'] != null) {
+      data = <ReceiveData>[];
+      json['data'].forEach((v) {
+        data!.add( ReceiveData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['response_code'] = this.responseCode;
+    data['response_message'] = this.responseMessage;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 
-class Material {
+class ReceiveData {
   String? asn;
-  List<String>? pos;
-  int? lpns;
-  int? quantity;
-  Material({this.asn, this.pos, this.lpns, this.quantity});
+  String? poNum;
+  String? vendor;
+  String? item;
+  String? qty;
 
-  Material.fromJson(Map<String, dynamic> json) {
+  ReceiveData({this.asn, this.poNum, this.vendor, this.item, this.qty});
+
+  ReceiveData.fromJson(Map<String, dynamic> json) {
     asn = json['asn'];
-    pos = (json['pos'] as List).map((e) => e.toString()).toList();
-    lpns = json['lpns'];
-    quantity = json['qty'];
+    poNum = json['po_num'];
+    vendor = json['vendor'];
+    item = json['item'];
+    qty = json['qty'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['asn'] = this.asn;
+    data['po_num'] = this.poNum;
+    data['vendor'] = this.vendor;
+    data['item'] = this.item;
+    data['qty'] = this.qty;
+    return data;
   }
 }

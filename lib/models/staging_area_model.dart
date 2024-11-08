@@ -1,25 +1,53 @@
 class StagingArea {
-  String? areaName;
-  List<Material>? materials;
-  StagingArea({this.areaName, this.materials = const []});
+  int? responseCode;
+  String? responseMessage;
+  List<StagingData>? data;
+
+  StagingArea({this.responseCode, this.responseMessage, this.data});
 
   StagingArea.fromJson(Map<String, dynamic> json) {
-    areaName = json['area_name'];
-    materials = (json['materials'] as List).map((e) => Material.fromJson(e)).toList();
+    responseCode = json['response_code'];
+    responseMessage = json['response_message'];
+    if (json['data'] != null) {
+      data = <StagingData>[];
+      json['data'].forEach((v) {
+        data!.add(new StagingData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['response_code'] = this.responseCode;
+    data['response_message'] = this.responseMessage;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 
-class Material {
-  String? orderNumber;
-  String? obLoad;
+class StagingData {
+  String? orderNum;
+  String? custName;
   String? item;
-  int? quantity;
-  Material({this.orderNumber, this.obLoad, this.item, this.quantity});
+  String? qty;
 
-  Material.fromJson(Map<String, dynamic> json) {
-    orderNumber = json['order_number'];
-    obLoad = json['ob_load'];
+  StagingData({this.orderNum, this.custName, this.item, this.qty});
+
+  StagingData.fromJson(Map<String, dynamic> json) {
+    orderNum = json['order_num'];
+    custName = json['cust_name'];
     item = json['item'];
-    quantity = json['qty'];
+    qty = json['qty'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['order_num'] = this.orderNum;
+    data['cust_name'] = this.custName;
+    data['item'] = this.item;
+    data['qty'] = this.qty;
+    return data;
   }
 }
