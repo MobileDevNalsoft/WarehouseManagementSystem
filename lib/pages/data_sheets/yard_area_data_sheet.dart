@@ -30,74 +30,38 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
           Gap(size.height * 0.02),
           Expanded(
             child: BlocBuilder<YardBloc, YardState>(
-            buildWhen: (previous, current) => current.yardAreaStatus==YardAreaStatus.success,
             builder: (context, state) {
               bool isEnabled = state.yardAreaStatus != YardAreaStatus.success;
-              // print("result count ${state.yardArea!.resultCount}");
-               
-              if(state.yardAreaStatus == YardAreaStatus.success){
+             
               return Skeletonizer(
                   enabled: isEnabled,
                   enableSwitchAnimation: true,
                   child: 
-              //     ExpansionPanelList(
-
-              //       expansionCallback: (panelInde  x, isExpanded) {
-              //         print("panelIndex $panelIndex");
-
-              //       },
-              //       children: 
-
-              //         state.yardArea!.results!.map((e) {
-              //           return ExpansionPanel(isExpanded: true, 
-              //   canTapOnHeader: true,headerBuilder: (context, isExpanded) { 
-              //   return Text("Header text"); 
-              // },  body: Customs.MapInfo(size: size, keys: [
-              //       'trailer_nbr',
-              //       'to_location',
-              //       'vendor_code',
-              //       'po_nbr',
-              //       'shipment_nbr'
-              //     ], values: [
-              //       isEnabled ? 'trailer_nbr' : e.trailerNbr!,
-              //       isEnabled ? 'to_location' : e.toLocation!,
-              //       isEnabled ? 'vendor_code' : e.vendorCode!,
-              //       isEnabled ? 'po_nbr' : e.poNbr!,
-              //       isEnabled ? 'shipment_nbr' : e.shipmentNbr!,
-                    
-                    
-              //     ]));
-              //         },).toList()
-
-              //         ,)
-                  
                   ListView.separated(
                       itemBuilder: (context, index) => Card(
                         child: Customs.MapInfo(size: size, keys: [
                               'Truck number',
                               'Vehicle location',
+                              'Vehicle entry time'
                               'Vendor code',
                               'PO number',
-                              'Shipment number'
+                              'Shipment number',
+                              'Sequence number'
                             ], values: [
-                              isEnabled ? 'Truck number' : state.yardArea!.results![index].truckNbr!,
-                              isEnabled ? 'Vehicle location' : state.yardArea!.results![index].vehicleLocation!,
-                              isEnabled ? 'Vendor code' : state.yardArea!.results![index].vendorCode!,
-                              isEnabled ? 'PO number' : state.yardArea!.results![index].poNbr!,
-                              isEnabled ? 'Shipment number' : state.yardArea!.results![index].shipmentNbr!,
+                              isEnabled ? 'Truck number' : state.yardArea!.data![index].truckNbr??"-",
+                              isEnabled ? 'Vehicle location' : state.yardArea!.data![index].vehicleLocation??"-",
+                              isEnabled ? 'Vehicle entry time' : state.yardArea!.data![index].vehicleEntryTime??"-",
+                              isEnabled ? 'Vendor code' : state.yardArea!.data![index].vendorCode??"-",
+                              isEnabled ? 'PO number' : state.yardArea!.data![index].poNbr??"-",
+                              isEnabled ? 'Shipment number' : state.yardArea!.data![index].shipmentNbr??"-",
+                              isEnabled ? 'Sequence number' : state.yardArea!.data![index].seqNbr??"-",
                             ]),
                       ),
                       separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                       itemCount: isEnabled ? 8 : state.yardArea!.resultCount!
+                      itemCount: isEnabled? 8: state.yardArea!.data!.length
                       )
                       );
-                      }
-                  else{
-                    return Center(child: SizedBox(
-                      height: size.height*0.05,
-                      width: size.width*0.02,
-                      child: CircularProgressIndicator()));
-                  }
+                 
             },
             ),
           )

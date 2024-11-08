@@ -31,11 +31,10 @@ main() async {
       BlocProvider(create: (_) => DockAreaBloc(customApi: getIt())),
       BlocProvider(create: (_) => AuthenticationBloc(navigator: getIt())),
       BlocProvider(create: (_) => YardBloc(customApi: getIt())),
-      BlocProvider(create: (_) => StorageBloc()),
        BlocProvider(create: (_) => YardBloc(customApi: getIt())),
-        BlocProvider(create: (_) => StorageBloc()),
         BlocProvider(create: (_) => ReceivingBloc(customApi: getIt())),
         BlocProvider(create: (_) => StagingBloc(customApi: getIt()))
+        BlocProvider(create: (_) => StorageBloc(customApi: getIt())),
     ],
     child: MaterialApp(
         navigatorKey: getIt<NavigatorService>().navigatorkey,

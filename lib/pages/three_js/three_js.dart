@@ -22,7 +22,6 @@ import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/rack_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/staging_area_data_sheet.dart';
-import 'package:warehouse_3d/pages/data_sheets/storage_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/yard_area_data_sheet.dart';
 import '../../bloc/warehouse/warehouse_interaction_bloc.dart';
 import '../../js_interop_service/js_inter.dart';

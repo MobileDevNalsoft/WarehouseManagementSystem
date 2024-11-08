@@ -4,18 +4,16 @@ enum  YardAreaStatus {initial, loading, success, failure }
 final class YardState extends Equatable {
   
   YardArea? yardArea;
-  String? toLocation;
   YardAreaStatus yardAreaStatus;
 
-  YardState({this.yardArea, this.toLocation, this.yardAreaStatus=YardAreaStatus.initial});
+  YardState({this.yardArea, this.yardAreaStatus=YardAreaStatus.initial});
 
   YardState copyWith({
     YardArea? yardArea,
-    String? toLocation,
     YardAreaStatus? yardAreaStatus
     }
   ) {
-    return YardState(toLocation: toLocation ?? this.toLocation, yardArea: yardArea ?? this.yardArea,yardAreaStatus:yardAreaStatus?? this.yardAreaStatus);
+    return YardState( yardArea: yardArea ?? this.yardArea, yardAreaStatus:yardAreaStatus?? this.yardAreaStatus);
   }
 
 factory YardState.initial(){
@@ -24,7 +22,6 @@ factory YardState.initial(){
   @override
   List<Object?> get props => [
     yardArea,
-    toLocation,
     yardAreaStatus
   ];
 }

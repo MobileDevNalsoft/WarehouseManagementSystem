@@ -25,11 +25,12 @@ class YardBloc extends Bloc<YardEvent, YardState> {
         AppConstants.YARD_AREA,
         queryParameters: {"facility_id": 243, "page_num": 0},
     ).then((value) {
+      print("type ${value.response!.data.runtimeType}");
       print(jsonDecode(value.response!.data)["data"]);
-        // YardArea yardArea = YardArea.fromJson(value.response!.data);
-        // print(" response ${yardArea.resultCount}");
-        // emit( state.copyWith(yardAreaStatus: YardAreaStatus.success,   yardArea: yardArea));
-        // getIt<JsInteropService>().setNumberOfTrucks(state.yardArea!.resultCount.toString());
+        YardArea yardArea = YardArea.fromJson(jsonDecode(value.response!.data));
+        print(" response ${yardArea.data!.length}");
+        emit( state.copyWith(yardAreaStatus: YardAreaStatus.success,   yardArea: yardArea));
+        getIt<JsInteropService>().setNumberOfTrucks(state.yardArea!.data! .length.toString());
         // print("yard area status ${state.yardAreaStatus}");
       });
     } catch (e) {

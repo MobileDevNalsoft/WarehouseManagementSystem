@@ -108,23 +108,27 @@ class _RackDataSheetState extends State<RackDataSheet> {
       Gap(size.height * 0.02),
       Expanded(
         child: BlocBuilder<StorageBloc, StorageState>(
-          buildWhen: (previous, current) => current.storageAreaStatus == StorageAreaStatus.success,
           builder: (context, state) {
             bool isEnabled = state.storageAreaStatus != StorageAreaStatus.success;
             if (state.storageAreaStatus == StorageAreaStatus.success) {
               return Skeletonizer(
                 enabled: isEnabled,
                 enableSwitchAnimation: true,
-                child: Column(
+                child: state.storageArea!.data!.length==0? 
+                Text("No items")
+                :
+                Column(
                   children: [
-                    Customs.MapInfo(size: size, keys: [
+                    Customs.MapInfo(size: size, 
+                    
+                    keys: [
                       'Asile',
                       'Type',
                       'Number of bins'
                     ], values: [
-                      isEnabled ? 'Asile' : state.storageArea!.results![0].aisle!,
-                      isEnabled ? 'Type' : state.storageArea!.results![0].locnSizeTypeId!.key!,
-                      isEnabled ? 'Number of bins' : state.storageArea!.resultCount.toString(),
+                      isEnabled ? 'Asile' : state.storageArea!.data![0].aisle??"-",
+                      isEnabled ? 'Type' : state.storageArea!.data![0].locationCategory??"-",
+                      isEnabled ? 'Number of bins' : state.storageArea!.data!.length.toString(),
                     ]),
                     Gap(size.height * 0.05),
                     SizedBox(
@@ -169,6 +173,7 @@ class _RackDataSheetState extends State<RackDataSheet> {
                         suggestionsCallback: (pattern) {
                           return widget.objectNames;
                         },
+                        
                         itemBuilder: (context, suggestion) => Row(
                           children: [
                             SizedBox(
@@ -186,6 +191,7 @@ class _RackDataSheetState extends State<RackDataSheet> {
                             ),
                           ],
                         ),
+                        
                         onSelected: (suggestion) {
                           typeAheadController.clear();
                           // provider.host = suggestion;
