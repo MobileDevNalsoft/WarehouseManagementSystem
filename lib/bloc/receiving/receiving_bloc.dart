@@ -8,15 +8,14 @@ import 'package:warehouse_3d/models/receiving_area_model.dart';
 
 import '../../local_network_calls.dart';
 
-class ReceivingBloc  extends Bloc<ReceivingEvent,ReceivingState>{
-
-  ReceivingBloc({required NetworkCalls customApi}) : _customApi = customApi,super(ReceivingState.initial()){
+class ReceivingBloc extends Bloc<ReceivingEvent, ReceivingState> {
+  ReceivingBloc({required NetworkCalls customApi})
+      : _customApi = customApi,
+        super(ReceivingState.initial()) {
     on<GetReceivingData>(_onGetReceivingData);
   }
 
-
   final NetworkCalls _customApi;
-
 
   void _onGetReceivingData(GetReceivingData event, Emitter<ReceivingState> emit) async {
     try {
@@ -24,13 +23,12 @@ class ReceivingBloc  extends Bloc<ReceivingEvent,ReceivingState>{
       await _customApi.get(
         AppConstants.RECEIVING_AREA,
         queryParameters: {"facility_id": 243, "page_num": state.pageNum},
-    ).then((value) {
-             ReceivingArea receivingArea = ReceivingArea.fromJson(jsonDecode(value.response!.data));
-      
-       state.receiveList!.addAll(receivingArea.data!);
+      ).then((value) {
+        ReceivingArea receivingArea = ReceivingArea.fromJson(jsonDecode(value.response!.data));
 
-       emit(state.copyWith(receivingArea: receivingArea,receivingStatus:ReceivingAreaStatus.success,receiveList: state.receiveList!));
-       
+        state.receiveList!.addAll(receivingArea.data!);
+
+        emit(state.copyWith(receivingArea: receivingArea, receivingStatus: ReceivingAreaStatus.success, receiveList: state.receiveList!));
       });
     } catch (e) {
       print("error ${e}");

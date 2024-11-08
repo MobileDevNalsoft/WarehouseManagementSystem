@@ -86,23 +86,35 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
                     height: size.height * 0.6,
                     child: ListView.separated(
                       controller: _controller,
-                        itemBuilder: (context, index) => Card(
-                          child: Customs.MapInfo(size: size, keys: [
-                                '',
+                        itemBuilder: (context, index) => index < state.receiveList!.length ? Customs.MapInfo(size: size, keys: [
+                              'No',
+                              'POs',
+                               'Vendor',
+                              'Item',
+                              'Quantity'
+                            ], values: [
+                              isEnabled ? 'No' : state.receiveList![index].asn!,
+                              isEnabled ? 'POs' : state.receiveList![index].poNum!,
+                               isEnabled ? 'Vendor' : state.receiveList![index].vendor!,
+                              isEnabled ? 'Item' : state.receiveList![index].item!,
+                              isEnabled ? 'Quantity' : state.receiveList![index].qty!
+                            ]) : Skeletonizer(
+                              child: Customs.MapInfo(size: size, keys: [
+                                'No',
                                 'POs',
                                  'Vendor',
                                 'Item',
                                 'Quantity'
                               ], values: [
-                                isEnabled ? '' : state.receiveList![index].asn!,
-                                isEnabled ? 'POs' : state.receiveList![index].poNum!,
-                                 isEnabled ? 'Vendor' : state.receiveList![index].vendor!,
-                                isEnabled ? 'Item' : state.receiveList![index].item!,
-                                isEnabled ? 'Quantity' : state.receiveList![index].qty!
+                                'No',
+                                'POs',
+                                 'Vendor',
+                                'Item',
+                                'Quantity'
                               ]),
-                        ),
+                            ),
                         separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                        itemCount: isEnabled ? 8 : state.receiveList!.length),
+                        itemCount: isEnabled ? 8 : state.receiveList!.length + 1),
                   ));
             },
           )
