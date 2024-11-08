@@ -28,13 +28,17 @@ body {
 
 #leftPanel {
     position: fixed;
-    top: 8vh; /* Use vh to make it responsive */
-    left: -20vw; /* Panel width now based on viewport width */
-    width: 9vw; /* Width as a percentage of viewport */
+    top: 8vh;
+    /* Use vh to make it responsive */
+    left: -20vw;
+    /* Panel width now based on viewport width */
+    width: 9vw;
+    /* Width as a percentage of viewport */
     height: auto;
     background-color: rgba(255, 255, 255, 0.8);
     z-index: 1000;
-    padding: 1vw; /* Adjust padding based on viewport width */
+    padding: 1vw;
+    /* Adjust padding based on viewport width */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     border-top-right-radius: 1.5vw;
     border-bottom-right-radius: 1.5vw;
@@ -44,7 +48,8 @@ body {
 /* Style for the chevron button */
 #togglePanel {
     position: fixed;
-    left: 0; /* Button initially visible at screen edge */
+    left: 0;
+    /* Button initially visible at screen edge */
     top: 31vh;
     transform: translateY(-50%);
     background-color: #0d47a1;
@@ -54,12 +59,14 @@ body {
     padding: 8px;
     cursor: pointer;
     z-index: 10;
-    transition: transform 0.4s ease, left 0.4s ease; /* Smooth rotation and sliding */
+    transition: transform 0.4s ease, left 0.4s ease;
+    /* Smooth rotation and sliding */
 }
 
 /* Tooltip styling */
 #toggleTooltip {
-    display: none; /* Initially hidden */
+    display: none;
+    /* Initially hidden */
     position: absolute;
     top: calc(50% - 20px);
     left: 50px;
@@ -73,13 +80,14 @@ body {
 }
 
 /* Show tooltip on hover */
-#togglePanel:hover + #toggleTooltip {
+#togglePanel:hover+#toggleTooltip {
     opacity: 1;
-    visibility: visible; /* Show tooltip on hover */
+    visibility: visible;
+    /* Show tooltip on hover */
     display: block;
 }
 
-.areaButton{
+.areaButton {
     border-radius: 15px;
     color: #090909;
     align-items: center;
@@ -93,32 +101,35 @@ body {
     margin-right: 0;
     padding: 1vh;
     width: 98%;
-    opacity: 0; /* Buttons are hidden initially */
-    transform: translateX(-50px); /* Slide-in effect for buttons */
+    opacity: 0;
+    /* Buttons are hidden initially */
+    transform: translateX(-50px);
+    /* Slide-in effect for buttons */
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 /* Button style inside the left panel */
-#inspectionArea_cam{
+#inspectionArea_cam {
     background-color: #6997dc;
 }
 
-#stagingArea_cam{
+#stagingArea_cam {
     background-color: #a1e793;
 }
-#activityArea_cam{
+
+#activityArea_cam {
     background-color: #bd976f;
 }
 
-#receivingArea_cam{
+#receivingArea_cam {
     background-color: #6fbdb4;
 }
 
-#storageArea_cam{
+#storageArea_cam {
     background-color: #6bd370;
 }
 
-#yardArea_cam{
+#yardArea_cam {
     background-color: #e18851;
 }
 
@@ -130,7 +141,8 @@ body {
 
 /* Chevron rotation when the panel is open */
 #togglePanel.open {
-    transform: translateY(-50%) rotate(180deg); /* Rotate when open */
+    transform: translateY(-50%) rotate(180deg);
+    /* Rotate when open */
 }
 
 #tooltip {
@@ -147,33 +159,65 @@ body {
     /* High enough to appear above other elements */
 }
 
-.dropdown-container {
-    display: none;
+#arrows-container {
     position: absolute;
-    top: 50px;
-    right: 10px;
-    width: 200px;
-    z-index: 10; /* Ensure it overlays the 3D model */
-    background: white;
-    border: 1px solid #ddd;
+    bottom: 20px;
+    right: 20px;
+    display: grid;
+    grid-template-areas:
+        ". up ."
+        "left . right"
+        ". down .";
+    gap: 5px;
+    z-index: 10;
+    /* Ensure it stays on top of the 3D view */
+}
+
+.arrow {
+    display: none;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 5px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  #searchInput {
+    cursor: pointer;
+    text-align: center;
+}
+
+#arrow-up {
+    grid-area: up;
+}
+
+#arrow-left {
+    grid-area: left;
+}
+
+#arrow-right {
+    grid-area: right;
+}
+
+#arrow-down {
+    grid-area: down;
+}
+
+#image-button-container {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    /* Set width of the button */
+    height: 60px;
+    /* Set height of the button */
+    cursor: pointer;
+    z-index: 10;
+    /* Make sure it overlays the 3D view */
+}
+
+#image-button {
     width: 100%;
-    padding: 5px;
-    margin-bottom: 5px;
-    box-sizing: border-box;
-    font-size: 14px;
-  }
-  
-  #objectDropdown {
-    display: none; /* Initially hidden */
-    width: 100%;
-    height: auto;
-    max-height: 150px; /* Optional, limits dropdown height */
-    overflow-y: auto;
-    font-size: 14px;
-  }
+    /* Make image fill container */
+    height: 100%;
+    object-fit: contain;
+}

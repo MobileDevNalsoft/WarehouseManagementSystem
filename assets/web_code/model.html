@@ -12,12 +12,13 @@
           "bufferGeometryUtils": "./node_modules/three/examples/jsm/utils/BufferGeometryUtils.js",
           "gltfLoader": "./node_modules/three/examples/jsm/loaders/GLTFLoader.js",
           "localStorage": "./localStorage.js",
-          "aniMaster": "./aniMaster.js",
+          "animations": "./animations.js",
           "renderer": "./renderer.js",
           "scene": "./sceneSetup.js",
           "camera": "./camera.js",
           "controls": "./controls.js",
           "loader": "./modelLoader.js",
+          "skyDome": "./skyDome.js",
           "lights": "./lights.js",
           "interactions": "./interactions.js",
           "tween": "./node_modules/@tweenjs/tween.js/dist/tween.esm.js"
@@ -30,28 +31,31 @@
   <body>
     <div id="container">
       <div id="leftPanel">
-        <button class="areaButton" id="inspectionArea_cam">
+        <button class="areaButton ignoreRaycast" id="inspectionArea_cam">
           Inspection Area
         </button>
-        <button class="areaButton" id="stagingArea_cam">Staging Area</button>
-        <button class="areaButton" id="activityArea_cam">Activity Area</button>
-        <button class="areaButton" id="receivingArea_cam">
+        <button class="areaButton ignoreRaycast" id="stagingArea_cam">Staging Area</button>
+        <button class="areaButton ignoreRaycast" id="activityArea_cam">Activity Area</button>
+        <button class="areaButton ignoreRaycast" id="receivingArea_cam">
           Receiving Area
         </button>
-        <button class="areaButton" id="storageArea_cam">Storage Area</button>
-        <button class="areaButton" id="yardArea_cam">Yard Area</button>
-        <button id="togglePanel">&#x25B6;</button>
+        <button class="areaButton ignoreRaycast" id="storageArea_cam">Storage Area</button>
+        <button class="areaButton ignoreRaycast" id="yardArea_cam">Yard Area</button>
+        <button class="ignoreRaycast" id="togglePanel">&#x25B6;</button>
         <!-- Chevron right symbol -->
         <div id="toggleTooltip">Open Controls</div>
       </div>
     </div>
     <div id="tooltip" style="display: none">Tooltip Data</div>
     <script type="module" src="./index.js"></script>
-    <div class="dropdown-container">
-      <input type="text" id="searchInput" class="searchInput" placeholder="Search objects...">
-      <select id="objectDropdown" size="5">
-        <!-- Options will be dynamically populated -->
-      </select>
+    <div id="arrows-container">
+      <button id="arrow-up" class="arrow ignoreRaycast">▲</button>
+      <button id="arrow-left" class="arrow ignoreRaycast">◄</button>
+      <button id="arrow-right" class="arrow ignoreRaycast">►</button>
+      <button id="arrow-down" class="arrow ignoreRaycast">▼</button>
+    </div>
+    <div id="image-button-container" class="ignoreRaycast">
+      <img id="image-button" class="ignoreRaycast" src="./man.png" alt="Button Image" />
     </div>
   </body>
 </html>

@@ -1,14 +1,14 @@
-import { resetTrucksAnimation } from "aniMaster";
+import { resetTrucksAnimation } from "animations";
 import { switchCamera } from "camera";
 
-export function localStorageSetup(scene, cameraList, camera, controls) {
+export function localStorageSetup(scene, camera, controls) {
   // Local Storage Setup
   window.localStorage.setItem("switchToMainCam", "null");
 
   window.addEventListener("storage", (event) => {
     switch (event.key) {
       case "switchToMainCam":
-        switchCamera(scene, event.newValue, cameraList, camera, controls);
+        switchCamera(scene, event.newValue, camera, controls);
         break;
       case "isRackDataLoaded":
         isRackDataLoaded = event.newValue;

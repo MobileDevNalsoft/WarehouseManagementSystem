@@ -1,99 +1,65 @@
 import * as THREE from "three";
 
-export function createCamera(gltf){
-    const container = document.getElementById("container");
-    const cameraList = gltf.cameras;
+export function createCamera() {
+  const container = document.getElementById("container");
 
-    const worldCam = findCameraByName(cameraList, "world_cam");
+  const fov = 30; // Field of view
+  const aspect = container.clientWidth / container.clientHeight; // Aspect ratio
+  const near = 0.1; // Near clipping plane
+  const far = 3000; // Far clipping plane
 
-    const fov = worldCam.fov; // Field of view
-    const aspect = container.clientWidth / container.clientHeight; // Aspect ratio
-    const near = worldCam.near; // Near clipping plane
-    const far = 3000; // Far clipping plane
+  // Create a new Perspective Camera
+  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
-    // Create a new Perspective Camera
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  // Set the position of the new camera based on the imported camera's position
+  camera.position.set(0, 350, 600);
+  camera.lookAt(0, 0, 0);
 
-    // Set the position of the new camera based on the imported camera's position
-    camera.position.copy(worldCam.position);
-    camera.quaternion.copy(worldCam.quaternion);
-    camera.rotation.copy(worldCam.rotation); // Copy rotation if needed
-
-    return camera;
+  return camera;
 }
 
-export function switchCamera(scene, name, cameraList, camera, controls) {
-  let selectedCamera;
-  let center;
-  const dropdown = document.querySelector(".dropdown-container");
-  dropdown.style.display = "none";
+export function switchCamera(scene, name, camera, controls) {
+  const { position, target } = getPositionAndTarget(
+    scene,
+    name,
+    name.toString().split("_")[0]
+  );
 
-  if (name == "warehouse") {
-    const object = scene.getObjectByName("warehouse_wall");
-    object.updateWorldMatrix(true, true);
-    center = new THREE.Vector3(
-      object.position.x,
-      object.position.y,
-      object.position.z
-    );
-    console.log('{"object":"null"}');
-    selectedCamera = findCameraByName(cameraList, name);
-  } else {
-    const object = scene.getObjectByName(name);
-    object.updateWorldMatrix(true, true);
-    center = new THREE.Vector3(
-      object.position.x,
-      object.position.y,
-      object.position.z
-    );
-    selectedCamera = findCameraByName(cameraList, name);
-    if(name === "storageArea_cam"){
-      dropdown.style.display = "block";
-      console.log('{"object":"null"}');
-    }
-  }
+  // Create a GSAP timeline for smoother transitions
+  const timeline = gsap.timeline();
 
-  if (selectedCamera) {
-    // Create a GSAP timeline for smoother transitions
-    const timeline = gsap.timeline();
+  controls.enabled = false;
+  controls.enableDamping = false;
 
-    controls.enabled = false;
-    controls.enableDamping = false;
-
-    // Animate position and rotation simultaneously
-    timeline
-      .to(camera.position, {
+  // Animate position and rotation simultaneously
+  timeline
+    .to(camera.position, {
+      duration: 3,
+      x: position.x,
+      y: position.y,
+      z: position.z,
+      ease: "power3.inOut",
+    })
+    .to(
+      controls.target,
+      {
         duration: 3,
-        x: selectedCamera.position.x,
-        y: selectedCamera.position.y,
-        z: selectedCamera.position.z,
+        x: target.x,
+        y: target.y,
+        z: target.z,
         ease: "power3.inOut",
         onUpdate: function () {
-          controls.target.copy(center); // Adjust target if necessary
+          camera.lookAt(controls.target); // Smoothly look at the target
         },
-      })
-      .to(
-        camera.quaternion,
-        {
-          duration: 3,
-          x: selectedCamera.quaternion.x,
-          y: selectedCamera.quaternion.y,
-          z: selectedCamera.quaternion.z,
-          w: selectedCamera.quaternion.w,
-          ease: "power3.inOut",
-          onUpdate: function () {
-            controls.target.copy(center); // Adjust target if necessary
-          },
-          onComplete: function () {
-            // if (!selectedCamera.name.toString().includes("Area")) {
-            controls.enabled = true;
-            controls.enableDamping = true;
-            // }
-          },
-        },
-        0
-      ); // Start rotation animation at the same time as position animation
-  }
+      },
+      "<"
+    );
+
+  // Callbacks after animation completes
+  timeline.call(() => {
+    controls.enabled = true; // Re-enable controls after animation
+    controls.enableDamping = true; // Re-enable damping after animation
+  });
 }
 
 export function moveToBin(object, camera, controls) {
@@ -119,7 +85,7 @@ export function moveToBin(object, camera, controls) {
       z: center.z,
       ease: "power1.out",
       onUpdate: function () {
-        controls.target.copy(center);
+        camera.lookAt(center);
       },
     })
     .to(
@@ -131,25 +97,195 @@ export function moveToBin(object, camera, controls) {
         z: center.z,
         ease: "power1.out",
         onUpdate: function () {
-          camera.lookAt(controls.target);
+          camera.lookAt(center);
         },
         onComplete: function () {
           controls.enabled = true; // Enable controls after switching cameras
           controls.enableDamping = true;
+          camera.lookAt(center);
         },
       },
       0
     ); // Start rotation animation at the same time as position animation
 }
 
+export function moveCam(controls, camera, target) {
+  controls.enabled = false;
+  const offset = {
+    x: controls.target.x - camera.position.x - 10,
+    y: controls.target.y - camera.position.y,
+    z: controls.target.z - camera.position.z - 10,
+  };
+
+  const new_pos = { ...target };
+  new_pos.y = camera.position.y;
+
+  gsap.to(camera.position, {
+    duration: 3,
+    x: new_pos.x,
+    y: new_pos.y,
+    z: new_pos.z,
+
+    onComplete: () => {
+      offset.x = controls.target.x - camera.position.x;
+      offset.y = controls.target.y - camera.position.y;
+      offset.z = controls.target.z - camera.position.z;
+      controls.enabled = true;
+    },
+  });
+  gsap.to(controls.target, {
+    duration: 3,
+    x: offset.x + new_pos.x,
+    z: offset.z + new_pos.z,
+    onUpdate: () => {
+      camera.lookAt(target);
+    },
+  });
+}
+
 function findCameraByName(cameraList, name) {
-    // Use Array.prototype.find to locate the camera by name
-    const foundCamera = cameraList.find((cam) => cam.name.includes(name));
-  
-    if (foundCamera) {
-      return foundCamera;
-    } else {
-      console.log('{"Camera Not Found":"' + name + '"}');
-      return null;
-    }
+  // Use Array.prototype.find to locate the camera by name
+  const foundCamera = cameraList.find((cam) => cam.name.includes(name));
+
+  if (foundCamera) {
+    return foundCamera;
+  } else {
+    console.log('{"Camera Not Found":"' + name + '"}');
+    return null;
   }
+}
+
+function getPositionAndTarget(scene, name, view) {
+  let position = new THREE.Vector3();
+  let target = new THREE.Vector3(0, 0, 0);
+  let object = new THREE.Object3D();
+  let box;
+  let number;
+
+  // if(name.includes("rack")){
+  //   const result = view.match(/\d+/);  // Matches one or more digits
+  //   number = result ? parseInt(result[0], 10) : null;
+  //   view = "rack";
+  //   console.log(number);
+  // }
+
+  switch (view) {
+    case "warehouse":
+      position.set(0, 500, 200);
+      target.set(0, 0, -50);
+      console.log('{"object":"null"}');
+      break;
+    case "storageArea":
+      const manButton = document.getElementById("image-button-container");
+      manButton.style.display = "block";
+      const arrows = document.querySelectorAll(".arrow");
+      arrows.forEach((arrow) => {
+        arrow.style.display = "none";
+      });
+      position.set(-83, 70, -20);
+      object = scene.getObjectByName(name);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      target.y = target.y + 10;
+      console.log('{"object":"null"}');
+      break;
+    case "inspectionArea":
+      position.set(18, 50, -50);
+      object = scene.getObjectByName(name);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "stagingArea":
+      position.set(-114, 80, 0);
+      object = scene.getObjectByName(name);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "activityArea":
+      position.set(-45, 80, -20);
+      object = scene.getObjectByName(name);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "receivingArea":
+      position.set(22, 80, 0);
+      object = scene.getObjectByName(name);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "yardArea":
+      position.set(50, 270, -34);
+      object = scene.getObjectByName(name);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    // case "rack":
+    //   position.set(-120+(32*(number-1)), 50, -116.9);
+    //   object = scene.getObjectByName(view+number+"r");
+    //   box = new THREE.Box3().setFromObject(object);
+    //   box.getCenter(target);
+    //   break;
+    case "rack5r":
+      position.set(0, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack4r":
+      position.set(-30, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack3r":
+      position.set(-55, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack2r":
+      position.set(-80, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack1r":
+      position.set(-100, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack5l":
+      position.set(-60, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack4l":
+      position.set(-85, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack3l":
+      position.set(-110, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack2l":
+      position.set(-130, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+    case "rack1l":
+      position.set(-160, 50, -116.9);
+      object = scene.getObjectByName(view);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
+      break;
+  }
+
+  return { position, target };
+}

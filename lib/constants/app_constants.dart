@@ -10,6 +10,7 @@ class AppConstants {
   static const String GET_OCI_TOKEN = "oauth2/v1/token";
   static const String AUTHENCTICATE_USER_NAME = "sso/v1/sdk/authenticate";
 
+  // idcs credentials
   static const String AUTHENTICATION_USERNAME = 'a07dc2a022db4c458397118abb543e57';
   static const String AUTHENTICATION_PASSWORD = 'bf06245f-33ae-4b6c-9d0e-27fc0d89f514';
 
@@ -25,15 +26,20 @@ class AppConstants {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
 
-  static const String USERNAME = "nalsoft_adm";
-  static const String PASSWORD = "P@s\$w0rd2024";
+  // api credentials
+  static const String APIUSERNAME = "NALSOFT";
+  static const String APIPASSWORD = "Nalsoft@123";
 
-  // apex constants
-   static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxwms/';
-   static const BASEURL = 'https://tg1.wms.ocs.oraclecloud.com:443/emg_test/wms/lgfapi/v10/entity/';
+  // urls
+  static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxwms/wms/';
+  static const BASEURL = 'https://tg1.wms.ocs.oraclecloud.com:443/emg_test/wms/lgfapi/v10/entity/';
 
-   static const INVENTORY_HISTORY = 'inventory_history/';
-   static const LOCATION = 'location/';
+  static const INVENTORY_HISTORY = 'inventory_history/';
+  static const LOCATION = 'location/';
+   
+  // methods
+  static const ACTIVITY_AREA = 'activity_area';
+  static const YARD_AREA = 'yard_area';
 }
 
  
