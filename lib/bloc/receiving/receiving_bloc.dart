@@ -19,7 +19,6 @@ class ReceivingBloc extends Bloc<ReceivingEvent, ReceivingState> {
 
   void _onGetReceivingData(GetReceivingData event, Emitter<ReceivingState> emit) async {
     try {
-      print("page_num ${state.pageNum}");
       await _customApi.get(
         AppConstants.RECEIVING_AREA,
         queryParameters: {"facility_id": 243, "page_num": state.pageNum},

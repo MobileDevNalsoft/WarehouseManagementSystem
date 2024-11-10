@@ -24,21 +24,17 @@ class ActivityAreaBloc extends Bloc<ActivityAreaEvent, ActivityAreaState> {
   final NetworkCalls _customApi;
 
   Future<void> _onGetActivityAreaData(GetActivityAreaData event, Emitter<ActivityAreaState> emit) async {
-    List<dynamic> checkList = ["Not Empty"];
-    int pageNum = 0;
-
-    while (checkList.isNotEmpty) {
-      try {
-        await _customApi.get(AppConstants.ACTIVITY_AREA, queryParameters: {"facility_id": 243, "page_num": pageNum}).then((apiResponse) {
-          AreaResponse<ActivityAreaItem> activityAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data),(json) => ActivityAreaItem.fromJson(json));
-          state.activityAreaItems!.addAll(activityAreaResponse.data!);
-          checkList = jsonDecode(apiResponse.response!.data)["data"];
-          emit(state.copyWith(activityAreaItems: state.activityAreaItems, getDataState: GetDataState.success));
-          pageNum += 1;
-        });
-      } catch (e) {
-        Log.e(e.toString());
-      }
+    try {
+      await _customApi.get(AppConstants.ACTIVITY_AREA, queryParameters: {"facility_id": 243, "page_num": state.pageNum}).then((apiResponse) {
+        AreaResponse<ActivityAreaItem> activityAreaResponse =
+            AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityAreaItem.fromJson(json));
+        state.activityAreaItems!.addAll(activityAreaResponse.data!);
+        state.getDataState = GetDataState.initial;
+        emit(state.copyWith(activityAreaItems: state.activityAreaItems, getDataState: GetDataState.success));
+      });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getDataState: GetDataState.failure));
     }
   }
 }

@@ -15,7 +15,7 @@ import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/models/yard_area_model.dart';
-import 'package:warehouse_3d/pages/customs/searchable_dropdown.dart';
+import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
 import 'package:warehouse_3d/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/bin_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
@@ -328,7 +328,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         Positioned(
           right: size.width*0.25,
           top: size.height*0.013,
-          child: PointerInterceptor(child: SearchBarDropdown(size: size, focusNode: focusNode))),
+          child: PointerInterceptor(child: SearchBarDropdown(size: size))),
         Positioned(
           right: 0,
           top: 0,

@@ -220,16 +220,18 @@ function getPositionAndTarget(scene, name) {
       box.getCenter(target);
       break;
     case "dockArea-IN":
-      position.set(22, 80, 0);
+      position.set(21.4, 120, -2);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
+      target.z = target.z + 25
       break;
     case "dockArea-OUT":
-      position.set(22, 80, 0);
+      position.set(-113.25, 120, -2);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
+      target.z = target.z + 25
       break;
     // case "rack":
     //   position.set(-120+(32*(number-1)), 50, -116.9);

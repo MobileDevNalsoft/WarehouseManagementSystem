@@ -13,6 +13,7 @@ class DockAreaDataSheet extends StatefulWidget {
 }
 
 class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
+  final ScrollController _controller = ScrollController();
   late DockAreaBloc _dockAreaBloc;
 
   @override
@@ -21,6 +22,14 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
 
     _dockAreaBloc = context.read<DockAreaBloc>();
     if (_dockAreaBloc.state.getDataState == GetDataState.initial) {
+      _dockAreaBloc.add(const GetDockAreaData());
+    }
+    _controller.addListener(_scrollListener);
+  }
+
+  void _scrollListener() async {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+      _dockAreaBloc.state.pageNum = _dockAreaBloc.state.pageNum! + 1;
       _dockAreaBloc.add(const GetDockAreaData());
     }
   }
@@ -49,11 +58,13 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
                   child: SizedBox(
                     height: size.height * 0.6,
                     child: ListView.separated(
-                        itemBuilder: (context, index) => Customs.MapInfo(size: size, keys: [
+                        controller: _controller,
+                        itemBuilder: (context, index) => index < state.dockAreaItems!.length
+                                ? Customs.MapInfo(size: size, keys: [
                               'Dock Type',
                               'Truck No.',
                               'PO No.',
-                              'Vendor'
+                              'Vendor',
                               'CheckIn TS',
                               'Quantity'
                             ], values: [
@@ -63,9 +74,25 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
                               isEnabled ? 'Vendor' : state.dockAreaItems![index].vendor!,
                               isEnabled ? 'CheckIn TS': state.dockAreaItems![index].checkInTS!,
                               isEnabled ? 'Quantity' : state.dockAreaItems![index].qty!.toString()
-                            ]),
+                            ]) : Skeletonizer(
+                              child: Customs.MapInfo(size: size, keys: [
+                                'Dock Type',
+                                'Truck No.',
+                                'PO No.',
+                                'Vendor',
+                                'CheckIn TS',
+                                'Quantity'
+                              ], values: [
+                                'Dock Type',
+                                'Truck No.',
+                                'PO No.',
+                                'Vendor',
+                                'CheckIn TS',
+                                'Quantity'
+                              ]),
+                            ),
                         separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                        itemCount: isEnabled ? 8 : state.dockAreaItems!.length),
+                        itemCount: isEnabled ? 8 : state.dockAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.dockAreaItems!.length + 1 : state.dockAreaItems!.length),
                   ));
             },
           )

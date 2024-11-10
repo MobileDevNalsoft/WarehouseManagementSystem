@@ -129,6 +129,8 @@ export function addInteractions(scene, model, camera, controls) {
           prevNav = name;
         }
       }
+    }else {
+      console.log('{"object":"null"}');
     }
   }
 
@@ -480,4 +482,5 @@ document.addEventListener("wheel", () => {
   });
   const manButton = document.getElementById("image-button-container");
   manButton.style.display = "none";
+  console.log('{"object":"null"}');
 });

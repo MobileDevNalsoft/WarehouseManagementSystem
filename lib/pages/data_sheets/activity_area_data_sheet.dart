@@ -15,6 +15,7 @@ class ActivityAreaDataSheet extends StatefulWidget {
 }
 
 class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
+  final ScrollController _controller = ScrollController();
   late ActivityAreaBloc _activityBloc;
 
   @override
@@ -23,6 +24,14 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
 
     _activityBloc = context.read<ActivityAreaBloc>();
     if (_activityBloc.state.getDataState == GetDataState.initial) {
+      _activityBloc.add(const GetActivityAreaData());
+    }
+    _controller.addListener(_scrollListener);
+  }
+
+  void _scrollListener() async {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+      _activityBloc.state.pageNum = _activityBloc.state.pageNum! + 1;
       _activityBloc.add(const GetActivityAreaData());
     }
   }
@@ -51,7 +60,9 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
                   child: SizedBox(
                     height: size.height * 0.6,
                     child: ListView.separated(
-                        itemBuilder: (context, index) => Customs.MapInfo(size: size, keys: [
+                        controller: _controller,
+                        itemBuilder: (context, index) => index < state.activityAreaItems!.length
+                                ? Customs.MapInfo(size: size, keys: [
                               'Work Order Number',
                               'Work Order Type',
                               'Status',
@@ -61,9 +72,21 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
                               isEnabled ? 'Work Order Type' : state.activityAreaItems![index].workOrderType!,
                               isEnabled ? 'Item' : state.activityAreaItems![index].item!,
                               isEnabled ? 'Quantity' : state.activityAreaItems![index].qty!.toString()
-                            ]),
+                            ]) : Skeletonizer(
+                              child: Customs.MapInfo(size: size, keys: [
+                                'Work Order Number',
+                                'Work Order Type',
+                                'Status',
+                                'Quantity'
+                              ], values: [
+                                'Work Order Number',
+                                'Work Order Type',
+                                'Item',
+                                'Quantity'
+                              ]),
+                            ),
                         separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                        itemCount: isEnabled ? 8 : state.activityAreaItems!.length),
+                        itemCount: isEnabled ? 8 : state.activityAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.activityAreaItems!.length + 1 : state.activityAreaItems!.length),
                   ));
             },
           )
