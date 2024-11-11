@@ -457,6 +457,7 @@ export function addInteractions(scene, model, camera, controls) {
 
       // // Hide tooltip during the animation
       // tooltip.style.opacity = 0;
+      switchCamera(scene, "compoundArea", camera, controls);
 
       // Wait for the animation to finish
       togglePanel.addEventListener(

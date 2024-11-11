@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
@@ -23,16 +24,25 @@ class Customs {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [IconButton(onPressed: ()async{getIt<JsInteropService>().switchToMainCam(await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea" ? "storageArea" : "compoundArea");
-            getIt<JsInteropService>().resetTrucks();
-            }, icon: const Icon(Icons.close_rounded))],
+            children: [
+              IconButton(
+                  onPressed: () async {
+                    getIt<JsInteropService>().switchToMainCam(
+                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
+                                "storageArea"
+                            ? "storageArea"
+                            : "compoundArea");
+                    getIt<JsInteropService>().resetTrucks();
+                  },
+                  icon: const Icon(Icons.close_rounded))
+            ],
           ),
           Container(
             height: size.height * 0.06,
             width: size.width * 0.12,
             margin: EdgeInsets.symmetric(vertical: size.height * 0.005),
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: Colors.blue.shade900, borderRadius: BorderRadius.all(Radius.circular(20))),
+            decoration: BoxDecoration(color: Colors.blue.shade900, borderRadius: const BorderRadius.all(Radius.circular(20))),
             child: Text(
               title,
               style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
@@ -72,6 +82,96 @@ class Customs {
         ],
       ),
     );
+  }
+
+  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title"}){
+    return SfCartesianChart(
+                    title: ChartTitle(text: title,textStyle: const TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                      
+                    )),
+                    primaryXAxis: const CategoryAxis(
+                      labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                      majorGridLines: MajorGridLines(
+                        width: 0,
+                      ),
+                      majorTickLines: MajorTickLines(width: 0),
+                      axisLine: AxisLine(width: 0),
+                    ),
+                    primaryYAxis: NumericAxis(
+                      title: AxisTitle(text: yAxisTitle),
+                
+                    ),
+                    plotAreaBorderWidth: 0,
+                    // tooltipBehavior: TooltipBehavior(
+                    //   enable: true,
+                    //   color: Colors.black,
+                    //   textStyle: const TextStyle(color: Colors.black),
+                    //   textAlignment: ChartAlignment.center,
+                    //   animationDuration: 100,
+                    //   duration: 2000,
+                    //   shadowColor: Colors.black,
+                    //   builder: (data, point, series, pointIndex, seriesIndex) => IntrinsicWidth(
+                    //     child: Container(
+                    //         height: size.height * 0.01,
+                    //         margin: EdgeInsets.only(
+                    //             left: size.width * 0.03, right: size.width * 0.03,),
+                    //         child: Text((data as BarData).abbreviation, style: TextStyle(color: Colors.white),)),
+                    //   ),
+                    // ),
+                    borderWidth: 0,
+                    series: List.generate(barCount, (index) => ColumnSeries<BarData, String>(
+                        dataSource: dataSources![index],
+                        xValueMapper: (BarData data, _) => data.xLabel,
+                        yValueMapper: (BarData data, _) => data.yValue,
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.lightBlue,
+                        dataLabelMapper: (datum, index) => datum.yValue.toString(),
+                        dataLabelSettings: DataLabelSettings(
+                          isVisible: true,
+                          useSeriesColor: true,
+                          builder: (data, point, series, pointIndex, seriesIndex) => Text(
+                            (data as BarData).yValue.toString(),
+                            style: const TextStyle(color: Colors.black, fontSize: 14),
+                          ),
+                        ),
+                        width: 0.6,
+                      ),)
+                    );
+  }
+
+  static Widget WMSBarChart({String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper}) {
+    return SfCircularChart(
+        title: ChartTitle(
+            text: title,
+            textStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
+            )),
+        tooltipBehavior: TooltipBehavior(
+          enable: true,
+        ),
+        legend: const Legend(
+          isVisible: true,
+          alignment: ChartAlignment.near,
+        ),
+        series: <PieSeries<PieData, String>>[
+          PieSeries<PieData, String>(
+              explode: true,
+              explodeIndex: 0,
+              dataSource: dataSource,
+              pointColorMapper: pointColorMapper,
+              xValueMapper: (PieData data, _) => data.xData,
+              yValueMapper: (PieData data, _) => data.yData,
+              dataLabelMapper: (PieData data, _) => data.text,
+              enableTooltip: true,
+              dataLabelSettings: const DataLabelSettings(
+                  isVisible: true,
+                  labelPosition: ChartDataLabelPosition.outside,
+                  textStyle: TextStyle(fontSize: 24),
+                  labelAlignment: ChartDataLabelAlignment.top)),
+        ]);
   }
 
   static void AnimatedDialog({
@@ -217,4 +317,19 @@ class _ClipShadowShadowPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
   }
+}
+
+// models for charts
+class PieData {
+  PieData(this.xData, this.yData, [this.text]);
+  final String xData;
+  final num yData;
+  String? text;
+}
+
+class BarData {
+  String xLabel;
+  int yValue;
+  String abbreviation;
+  BarData({required this.xLabel, required this.yValue, required this.abbreviation});
 }

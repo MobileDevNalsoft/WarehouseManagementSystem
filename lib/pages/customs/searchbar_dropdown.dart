@@ -147,10 +147,10 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                             maxLines: 1,
                             decoration: InputDecoration(
                               hintText: placeholderText,
-                              contentPadding: EdgeInsets.only(left: size.width*0.008),
+                              contentPadding: EdgeInsets.only(left: size.width*0.008, top: size.height*0.012),
                               isCollapsed: true,
                               hintStyle: TextStyle(
-                                color: Colors.blue.shade900.withOpacity(0.8), // Purple
+                                color: Colors.blue.shade900.withAlpha(200), // Purple
                                 fontSize: size.height * 0.022,
                                 fontWeight: FontWeight.w500,
                               ),
