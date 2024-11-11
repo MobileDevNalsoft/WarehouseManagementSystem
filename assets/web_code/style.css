@@ -47,10 +47,11 @@ body {
 
 /* Style for the chevron button */
 #togglePanel {
+    display: none;
     position: fixed;
     left: 0;
     /* Button initially visible at screen edge */
-    top: 31vh;
+    top: 38vh;
     transform: translateY(-50%);
     background-color: #0d47a1;
     color: white;
@@ -109,28 +110,44 @@ body {
 }
 
 /* Button style inside the left panel */
-#inspectionArea_cam {
+#inspectionArea {
+    font-size: 1vw;
     background-color: #6997dc;
 }
 
-#stagingArea_cam {
+#stagingArea {
+    font-size: 1vw;
     background-color: #a1e793;
 }
 
-#activityArea_cam {
+#activityArea {
+    font-size: 1vw;
     background-color: #bd976f;
 }
 
-#receivingArea_cam {
+#receivingArea {
+    font-size: 1vw;
     background-color: #6fbdb4;
 }
 
-#storageArea_cam {
+#storageArea {
+    font-size: 1vw;
     background-color: #6bd370;
 }
 
-#yardArea_cam {
+#yardArea {
+    font-size: 1vw;
     background-color: #e18851;
+}
+
+#dockArea-IN {
+    font-size: 1vw;
+    background-color: #a59e9a;
+}
+
+#dockArea-OUT {
+    font-size: 1vw;
+    background-color: #a59e9a;
 }
 
 /* When the panel is open, buttons will slide in */

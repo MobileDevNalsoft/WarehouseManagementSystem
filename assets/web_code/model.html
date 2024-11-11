@@ -1,10 +1,11 @@
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Model</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <script type="importmap">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Model</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <script type="importmap">
       {
         "imports": {
           "three": "./node_modules/three/build/three.module.js",
@@ -25,37 +26,36 @@
         }
       }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-  </head>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+</head>
 
-  <body>
-    <div id="container">
-      <div id="leftPanel">
-        <button class="areaButton ignoreRaycast" id="inspectionArea_cam">
-          Inspection Area
-        </button>
-        <button class="areaButton ignoreRaycast" id="stagingArea_cam">Staging Area</button>
-        <button class="areaButton ignoreRaycast" id="activityArea_cam">Activity Area</button>
-        <button class="areaButton ignoreRaycast" id="receivingArea_cam">
-          Receiving Area
-        </button>
-        <button class="areaButton ignoreRaycast" id="storageArea_cam">Storage Area</button>
-        <button class="areaButton ignoreRaycast" id="yardArea_cam">Yard Area</button>
-        <button class="ignoreRaycast" id="togglePanel">&#x25B6;</button>
-        <!-- Chevron right symbol -->
-        <div id="toggleTooltip">Open Controls</div>
-      </div>
+<body>
+  <div id="container">
+    <div id="leftPanel" class="ignoreRaycast">
+      <button class="areaButton ignoreRaycast" id="inspectionArea">Inspection Area</button>
+      <button class="areaButton ignoreRaycast" id="stagingArea">Staging Area</button>
+      <button class="areaButton ignoreRaycast" id="activityArea">Activity Area</button>
+      <button class="areaButton ignoreRaycast" id="receivingArea">Receiving Area</button>
+      <button class="areaButton ignoreRaycast" id="storageArea">Storage Area</button>
+      <button class="areaButton ignoreRaycast" id="yardArea">Yard Area</button>
+      <button class="areaButton ignoreRaycast" id="dockArea-IN">Dock Area IN</button>
+      <button class="areaButton ignoreRaycast" id="dockArea-OUT">Dock Area OUT</button>
+      <button class="ignoreRaycast" id="togglePanel">&#x25B6;</button>
+      <!-- Chevron right symbol -->
+      <div id="toggleTooltip">Open Controls</div>
     </div>
-    <div id="tooltip" style="display: none">Tooltip Data</div>
-    <script type="module" src="./index.js"></script>
-    <div id="arrows-container">
-      <button id="arrow-up" class="arrow ignoreRaycast">▲</button>
-      <button id="arrow-left" class="arrow ignoreRaycast">◄</button>
-      <button id="arrow-right" class="arrow ignoreRaycast">►</button>
-      <button id="arrow-down" class="arrow ignoreRaycast">▼</button>
-    </div>
-    <div id="image-button-container" class="ignoreRaycast">
-      <img id="image-button" class="ignoreRaycast" src="./man.png" alt="Button Image" />
-    </div>
-  </body>
+  </div>
+  <div id="tooltip" style="display: none">Tooltip Data</div>
+  <script type="module" src="./index.js"></script>
+  <div id="arrows-container">
+    <button id="arrow-up" class="arrow ignoreRaycast">▲</button>
+    <button id="arrow-left" class="arrow ignoreRaycast">◄</button>
+    <button id="arrow-right" class="arrow ignoreRaycast">►</button>
+    <button id="arrow-down" class="arrow ignoreRaycast">▼</button>
+  </div>
+  <div id="image-button-container" class="ignoreRaycast">
+    <img id="image-button" class="ignoreRaycast" src="./man.png" alt="Button Image" />
+  </div>
+</body>
+
 </html>

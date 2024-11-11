@@ -82,6 +82,7 @@ export function addInteractions(scene, model, camera, controls) {
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
+
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")
@@ -104,9 +105,9 @@ export function addInteractions(scene, model, camera, controls) {
           }
           switchCamera(scene, targetObject.name, camera, controls);
 
-          prevNav = targetObject.name.toString();
+          prevNav = name;
           window.localStorage.setItem("switchToMainCam", "null");
-          if (prevNav.includes("rack")) {
+          if (name.includes("rack")) {
             window.localStorage.setItem("rack_cam", "storageArea");
           } else {
             window.localStorage.setItem("rack_cam", "warehouse");
@@ -130,6 +131,8 @@ export function addInteractions(scene, model, camera, controls) {
           prevNav = name;
         }
       }
+    }else {
+      console.log('{"object":"null"}');
     }
   }
 
@@ -212,7 +215,7 @@ export function addInteractions(scene, model, camera, controls) {
       arrows.forEach((arrow) => {
         arrow.style.display = "block";
       });
-      const clickedObject = scene.getObjectByName("storageArea_cam_navigation");
+      const clickedObject = scene.getObjectByName("storageArea");
 
       // Calculate the bounding box of the clicked object
       const boundingBox = new THREE.Box3().setFromObject(clickedObject);
@@ -467,6 +470,7 @@ export function addInteractions(scene, model, camera, controls) {
 
       // // Hide tooltip during the animation
       // tooltip.style.opacity = 0;
+      switchCamera(scene, "compoundArea", camera, controls);
 
       // Wait for the animation to finish
       togglePanel.addEventListener(
@@ -492,4 +496,5 @@ document.addEventListener("wheel", () => {
   });
   const manButton = document.getElementById("image-button-container");
   manButton.style.display = "none";
+  console.log('{"object":"null"}');
 });

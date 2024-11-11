@@ -1,18 +1,28 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/activity_area_dashboard.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/dock_area_dashboard.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/inspection_area_dashboard.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/receiving_area_dashboard.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/staging_area_dashboard.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/storage_area_dashboard.dart';
 
 import '../responsive.dart';
 import '../shared/constants/defaults.dart';
 import '../shared/widgets/header.dart';
 import '../shared/widgets/sidemenu/sidebar.dart';
 import '../shared/widgets/sidemenu/tab_sidebar.dart';
-import 'dashboard/dashboard_page.dart';
+import 'dashboards/yard_area_dashboard.dart';
 
 final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
 class EntryPoint extends StatelessWidget {
-  const EntryPoint({super.key});
+  EntryPoint({super.key});
+
+  List<Widget> dashboards = [YardAreaDashboard(), StorageAreaDashboard(), StagingAreaDashboard(), ActivityAreaDashboard(), ReceivingAreaDashboard(), InspectionAreaDashboard(), DockAreaDashboard()];
 
   @override
   Widget build(BuildContext context) {
@@ -20,35 +30,14 @@ class EntryPoint extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       key: _drawerKey,
-      drawer: Responsive.isMobile(context) ? const Sidebar() : null,
       body: Row(
         children: [
-          if (Responsive.isDesktop(context)) const Sidebar(),
-          if (Responsive.isTablet(context)) const TabSidebar(),
+          const Sidebar(),
           Expanded(
-            child: Column(
-              children: [
-                // Header(drawerKey: _drawerKey),
-                Gap(size.height*0.03),
-                Row(mainAxisAlignment: MainAxisAlignment.center,children: [Text('Yard Dashboard', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)],),
-                Gap(size.height*0.03),
-                Expanded(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1360),
-                    child: ListView(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppDefaults.padding *
-                                (Responsive.isMobile(context) ? 1 : 1.5),
-                          ),
-                          child: SafeArea(child: Overview()),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            child: BlocBuilder<DashboardsBloc, DashboardsState>(
+              builder: (context, state) {
+                return dashboards[state.index!];
+              }
             ),
           )
         ],

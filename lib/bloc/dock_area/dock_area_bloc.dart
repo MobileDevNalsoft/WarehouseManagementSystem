@@ -23,21 +23,16 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
   final NetworkCalls _customApi;
 
   Future<void> _onGetDockAreaData(GetDockAreaData event, Emitter<DockAreaState> emit) async {
-    List<dynamic> checkList = ["Not Empty"];
-    int pageNum = 0;
-
-    while (checkList.isNotEmpty) {
-      try {
-        await _customApi.get(AppConstants.DOCK_AREA, queryParameters: {"facility_id": 243, "page_num": pageNum}).then((apiResponse) {
-          AreaResponse<DockAreaItem> dockAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data),(json) => DockAreaItem.fromJson(json));
-          state.dockAreaItems!.addAll(dockAreaResponse.data!);
-          checkList = jsonDecode(apiResponse.response!.data)["data"];
-          emit(state.copyWith(dockAreaItems: state.dockAreaItems, getDataState: GetDataState.success));
-          pageNum += 1;
-        });
-      } catch (e) {
-        Log.e(e.toString());
-      }
+    try {
+      await _customApi.get(AppConstants.DOCK_AREA, queryParameters: {"facility_id": 243, "page_num": state.pageNum}).then((apiResponse) {
+        AreaResponse<DockAreaItem> dockAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => DockAreaItem.fromJson(json));
+        state.dockAreaItems!.addAll(dockAreaResponse.data!);
+        state.getDataState = GetDataState.initial;
+        emit(state.copyWith(dockAreaItems: state.dockAreaItems, getDataState: GetDataState.success));
+      });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getDataState: GetDataState.failure));
     }
   }
 }

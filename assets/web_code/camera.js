@@ -183,7 +183,7 @@ function getPositionAndTarget(scene, name) {
         arrow.style.display = "none";
       });
       position.set(-83, 70, -20);
-      object = scene.getObjectByName(name);
+      object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       target.y = target.y + 10;
@@ -197,7 +197,7 @@ function getPositionAndTarget(scene, name) {
       break;
     case "stagingArea":
       position.set(-114, 80, 0);
-      object = scene.getObjectByName(name);
+      object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       break;
@@ -220,16 +220,18 @@ function getPositionAndTarget(scene, name) {
       box.getCenter(target);
       break;
     case "dockArea-IN":
-      position.set(22, 80, 0);
+      position.set(21.4, 120, -2);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
+      target.z = target.z + 25
       break;
     case "dockArea-OUT":
-      position.set(22, 80, 0);
+      position.set(-113.25, 120, -2);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
+      target.z = target.z + 25
       break;
     // case "rack":
     //   position.set(-120+(32*(number-1)), 50, -116.9);
