@@ -350,7 +350,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
       case 'rack':
         return RackDataSheet(objectNames: objectNames!,);
       case 'bin':
-        return const BinDataSheet();
+         context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS!['bin']}"));
+        return  BinDataSheet();
       case 'area':
         switch (objectValue) {
           case 'stagingArea':

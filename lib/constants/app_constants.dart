@@ -45,6 +45,7 @@ class AppConstants {
   static const RECEIVING_AREA = 'receiving_area';
   static const STAGING_AREA = 'staging_area';
   static const STORAGE_AISLE = 'storage_aisle';
+  static const STORAGE_BIN = 'storage_bin';
 }
 
  

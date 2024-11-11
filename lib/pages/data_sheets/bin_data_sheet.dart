@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class BinDataSheet extends StatefulWidget {
-  const BinDataSheet({super.key});
+   BinDataSheet({super.key});
 
   @override
   State<BinDataSheet> createState() => _BinDataSheetState();
@@ -14,12 +16,13 @@ class BinDataSheet extends StatefulWidget {
 
 class _BinDataSheetState extends State<BinDataSheet> {
   late WarehouseInteractionBloc _warehouseInteractionBloc;
-
+  late StorageBloc _storageBloc;
   @override
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    // _warehouseInteractionBloc.add(SelectedBin(binID: _warehouseInteractionBloc.state.dataFromJS!['bin']));
+    _storageBloc = context.read<StorageBloc>();
+   
   }
 
   @override
@@ -30,52 +33,55 @@ class _BinDataSheetState extends State<BinDataSheet> {
       context: context,
       size: size, 
       title: 'Storage Bin', children: [
-      BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+      BlocBuilder<StorageBloc, StorageState>(
         builder: (context, state) {
-          bool isEnabled = false;
-          // state.selectedBin == null;
+          bool isEnabled = state.storageBinStatus != StorageBinStatus.success;
           return Skeletonizer(
             enabled: isEnabled,
             child: Column(
               children: [
-                Text(
-                  isEnabled ? 'Bin ID' : state.dataFromJS!.values.first,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                isEnabled?Text("-"):
+                state.storageBin!.data!.length==0?Text("Empty bin"):
+              SizedBox(
+                height: size.height * 0.6,
+                child: ListView.separated(
+                  itemBuilder: (context,index) {
+                    return Customs.MapInfo(size: size, 
+                          keys: [
+                            'LPN Number',
+                            'Location Barcode',
+                            'ASN',
+                            'PO Number',
+                            'Vendor',
+                            'Item',
+                            'Item Category',
+                            'Quantity',
+                            'Manufacturing Date',
+                            'Expiry Date',
+                            'Batch Number',
+                            'Serial Number'
+                          ], values: [
+                             isEnabled ? 'LPN Number' : state.storageBin!.data![index].containerNbr??"NA",
+                             isEnabled ? 'Location Barcode' : state.storageBin!.data![index].locationKey??"NA",
+                             isEnabled ? 'ASN' : state.storageBin!.data![index].serialNbrKey??"NA",
+                             isEnabled ? 'PO Number' : state.storageBin!.data![index].refPoNbr??"NA",
+                             isEnabled ? 'Vendor' : state.storageBin!.data![index].vendor??"NA",
+                             isEnabled ? 'Item' : state.storageBin!.data![index].itemKey??"NA",
+                             isEnabled ? 'Item Category' : state.storageBin!.data![index].putawaytypeKey??"NA",
+                             isEnabled ? 'Quantity' : state.storageBin!.data![index].currQty??"NA",
+                             isEnabled ? 'Manufacturing Date' : state.storageBin!.data![index].manufactureDate??"NA",
+                             isEnabled ? 'Expiry Date' : state.storageBin!.data![index].expiryDate??"NA",
+                             isEnabled ? 'Batch Number' : state.storageBin!.data![index].batchNbrKey??"NA",
+                             isEnabled ? 'Serial Number Key' : state.storageBin!.data![index].serialNbrKey??"NA",
+                
+                          ]);
+                  },
+                          separatorBuilder: (context, index) => Gap(size.height * 0.025),
+                          itemCount: isEnabled ? 8 : state.storageBin!.data!.length,
                 ),
-                Gap(size.height * 0.02),
-                // if (context.watch<WarehouseInteractionBloc>().state.selectedBin != null)
-                //   SizedBox(
-                //     height: size.height * 0.6,
-                //     child: ListView.separated(
-                //       itemCount: isEnabled ? 8 : state.selectedBin!.items!.length,
-                //       itemBuilder: (context, index) => isEnabled
-                //           ? SizedBox(
-                //               width: size.width * 0.1,
-                //               height: size.height * 0.05,
-                //             )
-                //           : Customs.MapInfo(
-                //               size: size,
-                //               keys: ['Item Name', 'Quantity'],
-                //               values: [state.selectedBin!.items![index].itemName!, state.selectedBin!.items![index].quantity!.toString()]),
-                //       separatorBuilder: (context, index) => Gap(size.height * 0.05),
-                //     ),
-                //   ),
-                // if (context.watch<WarehouseInteractionBloc>().state.selectedBin != null)
-                //   Align(alignment: Alignment.bottomRight, child: Padding(
-                //     padding:  EdgeInsets.only(right: size.width*0.01),
-                //     child: InkWell(
-                //       onTap: () {
-                        
-                //       },
-                //       child: Text('view more details', style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),)),
-                //   ),),
-                // if (context.watch<WarehouseInteractionBloc>().state.selectedBin == null)
-                //   SizedBox(
-                //     height: size.height * 0.2,
-                //     child: const Center(
-                //       child: Text('This Bin is Empty'),
-                //     ),
-                //   )
+              ),
+                    Gap(size.height * 0.05),
+                   
               ],
             ),
           );
