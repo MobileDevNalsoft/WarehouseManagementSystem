@@ -33,10 +33,9 @@ main() async {
       BlocProvider(create: (_) => AuthenticationBloc(navigator: getIt())),
       BlocProvider(create: (_) => YardBloc(customApi: getIt())),
       BlocProvider(create: (_) => DashboardsBloc(customApi: getIt())),
-       
-        BlocProvider(create: (_) => ReceivingBloc(customApi: getIt())),
-        BlocProvider(create: (_) => StagingBloc(customApi: getIt())),
-         BlocProvider(create: (_) => StorageBloc(customApi: getIt()))
+      BlocProvider(create: (_) => ReceivingBloc(customApi: getIt())),
+      BlocProvider(create: (_) => StagingBloc(customApi: getIt())),
+      BlocProvider(create: (_) => StorageBloc(customApi: getIt()))
        
     ],
     child: MaterialApp(

@@ -89,6 +89,7 @@ export function addInteractions(scene, model, camera, controls) {
         ) {
           if (name.includes("rack")) {
             console.log('{"rack":"' + name + '"}');
+            
             window.localStorage.setItem("getData", name);
           } else if (!name.includes("storage")) {
             console.log('{"area":"' + name + '"}');
@@ -116,6 +117,7 @@ export function addInteractions(scene, model, camera, controls) {
           name.includes("r") &&
           prevNav.includes("rack")
         ) {
+          
           changeColor(targetObject);
           window.localStorage.setItem("switchToMainCam", "null");
         } else {
@@ -144,12 +146,23 @@ export function addInteractions(scene, model, camera, controls) {
     }
 
     prevBinColor = object.material.color.clone();
+    let actualName = object.name.toString();
+    let resultBin = ""
+    let bay="";
+
+    resultBin = actualName.substring(1,4);
+    let column = parseInt( actualName.charAt(actualName.length - 1));
+    bay = Math.ceil(parseInt( actualName.charAt(actualName.length - 1))/2);
+    resultBin += bay;
+    resultBin += "0"+actualName.charAt(4);
+    resultBin += "0"+ Math.floor(column/bay);
+
     if (prevBin != object) {
       object.userData.active = true;
       // Set transparent blue color
       object.material.color.set(0xadd8e6); // Blue color
       object.material.opacity = 0.5; // Adjust opacity for transparency
-      console.log('{"bin":"' + object.name.toString() + '"}');
+      console.log('{"bin":"' + resultBin + '"}');
       moveToBin(object, camera, controls);
     } else {
       if (object.userData.active == false) {
@@ -159,7 +172,7 @@ export function addInteractions(scene, model, camera, controls) {
         // Set transparent blue color
         object.material.color.set(0xadd8e6); // Blue color
         object.material.opacity = 0.5; // Adjust opacity for transparency
-        console.log('{"bin":"' + object.name.toString() + '"}');
+        console.log('{"bin":"' + resultBin + '"}');
         moveToBin(object, camera, controls);
       } else {
         object.userData.active = false;

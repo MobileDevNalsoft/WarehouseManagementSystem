@@ -11,3 +11,8 @@ class AddStorageAreaData extends StorageEvent{
   String selectedRack;
  AddStorageAreaData({required this.selectedRack});
 }
+
+class GetBinData extends StorageEvent{
+  String selectedBin;
+ GetBinData({required this.selectedBin});
+}
