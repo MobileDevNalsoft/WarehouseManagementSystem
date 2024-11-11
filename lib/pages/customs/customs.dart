@@ -84,7 +84,7 @@ class Customs {
     );
   }
 
-  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title"}){
+  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title",Color? color}){
     return SfCartesianChart(
                     title: ChartTitle(text: title,textStyle: const TextStyle(
                       decoration: TextDecoration.underline,
@@ -126,7 +126,7 @@ class Customs {
                         xValueMapper: (BarData data, _) => data.xLabel,
                         yValueMapper: (BarData data, _) => data.yValue,
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.lightBlue,
+                        color: color,
                         dataLabelMapper: (datum, index) => datum.yValue.toString(),
                         dataLabelSettings: DataLabelSettings(
                           isVisible: true,
@@ -141,7 +141,7 @@ class Customs {
                     );
   }
 
-  static Widget WMSBarChart({String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper}) {
+  static Widget WMSPieChart({String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper}) {
     return SfCircularChart(
         title: ChartTitle(
             text: title,

@@ -82,7 +82,7 @@ class DockAreaDashboard extends StatelessWidget {
                                     border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white),
-                                child: Customs.WMSBarChart(
+                                child: Customs.WMSPieChart(
                                     title: "Trucks Info",
                                     dataSource: [PieData("Available", 16, "16"), PieData("Occupied", 4, "4")],
                                     pointColorMapper: (datum, index) {
@@ -129,7 +129,7 @@ class DockAreaDashboard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white),
                                 child:
-                                    Customs.WMSBarChart(title: 'In Bound vs Out Bound', dataSource: [PieData("Total", 10, "10"), PieData("Active", 4, "4")])),
+                                    Customs.WMSPieChart(title: 'In Bound vs Out Bound', dataSource: [PieData("Total", 10, "10"), PieData("Active", 4, "4")])),
                           ],
                         )
                       ],
