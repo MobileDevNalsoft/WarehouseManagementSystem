@@ -194,7 +194,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                     barCount: 1,
                                     dataSources: [barData],
                                     yAxisTitle: 'No of ASNs Received',
-                                    color: const Color.fromARGB(255, 248, 190, 15))),
+                                    barColors: const [Color.fromARGB(255, 248, 190, 15)])),
                             Gap(size.width * 0.05),
                             Container(
                                 height: size.height * 0.3,
@@ -208,7 +208,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                     barCount: 1,
                                     dataSources: [barData1],
                                     yAxisTitle: 'No of ASNs Received',
-                                    color: const Color.fromARGB(255, 248, 112, 15))),
+                                    barColors: const [Color.fromARGB(255, 248, 112, 15)])),
                             Gap(size.width * 0.05),
                             Container(
                                 height: size.height * 0.3,
@@ -222,7 +222,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                     barCount: 1,
                                     dataSources: [barData2],
                                     yAxisTitle: 'No of LPNs Received',
-                                    color: const Color.fromARGB(255, 15, 123, 189))),
+                                    barColors: const [Color.fromARGB(255, 15, 123, 189)])),
                           ],
                         ),
                         Gap(size.height * 0.1),

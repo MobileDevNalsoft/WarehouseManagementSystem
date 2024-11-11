@@ -84,64 +84,78 @@ class Customs {
     );
   }
 
-  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title",Color? color}){
-    return SfCartesianChart(
-                    title: ChartTitle(text: title,textStyle: const TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold,
-                      
-                    )),
-                    primaryXAxis: const CategoryAxis(
-                      labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-                      majorGridLines: MajorGridLines(
-                        width: 0,
-                      ),
-                      majorTickLines: MajorTickLines(width: 0),
-                      axisLine: AxisLine(width: 0),
-                    ),
-                    primaryYAxis: NumericAxis(
-                      title: AxisTitle(text: yAxisTitle),
-                
-                    ),
-                    plotAreaBorderWidth: 0,
-                    // tooltipBehavior: TooltipBehavior(
-                    //   enable: true,
-                    //   color: Colors.black,
-                    //   textStyle: const TextStyle(color: Colors.black),
-                    //   textAlignment: ChartAlignment.center,
-                    //   animationDuration: 100,
-                    //   duration: 2000,
-                    //   shadowColor: Colors.black,
-                    //   builder: (data, point, series, pointIndex, seriesIndex) => IntrinsicWidth(
-                    //     child: Container(
-                    //         height: size.height * 0.01,
-                    //         margin: EdgeInsets.only(
-                    //             left: size.width * 0.03, right: size.width * 0.03,),
-                    //         child: Text((data as BarData).abbreviation, style: TextStyle(color: Colors.white),)),
-                    //   ),
-                    // ),
-                    borderWidth: 0,
-                    series: List.generate(barCount, (index) => ColumnSeries<BarData, String>(
-                        dataSource: dataSources![index],
-                        xValueMapper: (BarData data, _) => data.xLabel,
-                        yValueMapper: (BarData data, _) => data.yValue,
-                        borderRadius: BorderRadius.circular(10),
-                        color: color,
-                        dataLabelMapper: (datum, index) => datum.yValue.toString(),
-                        dataLabelSettings: DataLabelSettings(
-                          isVisible: true,
-                          useSeriesColor: true,
-                          builder: (data, point, series, pointIndex, seriesIndex) => Text(
-                            (data as BarData).yValue.toString(),
-                            style: const TextStyle(color: Colors.black, fontSize: 14),
-                          ),
-                        ),
-                        width: 0.6,
-                      ),)
-                    );
+  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title", List<Color> barColors = const [Colors.blue]}) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SfCartesianChart(
+          margin: EdgeInsets.zero,
+            title: ChartTitle(
+                text: title,
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                )),
+            primaryXAxis: CategoryAxis(
+              labelStyle: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.05),
+              majorGridLines: MajorGridLines(
+                width: 0,
+              ),
+              majorTickLines: MajorTickLines(width: 0),
+              axisLine: AxisLine(width: 0),
+            ),
+            primaryYAxis: NumericAxis(
+              title: AxisTitle(text: yAxisTitle, textStyle: TextStyle(fontSize: constraints.maxHeight*0.06)),
+              axisLabelFormatter: (axisLabelRenderArgs) => ChartAxisLabel('', TextStyle()),
+              majorGridLines: const MajorGridLines(
+                width: 0,
+              ),
+              majorTickLines: const MajorTickLines(width: 0),
+              axisLine: const AxisLine(width: 0,),
+        
+            ),
+            plotAreaBorderWidth: 0,
+            // tooltipBehavior: TooltipBehavior(
+            //   enable: true,
+            //   color: Colors.black,
+            //   textStyle: const TextStyle(color: Colors.black),
+            //   textAlignment: ChartAlignment.center,
+            //   animationDuration: 100,
+            //   duration: 2000,
+            //   shadowColor: Colors.black,
+            //   builder: (data, point, series, pointIndex, seriesIndex) => IntrinsicWidth(
+            //     child: Container(
+            //         height: size.height * 0.01,
+            //         margin: EdgeInsets.only(
+            //             left: size.width * 0.03, right: size.width * 0.03,),
+            //         child: Text((data as BarData).abbreviation, style: TextStyle(color: Colors.white),)),
+            //   ),
+            // ),
+            borderWidth: 0,
+            series: List.generate(
+              barCount,
+              (index) => ColumnSeries<BarData, String>(
+                dataSource: dataSources![index],
+                xValueMapper: (BarData data, _) => data.xLabel,
+                yValueMapper: (BarData data, _) => data.yValue,
+                borderRadius: BorderRadius.circular(10),
+                color: barColors[index],
+                dataLabelMapper: (datum, index) => datum.yValue.toString(),
+                dataLabelSettings: DataLabelSettings(
+                  isVisible: true,
+                  useSeriesColor: true,
+                  builder: (data, point, series, pointIndex, seriesIndex) => Text(
+                    (data as BarData).yValue.toString(),
+                    style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.05),
+                  ),
+                ),
+                width: 0.6,
+              ),
+            ));
+      }
+    );
   }
 
-  static Widget WMSPieChart({String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
+  static Widget WMSPieChart(
+      {String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
     return SfCircularChart(
         title: ChartTitle(
             text: title,

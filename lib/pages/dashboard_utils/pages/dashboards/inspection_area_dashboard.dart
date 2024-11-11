@@ -107,6 +107,7 @@ class InspectionAreaDashboard extends StatelessWidget {
                                 child: Customs.WMSCartesianChart(
                                     title: 'Daywise In Bound and Out Bound',
                                     barCount: 2,
+                                    barColors: [Colors.teal, Colors.greenAccent],
                                     dataSources: [inBoundData, outBoundData],
                                     yAxisTitle: 'Number of Vehicles')),
                           ],

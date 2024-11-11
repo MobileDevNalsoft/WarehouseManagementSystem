@@ -33,20 +33,20 @@ class _SidebarState extends State<Sidebar> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Container(
-        width: size.width*0.18,
+        width: size.width*0.2,
         decoration: BoxDecoration(
           color: Color.fromRGBO(99,109,121,1)
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(size.height*0.02),
+            Gap(size.height*0.05),
             Row(
               children: [
-                Gap(size.width*0.03),
-                Image.asset('assets/images/dashboard.png', scale: 1.8,),
+                Gap(size.width*0.02),
+                Image.asset('assets/images/dashboard.png', scale: 1.8, color: Colors.white,),
                 Gap(size.width*0.002),
-                Text("Dashboard's",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black),textAlign: TextAlign.center,),
+                Text("Dashboard's",style: TextStyle(fontSize: size.height*0.03,fontWeight: FontWeight.bold,color: Colors.white),textAlign: TextAlign.center,),
               ],
             ),
             Gap(size.height*0.1),
@@ -59,13 +59,14 @@ class _SidebarState extends State<Sidebar> {
                       child: Container(
                         width: size.width*0.1,
                         height: size.height*0.05,
-                        padding: EdgeInsets.only(left: size.width*0.01),
+                        margin: EdgeInsets.symmetric(vertical: size.height*0.01),
+                        padding: EdgeInsets.only(left: size.width*0.02),
                         alignment: Alignment.centerLeft,
                         decoration: BoxDecoration(
                           color: index == state.index ? Colors.white : Color.fromRGBO(99,109,121,1),
                           borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
                         ),
-                        child: Text(dashboardTitles[index], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                        child: Text(dashboardTitles[index], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: index == state.index ? Colors.black : Colors.white),),
                       ),
                     ),)
                   );
@@ -78,11 +79,3 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 }
-
-// MenuTile(
-//                           isActive: index == state.index,
-//                           title: dashboardTitles[index],
-//                           onPressed: () {
-//                             _dashboardsBloc.add(DashboardChanged(index: index));
-//                           },
-//                         )

@@ -47,28 +47,31 @@ class DockAreaDashboard extends StatelessWidget {
                     children: [
                       Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.4,
-                        width: size.width * 0.25,
+                        height: size.height * 0.5,
+                        width: size.width * 0.3,
                         decoration: BoxDecoration(
-                          color: Colors.black38,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
+                          boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
                         ),
+                        padding: EdgeInsets.all(size.height*0.035),
                         alignment: Alignment.bottomCenter,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Gap(size.height * 0.004),
                             Text(
-                              textAlign: TextAlign.center,
                               'Daywise Utilization',
-                              style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                             ),
-                            Container(
-                                height: size.height * 0.32,
-                                width: size.width * 0.25,
-                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                                child: Customs.WMSCartesianChart(
-                                    yAxisTitle: 'Number of Vehicles', barCount: 2, dataSources: [dockINDayWiseDataSource, dockOUTDayWiseDataSource])),
+                            Row(mainAxisAlignment: MainAxisAlignment.end,children: [CircleAvatar(backgroundColor: Colors.teal,radius: size.height*0.01,), Gap(size.width*0.005), Text("IN"), Gap(size.width*0.005), CircleAvatar(backgroundColor: Colors.greenAccent,radius: size.height*0.01,), Gap(size.width*0.005), Text("OUT"), Gap(size.width*0.022)],),
+                            SizedBox(
+                              height: size.height*0.35,
+                              width: size.width*0.25,
+                              child: Customs.WMSCartesianChart(
+                                title: "",
+                                      yAxisTitle: 'Number of Vehicles', barCount: 2, barColors: [Colors.teal, Colors.greenAccent], dataSources: [dockINDayWiseDataSource, dockOUTDayWiseDataSource]),
+                            )
                           ],
                         ),
                       ),
@@ -166,101 +169,101 @@ class DockAreaDashboard extends StatelessWidget {
                   )
                 ],
               ),
-              Container(
-                margin: EdgeInsets.only(right: aspectRatio * 8, top: aspectRatio * 8, bottom: aspectRatio * 8),
-                height: size.height * 0.93,
-                width: size.width * 0.175,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: size.height * 0.25,
-                      width: size.width * 0.14,
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      padding: EdgeInsets.all(aspectRatio * 8),
-                      decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
-                      child: SfRadialGauge(
-                          title: const GaugeTitle(text: 'Avg Loading Time', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-                          axes: <RadialAxis>[
-                            RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
-                              GaugeRange(
-                                  startValue: 0,
-                                  endValue: 60,
-                                  gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
-                                  startWidth: 20,
-                                  endWidth: 20),
-                            ], pointers: const <GaugePointer>[
-                              NeedlePointer(
-                                value: 30,
-                                enableAnimation: true,
-                              )
-                            ], annotations: const <GaugeAnnotation>[
-                              GaugeAnnotation(
-                                  widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
-                            ])
-                          ]),
-                    ),
-                    Container(
-                      height: size.height * 0.25,
-                      width: size.width * 0.14,
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      padding: EdgeInsets.all(aspectRatio * 8),
-                      decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
-                      child: SfRadialGauge(
-                          title: const GaugeTitle(text: 'Avg Unloading Time', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-                          axes: <RadialAxis>[
-                            RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
-                              GaugeRange(
-                                  startValue: 0,
-                                  endValue: 60,
-                                  gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
-                                  startWidth: 20,
-                                  endWidth: 20),
-                            ], pointers: const <GaugePointer>[
-                              NeedlePointer(
-                                value: 30,
-                                enableAnimation: true,
-                              )
-                            ], annotations: const <GaugeAnnotation>[
-                              GaugeAnnotation(
-                                  widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
-                            ])
-                          ]),
-                    ),
-                    Container(
-                      height: size.height * 0.25,
-                      width: size.width * 0.14,
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      padding: EdgeInsets.all(aspectRatio * 8),
-                      decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
-                      child: SfRadialGauge(
-                          title: const GaugeTitle(text: 'Avg TAT', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-                          axes: <RadialAxis>[
-                            RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
-                              GaugeRange(
-                                  startValue: 0,
-                                  endValue: 60,
-                                  gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
-                                  startWidth: 20,
-                                  endWidth: 20),
-                            ], pointers: const <GaugePointer>[
-                              NeedlePointer(
-                                value: 30,
-                                enableAnimation: true,
-                              )
-                            ], annotations: const <GaugeAnnotation>[
-                              GaugeAnnotation(
-                                  widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
-                            ])
-                          ]),
-                    ),
-                  ],
-                ),
-              )
+              // Container(
+              //   margin: EdgeInsets.only(right: aspectRatio * 8, top: aspectRatio * 8, bottom: aspectRatio * 8),
+              //   height: size.height * 0.93,
+              //   width: size.width * 0.175,
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(20),
+              //   ),
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Container(
+              //         height: size.height * 0.25,
+              //         width: size.width * 0.14,
+              //         margin: EdgeInsets.all(aspectRatio * 8),
+              //         padding: EdgeInsets.all(aspectRatio * 8),
+              //         decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
+              //         child: SfRadialGauge(
+              //             title: const GaugeTitle(text: 'Avg Loading Time', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+              //             axes: <RadialAxis>[
+              //               RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
+              //                 GaugeRange(
+              //                     startValue: 0,
+              //                     endValue: 60,
+              //                     gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
+              //                     startWidth: 20,
+              //                     endWidth: 20),
+              //               ], pointers: const <GaugePointer>[
+              //                 NeedlePointer(
+              //                   value: 30,
+              //                   enableAnimation: true,
+              //                 )
+              //               ], annotations: const <GaugeAnnotation>[
+              //                 GaugeAnnotation(
+              //                     widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
+              //               ])
+              //             ]),
+              //       ),
+              //       Container(
+              //         height: size.height * 0.25,
+              //         width: size.width * 0.14,
+              //         margin: EdgeInsets.all(aspectRatio * 8),
+              //         padding: EdgeInsets.all(aspectRatio * 8),
+              //         decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
+              //         child: SfRadialGauge(
+              //             title: const GaugeTitle(text: 'Avg Unloading Time', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+              //             axes: <RadialAxis>[
+              //               RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
+              //                 GaugeRange(
+              //                     startValue: 0,
+              //                     endValue: 60,
+              //                     gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
+              //                     startWidth: 20,
+              //                     endWidth: 20),
+              //               ], pointers: const <GaugePointer>[
+              //                 NeedlePointer(
+              //                   value: 30,
+              //                   enableAnimation: true,
+              //                 )
+              //               ], annotations: const <GaugeAnnotation>[
+              //                 GaugeAnnotation(
+              //                     widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
+              //               ])
+              //             ]),
+              //       ),
+              //       Container(
+              //         height: size.height * 0.25,
+              //         width: size.width * 0.14,
+              //         margin: EdgeInsets.all(aspectRatio * 8),
+              //         padding: EdgeInsets.all(aspectRatio * 8),
+              //         decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
+              //         child: SfRadialGauge(
+              //             title: const GaugeTitle(text: 'Avg TAT', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+              //             axes: <RadialAxis>[
+              //               RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
+              //                 GaugeRange(
+              //                     startValue: 0,
+              //                     endValue: 60,
+              //                     gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
+              //                     startWidth: 20,
+              //                     endWidth: 20),
+              //               ], pointers: const <GaugePointer>[
+              //                 NeedlePointer(
+              //                   value: 30,
+              //                   enableAnimation: true,
+              //                 )
+              //               ], annotations: const <GaugeAnnotation>[
+              //                 GaugeAnnotation(
+              //                     widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
+              //               ])
+              //             ]),
+              //       ),
+              //     ],
+              //   ),
+              // )
             ],
           ),
         ],

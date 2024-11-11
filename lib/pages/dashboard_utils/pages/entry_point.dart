@@ -48,7 +48,7 @@ class EntryPoint extends StatelessWidget {
                   width: size.width * 0.85,
                   decoration:
                       BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.only(topLeft: Radius.circular(50), bottomLeft: Radius.circular(50))),
-                  padding: EdgeInsets.all(size.height * 0.05),
+                  padding: EdgeInsets.all(size.height * 0.025),
                   child: dashboards[state.index!]);
             }),
           )
