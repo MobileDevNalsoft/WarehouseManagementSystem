@@ -60,36 +60,87 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
                     child: ListView.separated(
                         controller: _controller,
                         itemBuilder: (context, index) => index < state.dockAreaItems!.length
-                                ? Customs.MapInfo(size: size, keys: [
-                              'Dock Type',
-                              'Truck No.',
-                              'PO No.',
-                              'Vendor',
-                              'CheckIn TS',
-                              'Quantity'
-                            ], values: [
-                              isEnabled ? 'Dock Type' : state.dockAreaItems![index].dockType!,
-                              isEnabled ? 'Truck No.' : state.dockAreaItems![index].truckNum!,
-                              isEnabled ? 'PO No.' : state.dockAreaItems![index].poNum!,
-                              isEnabled ? 'Vendor' : state.dockAreaItems![index].vendor!,
-                              isEnabled ? 'CheckIn TS': state.dockAreaItems![index].checkInTS!,
-                              isEnabled ? 'Quantity' : state.dockAreaItems![index].qty!.toString()
-                            ]) : Skeletonizer(
-                              child: Customs.MapInfo(size: size, keys: [
-                                'Dock Type',
-                                'Truck No.',
-                                'PO No.',
-                                'Vendor',
-                                'CheckIn TS',
-                                'Quantity'
-                              ], values: [
-                                'Dock Type',
-                                'Truck No.',
-                                'PO No.',
-                                'Vendor',
-                                'CheckIn TS',
-                                'Quantity'
-                              ]),
+                                ? 
+                            Container(
+                              height: size.height*0.2,
+                            width: size.width*0.15,
+                            decoration: BoxDecoration(color: Colors.blueGrey.shade500, borderRadius: BorderRadius.circular(20)),
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  height: size.height*0.09,
+                                  width: size.width*0.09,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueGrey.shade200,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 5,
+                                    )]
+                                  ),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Transform.translate(offset: Offset(0, size.height*0.004),child: Image.asset('assets/images/qty_cart.png', scale: size.height*0.02,)),
+                                      Text(state.dockAreaItems![index].qty!.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.height*0.019),),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            )
+                            //     Customs.MapInfo(size: size, keys: [
+                            //   // 'Dock Type',
+                            //   'Truck No.',
+                            //   'PO No.',
+                            //   'Vendor',
+                            //   'CheckIn TS',
+                            //   'Quantity'
+                            // ], values: [
+                            //   // isEnabled ? 'Dock Type' : state.dockAreaItems![index].dockType!,
+                            //   isEnabled ? 'Truck No.' : state.dockAreaItems![index].truckNum!,
+                            //   isEnabled ? 'PO No.' : state.dockAreaItems![index].poNum!,
+                            //   isEnabled ? 'Vendor' : state.dockAreaItems![index].vendor!,
+                            //   isEnabled ? 'CheckIn TS': state.dockAreaItems![index].checkInTS!,
+                            //   isEnabled ? 'Quantity' : state.dockAreaItems![index].qty!.toString()
+                            // ]) 
+                            : 
+                            Skeletonizer(
+                              child: SizedBox(
+                              height: size.height*0.1,
+                              width: size.width*0.15,
+                              child: Card(
+                                child: Row(
+                                  children: [
+                                    Spacer(),
+                                    CircleAvatar(
+                                      backgroundColor: Colors.black,
+                                      child: Column(
+                                        children: [
+                                          Text("10", style: TextStyle(color: Colors.white),),
+                                          Image.asset('assets/images/qty_cart.png', color: Colors.white,)
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ),
+                            )
+                              // Customs.MapInfo(size: size, keys: [
+                              //   // 'Dock Type',
+                              //   'Truck No.',
+                              //   'PO No.',
+                              //   'Vendor',
+                              //   'CheckIn TS',
+                              //   'Quantity'
+                              // ], values: [
+                              //   // 'Dock Type',
+                              //   'Truck No.',
+                              //   'PO No.',
+                              //   'Vendor',
+                              //   'CheckIn TS',
+                              //   'Quantity'
+                              // ]),
                             ),
                         separatorBuilder: (context, index) => Gap(size.height * 0.025),
                         itemCount: isEnabled ? 8 : state.dockAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.dockAreaItems!.length + 1 : state.dockAreaItems!.length),
