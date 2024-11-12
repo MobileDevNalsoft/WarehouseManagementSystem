@@ -86,8 +86,9 @@ class Customs {
 
   static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title",Color? color}){
     return SfCartesianChart(
+                   
                     title: ChartTitle(text: title,textStyle: const TextStyle(
-                      decoration: TextDecoration.underline,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       
                     )),
@@ -122,11 +123,14 @@ class Customs {
                     // ),
                     borderWidth: 0,
                     series: List.generate(barCount, (index) => ColumnSeries<BarData, String>(
+                         
                         dataSource: dataSources![index],
                         xValueMapper: (BarData data, _) => data.xLabel,
                         yValueMapper: (BarData data, _) => data.yValue,
                         borderRadius: BorderRadius.circular(10),
+
                         color: color,
+                      
                         dataLabelMapper: (datum, index) => datum.yValue.toString(),
                         dataLabelSettings: DataLabelSettings(
                           isVisible: true,
@@ -136,7 +140,8 @@ class Customs {
                             style: const TextStyle(color: Colors.black, fontSize: 14),
                           ),
                         ),
-                        width: 0.6,
+                        width: 0.2,
+                  
                       ),)
                     );
   }
@@ -146,8 +151,9 @@ class Customs {
         title: ChartTitle(
             text: title,
             textStyle: const TextStyle(
+              fontSize: 18,
               fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
+            
             )),
         tooltipBehavior: TooltipBehavior(
           enable: true,

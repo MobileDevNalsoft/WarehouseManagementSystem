@@ -58,17 +58,39 @@ class ReceivingAreaDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<ChartData> chartData = [
       ChartData('David', 69, Color.fromRGBO(9, 0, 136, 1)),
-      ChartData('sd',31, Colors.transparent),
+      ChartData('sd', 31, Colors.transparent),
     ];
     final List<ChartData> chartData1 = [
       ChartData('David', 81, Color.fromRGBO(91, 9, 9, 1)),
-      ChartData('sd',19, Colors.transparent),
+      ChartData('sd', 19, Colors.transparent),
     ];
 
     Size size = MediaQuery.of(context).size;
-    return Column(
+
+
+   return  LayoutBuilder(
+      builder: (context, constraints) {
+        bool isWideScreen = constraints.maxWidth > 1200;
+        bool isMediumScreen = constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
+        double horizontalPadding = isWideScreen
+            ? AppDefaults.padding * 2
+            : isMediumScreen
+                ? AppDefaults.padding * 1.5
+                : AppDefaults.padding;
+        double containerWidth = isWideScreen
+            ? constraints.maxWidth * 0.6
+            : isMediumScreen
+                ? constraints.maxWidth * 0.45
+                : constraints.maxWidth * 0.9;
+        double containerHeight = isWideScreen || isMediumScreen
+            ? constraints.maxHeight *1
+            : constraints.maxHeight * 1;
+
+
+
+             return Column(
       children: [
-        Gap(size.height * 0.03),
+        Gap(constraints.maxHeight * 0.03),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -78,37 +100,32 @@ class ReceivingAreaDashboard extends StatelessWidget {
             )
           ],
         ),
-        Gap(size.height * 0.03),
+        Gap(constraints.maxHeight * 0.03),
         Expanded(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1360),
-            child: ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppDefaults.padding * 1.5,
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(AppDefaults.padding),
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(95, 154, 152, 152),
-                      borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
-                    ),
-                    child: Column(
+          child: ListView(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(AppDefaults.padding),
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(95, 154, 152, 152),
+                  borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Row(
-                          children: [
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.4,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: Column(
-                                  children: [
-                                    Customs.WMSPieChart(
+                     
+                        Container(
+                            height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: Column(
+                              children: [
+                                Customs.WMSPieChart(
                                     title: "Total Inbound Summary",
                                     dataSource: [PieData("Open", 16, "16"), PieData("In Receiving", 4, "4"), PieData("Received", 5, "5")],
                                     pointColorMapper: (datum, index) {
@@ -120,287 +137,281 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                         return const Color.fromARGB(255, 52, 129, 228);
                                       }
                                     }),
-                                    Text("Inbound orders status wise ")
-                                  ],
-                                )),
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: Customs.WMSPieChart(
-                                    title: "Total ASN Status",
-                                    dataSource: [
-                                      PieData("In-Transit", 8, "8"),
-                                      PieData("In Receiving", 4, "4"),
-                                      PieData("Received", 3, "3"),
-                                      PieData("Cancelled", 1, "1")
-                                    ],
-                                    pointColorMapper: (datum, index) {
-                                      if (datum.text == '8') {
-                                        return const Color.fromARGB(255, 27, 219, 219);
-                                      } else if (datum.text == '4') {
-                                        return const Color.fromARGB(255, 57, 33, 0);
-                                      } else if (datum.text == '3') {
-                                        return const Color.fromARGB(255, 38, 82, 113);
-                                      } else {
-                                        return const Color.fromARGB(255, 241, 114, 41);
-                                      }
-                                    })),
-                            // Container(
-                            //     height: size.height * 0.3,
-                            //     width: size.width * 0.2,
-                            //     decoration: BoxDecoration(
-                            //         border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                            //         borderRadius: BorderRadius.circular(10),
-                            //         color: Colors.white),
-                            //     child: Customs.WMSCartesianChart(
-                            //         title: 'Daywise In Bound and Out Bound',
-                            //         barCount: 2,
-                            //         dataSources: [inBoundData, outBoundData],
-                            //         yAxisTitle: 'Number of Vehicles')),
+                                Text("Inbound orders status wise ")
+                              ],
+                            )),
+                       
+                        Container(
+                           height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: Customs.WMSPieChart(
+                                title: "Total ASN Status",
+                                dataSource: [
+                                  PieData("In-Transit", 8, "8"),
+                                  PieData("In Receiving", 4, "4"),
+                                  PieData("Received", 3, "3"),
+                                  PieData("Cancelled", 1, "1")
+                                ],
+                                pointColorMapper: (datum, index) {
+                                  if (datum.text == '8') {
+                                    return const Color.fromARGB(255, 27, 219, 219);
+                                  } else if (datum.text == '4') {
+                                    return const Color.fromARGB(255, 57, 33, 0);
+                                  } else if (datum.text == '3') {
+                                    return const Color.fromARGB(255, 38, 82, 113);
+                                  } else {
+                                    return const Color.fromARGB(255, 241, 114, 41);
+                                  }
+                                })),
+                       
+                        
+                        
+                      ],
+                    ),
+                    Gap(constraints.maxHeight * 0.05),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        
+                          Container(
+                            height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: _getRadialGauge()),
 
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: _getRadialGauge()),
-                          ],
-                        ),
-                        Gap(size.height * 0.1),
-                        Row(
-                          children: [
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: Customs.WMSCartesianChart(
-                                    title: 'Day Wise Inbound Summary  ',
-                                    barCount: 1,
-                                    dataSources: [barData],
-                                    yAxisTitle: 'No of ASNs Received',
-                                    color: const Color.fromARGB(255, 248, 190, 15))),
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: Customs.WMSCartesianChart(
-                                    title: 'Supplier Wise Inbound Summary  ',
-                                    barCount: 1,
-                                    dataSources: [barData1],
-                                    yAxisTitle: 'No of ASNs Received',
-                                    color: const Color.fromARGB(255, 248, 112, 15))),
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: Customs.WMSCartesianChart(
-                                    title: 'User Receiving Efficiency  ',
-                                    barCount: 1,
-                                    dataSources: [barData2],
-                                    yAxisTitle: 'No of LPNs Received',
-                                    color: const Color.fromARGB(255, 15, 123, 189))),
-                          ],
-                        ),
-                        Gap(size.height * 0.1),
-                        Row(
-                          children: [
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: SfCircularChart(
-                                  title: ChartTitle(text: "Avg Receiving Time",textStyle: TextStyle(
+
+                        Container(
+                           height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: Customs.WMSCartesianChart(
+                                title: 'Day Wise Inbound Summary  ',
+                                barCount: 1,
+                                dataSources: [barData],
+                                yAxisTitle: 'No of ASNs Received',
+                                color: const Color.fromARGB(255, 248, 190, 15))),
+                        
+                        
+                      ],
+                    ),
+                     Gap(constraints.maxHeight * 0.05),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                           height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: Customs.WMSCartesianChart(
+                                title: 'Supplier Wise Inbound Summary  ',
+                                barCount: 1,
+                                dataSources: [barData1],
+                                yAxisTitle: 'No of ASNs Received',
+                                color: const Color.fromARGB(255, 248, 112, 15))),
+                        
+                        Container(
+                            height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: Customs.WMSCartesianChart(
+                                title: 'User Receiving Efficiency  ',
+                                barCount: 1,
+                                dataSources: [barData2],
+                                yAxisTitle: 'No of LPNs Received',
+                                color: const Color.fromARGB(255, 15, 123, 189)))
+                      ],
+                    ),
+                     Gap(constraints.maxHeight * 0.05),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        
+                        Container(
+                            height: constraints.maxHeight * 0.3,
+                            width: constraints.maxWidth * 0.2,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: SfCircularChart(
+                              title: ChartTitle(
+                                  text: "Avg Receiving Time",
+                                  textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   )),
-                                  annotations: <CircularChartAnnotation>[
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        width: 100, // Set the size of the shadowed circle
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: const Color.fromARGB(255, 232, 229, 229),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 10,
-                                              offset: Offset(0, 4), // Adjust to set shadow direction
-                                            ),
-                                          ],
+                              annotations: <CircularChartAnnotation>[
+                                CircularChartAnnotation(
+                                  widget: Container(
+                                    width: 100, // Set the size of the shadowed circle
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: const Color.fromARGB(255, 232, 229, 229),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          blurRadius: 10,
+                                          offset: Offset(0, 4), // Adjust to set shadow direction
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                CircularChartAnnotation(
+                                  widget: Container(
+                                    child: const Text(
+                                      '05h:32m',
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 101, 10, 10),
+                                        fontSize: 25,
                                       ),
                                     ),
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        child: const Text(
-                                          '05h:32m',
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 101, 10, 10),
-                                            fontSize: 25,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  series: <CircularSeries>[
-                                    DoughnutSeries<ChartData, String>(
-                                      dataSource: chartData,
-                                      xValueMapper: (ChartData data, _) => data.x,
-                                      yValueMapper: (ChartData data, _) => data.y,
-                                      radius: '60%', // Adjust the radius as needed
-                                      innerRadius: '40%', // Optional: adjust for a thinner ring
-                                      pointColorMapper: (ChartData data, _) => data.color,
-                                    )
-                                  ],
-                                )),
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: Stack(
-                                  children: [
-                                    SfRadialGauge(
-                                      title: GaugeTitle(text: "Receiving Efficiency",textStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
-            )),
+                                  ),
+                                ),
+                              ],
+                              series: <CircularSeries>[
+                                DoughnutSeries<ChartData, String>(
+                                  dataSource: chartData,
+                                  xValueMapper: (ChartData data, _) => data.x,
+                                  yValueMapper: (ChartData data, _) => data.y,
+                                  radius: '60%', // Adjust the radius as needed
+                                  innerRadius: '40%', // Optional: adjust for a thinner ring
+                                  pointColorMapper: (ChartData data, _) => data.color,
+                                )
+                              ],
+                            )),
+                      
+                        Container(
+                            height: constraints.maxHeight * 0.3,
+                            width: constraints.maxWidth * 0.2,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: Stack(
+                              children: [
+                                SfRadialGauge(
+                                  title: GaugeTitle(
+                                      text: "Receiving Efficiency",
+                                      textStyle: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.underline,
+                                      )),
                                   enableLoadingAnimation: true,
                                   animationDuration: 2000,
                                   axes: <RadialAxis>[
-
-                                  
                                     RadialAxis(
-                                      centerX: 0.5,
-                                      centerY: 0.6,
-                                      
-
-                                      startAngle: 180,
-                                      endAngle: 0,
-                                       labelsPosition: ElementsPosition.outside, 
-                                      showLabels: true,
-                                      showAxisLine: false,
-                                      showTicks: false,
-                                      showLastLabel: true,
-                                      
-                                      
-                                      minimum: 0, maximum: 100, ranges: <GaugeRange>[
-            GaugeRange(
-                startValue: 0,
-                endValue: 50,
-                color: const Color.fromARGB(255, 121, 43, 181),
-                startWidth: 50,
-                endWidth: 50),
-                GaugeRange(
-                startValue: 50,
-                endValue: 100,
-                color: const Color.fromARGB(255, 189, 200, 210),
-                startWidth: 50,
-                endWidth: 50),
-                                    ])
+                                        centerX: 0.5,
+                                        centerY: 0.6,
+                                        startAngle: 180,
+                                        endAngle: 0,
+                                        labelsPosition: ElementsPosition.outside,
+                                        showLabels: true,
+                                        showAxisLine: false,
+                                        showTicks: false,
+                                        showLastLabel: true,
+                                        minimum: 0,
+                                        maximum: 100,
+                                        ranges: <GaugeRange>[
+                                          GaugeRange(
+                                              startValue: 0, endValue: 50, color: const Color.fromARGB(255, 121, 43, 181), startWidth: 50, endWidth: 50),
+                                          GaugeRange(
+                                              startValue: 50, endValue: 100, color: const Color.fromARGB(255, 189, 200, 210), startWidth: 50, endWidth: 50),
+                                        ])
                                   ],
                                 ),
-
                                 Positioned(
-                                 
                                   bottom: 100,
                                   right: 150,
                                   child: Text("50%"),
                                 )
-                                  ],
-                                )),
-                            Gap(size.width * 0.05),
-                            Container(
-                                height: size.height * 0.3,
-                                width: size.width * 0.2,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white),
-                                child: SfCircularChart(
-                                  title: ChartTitle(text: "Avg PutAway Time",textStyle: TextStyle(
+                              ],
+                            )),
+                     
+                        Container(
+                            height: constraints.maxHeight * 0.3,
+                            width: constraints.maxWidth * 0.2,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white),
+                            child: SfCircularChart(
+                              title: ChartTitle(
+                                  text: "Avg PutAway Time",
+                                  textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   )),
-                                  annotations: <CircularChartAnnotation>[
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        width: 100, // Set the size of the shadowed circle
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: const Color.fromARGB(255, 232, 229, 229),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 10,
-                                              offset: Offset(0, 4), // Adjust to set shadow direction
-                                            ),
-                                          ],
+                              annotations: <CircularChartAnnotation>[
+                                CircularChartAnnotation(
+                                  widget: Container(
+                                    width: 100, // Set the size of the shadowed circle
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: const Color.fromARGB(255, 232, 229, 229),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          blurRadius: 10,
+                                          offset: Offset(0, 4), // Adjust to set shadow direction
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                CircularChartAnnotation(
+                                  widget: Container(
+                                    child: const Text(
+                                      '03h:15m',
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 20, 21, 22),
+                                        fontSize: 25,
                                       ),
                                     ),
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        child: const Text(
-                                          '03h:15m',
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 20, 21, 22),
-                                            fontSize: 25,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  series: <CircularSeries>[
-                                    DoughnutSeries<ChartData, String>(
-                                      dataSource: chartData1,
-                                      xValueMapper: (ChartData data, _) => data.x,
-                                      yValueMapper: (ChartData data, _) => data.y,
-                                      radius: '60%', // Adjust the radius as needed
-                                      innerRadius: '40%', // Optional: adjust for a thinner ring
-                                      pointColorMapper: (ChartData data, _) => data.color,
-                                    )
-                                  ],
-                                )),
-                          ],
-                        ),
+                                  ),
+                                ),
+                              ],
+                              series: <CircularSeries>[
+                                DoughnutSeries<ChartData, String>(
+                                  dataSource: chartData1,
+                                  xValueMapper: (ChartData data, _) => data.x,
+                                  yValueMapper: (ChartData data, _) => data.y,
+                                  radius: '60%', // Adjust the radius as needed
+                                  innerRadius: '40%', // Optional: adjust for a thinner ring
+                                  pointColorMapper: (ChartData data, _) => data.color,
+                                )
+                              ],
+                            )),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
     );
+      }
+   );
+
+   
   }
 
   Widget _getRadialGauge() {
