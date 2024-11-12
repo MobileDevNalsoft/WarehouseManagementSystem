@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
@@ -28,246 +29,314 @@ class DockAreaDashboard extends StatelessWidget {
     BarData(xLabel: 'Sun', yValue: 9, abbreviation: 'Sunday')
   ];
 
-  List<PieData> dockINDataSource = [PieData("Utilized Docks", 3), PieData("Avalable Docks", 6)];
+  final List<TimeData> chartData1 = [
+    TimeData('David', 81, const Color.fromRGBO(183, 200, 224, 1)),
+    TimeData('sd', 19, Colors.transparent),
+  ];
+
+  List<PieDataM> dockINDataSource = [PieDataM(xData: "Utilized Docks",yData:  3, color: const Color.fromARGB(255, 181, 166, 221)), PieDataM(xData: "Avalable Docks",yData:  6, color: const Color.fromARGB(255, 238, 236, 135))];
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double aspectRatio = size.width / size.height;
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.5,
-                        width: size.width * 0.3,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
-                        ),
-                        padding: EdgeInsets.all(size.height*0.035),
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Daywise Utilization',
-                              style: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                            ),
-                            Row(mainAxisAlignment: MainAxisAlignment.end,children: [CircleAvatar(backgroundColor: Colors.teal,radius: size.height*0.01,), Gap(size.width*0.005), Text("IN"), Gap(size.width*0.005), CircleAvatar(backgroundColor: Colors.greenAccent,radius: size.height*0.01,), Gap(size.width*0.005), Text("OUT"), Gap(size.width*0.022)],),
-                            SizedBox(
-                              height: size.height*0.35,
-                              width: size.width*0.25,
-                              child: Customs.WMSCartesianChart(
-                                title: "",
-                                      yAxisTitle: 'Number of Vehicles', barCount: 2, barColors: [Colors.teal, Colors.greenAccent], dataSources: [dockINDayWiseDataSource, dockOUTDayWiseDataSource]),
-                            )
-                          ],
-                        ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(aspectRatio * 8),
+                      height: size.height * 0.45,
+                      width: size.width * 0.3,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]
                       ),
-                      Container(
-                        height: size.height * 0.4,
-                        width: size.width * 0.36,
-                        decoration: BoxDecoration(
-                          color: Colors.black38,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        alignment: Alignment.bottomCenter,
-                        child: LayoutBuilder(builder: (context, constraints) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Gap(size.height * 0.004),
-                              Text(
-                                textAlign: TextAlign.center,
-                                "Today's Utilization",
-                                style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                height: constraints.maxHeight * 0.8,
-                                width: constraints.maxWidth,
-                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(aspectRatio * 4),
-                                      child: Customs.WMSPieChart(
-                                          title: "IN",
-                                          dataSource: dockINDataSource,
-                                          pointColorMapper: (datum, index) {
-                                            if (index == 1) {
-                                              return const Color.fromARGB(255, 159, 238, 161);
-                                            } else {
-                                              return const Color.fromARGB(255, 182, 62, 53);
-                                            }
-                                          }),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(aspectRatio * 4),
-                                      child: Customs.WMSPieChart(
-                                          title: "OUT",
-                                          dataSource: dockINDataSource,
-                                          pointColorMapper: (datum, index) {
-                                            if (index == 1) {
-                                              return const Color.fromARGB(255, 159, 238, 161);
-                                            } else {
-                                              return const Color.fromARGB(255, 182, 62, 53);
-                                            }
-                                          }),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: size.height * 0.5,
-                    width: size.width * 0.62,
-                    margin: EdgeInsets.all(aspectRatio * 8),
-                    decoration: BoxDecoration(
-                      color: Colors.black38,
-                      borderRadius: BorderRadius.circular(20),
+                      padding: EdgeInsets.all(size.height*0.035),
+                      alignment: Alignment.bottomCenter,
+                      child: Customs.WMSCartesianChart(
+                        title: "Daywise Utilization",
+                              yAxisTitle: 'Number of Vehicles', barCount: 2, barColors: [Colors.teal, Colors.greenAccent], dataSources: [dockINDayWiseDataSource, dockOUTDayWiseDataSource]),
                     ),
-                    alignment: Alignment.bottomCenter,
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Gap(size.height * 0.004),
-                          Text(
-                            textAlign: TextAlign.center,
-                            'Appointments',
-                            style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                          ),
-                          Container(
-                            height: constraints.maxHeight * 0.8,
-                            width: constraints.maxWidth,
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                            child: SfCalendar(
-                              view: CalendarView.month,
-                              headerHeight: 0,
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  )
-                ],
-              ),
-              // Container(
-              //   margin: EdgeInsets.only(right: aspectRatio * 8, top: aspectRatio * 8, bottom: aspectRatio * 8),
-              //   height: size.height * 0.93,
-              //   width: size.width * 0.175,
-              //   decoration: BoxDecoration(
-              //     color: Colors.white,
-              //     borderRadius: BorderRadius.circular(20),
-              //   ),
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Container(
-              //         height: size.height * 0.25,
-              //         width: size.width * 0.14,
-              //         margin: EdgeInsets.all(aspectRatio * 8),
-              //         padding: EdgeInsets.all(aspectRatio * 8),
-              //         decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
-              //         child: SfRadialGauge(
-              //             title: const GaugeTitle(text: 'Avg Loading Time', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-              //             axes: <RadialAxis>[
-              //               RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
-              //                 GaugeRange(
-              //                     startValue: 0,
-              //                     endValue: 60,
-              //                     gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
-              //                     startWidth: 20,
-              //                     endWidth: 20),
-              //               ], pointers: const <GaugePointer>[
-              //                 NeedlePointer(
-              //                   value: 30,
-              //                   enableAnimation: true,
-              //                 )
-              //               ], annotations: const <GaugeAnnotation>[
-              //                 GaugeAnnotation(
-              //                     widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
-              //               ])
-              //             ]),
-              //       ),
-              //       Container(
-              //         height: size.height * 0.25,
-              //         width: size.width * 0.14,
-              //         margin: EdgeInsets.all(aspectRatio * 8),
-              //         padding: EdgeInsets.all(aspectRatio * 8),
-              //         decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
-              //         child: SfRadialGauge(
-              //             title: const GaugeTitle(text: 'Avg Unloading Time', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-              //             axes: <RadialAxis>[
-              //               RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
-              //                 GaugeRange(
-              //                     startValue: 0,
-              //                     endValue: 60,
-              //                     gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
-              //                     startWidth: 20,
-              //                     endWidth: 20),
-              //               ], pointers: const <GaugePointer>[
-              //                 NeedlePointer(
-              //                   value: 30,
-              //                   enableAnimation: true,
-              //                 )
-              //               ], annotations: const <GaugeAnnotation>[
-              //                 GaugeAnnotation(
-              //                     widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
-              //               ])
-              //             ]),
-              //       ),
-              //       Container(
-              //         height: size.height * 0.25,
-              //         width: size.width * 0.14,
-              //         margin: EdgeInsets.all(aspectRatio * 8),
-              //         padding: EdgeInsets.all(aspectRatio * 8),
-              //         decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
-              //         child: SfRadialGauge(
-              //             title: const GaugeTitle(text: 'Avg TAT', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
-              //             axes: <RadialAxis>[
-              //               RadialAxis(minimum: 0, maximum: 60, ranges: <GaugeRange>[
-              //                 GaugeRange(
-              //                     startValue: 0,
-              //                     endValue: 60,
-              //                     gradient: const SweepGradient(colors: [Colors.green, Colors.red], stops: [0.6, 1]),
-              //                     startWidth: 20,
-              //                     endWidth: 20),
-              //               ], pointers: const <GaugePointer>[
-              //                 NeedlePointer(
-              //                   value: 30,
-              //                   enableAnimation: true,
-              //                 )
-              //               ], annotations: const <GaugeAnnotation>[
-              //                 GaugeAnnotation(
-              //                     widget: Text('30 mins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), angle: 90, positionFactor: 0.8, verticalAlignment: GaugeAlignment.near,)
-              //               ])
-              //             ]),
-              //       ),
-              //     ],
-              //   ),
-              // )
-            ],
+                    Container(
+                    margin: EdgeInsets.all(aspectRatio * 8),
+                    height: size.height * 0.45,
+                    width: size.width * 0.3,
+                    decoration: BoxDecoration(
+                        color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                    padding: EdgeInsets.all(size.height * 0.035),
+                    alignment: Alignment.topCenter,
+                    child: SfCircularChart(
+                      title: ChartTitle(
+                        text: 'Dock-IN Utilization',
+                        alignment: ChartAlignment.near,
+                        textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                      ),
+                      legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                      series: <CircularSeries>[
+                        // Renders radial bar chart
+                          
+                        DoughnutSeries<PieDataM, String>(
+                          dataSource: dockINDataSource,
+                          dataLabelSettings: const DataLabelSettings(
+                              // Renders the data label
+                              isVisible: true,
+                              textStyle: TextStyle(fontWeight: FontWeight.bold),
+                              alignment: ChartAlignment.near),
+                          pointColorMapper: (datum, index) {
+                            return dockINDataSource[index].color;
+                          },
+                          xValueMapper: (PieDataM data, _) => data.xData,
+                          yValueMapper: (PieDataM data, _) => data.yData,
+                        )
+                      ],
+                    ),
+                  ),
+                  
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                    margin: EdgeInsets.all(aspectRatio * 8),
+                    height: size.height * 0.45,
+                    width: size.width * 0.3,
+                    decoration: BoxDecoration(
+                        color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                    padding: EdgeInsets.all(size.height * 0.035),
+                    alignment: Alignment.topCenter,
+                    child: SfCircularChart(
+                      title: ChartTitle(
+                        text: 'Dock-OUT Utilization',
+                        alignment: ChartAlignment.near,
+                        textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                      ),
+                      legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                      series: <CircularSeries>[
+                        // Renders radial bar chart
+                          
+                        DoughnutSeries<PieDataM, String>(
+                          dataSource: dockINDataSource,
+                          dataLabelSettings: const DataLabelSettings(
+                              // Renders the data label
+                              isVisible: true,
+                              textStyle: TextStyle(fontWeight: FontWeight.bold),
+                              alignment: ChartAlignment.near),
+                          pointColorMapper: (datum, index) {
+                            return dockINDataSource[index].color;
+                          },
+                          xValueMapper: (PieDataM data, _) => data.xData,
+                          yValueMapper: (PieDataM data, _) => data.yData,
+                        )
+                      ],
+                    ),
+                  ),
+                    Container(
+                              margin: EdgeInsets.all(aspectRatio * 8),
+                              height: size.height * 0.45,
+                              width: size.width * 0.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              padding: EdgeInsets.all(size.height * 0.035),
+                              alignment: Alignment.topCenter,
+                              child: SfCircularChart(
+                                title: ChartTitle(
+                                    text: "Avg Loading Time",
+                                    alignment: ChartAlignment.near,
+                                    textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                                annotations: <CircularChartAnnotation>[
+                                  CircularChartAnnotation(
+                                    verticalAlignment: ChartAlignment.center,
+                                    widget: Container(
+                                      height: size.height * 0.12,
+                                            alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blueGrey.shade100,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade900,
+                                            blurRadius: 10, // Adjust to set shadow direction
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        '03h:15m',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.02,
+                                        ),
+                                      )
+                                    ),
+                                  ),
+                                ],
+                                series: <CircularSeries>[
+                                  DoughnutSeries<TimeData, String>(
+                                    dataSource: chartData1,
+                                    xValueMapper: (TimeData data, _) => data.x,
+                                    yValueMapper: (TimeData data, _) => data.y,
+                                    radius: '60%', // Adjust the radius as needed
+                                    innerRadius: '40%', // Optional: adjust for a thinner ring
+                                    pointColorMapper: (TimeData data, _) => data.color,
+                                  )
+                                ],
+                              )),
+                    
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                              margin: EdgeInsets.all(aspectRatio * 8),
+                              height: size.height * 0.45,
+                              width: size.width * 0.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              padding: EdgeInsets.all(size.height * 0.035),
+                              alignment: Alignment.topCenter,
+                              child: SfCircularChart(
+                                title: ChartTitle(
+                                    text: "Avg Unloading Time",
+                                    alignment: ChartAlignment.near,
+                                    textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                                annotations: <CircularChartAnnotation>[
+                                  CircularChartAnnotation(
+                                    verticalAlignment: ChartAlignment.center,
+                                    widget: Container(
+                                      height: size.height * 0.12,
+                                            alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blueGrey.shade100,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade900,
+                                            blurRadius: 10, // Adjust to set shadow direction
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        '03h:15m',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.02,
+                                        ),
+                                      )
+                                    ),
+                                  ),
+                                ],
+                                series: <CircularSeries>[
+                                  DoughnutSeries<TimeData, String>(
+                                    dataSource: chartData1,
+                                    xValueMapper: (TimeData data, _) => data.x,
+                                    yValueMapper: (TimeData data, _) => data.y,
+                                    radius: '60%', // Adjust the radius as needed
+                                    innerRadius: '40%', // Optional: adjust for a thinner ring
+                                    pointColorMapper: (TimeData data, _) => data.color,
+                                  )
+                                ],
+                              )),
+                  Container(
+                              margin: EdgeInsets.all(aspectRatio * 8),
+                              height: size.height * 0.45,
+                              width: size.width * 0.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              padding: EdgeInsets.all(size.height * 0.035),
+                              alignment: Alignment.topCenter,
+                              child: SfCircularChart(
+                                title: ChartTitle(
+                                    text: "Avg Dock TAT",
+                                    alignment: ChartAlignment.near,
+                                    textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                                annotations: <CircularChartAnnotation>[
+                                  CircularChartAnnotation(
+                                    verticalAlignment: ChartAlignment.center,
+                                    widget: Container(
+                                      height: size.height * 0.12,
+                                            alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blueGrey.shade100,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade900,
+                                            blurRadius: 10, // Adjust to set shadow direction
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        '03h:15m',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.02,
+                                        ),
+                                      )
+                                    ),
+                                  ),
+                                ],
+                                series: <CircularSeries>[
+                                  DoughnutSeries<TimeData, String>(
+                                    dataSource: chartData1,
+                                    xValueMapper: (TimeData data, _) => data.x,
+                                    yValueMapper: (TimeData data, _) => data.y,
+                                    radius: '60%', // Adjust the radius as needed
+                                    innerRadius: '40%', // Optional: adjust for a thinner ring
+                                    pointColorMapper: (TimeData data, _) => data.color,
+                                  )
+                                ],
+                              )),
+                  ],
+                )
+                // Container(
+                //   height: size.height * 0.5,
+                //   width: size.width * 0.62,
+                //   margin: EdgeInsets.all(aspectRatio * 8),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //         borderRadius: BorderRadius.circular(20),
+                //         boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]
+                //   ),
+                //   alignment: Alignment.bottomCenter,
+                //   child: LayoutBuilder(builder: (context, constraints) {
+                //     return Column(
+                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         Gap(size.height * 0.004),
+                //         Text(
+                //           textAlign: TextAlign.center,
+                //           'Appointments',
+                //           style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
+                //         ),
+                //         SfCalendar(
+                //             view: CalendarView.month,
+                //           )
+                //       ],
+                //     );
+                //   }),
+                // ),
+              ],
+            )
           ),
-        ],
-      )
+        ),
+        Container(
+          width: size.width*0.19,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 163, 172, 177),
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+             boxShadow: [BoxShadow(color: Colors.grey.shade600, offset: Offset(-1,0), blurRadius: 5, spreadRadius: 0)]
+          ),
+          padding: EdgeInsets.all(size.height*0.02),
+          child: ListView.builder(itemBuilder: (context, index) => Column(),),
+        )
+      ],
     );
   }
 }

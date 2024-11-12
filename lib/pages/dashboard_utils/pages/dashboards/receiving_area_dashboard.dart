@@ -114,7 +114,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                   children: [
                                     Customs.WMSPieChart(
                                     title: "Total Inbound Summary",
-                                    dataSource: [PieData("Open", 16, "16"), PieData("In Receiving", 4, "4"), PieData("Received", 5, "5")],
+                                    dataSource: [PieDataM(xData: "Open",yData:  16,text: "16"), PieDataM(xData: "In Receiving",yData:  4,text:  "4"), PieDataM(xData: "Received",yData:  5,text:  "5")],
                                     pointColorMapper: (datum, index) {
                                       if (datum.text == '16') {
                                         return const Color.fromARGB(255, 219, 165, 27);
@@ -138,10 +138,10 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                 child: Customs.WMSPieChart(
                                     title: "Total ASN Status",
                                     dataSource: [
-                                      PieData("In-Transit", 8, "8"),
-                                      PieData("In Receiving", 4, "4"),
-                                      PieData("Received", 3, "3"),
-                                      PieData("Cancelled", 1, "1")
+                                      PieDataM(xData: "In-Transit",yData:  8,text:  "8"),
+                                      PieDataM(xData: "In Receiving",yData:  4,text:  "4"),
+                                      PieDataM(xData: "Received",yData:  3,text:  "3"),
+                                      PieDataM(xData: "Cancelled",yData:  1,text:  "1")
                                     ],
                                     pointColorMapper: (datum, index) {
                                       if (datum.text == '8') {
