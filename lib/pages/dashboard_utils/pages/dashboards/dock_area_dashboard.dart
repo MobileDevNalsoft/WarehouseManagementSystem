@@ -34,7 +34,7 @@ class DockAreaDashboard extends StatelessWidget {
     TimeData('sd', 19, Colors.transparent),
   ];
 
-  List<PieDataM> dockINDataSource = [PieDataM(xData: "Utilized Docks",yData:  3, color: const Color.fromARGB(255, 181, 166, 221)), PieDataM(xData: "Avalable Docks",yData:  6, color: const Color.fromARGB(255, 238, 236, 135))];
+  List<PieData> dockINDataSource = [PieData(xData: "Utilized Docks",yData:  3, color: const Color.fromARGB(255, 181, 166, 221)), PieData(xData: "Avalable Docks",yData:  6, color: const Color.fromARGB(255, 238, 236, 135))];
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class DockAreaDashboard extends StatelessWidget {
                       series: <CircularSeries>[
                         // Renders radial bar chart
                           
-                        DoughnutSeries<PieDataM, String>(
+                        DoughnutSeries<PieData, String>(
                           dataSource: dockINDataSource,
                           dataLabelSettings: const DataLabelSettings(
                               // Renders the data label
@@ -93,8 +93,8 @@ class DockAreaDashboard extends StatelessWidget {
                           pointColorMapper: (datum, index) {
                             return dockINDataSource[index].color;
                           },
-                          xValueMapper: (PieDataM data, _) => data.xData,
-                          yValueMapper: (PieDataM data, _) => data.yData,
+                          xValueMapper: (PieData data, _) => data.xData,
+                          yValueMapper: (PieData data, _) => data.yData,
                         )
                       ],
                     ),
@@ -122,7 +122,7 @@ class DockAreaDashboard extends StatelessWidget {
                       series: <CircularSeries>[
                         // Renders radial bar chart
                           
-                        DoughnutSeries<PieDataM, String>(
+                        DoughnutSeries<PieData, String>(
                           dataSource: dockINDataSource,
                           dataLabelSettings: const DataLabelSettings(
                               // Renders the data label
@@ -132,8 +132,8 @@ class DockAreaDashboard extends StatelessWidget {
                           pointColorMapper: (datum, index) {
                             return dockINDataSource[index].color;
                           },
-                          xValueMapper: (PieDataM data, _) => data.xData,
-                          yValueMapper: (PieDataM data, _) => data.yData,
+                          xValueMapper: (PieData data, _) => data.xData,
+                          yValueMapper: (PieData data, _) => data.yData,
                         )
                       ],
                     ),

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/receiving_area_dashboard.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/pages/entry_point.dart';
 import 'package:warehouse_3d/pages/home.dart';
 import 'package:warehouse_3d/pages/select_warehouse.dart';

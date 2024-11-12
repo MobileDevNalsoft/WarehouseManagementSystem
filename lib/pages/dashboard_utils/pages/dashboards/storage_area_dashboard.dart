@@ -3,7 +3,8 @@ import 'package:gap/gap.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
-import 'package:syncfusion_flutter_gauges/gauges.dart%20';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 
@@ -20,27 +21,27 @@ class StorageAreaDashboard extends StatelessWidget {
     BarData(xLabel: 'S7', yValue: 2, abbreviation: 'Supplier7')
   ];
 
-  List<PieDataM> locationUtilizationDataSource = [
-    PieDataM(xData: "Occupied Bins", yData: 30, color: const Color.fromRGBO(232, 212, 162, 1)),
-    PieDataM(xData: "Avalable Bins", yData: 6, color: const Color.fromRGBO(139, 182, 162, 1)),
-    PieDataM(xData: "Full Bins", yData: 16, color: const Color.fromRGBO(255, 116, 106, 1))
+  List<PieData> locationUtilizationDataSource = [
+    PieData(xData: "Occupied Bins", yData: 30, color: const Color.fromRGBO(232, 212, 162, 1)),
+    PieData(xData: "Avalable Bins", yData: 6, color: const Color.fromRGBO(139, 182, 162, 1)),
+    PieData(xData: "Full Bins", yData: 16, color: const Color.fromRGBO(255, 116, 106, 1))
   ];
 
-  List<PieDataM> warehouseUtilizationDataSource = [
-    PieDataM(xData: "Occupied Bins", yData: 300, color: const Color.fromARGB(255, 181, 166, 221)),
-    PieDataM(xData: "Avalable Bins", yData: 60, color: const Color.fromARGB(255, 238, 236, 135)),
+  List<PieData> warehouseUtilizationDataSource = [
+    PieData(xData: "Occupied Bins", yData: 300, color: const Color.fromARGB(255, 181, 166, 221)),
+    PieData(xData: "Avalable Bins", yData: 60, color: const Color.fromARGB(255, 238, 236, 135)),
   ];
 
-  List<PieDataM> inventorySummaryDataSource = [
-    PieDataM(xData: "In Stock", yData: 456, color: const Color.fromARGB(255, 148, 224, 214)),
-    PieDataM(xData: "Running Out of Stock", yData: 68, color: const Color.fromARGB(255, 184, 172, 149)),
-    PieDataM(xData: "Out of Stock", yData: 26, color: const Color.fromARGB(255, 221, 152, 184))
+  List<PieData> inventorySummaryDataSource = [
+    PieData(xData: "In Stock", yData: 456, color: const Color.fromARGB(255, 148, 224, 214)),
+    PieData(xData: "Running Out of Stock", yData: 68, color: const Color.fromARGB(255, 184, 172, 149)),
+    PieData(xData: "Out of Stock", yData: 26, color: const Color.fromARGB(255, 221, 152, 184))
   ];
 
-  List<PieDataM> inventoryAgingDataSource = [
-    PieDataM(xData: "< 30 Days", yData: 76, color: const Color.fromARGB(255, 148, 215, 224)),
-    PieDataM(xData: "30 - 90 Days", yData: 368, color: const Color.fromARGB(255, 159, 196, 161)),
-    PieDataM(xData: "> 90 Days", yData: 43, color: const Color.fromARGB(255, 180, 140, 164))
+  List<PieData> inventoryAgingDataSource = [
+    PieData(xData: "< 30 Days", yData: 76, color: const Color.fromARGB(255, 148, 215, 224)),
+    PieData(xData: "30 - 90 Days", yData: 368, color: const Color.fromARGB(255, 159, 196, 161)),
+    PieData(xData: "> 90 Days", yData: 43, color: const Color.fromARGB(255, 180, 140, 164))
   ];
 
   final List<TimeData> chartData1 = [
@@ -80,7 +81,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
                         series: <CircularSeries>[
                           // Renders radial bar chart
-                          RadialBarSeries<PieDataM, String>(
+                          RadialBarSeries<PieData, String>(
                             dataSource: locationUtilizationDataSource,
                             maximumValue: 36,
                             dataLabelSettings: const DataLabelSettings(
@@ -91,8 +92,8 @@ class StorageAreaDashboard extends StatelessWidget {
                             pointColorMapper: (datum, index) {
                               return locationUtilizationDataSource[index].color;
                             },
-                            xValueMapper: (PieDataM data, _) => data.xData,
-                            yValueMapper: (PieDataM data, _) => data.yData,
+                            xValueMapper: (PieData data, _) => data.xData,
+                            yValueMapper: (PieData data, _) => data.yData,
                           )
                         ],
                       ),
@@ -115,7 +116,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         series: <CircularSeries>[
                           // Renders radial bar chart
 
-                          DoughnutSeries<PieDataM, String>(
+                          DoughnutSeries<PieData, String>(
                             dataSource: warehouseUtilizationDataSource,
                             dataLabelSettings: const DataLabelSettings(
                                 // Renders the data label
@@ -125,8 +126,8 @@ class StorageAreaDashboard extends StatelessWidget {
                             pointColorMapper: (datum, index) {
                               return warehouseUtilizationDataSource[index].color;
                             },
-                            xValueMapper: (PieDataM data, _) => data.xData,
-                            yValueMapper: (PieDataM data, _) => data.yData,
+                            xValueMapper: (PieData data, _) => data.xData,
+                            yValueMapper: (PieData data, _) => data.yData,
                           )
                         ],
                       ),
@@ -148,7 +149,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
                         series: <CircularSeries>[
                           // Renders radial bar chart
-                          PieSeries<PieDataM, String>(
+                          PieSeries<PieData, String>(
                             dataSource: inventorySummaryDataSource,
                             dataLabelSettings: const DataLabelSettings(
                                 // Renders the data label
@@ -158,8 +159,8 @@ class StorageAreaDashboard extends StatelessWidget {
                             pointColorMapper: (datum, index) {
                               return inventorySummaryDataSource[index].color;
                             },
-                            xValueMapper: (PieDataM data, _) => data.xData,
-                            yValueMapper: (PieDataM data, _) => data.yData,
+                            xValueMapper: (PieData data, _) => data.xData,
+                            yValueMapper: (PieData data, _) => data.yData,
                           )
                         ],
                       ),
@@ -185,7 +186,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
                         series: <CircularSeries>[
                           // Renders radial bar chart
-                          PieSeries<PieDataM, String>(
+                          PieSeries<PieData, String>(
                             dataSource: inventoryAgingDataSource,
                             dataLabelSettings: const DataLabelSettings(
                                 // Renders the data label
@@ -195,8 +196,8 @@ class StorageAreaDashboard extends StatelessWidget {
                             pointColorMapper: (datum, index) {
                               return inventoryAgingDataSource[index].color;
                             },
-                            xValueMapper: (PieDataM data, _) => data.xData,
-                            yValueMapper: (PieDataM data, _) => data.yData,
+                            xValueMapper: (PieData data, _) => data.xData,
+                            yValueMapper: (PieData data, _) => data.yData,
                           )
                         ],
                       ),
