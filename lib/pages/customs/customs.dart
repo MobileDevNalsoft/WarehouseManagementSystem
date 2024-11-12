@@ -84,64 +84,98 @@ class Customs {
     );
   }
 
-  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title"}){
-    return SfCartesianChart(
-                    title: ChartTitle(text: title,textStyle: const TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold,
-                      
-                    )),
-                    primaryXAxis: const CategoryAxis(
-                      labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-                      majorGridLines: MajorGridLines(
-                        width: 0,
-                      ),
-                      majorTickLines: MajorTickLines(width: 0),
-                      axisLine: AxisLine(width: 0),
-                    ),
-                    primaryYAxis: NumericAxis(
-                      title: AxisTitle(text: yAxisTitle),
-                
-                    ),
-                    plotAreaBorderWidth: 0,
-                    // tooltipBehavior: TooltipBehavior(
-                    //   enable: true,
-                    //   color: Colors.black,
-                    //   textStyle: const TextStyle(color: Colors.black),
-                    //   textAlignment: ChartAlignment.center,
-                    //   animationDuration: 100,
-                    //   duration: 2000,
-                    //   shadowColor: Colors.black,
-                    //   builder: (data, point, series, pointIndex, seriesIndex) => IntrinsicWidth(
-                    //     child: Container(
-                    //         height: size.height * 0.01,
-                    //         margin: EdgeInsets.only(
-                    //             left: size.width * 0.03, right: size.width * 0.03,),
-                    //         child: Text((data as BarData).abbreviation, style: TextStyle(color: Colors.white),)),
-                    //   ),
-                    // ),
-                    borderWidth: 0,
-                    series: List.generate(barCount, (index) => ColumnSeries<BarData, String>(
-                        dataSource: dataSources![index],
-                        xValueMapper: (BarData data, _) => data.xLabel,
-                        yValueMapper: (BarData data, _) => data.yValue,
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.lightBlue,
-                        dataLabelMapper: (datum, index) => datum.yValue.toString(),
-                        dataLabelSettings: DataLabelSettings(
-                          isVisible: true,
-                          useSeriesColor: true,
-                          builder: (data, point, series, pointIndex, seriesIndex) => Text(
-                            (data as BarData).yValue.toString(),
-                            style: const TextStyle(color: Colors.black, fontSize: 14),
-                          ),
+  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title", List<Color> barColors = const [Colors.blue]}) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SfCartesianChart(
+          margin: EdgeInsets.zero,
+            title: ChartTitle(
+                text: title,
+                alignment: ChartAlignment.near,
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: constraints.maxHeight*0.045
+                )),
+            primaryXAxis: CategoryAxis(
+              labelStyle: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.04),
+              majorGridLines: MajorGridLines(
+                width: 0,
+              ),
+              majorTickLines: MajorTickLines(width: 0),
+              axisLine: AxisLine(width: 0),
+            ),
+            legend: Legend(isVisible: true, alignment: ChartAlignment.near, legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
+              height: constraints.maxHeight*0.1,
+              width: constraints.maxWidth*0.2,
+              child: Row(
+              children: <Widget>[
+                Container(
+                  width: constraints.maxHeight*0.05,
+                  height: constraints.maxWidth*0.05,
+                  decoration: BoxDecoration(color: barColors[seriesIndex], shape: BoxShape.circle), // Use series color for icon
+                ),
+                const SizedBox(width: 8), // Space between icon and text
+                Text(seriesIndex == 0 ? 'IN' : 'OUT'), // Custom legend text
+              ],
                         ),
-                        width: 0.6,
-                      ),)
-                    );
+            ),),
+            primaryYAxis: NumericAxis(
+              title: AxisTitle(text: yAxisTitle, textStyle: TextStyle(fontSize: constraints.maxHeight*0.05)),
+              axisLabelFormatter: (axisLabelRenderArgs) => ChartAxisLabel('', TextStyle()),
+              majorGridLines: const MajorGridLines(
+                width: 0,
+              ),
+              majorTickLines: const MajorTickLines(width: 0),
+              axisLine: const AxisLine(width: 0,),
+        
+            ),
+            plotAreaBorderWidth: 0,
+            // tooltipBehavior: TooltipBehavior(
+            //   enable: true,
+            //   color: Colors.black,
+            //   textStyle: const TextStyle(color: Colors.black),
+            //   textAlignment: ChartAlignment.center,
+            //   animationDuration: 100,
+            //   duration: 2000,
+            //   shadowColor: Colors.black,
+            //   builder: (data, point, series, pointIndex, seriesIndex) => IntrinsicWidth(
+            //     child: Container(
+            //         height: size.height * 0.01,
+            //         margin: EdgeInsets.only(
+            //             left: size.width * 0.03, right: size.width * 0.03,),
+            //         child: Text((data as BarData).abbreviation, style: TextStyle(color: Colors.white),)),
+            //   ),
+            // ),
+            borderWidth: 0,
+            enableAxisAnimation: true,
+
+            series: List.generate(
+              barCount,
+              (index) => ColumnSeries<BarData, String>(
+                spacing: 0.15,
+                dataSource: dataSources![index],
+                xValueMapper: (BarData data, _) => data.xLabel,
+                yValueMapper: (BarData data, _) => data.yValue,
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(colors: [barColors[index], Colors.black], stops: [0.8,1],),
+                dataLabelMapper: (datum, index) => datum.yValue.toString(),
+                dataLabelSettings: DataLabelSettings(
+                  isVisible: true,
+                  useSeriesColor: true,
+                  builder: (data, point, series, pointIndex, seriesIndex) => Text(
+                    (data as BarData).yValue.toString(),
+                    style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.035),
+                  ),
+                ),
+                width: 0.6,
+              ),
+            ));
+      }
+    );
   }
 
-  static Widget WMSBarChart({String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper}) {
+  static Widget WMSPieChart(
+      {String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
     return SfCircularChart(
         title: ChartTitle(
             text: title,
@@ -152,14 +186,16 @@ class Customs {
         tooltipBehavior: TooltipBehavior(
           enable: true,
         ),
-        legend: const Legend(
-          isVisible: true,
-          alignment: ChartAlignment.near,
+        legend: Legend(
+          isVisible: legendVisibility,
+          alignment: ChartAlignment.center,
         ),
+        margin: EdgeInsets.zero,
         series: <PieSeries<PieData, String>>[
           PieSeries<PieData, String>(
               explode: true,
               explodeIndex: 0,
+              radius: '50%',
               dataSource: dataSource,
               pointColorMapper: pointColorMapper,
               xValueMapper: (PieData data, _) => data.xData,
@@ -321,10 +357,11 @@ class _ClipShadowShadowPainter extends CustomPainter {
 
 // models for charts
 class PieData {
-  PieData(this.xData, this.yData, [this.text]);
+  PieData({required this.xData,required this.yData, this.text, this.color});
   final String xData;
   final num yData;
   String? text;
+  Color? color;
 }
 
 class BarData {
@@ -332,4 +369,10 @@ class BarData {
   int yValue;
   String abbreviation;
   BarData({required this.xLabel, required this.yValue, required this.abbreviation});
+}
+class TimeData {
+  TimeData(this.x, this.y, this.color);
+  final String x;
+  final double y;
+  final Color color;
 }

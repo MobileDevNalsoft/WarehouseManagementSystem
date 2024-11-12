@@ -56,13 +56,17 @@ class StagingAreaDashboard extends StatelessWidget {
         ),
         Gap(size.height * 0.03),
         Expanded(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1360),
-            child: ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppDefaults.padding * 1.5,
+          child: ListView(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDefaults.padding * 1.5,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(AppDefaults.padding),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(95, 154, 152, 152),
+                    borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
                   ),
                   child: Container(
                     padding: const EdgeInsets.all(AppDefaults.padding),
@@ -82,9 +86,9 @@ class StagingAreaDashboard extends StatelessWidget {
                                     border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white),
-                                child: Customs.WMSBarChart(
+                                child: Customs.WMSPieChart(
                                     title: "Trucks Info",
-                                    dataSource: [PieData("Available", 16, "16"), PieData("Occupied", 4, "4")],
+                                    dataSource: [PieData(xData: "Available",yData:  16,text:  "16"), PieData(xData: "Occupied",yData:  4,text:  "4")],
                                     pointColorMapper: (datum, index) {
                                       if (datum.text == '16') {
                                         return const Color.fromARGB(255, 159, 238, 161);
@@ -103,6 +107,7 @@ class StagingAreaDashboard extends StatelessWidget {
                                 child: Customs.WMSCartesianChart(
                                     title: 'Daywise In Bound and Out Bound',
                                     barCount: 2,
+                                    barColors: [Colors.teal, Colors.greenAccent],
                                     dataSources: [inBoundData, outBoundData],
                                     yAxisTitle: 'Number of Vehicles')),
                           ],
@@ -129,15 +134,15 @@ class StagingAreaDashboard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white),
                                 child:
-                                    Customs.WMSBarChart(title: 'In Bound vs Out Bound', dataSource: [PieData("Total", 10, "10"), PieData("Active", 4, "4")])),
+                                    Customs.WMSPieChart(title: 'In Bound vs Out Bound', dataSource: [PieData(xData: "Total",yData:  10,text:  "10"), PieData(xData: "Active",yData:  4,text:  "4")])),
                           ],
                         )
                       ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],

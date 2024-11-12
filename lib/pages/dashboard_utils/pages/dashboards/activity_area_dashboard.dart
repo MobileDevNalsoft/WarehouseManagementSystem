@@ -383,372 +383,77 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                     color: Color.fromARGB(95, 154, 152, 152),
                     borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
                   ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                              height: size.height * 0.32,
-                              width: size.width * 0.26,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
-                                  color: Colors.white),
-                              child: WMSPieChart(
-                                  title: "Trucks Info",
-                                  dataSource: [
-                                    PieData("Created", 16, "16"),
-                                    PieData("Completed", 6, "6"),
-                                    PieData("In Progress", 4, "4"),
-                                    PieData("Cancelled", 2, "2"),
-                                  ],
-                                  pointColorMapper: (datum, index) {
-                                    if (datum.xData == 'Created') {
-                                      return Colors.lightBlueAccent.shade700;
-                                    } else if (datum.xData == 'In Progress') {
-                                      return Colors.orangeAccent;
-                                    } else if (datum.xData == 'Completed') {
-                                      return Colors.green;
-                                    } else if (datum.xData == 'Cancelled') {
-                                      return Colors.red;
-                                    }
-                                  })),
-                          Container(
-                              height: size.height * 0.32,
-                              width: size.width * 0.26,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white),
-                              child: WMSPieChart(
-                                  title: 'Task Type Summary',
-                                  dataSource: [PieData("Cycle Count", 10, "10"), PieData("Pick Tasks", 4, "4"), PieData("Replenishment", 4, "4")])),
-                          Container(
-                              height: size.height * 0.32,
-                              width: size.width * 0.26,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
-                                  color: Colors.white),
-                              child: WMSPieChart(
-                                  title: "Today Work Order Summary",
-                                  dataSource: [
-                                    PieData("Created", 16, "16"),
-                                    PieData("Work In Progress", 6, "6"),
-                                    PieData("Completed", 4, "4"),
-                                  ],
-                                  pointColorMapper: (datum, index) {
-                                    if (datum.xData == 'Created') {
-                                      return Colors.lightBlueAccent.shade700;
-                                    } else if (datum.xData == 'Work In Progress') {
-                                      return Colors.orangeAccent;
-                                    } else if (datum.xData == 'Completed') {
-                                      return Colors.green;
-                                    }
-                                  })),
-                        ],
-                      ),
-                      Gap(size.height * 0.01),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                              height: size.height * 0.48,
-                              width: size.width * 0.32,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
-                                  color: Colors.white),
-                              child: WMSCartesianChart(
-                                  title: 'Day Wise Task Summary ',
-                                  barCount: 1,
-                                  dataSources: [taskdata],
-                                  yAxisTitle: 'Number of Tasks',
-                                  primaryColor: Color.fromRGBO(9, 0, 136, 0.692))),
-                          Container(
-                            height: size.height * 0.48,
-                            width: size.width * 0.32,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
-                                color: Colors.white),
-                            child: WMSCartesianChart(
-                                title: 'Employee Wise Task Summary',
-                                barCount: 1,
-                                dataSources: [taskdata],
-                                yAxisTitle: 'Number of Tasks',
-                                primaryColor: Color.fromRGBO(64, 133, 138, 1)),
-                          ),
-                          SizedBox(
-                            height: size.height * 0.48,
-                            child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                              Container(
-                                  height: size.height * 0.235,
-                                  width: size.width * 0.14,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
-                                      color: Colors.white),
-                                  child: WMSSfCircularChart(
-                                      size: size,
-                                      chartData: avgTaskExecutionTime,
-                                      title: "Average Task Execution Time",
-                                      contentText: "6h 40m",
-                                      width: 136,
-                                      height: 136,
-                                      radius: "90%")),
-                              Container(
-                                  height: size.height * 0.235,
-                                  width: size.width * 0.14,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
-                                      color: Colors.white),
-                                  child: WMSSfCircularChart(
-                                      size: size,
-                                      chartData: avgPickTime,
-                                      title: "Avg Pick Time",
-                                      contentText: "2h 15m",
-                                      textColor: Color.fromRGBO(13, 6, 109, 1),
-                                      width: 136,
-                                      height: 136,
-                                      radius: "90%")),
-                            ]),
-                          )
-                        ],
-                      ),
-                      Gap(size.height * 0.01),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              height: size.height * 0.48,
-                              width: size.width * 0.56,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
-                                  color: Colors.white),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: size.width * 0.4,
-                                    child: WMSCartesianChart(
-                                        title: 'Avg Task Taken by Employee ',
-                                        barCount: 1,
-                                        dataSources: [empTaskdata],
-                                        yAxisTitle: 'Number of Tasks',
-                                        primaryColor: Color.fromRGBO(147, 0, 120, 0.5)),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: size.width * 0.04, top: size.height * 0.04),
-                                      // height: size.height * 0.04,
-                                      width: size.width * 0.1,
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: TypeAheadField(
-                                                  suggestionsController: suggestionsController,
-                                                  builder: (context, textController, focusNode) {
-                                                    typeAheadController = textController;
-                                                    typeAheadFocusNode = focusNode;
-                                                    textController = textController;
-                                                    focusNode = focusNode;
-                                                    focusNode.addListener(() {
-                                                      if (!focusNode.hasFocus) {
-                                                        textController.clear();
-                                                      }
-                                                    });
-                                                    return TextFormField(
-                                                      textAlign: TextAlign.center,
-                                                      onTap: () {},
-                                                      cursorColor: Colors.black,
-                                                      decoration: InputDecoration(
-                                                          hintText: rangeSelection? 'Choose' : "Compare",
-                                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                                                          hintStyle: const TextStyle(
-                                                            color: Colors.black54,
-                                                            fontWeight: FontWeight.normal,
-                                                          ),
-                                                          suffixIconConstraints: const BoxConstraints(minWidth: 16, minHeight: 8)),
-                                                      controller: textController,
-                                                      focusNode: focusNode,
-                                                    );
-                                                  },
-                                                  suggestionsCallback: (pattern) {
-                                                    employeeSuggestions = [];
-                                                    if (rangeSelection) {
-                                                      employeeSuggestions = employeeSuggestionRange.keys.toList();
-                                                    } else {
-                                                      for (var empList in employeeSuggestionRange.values) {
-                                                        print(empList);
-                                                        employeeSuggestions.addAll(empList);
-                                                      }
-                                                      print("emp suggestios $employeeSuggestions");
-                                                    }
-                                                    return employeeSuggestions;
-                                                  },
-                                                  itemBuilder: (context, suggestion) => Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.all(8.0),
-                                                          child: SizedBox(
-                                                              child: Row(
-                                                            children: [
-                                                              Checkbox(
-                                                                  shape: OvalBorder(),
-                                                                  value: rangeSelection?selectedEmployeeRange==suggestion: selectedEmployees.contains(suggestion),
-                                                                  onChanged: (value) {
-                                                                    setState(() {
-                                                                      if (rangeSelection != true) {
-                                                                        if (selectedEmployees.contains(suggestion)) {
-                                                                          selectedEmployees.remove(suggestion);
-                                                                          empTaskdata.removeWhere((data) => data.xLabel == suggestion);
-                                                                          suggestionsController.refresh();
-                                                                        } else if (selectedEmployees.length <= 10) {
-                                                                          selectedEmployees.add(suggestion);
-                                                                          empTaskdata
-                                                                              .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                                          suggestionsController.refresh();
-                                                                        }
-                                                                      } else {
-                                                                        selectedEmployeeRange = suggestion;
-                                                                         empTaskdata=[];
-                                                                         selectedEmployees=[];
-                                                                        List<String> employees = employeeSuggestionRange[suggestion]!;
-                                                                        selectedEmployees.addAll(employees);
-                                                                        for (var emp in selectedEmployees) {
-                                                                          empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                                        }
-                                                                      }
-                                                                    });
-                                                                  }),
-                                                              Text(
-                                                                suggestion.toString(),
-                                                                textAlign: TextAlign.justify,
-                                                                overflow: TextOverflow.ellipsis,
-                                                              ),
-                                                            ],
-                                                          )),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  onSelected: (suggestion) {
-                                                    if (rangeSelection==false) {
-                                                      setState(
-                                                        () {
-                                                          if (selectedEmployees.contains(suggestion)) {
-                                                            selectedEmployees.remove(suggestion);
-                                                            empTaskdata.removeWhere((data) => data.xLabel == suggestion);
-                                                            suggestionsController.refresh();
-                                                          } else {
-                                                            selectedEmployees.add(suggestion);
-                                                            empTaskdata.add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                            // typeAheadController.clear();
-                                                            // suggestionsController.close();
-                                                            suggestionsController.refresh();
-                                                          }
-                                                        },
-                                                      );
-                                                    } else {
-                                                      setState(() {
-                                                        selectedEmployeeRange = suggestion;
-                                                        List<String> employees = employeeSuggestionRange[suggestion]!;
-                                                        empTaskdata=[];
-                                                        selectedEmployees=[];
-                                                
-                                                        selectedEmployees.addAll(employees);
-                                                        for (var emp in selectedEmployees) {
-                                                          empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                        }
-                                                      });
-                                                    }
-                                                  },
-                                                  hideOnSelect: false,
-                                                ),
-                                              ),
-                                              Gap(size.width*0.01),
-                                              SizedBox(
-                                                // width:size.width*0.08,
-                                                height: size.height*0.02,
-
-                                                child:
-                                                
-                                                 Switch(value: rangeSelection, onChanged: (value) {
-                                                  print(rangeSelection);
-                                                    setState(() {
-                                                      rangeSelection=value;
-                                                      suggestionsController.refresh();
-                                                      selectedEmployeeRange="";
-                                                      selectedEmployees=[];
-                                                      empTaskdata=[];
-                                                    
-                                                    });
-                                                  
-                                                },),
-                                              )
-                                           
-                                            ],
-                                          ),
-                                          Gap(size.height * 0.01),
-
-                                          Container(
-                                              width: size.width * 0.1,
-                                              height: size.height * 0.36,
-                                              decoration: BoxDecoration(),
-                                              child: rangeSelection
-                                                  ? Text(selectedEmployeeRange)
-                                                  : ListView(
-                                                      children: selectedEmployees
-                                                          .map((emp) => Container(
-                                                                  child: Row(
-                                                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Gap(size.width * 0.01),
-                                                                  Expanded(
-                                                                      child: Text(
-                                                                    emp,
-                                                                    style: TextStyle(fontSize: 22),
-                                                                  )),
-                                                                  IconButton(
-                                                                    onPressed: () {
-                                                                      setState(() {
-                                                                        selectedEmployees.remove(emp);
-                                                                        empTaskdata.removeWhere((data) => data.xLabel == emp);
-                                                                      });
-                                                                    },
-                                                                    icon: Icon(Icons.cancel_rounded),
-                                                                    iconSize: size.width * 0.01,
-                                                                    splashRadius: 5,
-                                                                    visualDensity: VisualDensity.compact,
-                                                                  ),
-                                                                ],
-                                                              )))
-                                                          .toList(),
-                                                    ))
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        ],
-                      ),
-                    ],
+                  child: Container(
+                    padding: const EdgeInsets.all(AppDefaults.padding),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(95, 154, 152, 152),
+                      borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Gap(size.width * 0.05),
+                            Container(
+                                height: size.height * 0.4,
+                                width: size.width * 0.3,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white),
+                                child: Customs.WMSPieChart(
+                                    title: "Trucks Info",
+                                    dataSource: [PieData(xData: "Available",yData:  16,text:  "16"), PieData(xData: "Occupied",yData:  4,text:  "4")],
+                                    pointColorMapper: (datum, index) {
+                                      if (datum.text == '16') {
+                                        return const Color.fromARGB(255, 159, 238, 161);
+                                      } else {
+                                        return const Color.fromARGB(255, 182, 62, 53);
+                                      }
+                                    })),
+                            Gap(size.width * 0.05),
+                            Container(
+                                height: size.height * 0.4,
+                                width: size.width * 0.3,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white),
+                                child: Customs.WMSCartesianChart(
+                                    title: 'Daywise In Bound and Out Bound',
+                                    barCount: 2,
+                                    barColors: [Colors.teal, Colors.greenAccent],
+                                    dataSources: [inBoundData, outBoundData],
+                                    yAxisTitle: 'Number of Vehicles')),
+                          ],
+                        ),
+                        Gap(size.height * 0.1),
+                        Row(
+                          children: [
+                            Gap(size.width * 0.05),
+                            Container(
+                                height: size.height * 0.4,
+                                width: size.width * 0.3,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white),
+                                child: Customs.WMSCartesianChart(
+                                    title: 'Daywise Vehicle Engagement', barCount: 1, dataSources: [barData], yAxisTitle: 'Number of Vehicles')),
+                            Gap(size.width * 0.05),
+                            Container(
+                                height: size.height * 0.4,
+                                width: size.width * 0.3,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white),
+                                child:
+                                    Customs.WMSPieChart(title: 'In Bound vs Out Bound', dataSource: [PieData(xData: "Total",yData:  10,text:  "10"), PieData(xData: "Active",yData:  4,text:  "4")])),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -30,36 +30,47 @@ class _SidebarState extends State<Sidebar> {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: SafeArea(
+    Size size = MediaQuery.of(context).size;
+    return SafeArea(
+      child: Container(
+        width: size.width*0.2,
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(99,109,121,1)
+        ),
         child: Column(
-          
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            gapH16,
-            Text("Dashboards",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black),textAlign: TextAlign.center,),
-            gapH16,
-            Divider(
-              thickness: 2,
+            Gap(size.height*0.05),
+            Row(
+              children: [
+                Gap(size.width*0.02),
+                Image.asset('assets/images/dashboard.png', scale: 1.8, color: Colors.white,),
+                Gap(size.width*0.002),
+                Text("Dashboard's",style: TextStyle(fontSize: size.height*0.03,fontWeight: FontWeight.bold,color: Colors.white),textAlign: TextAlign.center,),
+              ],
             ),
+            Gap(size.height*0.1),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDefaults.padding,
-                ),
-                child: BlocBuilder<DashboardsBloc, DashboardsState>(
-                  builder: (context, state) {
-                    return ListView(
-                      children: List.generate(dashboardTitles.length, (index) => MenuTile(
-                          isActive: index == state.index,
-                          title: dashboardTitles[index],
-                          onPressed: () {
-                            _dashboardsBloc.add(DashboardChanged(index: index));
-                          },
-                        ),)
-                    );
-                  }
-                ),
+              child: BlocBuilder<DashboardsBloc, DashboardsState>(
+                builder: (context, state) {
+                  return Column(
+                    children: List.generate(dashboardTitles.length, (index) => InkWell(
+                      onTap: () => _dashboardsBloc.add(DashboardChanged(index: index)),
+                      child: Container(
+                        width: size.width*0.1,
+                        height: size.height*0.05,
+                        margin: EdgeInsets.symmetric(vertical: size.height*0.01),
+                        padding: EdgeInsets.only(left: size.width*0.02),
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: index == state.index ? Colors.white : Color.fromRGBO(99,109,121,1),
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+                        ),
+                        child: Text(dashboardTitles[index], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: index == state.index ? Colors.black : Colors.white),),
+                      ),
+                    ),)
+                  );
+                }
               ),
             ),
           ],
