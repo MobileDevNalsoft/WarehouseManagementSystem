@@ -30,18 +30,29 @@ class DockAreaDashboard extends StatelessWidget {
   ];
 
   final List<TimeData> chartData1 = [
-    TimeData('David', 81, const Color.fromRGBO(183, 200, 224, 1)),
+    TimeData('David', 81, const Color.fromARGB(255, 172, 189, 213)),
     TimeData('sd', 19, Colors.transparent),
   ];
 
-  List<PieData> dockINDataSource = [PieData(xData: "Utilized Docks",yData:  3, color: const Color.fromARGB(255, 181, 166, 221)), PieData(xData: "Avalable Docks",yData:  6, color: const Color.fromARGB(255, 238, 236, 135))];
+  final List<TimeData> chartData2 = [
+    TimeData('David', 81, const Color.fromARGB(255, 183, 214, 153)),
+    TimeData('sd', 19, Colors.transparent),
+  ];
+
+  final List<TimeData> chartData3 = [
+    TimeData('David', 81, const Color.fromARGB(255, 202, 159, 209)),
+    TimeData('sd', 19, Colors.transparent),
+  ];
+
+  List<PieData> dockINDataSource = [PieData(xData: "Utilized Docks",yData:  3, color: const Color.fromARGB(255, 102, 82, 156)), PieData(xData: "Avalable Docks",yData:  6, color: const Color.fromARGB(255, 175, 163, 207))];
+
+  List<PieData> dockOUTDataSource = [PieData(xData: "Utilized Docks",yData:  4, color: const Color.fromARGB(255, 71, 143, 147)), PieData(xData: "Avalable Docks",yData:  5, color: const Color.fromARGB(255, 154, 197, 200))];
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double aspectRatio = size.width / size.height;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
@@ -59,11 +70,11 @@ class DockAreaDashboard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]
                       ),
-                      padding: EdgeInsets.all(size.height*0.035),
+                      padding: EdgeInsets.only(left : size.height * 0.035, top : size.height * 0.035, bottom : size.height * 0.035),
                       alignment: Alignment.bottomCenter,
                       child: Customs.WMSCartesianChart(
                         title: "Daywise Utilization",
-                              yAxisTitle: 'Number of Vehicles', barCount: 2, barColors: [Colors.teal, Colors.greenAccent], dataSources: [dockINDayWiseDataSource, dockOUTDayWiseDataSource]),
+                              yAxisTitle: 'Number of Vehicles', barCount: 2, barColors: [Colors.teal, Colors.greenAccent], dataSources: [dockINDayWiseDataSource, dockOUTDayWiseDataSource], legendVisibility: true),
                     ),
                     Container(
                     margin: EdgeInsets.all(aspectRatio * 8),
@@ -71,7 +82,7 @@ class DockAreaDashboard extends StatelessWidget {
                     width: size.width * 0.3,
                     decoration: BoxDecoration(
                         color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                    padding: EdgeInsets.all(size.height * 0.035),
+                    padding: EdgeInsets.only(left : size.height * 0.035, top : size.height * 0.035, bottom : size.height * 0.035),
                     alignment: Alignment.topCenter,
                     child: SfCircularChart(
                       title: ChartTitle(
@@ -110,7 +121,7 @@ class DockAreaDashboard extends StatelessWidget {
                     width: size.width * 0.3,
                     decoration: BoxDecoration(
                         color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                    padding: EdgeInsets.all(size.height * 0.035),
+                    padding: EdgeInsets.only(left : size.height * 0.035, top : size.height * 0.035, bottom : size.height * 0.035),
                     alignment: Alignment.topCenter,
                     child: SfCircularChart(
                       title: ChartTitle(
@@ -123,14 +134,14 @@ class DockAreaDashboard extends StatelessWidget {
                         // Renders radial bar chart
                           
                         DoughnutSeries<PieData, String>(
-                          dataSource: dockINDataSource,
+                          dataSource: dockOUTDataSource,
                           dataLabelSettings: const DataLabelSettings(
                               // Renders the data label
                               isVisible: true,
                               textStyle: TextStyle(fontWeight: FontWeight.bold),
                               alignment: ChartAlignment.near),
                           pointColorMapper: (datum, index) {
-                            return dockINDataSource[index].color;
+                            return dockOUTDataSource[index].color;
                           },
                           xValueMapper: (PieData data, _) => data.xData,
                           yValueMapper: (PieData data, _) => data.yData,
@@ -234,7 +245,7 @@ class DockAreaDashboard extends StatelessWidget {
                                 ],
                                 series: <CircularSeries>[
                                   DoughnutSeries<TimeData, String>(
-                                    dataSource: chartData1,
+                                    dataSource: chartData2,
                                     xValueMapper: (TimeData data, _) => data.x,
                                     yValueMapper: (TimeData data, _) => data.y,
                                     radius: '60%', // Adjust the radius as needed
@@ -284,7 +295,7 @@ class DockAreaDashboard extends StatelessWidget {
                                 ],
                                 series: <CircularSeries>[
                                   DoughnutSeries<TimeData, String>(
-                                    dataSource: chartData1,
+                                    dataSource: chartData3,
                                     xValueMapper: (TimeData data, _) => data.x,
                                     yValueMapper: (TimeData data, _) => data.y,
                                     radius: '60%', // Adjust the radius as needed
@@ -326,16 +337,7 @@ class DockAreaDashboard extends StatelessWidget {
             )
           ),
         ),
-        Container(
-          width: size.width*0.19,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 163, 172, 177),
-            borderRadius: BorderRadius.all(Radius.circular(30)),
-             boxShadow: [BoxShadow(color: Colors.grey.shade600, offset: Offset(-1,0), blurRadius: 5, spreadRadius: 0)]
-          ),
-          padding: EdgeInsets.all(size.height*0.02),
-          child: ListView.builder(itemBuilder: (context, index) => Column(),),
-        )
+        Container()
       ],
     );
   }

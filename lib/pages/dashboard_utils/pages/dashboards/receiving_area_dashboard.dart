@@ -57,77 +57,97 @@ class ReceivingAreaDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<ChartData> chartData = [
-      ChartData('David', 69, Color.fromRGBO(9, 0, 136, 1)),
+      ChartData('David', 69, const Color.fromRGBO(9, 0, 136, 1)),
       ChartData('sd', 31, Colors.transparent),
     ];
     final List<ChartData> chartData1 = [
-      ChartData('David', 81, Color.fromRGBO(91, 9, 9, 1)),
+      ChartData('David', 81, const Color.fromRGBO(91, 9, 9, 1)),
       ChartData('sd', 19, Colors.transparent),
     ];
 
     Size size = MediaQuery.of(context).size;
 
+    return LayoutBuilder(builder: (context, constraints) {
+      bool isWideScreen = constraints.maxWidth > 1200;
+      bool isMediumScreen = constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
+      double horizontalPadding = isWideScreen
+          ? AppDefaults.padding * 2
+          : isMediumScreen
+              ? AppDefaults.padding * 1.5
+              : AppDefaults.padding;
+      double containerWidth = isWideScreen
+          ? constraints.maxWidth * 0.6
+          : isMediumScreen
+              ? constraints.maxWidth * 0.45
+              : constraints.maxWidth * 0.9;
+      double containerHeight = isWideScreen || isMediumScreen ? constraints.maxHeight * 1 : constraints.maxHeight * 1;
 
-   return  LayoutBuilder(
-      builder: (context, constraints) {
-        bool isWideScreen = constraints.maxWidth > 1200;
-        bool isMediumScreen = constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
-        double horizontalPadding = isWideScreen
-            ? AppDefaults.padding * 2
-            : isMediumScreen
-                ? AppDefaults.padding * 1.5
-                : AppDefaults.padding;
-        double containerWidth = isWideScreen
-            ? constraints.maxWidth * 0.6
-            : isMediumScreen
-                ? constraints.maxWidth * 0.45
-                : constraints.maxWidth * 0.9;
-        double containerHeight = isWideScreen || isMediumScreen
-            ? constraints.maxHeight *1
-            : constraints.maxHeight * 1;
-
-
-
-             return Column(
-      children: [
-        Gap(constraints.maxHeight * 0.03),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Receiving Area Dashboard',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-        Gap(constraints.maxHeight * 0.03),
-        Expanded(
-          child: ListView(
+      return Column(
+        children: [
+          Gap(constraints.maxHeight * 0.03),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(AppDefaults.padding),
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(95, 154, 152, 152),
-                  borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
-                ),
-                child: Column(
+              Text(
+                'Receiving Area Dashboard',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              )
+            ],
+          ),
+          Gap(constraints.maxHeight * 0.03),
+          Expanded(
+            child: ListView(
+              children: [
+                Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                     
                         Container(
-                            height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
-                            child: Column(
+                          margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
+                          child: Customs.WMSPieChart(
+                              title: "Total ASN Status",
+                              dataSource: [
+                                PieData(xData: "In-Transit", yData: 8, text: "8"),
+                                PieData(xData: "In Receiving", yData: 4, text: "4"),
+                                PieData(xData: "Received", yData: 3, text: "3"),
+                                PieData(xData: "Cancelled", yData: 1, text: "1")
+                              ],
+                              pointColorMapper: (datum, index) {
+                                if (datum.text == '8') {
+                                  return const Color.fromARGB(255, 27, 219, 219);
+                                } else if (datum.text == '4') {
+                                  return const Color.fromARGB(255, 57, 33, 0);
+                                } else if (datum.text == '3') {
+                                  return const Color.fromARGB(255, 38, 82, 113);
+                                } else {
+                                  return const Color.fromARGB(255, 241, 114, 41);
+                                }
+                              }),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
+                          child: Column(
                               children: [
                                 Customs.WMSPieChart(
                                     title: "Total Inbound Summary",
-                                    dataSource: [PieData(xData: "Open",yData:  16, text: "16"), PieData(xData: "In Receiving", yData:4 , text: "4"), PieData(xData: "Received",yData:  5, text: "5")],
+                                    dataSource: [
+                                      PieData(xData: "Open", yData: 16, text: "16"),
+                                      PieData(xData: "In Receiving", yData: 4, text: "4"),
+                                      PieData(xData: "Received", yData: 5, text: "5")
+                                    ],
                                     pointColorMapper: (datum, index) {
                                       if (datum.text == '16') {
                                         return const Color.fromARGB(255, 219, 165, 27);
@@ -137,126 +157,83 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                         return const Color.fromARGB(255, 52, 129, 228);
                                       }
                                     }),
-                                Text("Inbound orders status wise ")
+                                const Text("Inbound orders status wise ")
                               ],
-                            )),
-                       
+                            )
+                        ),
                         Container(
-                           height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
-                            child: Customs.WMSPieChart(
-                                title: "Total ASN Status",
-                                dataSource: [
-                                  PieData(xData: "In-Transit",yData:  8,text:  "8"),
-                                  PieData(xData: "In Receiving",yData:  4,text:  "4"),
-                                  PieData(xData: "Received", yData:3 , text: "3"),
-                                  PieData(xData: "Cancelled", yData: 1, text: "1")
-                                ],
-                                pointColorMapper: (datum, index) {
-                                  if (datum.text == '8') {
-                                    return const Color.fromARGB(255, 27, 219, 219);
-                                  } else if (datum.text == '4') {
-                                    return const Color.fromARGB(255, 57, 33, 0);
-                                  } else if (datum.text == '3') {
-                                    return const Color.fromARGB(255, 38, 82, 113);
-                                  } else {
-                                    return const Color.fromARGB(255, 241, 114, 41);
-                                  }
-                                })),
-                       
-                        
-                        
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
+                            child: _getRadialGauge()),
                       ],
                     ),
                     Gap(constraints.maxHeight * 0.05),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        
-                          Container(
-                            height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
-                            child: _getRadialGauge()),
-
-
                         Container(
-                           height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                             child: Customs.WMSCartesianChart(
                                 title: 'Day Wise Inbound Summary  ',
                                 barCount: 1,
                                 dataSources: [barData],
                                 yAxisTitle: 'No of ASNs Received',
-                                 barColors:[
-                                  const Color.fromARGB(255, 248, 190, 15)
-                                 ] )),
-                        
-                        
-                      ],
-                    ),
-                     Gap(constraints.maxHeight * 0.05),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
+                                barColors: [const Color.fromARGB(255, 248, 190, 15)])),
                         Container(
-                           height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                             child: Customs.WMSCartesianChart(
                                 title: 'Supplier Wise Inbound Summary  ',
                                 barCount: 1,
                                 dataSources: [barData1],
                                 yAxisTitle: 'No of ASNs Received',
-                                barColors: [
-                                  const Color.fromARGB(255, 248, 112, 15)
-                                ])),
-                        
+                                barColors: [const Color.fromARGB(255, 248, 112, 15)])),
                         Container(
-                            height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                             child: Customs.WMSCartesianChart(
                                 title: 'User Receiving Efficiency  ',
                                 barCount: 1,
                                 dataSources: [barData2],
                                 yAxisTitle: 'No of LPNs Received',
-                                barColors: [
-                                  const Color.fromARGB(255, 15, 123, 189)
-                                ]))
+                                barColors: [const Color.fromARGB(255, 15, 123, 189)]))
                       ],
                     ),
-                     Gap(constraints.maxHeight * 0.05),
+                    Gap(constraints.maxHeight * 0.05),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        
                         Container(
-                            height: constraints.maxHeight * 0.3,
-                            width: constraints.maxWidth * 0.2,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                             child: SfCircularChart(
-                              title: ChartTitle(
+                              title: const ChartTitle(
                                   text: "Avg Receiving Time",
                                   textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -273,7 +250,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                         BoxShadow(
                                           color: Colors.black.withOpacity(0.3),
                                           blurRadius: 10,
-                                          offset: Offset(0, 4), // Adjust to set shadow direction
+                                          offset: const Offset(0, 4), // Adjust to set shadow direction
                                         ),
                                       ],
                                     ),
@@ -302,20 +279,20 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                 )
                               ],
                             )),
-                      
                         Container(
-                            height: constraints.maxHeight * 0.3,
-                            width: constraints.maxWidth * 0.2,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                             child: Stack(
                               children: [
                                 SfRadialGauge(
-                                  title: GaugeTitle(
+                                  title: const GaugeTitle(
                                       text: "Receiving Efficiency",
-                                      textStyle: const TextStyle(
+                                      textStyle: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         decoration: TextDecoration.underline,
                                       )),
@@ -335,30 +312,29 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                         minimum: 0,
                                         maximum: 100,
                                         ranges: <GaugeRange>[
-                                          GaugeRange(
-                                              startValue: 0, endValue: 50, color: const Color.fromARGB(255, 121, 43, 181), startWidth: 50, endWidth: 50),
+                                          GaugeRange(startValue: 0, endValue: 50, color: const Color.fromARGB(255, 121, 43, 181), startWidth: 50, endWidth: 50),
                                           GaugeRange(
                                               startValue: 50, endValue: 100, color: const Color.fromARGB(255, 189, 200, 210), startWidth: 50, endWidth: 50),
                                         ])
                                   ],
                                 ),
-                                Positioned(
+                                const Positioned(
                                   bottom: 100,
                                   right: 150,
                                   child: Text("50%"),
                                 )
                               ],
                             )),
-                     
                         Container(
-                            height: constraints.maxHeight * 0.3,
-                            width: constraints.maxWidth * 0.2,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white),
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                             child: SfCircularChart(
-                              title: ChartTitle(
+                              title: const ChartTitle(
                                   text: "Avg PutAway Time",
                                   textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -375,7 +351,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                                         BoxShadow(
                                           color: Colors.black.withOpacity(0.3),
                                           blurRadius: 10,
-                                          offset: Offset(0, 4), // Adjust to set shadow direction
+                                          offset: const Offset(0, 4), // Adjust to set shadow direction
                                         ),
                                       ],
                                     ),
@@ -408,29 +384,25 @@ class ReceivingAreaDashboard extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-      }
-   );
-
-   
+        ],
+      );
+    });
   }
 
   Widget _getRadialGauge() {
     return gauge.SfRadialGauge(
         animationDuration: 2000,
-        title: gauge.GaugeTitle(text: 'Putaway Accuracy', textStyle: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+        title: const gauge.GaugeTitle(text: 'Putaway Accuracy', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
         axes: <gauge.RadialAxis>[
           gauge.RadialAxis(minimum: 0, maximum: 100, ranges: <gauge.GaugeRange>[
             gauge.GaugeRange(startValue: 0, endValue: 50, color: Colors.orange, startWidth: 10, endWidth: 10),
             gauge.GaugeRange(startValue: 50, endValue: 100, color: Colors.green, startWidth: 10, endWidth: 10),
             gauge.GaugeRange(startValue: 100, endValue: 150, color: Colors.red, startWidth: 10, endWidth: 10)
           ], pointers: <gauge.GaugePointer>[
-            gauge.NeedlePointer(
+            const gauge.NeedlePointer(
               value: 90,
               enableAnimation: true,
               animationType: gauge.AnimationType.ease,

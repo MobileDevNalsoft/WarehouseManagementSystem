@@ -84,7 +84,7 @@ class Customs {
     );
   }
 
-  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title", List<Color> barColors = const [Colors.blue]}) {
+  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title", List<Color> barColors = const [Colors.blue], bool legendVisibility = false}) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SfCartesianChart(
@@ -104,7 +104,7 @@ class Customs {
               majorTickLines: MajorTickLines(width: 0),
               axisLine: AxisLine(width: 0),
             ),
-            legend: Legend(isVisible: true, alignment: ChartAlignment.near, legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
+            legend: Legend(isVisible: legendVisibility, alignment: ChartAlignment.near, legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
               height: constraints.maxHeight*0.1,
               width: constraints.maxWidth*0.2,
               child: Row(
@@ -148,16 +148,17 @@ class Customs {
             // ),
             borderWidth: 0,
             enableAxisAnimation: true,
-
+            
             series: List.generate(
               barCount,
               (index) => ColumnSeries<BarData, String>(
                 spacing: 0.15,
+                
                 dataSource: dataSources![index],
                 xValueMapper: (BarData data, _) => data.xLabel,
                 yValueMapper: (BarData data, _) => data.yValue,
                 borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(colors: [barColors[index], Colors.black], stops: [0.8,1],),
+                gradient: LinearGradient(colors: [barColors[index], Colors.black54    ], stops: [0.8,1],),
                 dataLabelMapper: (datum, index) => datum.yValue.toString(),
                 dataLabelSettings: DataLabelSettings(
                   isVisible: true,
@@ -167,7 +168,7 @@ class Customs {
                     style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.035),
                   ),
                 ),
-                width: 0.6,
+                width: barCount == 1 ? 0.4 : 0.5,
               ),
             ));
       }

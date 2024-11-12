@@ -78,178 +78,171 @@ class InspectionAreaDashboard extends StatelessWidget {
             child: ListView(
               children: [
                 Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(AppDefaults.padding),
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(95, 154, 152, 152),
-                      borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                                height: constraints.maxHeight * 0.4,
-                                width: constraints.maxWidth * 0.43,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                    const  BoxShadow(
-                                        offset: Offset(2, 2),
-                                        blurRadius: 5,
-                                       
-                                        color: Color.fromARGB(255, 69, 65, 61)
-                                      )
-                                    ],
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white),
-                                child: Customs.WMSPieChart(
-                                    title: "Today Quality Status",
-                                    dataSource: [PieData(xData: "Marked for QC",yData:  10,text:  "10"), PieData(xData: "QC Approved",yData:  6,text:  "6"), PieData(xData: "QC Rejected", yData: 3,text:  "3")],
-                                    pointColorMapper: (datum, index) {
-                                      if (datum.text == '10') {
-                                        return const Color.fromARGB(255, 7, 72, 100);
-                                      } else if (datum.text == '6') {
-                                        return const Color.fromARGB(255, 84, 9, 4);
-                                      } else {
-                                        return const Color.fromARGB(255, 17, 208, 119);
-                                      }
-                                    })),
-                            Container(
-                                height: constraints.maxHeight * 0.4,
-                                width: constraints.maxWidth * 0.43,
-                                decoration: BoxDecoration(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                              height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                              decoration: BoxDecoration(
                                   boxShadow: [
-                                    const  BoxShadow(
-                                        offset: Offset(2, 2),
-                                        blurRadius: 5,
-                                       
-                                        color: Color.fromARGB(255, 69, 65, 61)
-                                      )
-                                    ],
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white),
-                                child: _getRadialGauge()),
-                          ],
-                        ),
-                        Gap(constraints.maxHeight * 0.05),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                                height: constraints.maxHeight * 0.4,
-                                width: constraints.maxWidth * 0.43,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    const  BoxShadow(
-                                        offset: Offset(2, 2),
-                                        blurRadius: 5,
-                                       
-                                        color: Color.fromARGB(255, 69, 65, 61)
-                                      )
-                                    ],
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white),
-                                child: SfCircularChart(
-                                  title: ChartTitle(text: "Material Quality", textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                                  annotations: <CircularChartAnnotation>[
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        width: 100, // Set the size of the shadowed circle
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          
-                                          shape: BoxShape.circle,
-                                          color: const Color.fromARGB(255, 232, 229, 229),
-                                    
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 10,
-                                              offset: Offset(0, 4), // Adjust to set shadow direction
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        child: const Text(
-                                          '45%',
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 101, 10, 10),
-                                            fontSize: 25,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  series: <CircularSeries>[
-                                    DoughnutSeries<ChartData, String>(
-                                      dataSource: chartData,
-                                      xValueMapper: (ChartData data, _) => data.x,
-                                      yValueMapper: (ChartData data, _) => data.y,
-                                      radius: '60%', // Adjust the radius as needed
-                                      innerRadius: '45%', // Optional: adjust for a thinner ring
-                                      pointColorMapper: (ChartData data, _) => data.color,
+                                  const  BoxShadow(
+                                      offset: Offset(2, 2),
+                                      blurRadius: 5,
+                                     
+                                      color: Color.fromARGB(255, 69, 65, 61)
                                     )
                                   ],
-                                )),
-                            Container(
-                                height: constraints.maxHeight * 0.4,
-                                width: constraints.maxWidth * 0.43,
-                                decoration: BoxDecoration(
-                                   boxShadow: [
-                                    const  BoxShadow(
-                                        offset: Offset(2, 2),
-                                        blurRadius: 5,
-                                       
-                                        color: Color.fromARGB(255, 69, 65, 61)
-                                      )
-                                    ],
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(20),
-                                    color: Colors.white),
-                                child: Customs.WMSCartesianChart(
-                                    title: 'Day Wise Quality Summary  ',
-                                    barCount: 1,
-                                    dataSources: [barData],
-                                    yAxisTitle: 'Quality Enabled LPNs',
-                                    barColors: const [Color.fromARGB(255, 114, 68, 5)])),
-                          ],
-                        ),
-                        Gap(constraints.maxHeight * 0.05),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                                height: constraints.maxHeight * 0.4,
-                                width: constraints.maxWidth * 0.43,
-                                decoration: BoxDecoration(
-                                   boxShadow: [
-                                    const  BoxShadow(
-                                        offset: Offset(2, 2),
-                                        blurRadius: 5,
-                                       
-                                        color: Color.fromARGB(255, 69, 65, 61)
-                                      )
-                                    ],
-                                    border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                    borderRadius: BorderRadius.circular(0),
-                                    color: Colors.white),
-                                child: Customs.WMSCartesianChart(
-                                    title: 'Supplier Wise Quality  ',
-                                    barCount: 1,
-                                    dataSources: [barData_sup],
-                                    yAxisTitle: 'Quality In Percentage',
-                                    barColors: const [Color.fromARGB(255, 114, 68, 5)]))
-                          ],
-                        )
-                      ],
-                    ),
+                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white),
+                              child: Customs.WMSPieChart(
+                                  title: "Today Quality Status",
+                                  dataSource: [PieData(xData: "Marked for QC",yData:  10,text:  "10"), PieData(xData: "QC Approved",yData:  6,text:  "6"), PieData(xData: "QC Rejected", yData: 3,text:  "3")],
+                                  pointColorMapper: (datum, index) {
+                                    if (datum.text == '10') {
+                                      return const Color.fromARGB(255, 7, 72, 100);
+                                    } else if (datum.text == '6') {
+                                      return const Color.fromARGB(255, 84, 9, 4);
+                                    } else {
+                                      return const Color.fromARGB(255, 17, 208, 119);
+                                    }
+                                  })),
+                          Container(
+                              height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  const  BoxShadow(
+                                      offset: Offset(2, 2),
+                                      blurRadius: 5,
+                                     
+                                      color: Color.fromARGB(255, 69, 65, 61)
+                                    )
+                                  ],
+                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white),
+                              child: _getRadialGauge()),
+                        ],
+                      ),
+                      Gap(constraints.maxHeight * 0.05),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                              height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  const  BoxShadow(
+                                      offset: Offset(2, 2),
+                                      blurRadius: 5,
+                                     
+                                      color: Color.fromARGB(255, 69, 65, 61)
+                                    )
+                                  ],
+                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white),
+                              child: SfCircularChart(
+                                title: ChartTitle(text: "Material Quality", textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                                annotations: <CircularChartAnnotation>[
+                                  CircularChartAnnotation(
+                                    widget: Container(
+                                      width: 100, // Set the size of the shadowed circle
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        
+                                        shape: BoxShape.circle,
+                                        color: const Color.fromARGB(255, 232, 229, 229),
+                                  
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.3),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 4), // Adjust to set shadow direction
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  CircularChartAnnotation(
+                                    widget: Container(
+                                      child: const Text(
+                                        '45%',
+                                        style: TextStyle(
+                                          color: Color.fromARGB(255, 101, 10, 10),
+                                          fontSize: 25,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                series: <CircularSeries>[
+                                  DoughnutSeries<ChartData, String>(
+                                    dataSource: chartData,
+                                    xValueMapper: (ChartData data, _) => data.x,
+                                    yValueMapper: (ChartData data, _) => data.y,
+                                    radius: '60%', // Adjust the radius as needed
+                                    innerRadius: '45%', // Optional: adjust for a thinner ring
+                                    pointColorMapper: (ChartData data, _) => data.color,
+                                  )
+                                ],
+                              )),
+                          Container(
+                              height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                              decoration: BoxDecoration(
+                                 boxShadow: [
+                                  const  BoxShadow(
+                                      offset: Offset(2, 2),
+                                      blurRadius: 5,
+                                     
+                                      color: Color.fromARGB(255, 69, 65, 61)
+                                    )
+                                  ],
+                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white),
+                              child: Customs.WMSCartesianChart(
+                                  title: 'Day Wise Quality Summary  ',
+                                  barCount: 1,
+                                  dataSources: [barData],
+                                  yAxisTitle: 'Quality Enabled LPNs',
+                                  barColors: const [Color.fromARGB(255, 114, 68, 5)])),
+                        ],
+                      ),
+                      Gap(constraints.maxHeight * 0.05),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                              height: constraints.maxHeight * 0.4,
+                              width: constraints.maxWidth * 0.43,
+                              decoration: BoxDecoration(
+                                 boxShadow: [
+                                  const  BoxShadow(
+                                      offset: Offset(2, 2),
+                                      blurRadius: 5,
+                                     
+                                      color: Color.fromARGB(255, 69, 65, 61)
+                                    )
+                                  ],
+                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
+                                  borderRadius: BorderRadius.circular(0),
+                                  color: Colors.white),
+                              child: Customs.WMSCartesianChart(
+                                  title: 'Supplier Wise Quality  ',
+                                  barCount: 1,
+                                  dataSources: [barData_sup],
+                                  yAxisTitle: 'Quality In Percentage',
+                                  barColors: const [Color.fromARGB(255, 114, 68, 5)]))
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ],
