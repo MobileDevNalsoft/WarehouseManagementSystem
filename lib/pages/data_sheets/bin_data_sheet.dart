@@ -40,6 +40,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
             enabled: isEnabled,
             child: Column(
               children: [
+                Text("RC${_warehouseInteractionBloc.state.dataFromJS!['bin'].toString().toUpperCase()}",style: TextStyle(fontWeight: FontWeight.bold),),
                 isEnabled?Text("-"):
                 state.storageBin!.data!.length==0?Text("Empty bin"):
               SizedBox(
@@ -49,7 +50,6 @@ class _BinDataSheetState extends State<BinDataSheet> {
                     return Customs.MapInfo(size: size, 
                           keys: [
                             'LPN Number',
-                            'Location Barcode',
                             'ASN',
                             'PO Number',
                             'Vendor',
@@ -62,7 +62,6 @@ class _BinDataSheetState extends State<BinDataSheet> {
                             'Serial Number'
                           ], values: [
                              isEnabled ? 'LPN Number' : state.storageBin!.data![index].containerNbr??"NA",
-                             isEnabled ? 'Location Barcode' : state.storageBin!.data![index].locationKey??"NA",
                              isEnabled ? 'ASN' : state.storageBin!.data![index].serialNbrKey??"NA",
                              isEnabled ? 'PO Number' : state.storageBin!.data![index].refPoNbr??"NA",
                              isEnabled ? 'Vendor' : state.storageBin!.data![index].vendor??"NA",
