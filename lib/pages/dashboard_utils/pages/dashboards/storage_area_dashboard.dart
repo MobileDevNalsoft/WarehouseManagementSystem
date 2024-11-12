@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
@@ -75,7 +74,7 @@ class StorageAreaDashboard extends StatelessWidget {
                       child: SfCircularChart(
                         title: ChartTitle(
                           text: 'Location Utilization',
-                          alignment: ChartAlignment.near,
+                          alignment: ChartAlignment.center,
                           textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                         ),
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -84,11 +83,13 @@ class StorageAreaDashboard extends StatelessWidget {
                           RadialBarSeries<PieData, String>(
                             dataSource: locationUtilizationDataSource,
                             maximumValue: 36,
+                            cornerStyle: CornerStyle.bothCurve,
+                            innerRadius: "30%",
                             dataLabelSettings: const DataLabelSettings(
                                 // Renders the data label
                                 isVisible: true,
                                 textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                alignment: ChartAlignment.near),
+                                alignment: ChartAlignment.center),
                             pointColorMapper: (datum, index) {
                               return locationUtilizationDataSource[index].color;
                             },
@@ -109,7 +110,7 @@ class StorageAreaDashboard extends StatelessWidget {
                       child: SfCircularChart(
                         title: ChartTitle(
                           text: 'Warehouse Utilization',
-                          alignment: ChartAlignment.near,
+                          alignment: ChartAlignment.center,
                           textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                         ),
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -122,7 +123,7 @@ class StorageAreaDashboard extends StatelessWidget {
                                 // Renders the data label
                                 isVisible: true,
                                 textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                alignment: ChartAlignment.near),
+                                alignment: ChartAlignment.center),
                             pointColorMapper: (datum, index) {
                               return warehouseUtilizationDataSource[index].color;
                             },
@@ -143,7 +144,7 @@ class StorageAreaDashboard extends StatelessWidget {
                       child: SfCircularChart(
                         title: ChartTitle(
                           text: 'Inventory Summary',
-                          alignment: ChartAlignment.near,
+                          alignment: ChartAlignment.center,
                           textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                         ),
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -155,7 +156,7 @@ class StorageAreaDashboard extends StatelessWidget {
                                 // Renders the data label
                                 isVisible: true,
                                 textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                alignment: ChartAlignment.near),
+                                alignment: ChartAlignment.center),
                             pointColorMapper: (datum, index) {
                               return inventorySummaryDataSource[index].color;
                             },
@@ -180,7 +181,7 @@ class StorageAreaDashboard extends StatelessWidget {
                       child: SfCircularChart(
                         title: ChartTitle(
                           text: 'Inventory Aging',
-                          alignment: ChartAlignment.near,
+                          alignment: ChartAlignment.center,
                           textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                         ),
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -192,7 +193,7 @@ class StorageAreaDashboard extends StatelessWidget {
                                 // Renders the data label
                                 isVisible: true,
                                 textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                alignment: ChartAlignment.near),
+                                alignment: ChartAlignment.center),
                             pointColorMapper: (datum, index) {
                               return inventoryAgingDataSource[index].color;
                             },
@@ -213,23 +214,9 @@ class StorageAreaDashboard extends StatelessWidget {
                         ),
                         padding: EdgeInsets.all(size.height*0.035),
                         alignment: Alignment.bottomCenter,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Supplierwise Inventory',
-                              style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: size.height*0.3,
-                              width: size.width*0.25,
-                              child: Customs.WMSCartesianChart(
-                                title: "",
-                                      yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource]),
-                            )
-                          ],
-                        ),
+                        child: Customs.WMSCartesianChart(
+                          title: 'Supplierwise Inventory',
+                                yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource]),
                       ),
                       Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
@@ -242,7 +229,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         child: SfCircularChart(
                           title: ChartTitle(
                               text: "Avg Storage Time",
-                              alignment: ChartAlignment.near,
+                              alignment: ChartAlignment.center,
                               textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
                           annotations: <CircularChartAnnotation>[
                             CircularChartAnnotation(
@@ -296,7 +283,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         child: Gauges.SfRadialGauge(
                           title: Gauges.GaugeTitle(
                               text: "Cycle Count Accuracy",
-                              alignment: Gauges.GaugeAlignment.near,
+                              alignment: Gauges.GaugeAlignment.center,
                               textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
                           axes: [
                             Gauges.RadialAxis(
@@ -327,17 +314,19 @@ class StorageAreaDashboard extends StatelessWidget {
                                     ))
                               ],
                               axisLineStyle: const Gauges.AxisLineStyle(
-                                  thickness: 35, color: Color.fromARGB(255, 125, 218, 187), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                  thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
                               showTicks: false,
                               showLabels: false,
                               radiusFactor: aspectRatio * 0.3,
                               pointers: const [
                                 Gauges.MarkerPointer(
                                   value: 90,
-                                  markerType: MarkerType.circle,
-                                  markerHeight: 30,
-                                  markerWidth: 30,
+                                  markerType: Gauges.MarkerType.invertedTriangle,
+                                  markerHeight: 20,
+                                  markerWidth: 20,
                                   color: Colors.white,
+                                  enableAnimation: true,
+                                  elevation: 10,
                                 )
                               ],
                             )

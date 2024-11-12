@@ -91,7 +91,7 @@ class Customs {
           margin: EdgeInsets.zero,
             title: ChartTitle(
                 text: title,
-                alignment: ChartAlignment.near,
+                alignment: ChartAlignment.center,
                 textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: constraints.maxHeight*0.045
@@ -121,12 +121,12 @@ class Customs {
             ),),
             primaryYAxis: NumericAxis(
               title: AxisTitle(text: yAxisTitle, textStyle: TextStyle(fontSize: constraints.maxHeight*0.05)),
-              axisLabelFormatter: (axisLabelRenderArgs) => ChartAxisLabel('', TextStyle()),
+              // axisLabelFormatter: (axisLabelRenderArgs) => ChartAxisLabel('', TextStyle()),
               majorGridLines: const MajorGridLines(
                 width: 0,
               ),
-              majorTickLines: const MajorTickLines(width: 0),
-              axisLine: const AxisLine(width: 0,),
+              majorTickLines: const MajorTickLines(width: 1),
+              axisLine: const AxisLine(width: 1,),
         
             ),
             plotAreaBorderWidth: 0,
@@ -180,6 +180,7 @@ class Customs {
     return SfCircularChart(
         title: ChartTitle(
             text: title,
+            alignment: ChartAlignment.center,
             textStyle: const TextStyle(
               fontWeight: FontWeight.bold,
               decoration: TextDecoration.underline,
