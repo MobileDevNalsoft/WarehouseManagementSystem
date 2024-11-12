@@ -37,7 +37,7 @@ class _SidebarState extends State<Sidebar> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             gapH16,
-            Text("Dashboard's",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black),textAlign: TextAlign.center,),
+            Text("Dashboards",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: Colors.black),textAlign: TextAlign.center,),
             gapH16,
             Divider(
               thickness: 2,
