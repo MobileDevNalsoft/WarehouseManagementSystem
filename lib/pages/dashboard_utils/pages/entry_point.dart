@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -22,23 +21,36 @@ final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 class EntryPoint extends StatelessWidget {
   EntryPoint({super.key});
 
-  List<Widget> dashboards = [YardAreaDashboard(), StorageAreaDashboard(), StagingAreaDashboard(), ActivityAreaDashboard(), ReceivingAreaDashboard(), InspectionAreaDashboard(), DockAreaDashboard()];
+  List<Widget> dashboards = [
+    YardAreaDashboard(),
+    StorageAreaDashboard(),
+    StagingAreaDashboard(),
+    ActivityAreaDashboard(),
+    ReceivingAreaDashboard(),
+    InspectionAreaDashboard(),
+    DockAreaDashboard()
+  ];
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
       key: _drawerKey,
-      body: Row(
+      body: Stack(
+        alignment: Alignment.centerLeft,
         children: [
           const Sidebar(),
-          Expanded(
-            child: BlocBuilder<DashboardsBloc, DashboardsState>(
-              builder: (context, state) {
-                return dashboards[state.index!];
-              }
-            ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+              return Container(
+                height: size.height,
+                  width: size.width * 0.85,
+                  decoration:
+                      BoxDecoration(color: Colors.blueGrey.shade100, borderRadius: BorderRadius.only(topLeft: Radius.circular(50), bottomLeft: Radius.circular(50)), boxShadow: [BoxShadow(color: Colors.grey.shade900, offset: Offset(-1,0), blurRadius: 5)]),
+                  padding: EdgeInsets.all(size.height * 0.025),
+                  child: dashboards[state.index!]);
+            }),
           )
         ],
       ),

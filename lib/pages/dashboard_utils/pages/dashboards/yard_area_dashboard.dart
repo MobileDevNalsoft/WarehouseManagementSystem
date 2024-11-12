@@ -82,7 +82,7 @@ class YardAreaDashboard extends StatelessWidget {
                                   color: Colors.white),
                               child: Customs.WMSPieChart(
                                   title: "Trucks Info",
-                                  dataSource: [PieData("Available", 16, "16"), PieData("Occupied", 4, "4")],
+                                  dataSource: [PieDataM(xData: "Available",yData:  16,text: "16"), PieDataM(xData: "Occupied",yData:  4,text:  "4")],
                                   pointColorMapper: (datum, index) {
                                     if (datum.text == '16') {
                                       return const Color.fromARGB(255, 159, 238, 161);
@@ -101,6 +101,7 @@ class YardAreaDashboard extends StatelessWidget {
                               child: Customs.WMSCartesianChart(
                                   title: 'Daywise In Bound and Out Bound',
                                   barCount: 2,
+                                  barColors: [Colors.teal, Colors.greenAccent],
                                   dataSources: [inBoundData, outBoundData],
                                   yAxisTitle: 'Number of Vehicles')),
                         ],
@@ -127,7 +128,7 @@ class YardAreaDashboard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.white),
                               child:
-                                  Customs.WMSPieChart(title: 'In Bound vs Out Bound', dataSource: [PieData("Total", 10, "10"), PieData("Active", 4, "4")])),
+                                  Customs.WMSPieChart(title: 'In Bound vs Out Bound', dataSource: [PieDataM(xData: "Total",yData:  10,text:  "10"), PieDataM(xData: "Active",yData:  4,text:  "4")])),
                         ],
                       )
                     ],

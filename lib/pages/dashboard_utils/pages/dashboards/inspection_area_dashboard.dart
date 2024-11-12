@@ -45,6 +45,7 @@ class InspectionAreaDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+<<<<<<< HEAD
 
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;
@@ -78,6 +79,34 @@ class InspectionAreaDashboard extends StatelessWidget {
             child: ListView(
               children: [
                 Expanded(
+=======
+    return Column(
+      children: [
+        Gap(size.height * 0.03),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Inspection Area Dashboard',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+        Gap(size.height * 0.03),
+        Expanded(
+          child: ListView(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDefaults.padding * 1.5,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(AppDefaults.padding),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(95, 154, 152, 152),
+                    borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
+                  ),
+>>>>>>> 98dd81f62146c29c5efafa5e53b79b3b842b6d01
                   child: Container(
                     padding: const EdgeInsets.all(AppDefaults.padding),
                     decoration: const BoxDecoration(
@@ -105,8 +134,13 @@ class InspectionAreaDashboard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                     color: Colors.white),
                                 child: Customs.WMSPieChart(
+<<<<<<< HEAD
                                     title: "Today Quality Status",
                                     dataSource: [PieData("Marked for QC", 10, "10"), PieData("QC Approved", 6, "6"), PieData("QC Rejected", 3, "3")],
+=======
+                                    title: "Trucks Info",
+                                    dataSource: [PieDataM(xData: "Available",yData:  16,text:  "16"), PieDataM(xData: "Occupied",yData:  4,text:  "4")],
+>>>>>>> 98dd81f62146c29c5efafa5e53b79b3b842b6d01
                                     pointColorMapper: (datum, index) {
                                       if (datum.text == '10') {
                                         return const Color.fromARGB(255, 7, 72, 100);
@@ -131,7 +165,16 @@ class InspectionAreaDashboard extends StatelessWidget {
                                     border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                     borderRadius: BorderRadius.circular(20),
                                     color: Colors.white),
+<<<<<<< HEAD
                                 child: _getRadialGauge()),
+=======
+                                child: Customs.WMSCartesianChart(
+                                    title: 'Daywise In Bound and Out Bound',
+                                    barCount: 2,
+                                    barColors: [Colors.teal, Colors.greenAccent],
+                                    dataSources: [inBoundData, outBoundData],
+                                    yAxisTitle: 'Number of Vehicles')),
+>>>>>>> 98dd81f62146c29c5efafa5e53b79b3b842b6d01
                           ],
                         ),
                         Gap(constraints.maxHeight * 0.05),
@@ -240,20 +283,25 @@ class InspectionAreaDashboard extends StatelessWidget {
                                     border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                     borderRadius: BorderRadius.circular(20),
                                     color: Colors.white),
+<<<<<<< HEAD
                                 child: Customs.WMSCartesianChart(
                                     title: 'Supplier Wise Quality  ',
                                     barCount: 1,
                                     dataSources: [barData_sup],
                                     yAxisTitle: 'Quality In Percentage',
                                     color: const Color.fromARGB(255, 19, 204, 237)))
+=======
+                                child:
+                                    Customs.WMSPieChart(title: 'In Bound vs Out Bound', dataSource: [PieDataM(xData: "Total",yData:  10,text:  "10"), PieDataM(xData: "Active",yData:  4,text:  "4")])),
+>>>>>>> 98dd81f62146c29c5efafa5e53b79b3b842b6d01
                           ],
                         )
                       ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       );
