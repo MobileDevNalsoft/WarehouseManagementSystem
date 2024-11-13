@@ -45,7 +45,7 @@ class StagingAreaDashboard extends StatelessWidget {
     return Column(
       children: [
         Gap(size.height * 0.03),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
@@ -59,7 +59,7 @@ class StagingAreaDashboard extends StatelessWidget {
           child: ListView(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: AppDefaults.padding * 1.5,
                 ),
                 child: Container(

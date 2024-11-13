@@ -36,7 +36,7 @@ class _RackDataSheetState extends State<RackDataSheet> {
                 enabled: isEnabled,
                 enableSwitchAnimation: true,
                 child: state.storageArea?.data?.isEmpty ?? true?
-                Text("No items")
+                const Text("No items")
                 :
                 Column(
                   children: [
@@ -76,7 +76,7 @@ class _RackDataSheetState extends State<RackDataSheet> {
                                   cursorColor: Colors.black,
                                   decoration: InputDecoration(
                                       hintText: focusNode.hasFocus ? 'Choose' : "Choose",
-                                      border: OutlineInputBorder(),
+                                      border: const OutlineInputBorder(),
                                       hintStyle: const TextStyle(
                                         color: Colors.black54,
                                         fontWeight: FontWeight.normal,

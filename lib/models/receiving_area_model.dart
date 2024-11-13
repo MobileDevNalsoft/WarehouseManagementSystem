@@ -17,9 +17,9 @@ class ReceivingArea {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['response_code'] = this.responseCode;
-    data['response_message'] = this.responseMessage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['response_code'] = responseCode;
+    data['response_message'] = responseMessage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -45,12 +45,12 @@ class ReceiveData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['asn'] = this.asn;
-    data['po_num'] = this.poNum;
-    data['vendor'] = this.vendor;
-    data['item'] = this.item;
-    data['qty'] = this.qty;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['asn'] = asn;
+    data['po_num'] = poNum;
+    data['vendor'] = vendor;
+    data['item'] = item;
+    data['qty'] = qty;
     return data;
   }
 }

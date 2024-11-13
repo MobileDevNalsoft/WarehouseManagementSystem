@@ -38,7 +38,7 @@ class InspectionAreaDashboard extends StatelessWidget {
   ];
 
   final List<ChartData> chartData = [
-    ChartData('David', 45, Color.fromRGBO(3, 109, 97, 1)),
+    ChartData('David', 45, const Color.fromRGBO(3, 109, 97, 1)),
     ChartData('sd', 55, Colors.transparent),
   ];
 
@@ -64,7 +64,7 @@ class InspectionAreaDashboard extends StatelessWidget {
       return Column(
         children: [
           Gap(constraints.maxHeight * 0.03),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
@@ -87,8 +87,8 @@ class InspectionAreaDashboard extends StatelessWidget {
                               height: constraints.maxHeight * 0.4,
                               width: constraints.maxWidth * 0.43,
                               decoration: BoxDecoration(
-                                  boxShadow: [
-                                  const  BoxShadow(
+                                  boxShadow: const [
+                                  BoxShadow(
                                       offset: Offset(2, 2),
                                       blurRadius: 5,
                                      
@@ -114,8 +114,8 @@ class InspectionAreaDashboard extends StatelessWidget {
                               height: constraints.maxHeight * 0.4,
                               width: constraints.maxWidth * 0.43,
                               decoration: BoxDecoration(
-                                boxShadow: [
-                                  const  BoxShadow(
+                                boxShadow: const [
+                                  BoxShadow(
                                       offset: Offset(2, 2),
                                       blurRadius: 5,
                                      
@@ -136,8 +136,8 @@ class InspectionAreaDashboard extends StatelessWidget {
                               height: constraints.maxHeight * 0.4,
                               width: constraints.maxWidth * 0.43,
                               decoration: BoxDecoration(
-                                boxShadow: [
-                                  const  BoxShadow(
+                                boxShadow: const [
+                                  BoxShadow(
                                       offset: Offset(2, 2),
                                       blurRadius: 5,
                                      
@@ -148,7 +148,7 @@ class InspectionAreaDashboard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20),
                                   color: Colors.white),
                               child: SfCircularChart(
-                                title: ChartTitle(text: "Material Quality", textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                                title: const ChartTitle(text: "Material Quality", textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(
                                     widget: Container(
@@ -163,7 +163,7 @@ class InspectionAreaDashboard extends StatelessWidget {
                                           BoxShadow(
                                             color: Colors.black.withOpacity(0.3),
                                             blurRadius: 10,
-                                            offset: Offset(0, 4), // Adjust to set shadow direction
+                                            offset: const Offset(0, 4), // Adjust to set shadow direction
                                           ),
                                         ],
                                       ),
@@ -196,8 +196,8 @@ class InspectionAreaDashboard extends StatelessWidget {
                               height: constraints.maxHeight * 0.4,
                               width: constraints.maxWidth * 0.43,
                               decoration: BoxDecoration(
-                                 boxShadow: [
-                                  const  BoxShadow(
+                                 boxShadow: const [
+                                  BoxShadow(
                                       offset: Offset(2, 2),
                                       blurRadius: 5,
                                      
@@ -223,8 +223,8 @@ class InspectionAreaDashboard extends StatelessWidget {
                               height: constraints.maxHeight * 0.4,
                               width: constraints.maxWidth * 0.43,
                               decoration: BoxDecoration(
-                                 boxShadow: [
-                                  const  BoxShadow(
+                                 boxShadow: const [
+                                  BoxShadow(
                                       offset: Offset(2, 2),
                                       blurRadius: 5,
                                      
@@ -256,12 +256,12 @@ class InspectionAreaDashboard extends StatelessWidget {
   Widget _getRadialGauge() {
     return gauge.SfRadialGauge(
         animationDuration: 2000,
-        title: gauge.GaugeTitle(text: 'Quality Efficiency', textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+        title: const gauge.GaugeTitle(text: 'Quality Efficiency', textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
         axes: <gauge.RadialAxis>[
           gauge.RadialAxis(labelsPosition: gauge.ElementsPosition.outside, showLastLabel: true, minimum: 0, maximum: 100, ranges: <gauge.GaugeRange>[
             gauge.GaugeRange(startValue: 0, endValue: 50, color: const Color.fromARGB(255, 4, 112, 122), startWidth: 30, endWidth: 30),
             gauge.GaugeRange(startValue: 50, endValue: 100, color: const Color.fromARGB(255, 178, 123, 223), startWidth: 30, endWidth: 30),
-          ], pointers: <gauge.GaugePointer>[
+          ], pointers: const <gauge.GaugePointer>[
             gauge.NeedlePointer(
               value: 20,
               enableAnimation: true,

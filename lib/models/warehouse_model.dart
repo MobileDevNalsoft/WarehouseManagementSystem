@@ -1,4 +1,3 @@
-import 'dart:async';
 
 class WarehouseData {
   List<ZoneData>? zones;
@@ -48,7 +47,9 @@ class BinData {
     binID = json['bin_id'];
     capacity = json['capacity'];
     items = ((json['items'] ?? []) as List).map((e) => ItemData.fromJson(e)).toList();
-    items!.forEach((e) => totalQuantity = (totalQuantity ?? 0) + (e.quantity ?? 0));
+    for (var e in items!) {
+      totalQuantity = (totalQuantity ?? 0) + (e.quantity ?? 0);
+    }
   }
 }
 

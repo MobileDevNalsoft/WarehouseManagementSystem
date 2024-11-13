@@ -11,15 +11,15 @@ class YardArea {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['response_code'] = this.responseCode;
-    data['response_message'] = this.responseMessage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['response_code'] = responseCode;
+    data['response_message'] = responseMessage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -59,15 +59,15 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['vehicle_location'] = this.vehicleLocation;
-    data['truck_nbr'] = this.truckNbr;
-    data['vehicle_entry_time'] = this.vehicleEntryTime;
-    data['seq_nbr'] = this.seqNbr;
-    data['shipment_nbr'] = this.shipmentNbr;
-    data['po_nbr'] = this.poNbr;
-    data['vendor_code'] = this.vendorCode;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['vehicle_location'] = vehicleLocation;
+    data['truck_nbr'] = truckNbr;
+    data['vehicle_entry_time'] = vehicleEntryTime;
+    data['seq_nbr'] = seqNbr;
+    data['shipment_nbr'] = shipmentNbr;
+    data['po_nbr'] = poNbr;
+    data['vendor_code'] = vendorCode;
     return data;
   }
 }

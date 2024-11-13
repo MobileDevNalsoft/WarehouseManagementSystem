@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,13 +6,8 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:three_js/three_js.dart';
-import 'package:touchable/touchable.dart';
-import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
-import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/models/yard_area_model.dart';
 import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
 import 'package:warehouse_3d/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/bin_data_sheet.dart';
@@ -91,7 +84,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             Container(
               height: size.height * 0.08,
               width: size.width,
-              color: Colors.blueAccent.shade100,
+              color:  Color.fromRGBO(68, 98, 136, 1),
               child: Row(
                 children: [
                   Gap(size.width * 0.006),
@@ -235,7 +228,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                 focusNode.unfocus();
                                 print("unfocused");
                               },
-                              child: SizedBox()
+                              child: const SizedBox()
                               // InAppWebView(
                               //   initialFile: 'assets/web_code/model.html',
                               //   onConsoleMessage: (controller, consoleMessage) {
@@ -356,7 +349,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         return RackDataSheet(objectNames: objectNames!,);
       case 'bin':
          context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS!['bin']}"));
-        return  BinDataSheet();
+        return  const BinDataSheet();
       case 'area':
         switch (objectValue) {
           case 'stagingArea':
@@ -372,11 +365,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           case 'dockArea-OUT':
             return const DockAreaDataSheet();
           case 'yardArea':
-            return YardAreaDataSheet();
+            return const YardAreaDataSheet();
 
           default:
             return null;
         }
     }
+    return null;
   }
 }

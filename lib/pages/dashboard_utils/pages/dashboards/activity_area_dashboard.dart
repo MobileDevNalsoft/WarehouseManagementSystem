@@ -7,7 +7,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class ActivityAreaDashboard extends StatefulWidget {
-  ActivityAreaDashboard({super.key});
+  const ActivityAreaDashboard({super.key});
 
   @override
   State<ActivityAreaDashboard> createState() => _ActivityAreaDashboardState();
@@ -17,14 +17,14 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   SuggestionsController suggestionsController = SuggestionsController();
 
 
-    static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title" ,Color? primaryColor,Color? secondaryColor,List<String>? legendText,bool? isLegendVisible,int? spacing}){
+    static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title" ,Color? primaryColor,Color? secondaryColor,List<String>? legendText,bool? isLegendVisible}){
     return SfCartesianChart(
                     title: ChartTitle(text: title,textStyle: const TextStyle(
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.bold,
                     )),
                     
-                    legend: isLegendVisible!=null? Legend(alignment: ChartAlignment.near,isVisible: isLegendVisible?? false,isResponsive: true,position: LegendPosition.bottom):Legend(),
+                    legend: isLegendVisible!=null? Legend(alignment: ChartAlignment.near,isVisible: isLegendVisible?? false,isResponsive: true,position: LegendPosition.bottom):const Legend(),
                     onLegendItemRender: (legendRenderArgs) {
                       if(legendText!=null){
                       legendRenderArgs.text = legendText[legendRenderArgs.seriesIndex!];}
@@ -138,7 +138,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                             BoxShadow(
                                               color: Colors.black.withOpacity(0.3),
                                               blurRadius: 10,
-                                              offset: Offset(0, 4), // Adjust to set shadow direction
+                                              offset: const Offset(0, 4), // Adjust to set shadow direction
                                             ),
                                           ],
                                         ),
@@ -149,7 +149,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                         child:  Text(
                                           contentText??"chart",
                                           style: TextStyle(
-                                            color: textColor??Color.fromARGB(255, 101, 10, 10),
+                                            color: textColor??const Color.fromARGB(255, 101, 10, 10),
                                             fontSize: 25,
                                           ),
                                         ),
@@ -303,7 +303,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   ];
 
   final List<AnalogChartData> avgTaskExecutionTime = [
-    AnalogChartData('Execution time', 60, Color.fromRGBO(147, 0, 119, 1)),
+    AnalogChartData('Execution time', 60, const Color.fromRGBO(147, 0, 119, 1)),
     AnalogChartData('rest', 40, Colors.transparent),
     // AnalogChartData('rest', 75, Color.fromRGBO(9, 0, 136, 1))
     // AnalogChartData('Jack', 34, Color.fromRGBO(228,0,124,1)),
@@ -311,7 +311,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   ];
 
   final List<AnalogChartData> avgPickTime = [
-    AnalogChartData('Execution time', 40, Color.fromRGBO(9, 0, 136, 1)),
+    AnalogChartData('Execution time', 40, const Color.fromRGBO(9, 0, 136, 1)),
     AnalogChartData('rest', 60, Colors.transparent),
   ];
   late Map<String, List<String>> employeeSuggestionRange;
@@ -360,7 +360,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
     return Column(
       children: [
         Gap(size.height * 0.03),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
@@ -374,7 +374,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
           child: ListView(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: AppDefaults.padding * 1.5,
                 ),
                 child: Container(
@@ -394,7 +394,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
                                   color: Colors.white),
                               child: WMSPieChart(
                                   title: "Trucks Info",
@@ -414,6 +414,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                     } else if (datum.xData == 'Cancelled') {
                                       return Colors.red;
                                     }
+                                    return null;
                                   })),
                           Container(
                               height: size.height * 0.32,
@@ -431,7 +432,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
                                   color: Colors.white),
                               child: WMSPieChart(
                                   title: "Today Work Order Summary",
@@ -448,6 +449,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                     } else if (datum.xData == 'Completed') {
                                       return Colors.green;
                                     }
+                                    return null;
                                   })),
                         ],
                       ),
@@ -461,28 +463,28 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
                                   color: Colors.white),
                               child: WMSCartesianChart(
                                   title: 'Day Wise Task Summary ',
                                   barCount: 1,
                                   dataSources: [taskdata],
                                   yAxisTitle: 'Number of Tasks',
-                                  primaryColor: Color.fromRGBO(9, 0, 136, 0.692))),
+                                  primaryColor: const Color.fromRGBO(9, 0, 136, 0.692))),
                           Container(
                             height: size.height * 0.48,
                             width: size.width * 0.32,
                             decoration: BoxDecoration(
                                 border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                 borderRadius: BorderRadius.circular(10),
-                                boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
+                                boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
                                 color: Colors.white),
                             child: WMSCartesianChart(
                                 title: 'Employee Wise Task Summary',
                                 barCount: 1,
                                 dataSources: [taskdata],
                                 yAxisTitle: 'Number of Tasks',
-                                primaryColor: Color.fromRGBO(64, 133, 138, 1)),
+                                primaryColor: const Color.fromRGBO(64, 133, 138, 1)),
                           ),
                           SizedBox(
                             height: size.height * 0.48,
@@ -493,7 +495,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                   decoration: BoxDecoration(
                                       border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                       borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
+                                      boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
                                       color: Colors.white),
                                   child: WMSSfCircularChart(
                                       size: size,
@@ -509,14 +511,14 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                   decoration: BoxDecoration(
                                       border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                       borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
+                                      boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
                                       color: Colors.white),
                                   child: WMSSfCircularChart(
                                       size: size,
                                       chartData: avgPickTime,
                                       title: "Avg Pick Time",
                                       contentText: "2h 15m",
-                                      textColor: Color.fromRGBO(13, 6, 109, 1),
+                                      textColor: const Color.fromRGBO(13, 6, 109, 1),
                                       width: 136,
                                       height: 136,
                                       radius: "90%")),
@@ -534,7 +536,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 0.4, spreadRadius: 0.4)],
                                   color: Colors.white),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -546,7 +548,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                         barCount: 1,
                                         dataSources: [empTaskdata],
                                         yAxisTitle: 'Number of Tasks',
-                                        primaryColor: Color.fromRGBO(147, 0, 120, 0.5)),
+                                        primaryColor: const Color.fromRGBO(147, 0, 120, 0.5)),
                                   ),
                                   Align(
                                     alignment: Alignment.topCenter,
@@ -609,7 +611,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                               child: Row(
                                                             children: [
                                                               Checkbox(
-                                                                  shape: OvalBorder(),
+                                                                  shape: const OvalBorder(),
                                                                   value: rangeSelection?selectedEmployeeRange==suggestion: selectedEmployees.contains(suggestion),
                                                                   onChanged: (value) {
                                                                     setState(() {
@@ -709,7 +711,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                           Container(
                                               width: size.width * 0.1,
                                               height: size.height * 0.36,
-                                              decoration: BoxDecoration(),
+                                              decoration: const BoxDecoration(),
                                               child: rangeSelection
                                                   ? Text(selectedEmployeeRange)
                                                   : ListView(
@@ -722,7 +724,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                                   Expanded(
                                                                       child: Text(
                                                                     emp,
-                                                                    style: TextStyle(fontSize: 22),
+                                                                    style: const TextStyle(fontSize: 22),
                                                                   )),
                                                                   IconButton(
                                                                     onPressed: () {
@@ -731,7 +733,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                                         empTaskdata.removeWhere((data) => data.xLabel == emp);
                                                                       });
                                                                     },
-                                                                    icon: Icon(Icons.cancel_rounded),
+                                                                    icon: const Icon(Icons.cancel_rounded),
                                                                     iconSize: size.width * 0.01,
                                                                     splashRadius: 5,
                                                                     visualDensity: VisualDensity.compact,

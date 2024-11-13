@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
@@ -8,7 +7,7 @@ import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class BinDataSheet extends StatefulWidget {
-   BinDataSheet({super.key});
+   const BinDataSheet({super.key});
 
   @override
   State<BinDataSheet> createState() => _BinDataSheetState();
@@ -40,9 +39,9 @@ class _BinDataSheetState extends State<BinDataSheet> {
             enabled: isEnabled,
             child: Column(
               children: [
-                Text("RC${_warehouseInteractionBloc.state.dataFromJS!['bin'].toString().toUpperCase()}",style: TextStyle(fontWeight: FontWeight.bold),),
-                isEnabled?Text("-"):
-                state.storageBin!.data!.length==0?Text("Empty bin"):
+                Text("RC${_warehouseInteractionBloc.state.dataFromJS!['bin'].toString().toUpperCase()}",style: const TextStyle(fontWeight: FontWeight.bold),),
+                isEnabled?const Text("-"):
+                state.storageBin!.data!.isEmpty?const Text("Empty bin"):
               SizedBox(
                 height: size.height * 0.6,
                 child: ListView.separated(

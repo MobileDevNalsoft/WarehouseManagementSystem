@@ -14,7 +14,7 @@ class YardAreaDashboard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     )),
                     
-                    legend: isLegendVisible!=null? Legend(alignment: ChartAlignment.near,isVisible: isLegendVisible?? false,isResponsive: true,position: LegendPosition.bottom):Legend(),
+                    legend: isLegendVisible!=null? Legend(alignment: ChartAlignment.near,isVisible: isLegendVisible?? false,isResponsive: true,position: LegendPosition.bottom):const Legend(),
                     onLegendItemRender: (legendRenderArgs) {
                       if(legendText!=null){
                       legendRenderArgs.text = legendText[legendRenderArgs.seriesIndex!];}
@@ -128,7 +128,7 @@ class YardAreaDashboard extends StatelessWidget {
                                             BoxShadow(
                                               color: Colors.black.withOpacity(0.3),
                                               blurRadius: 10,
-                                              offset: Offset(0, 4), // Adjust to set shadow direction
+                                              offset: const Offset(0, 4), // Adjust to set shadow direction
                                             ),
                                           ],
                                         ),
@@ -139,7 +139,7 @@ class YardAreaDashboard extends StatelessWidget {
                                         child:  Text(
                                           contentText??"chart",
                                           style: TextStyle(
-                                            color: textColor??Color.fromARGB(255, 101, 10, 10),
+                                            color: textColor??const Color.fromARGB(255, 101, 10, 10),
                                             fontSize: 25,
                                           ),
                                         ),
@@ -221,7 +221,7 @@ class YardAreaDashboard extends StatelessWidget {
   ];
 
   final List<AnalogChartData> avgYardTime = [
-    AnalogChartData('Yard time', 45, Color.fromRGBO(147,0,119,1)),
+    AnalogChartData('Yard time', 45, const Color.fromRGBO(147,0,119,1)),
     AnalogChartData('rest', 55, Colors.transparent),
     // AnalogChartData('rest', 75, Color.fromRGBO(9, 0, 136, 1))
     // AnalogChartData('Jack', 34, Color.fromRGBO(228,0,124,1)),
@@ -231,8 +231,8 @@ class YardAreaDashboard extends StatelessWidget {
  final List<AnalogChartData> loadingUnloadingCount = [
     // AnalogChartData('Yard time', 45, Color.fromRGBO(147,0,119,1)),
     // AnalogChartData('rest', 55, Colors.transparent),
-    AnalogChartData('Loading', 75, Color.fromRGBO(9, 0, 136, 1)),
-    AnalogChartData('Unloading', 34, Color.fromRGBO(138, 68, 27, 1))
+    AnalogChartData('Loading', 75, const Color.fromRGBO(9, 0, 136, 1)),
+    AnalogChartData('Unloading', 34, const Color.fromRGBO(138, 68, 27, 1))
     // AnalogChartData('Others', 52, Color.fromRGBO(255,189,57,1))
   ];
 
@@ -249,7 +249,7 @@ class YardAreaDashboard extends StatelessWidget {
     return Column(
       children: [
         Gap(size.height * 0.03),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
@@ -263,7 +263,7 @@ class YardAreaDashboard extends StatelessWidget {
           child: ListView(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: AppDefaults.padding * 1,
                 ),
                 child: Container(
@@ -283,7 +283,7 @@ class YardAreaDashboard extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
                                   color: Colors.white),
                               child: WMSCartesianChart(
                                   title: 'Vehicle Detention', barCount: 1, dataSources: [vehicleDetentionData], yAxisTitle: 'Number of Vehicles')),
@@ -293,17 +293,18 @@ class YardAreaDashboard extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
                                   color: Colors.white),
                               child: WMSPieChart(
                                 title: 'Yard Utilization',
                                 dataSource: [PieData("Available Locations", 10, "10"), PieData("Occupied", 4, "4")],
                                 pointColorMapper: (piedata, index) {
                                   if (index == 0) {
-                                    return Color.fromRGBO(255, 182, 24, 1);
+                                    return const Color.fromRGBO(255, 182, 24, 1);
                                   } else if (index == 1) {
-                                    return Color.fromRGBO(161, 40, 40, 0.8);
+                                    return const Color.fromRGBO(161, 40, 40, 0.8);
                                   }
+                                  return null;
                                 },
                               )),
                           Container(
@@ -312,7 +313,7 @@ class YardAreaDashboard extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
                                   color: Colors.white),
                               child: WMSCartesianChart(
 
@@ -336,7 +337,7 @@ class YardAreaDashboard extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
                                   color: Colors.white),
 
                               child: WMSSfCircularChart(size: size, chartData: avgYardTime, title: "Average Yard Time", contentText: "5h 25m",width: 150,height: 150,radius: "72%")),
@@ -347,16 +348,16 @@ class YardAreaDashboard extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
                                   borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
+                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
                                   color: Colors.white),
                      child:   SfCircularChart(
-                          title:ChartTitle(text: "Previous month yard acitvity"),
-                          legend: Legend(isResponsive: true,isVisible: true),
+                          title:const ChartTitle(text: "Previous month yard acitvity"),
+                          legend: const Legend(isResponsive: true,isVisible: true),
                         series: <CircularSeries>[
                             // Renders radial bar chart
                             RadialBarSeries<ChartData, String>(
                                 dataSource: chartData,
-                               dataLabelSettings: DataLabelSettings(
+                               dataLabelSettings: const DataLabelSettings(
                                     // Renders the data label
                                     isVisible: true,
                                       textStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -365,7 +366,7 @@ class YardAreaDashboard extends StatelessWidget {
                                 name: "Loading and Unloading Count",
                                 pointColorMapper: (datum, index) {
                                   if(datum.x=="Loading"){
-                                    return  Color.fromRGBO(187, 44, 42, 1);
+                                    return  const Color.fromRGBO(187, 44, 42, 1);
                                   }
                                   else{
                                     return const Color.fromRGBO(	255,	166	,0,1);

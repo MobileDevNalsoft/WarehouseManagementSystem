@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +72,7 @@ class _WarehouseState extends State<Warehouse> {
                       decoration: BoxDecoration(
                           color: Colors.green.shade200,
                           borderRadius: BorderRadius.circular(size.width * 0.016),
-                          boxShadow: [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: const Offset(0, 0))]),
+                          boxShadow: const [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: Offset(0, 0))]),
                       child: Text(
                         "Storage Area 1",
                         style: TextStyle(fontSize: size.width * 0.024),
@@ -91,7 +90,7 @@ class _WarehouseState extends State<Warehouse> {
                       decoration: BoxDecoration(
                           color: Colors.green.shade200,
                           borderRadius: BorderRadius.circular(size.width * 0.016),
-                          boxShadow: [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: const Offset(0, 0))]),
+                          boxShadow: const [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: Offset(0, 0))]),
                       child: Text(
                         "Storage Area 2",
                         style: TextStyle(fontSize: size.width * 0.024),
@@ -109,7 +108,7 @@ class _WarehouseState extends State<Warehouse> {
                       decoration: BoxDecoration(
                           color: Colors.green.shade200,
                           borderRadius: BorderRadius.circular(size.width * 0.016),
-                          boxShadow: [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: const Offset(0, 0))]),
+                          boxShadow: const [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: Offset(0, 0))]),
                       child: Text(
                         "Storage Area 3",
                         style: TextStyle(fontSize: size.width * 0.024),
@@ -128,13 +127,13 @@ class _WarehouseState extends State<Warehouse> {
                     decoration: BoxDecoration(
                         color: Colors.deepPurple.shade200,
                         borderRadius: BorderRadius.circular(size.width * 0.016),
-                        boxShadow: [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: const Offset(0, 0))]),
+                        boxShadow: const [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: Offset(0, 0))]),
                     child: Text(
                       "Staging Area",
                       style: TextStyle(fontSize: size.width * 0.02),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Container(
                     alignment: Alignment.center,
                     height: size.height * 0.2,
@@ -142,7 +141,7 @@ class _WarehouseState extends State<Warehouse> {
                     decoration: BoxDecoration(
                         color: Colors.deepPurple.shade200,
                         borderRadius: BorderRadius.circular(size.width * 0.016),
-                        boxShadow: [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: const Offset(0, 0))]),
+                        boxShadow: const [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: Offset(0, 0))]),
                     child: Text(
                       "Staging Area",
                       style: TextStyle(fontSize: size.width * 0.02),
@@ -160,13 +159,13 @@ class _WarehouseState extends State<Warehouse> {
                     decoration: BoxDecoration(
                         color: Colors.yellow.shade200,
                         borderRadius: BorderRadius.circular(size.width * 0.016),
-                        boxShadow: [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: const Offset(0, 0))]),
+                        boxShadow: const [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: Offset(0, 0))]),
                     child: Text(
                       "Receiving Area",
                       style: TextStyle(fontSize: size.width * 0.02),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Container(
                     alignment: Alignment.center,
                     height: size.height * 0.2,
@@ -174,7 +173,7 @@ class _WarehouseState extends State<Warehouse> {
                     decoration: BoxDecoration(
                         color: Colors.orange.shade200,
                         borderRadius: BorderRadius.circular(size.width * 0.016),
-                        boxShadow: [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: const Offset(0, 0))]),
+                        boxShadow: const [BoxShadow(blurRadius: 5, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.black, offset: Offset(0, 0))]),
                     child: Text(
                       "Shipping Area",
                       style: TextStyle(fontSize: size.width * 0.02),

@@ -34,7 +34,7 @@ class YardBloc extends Bloc<YardEvent, YardState> {
         // print("yard area status ${state.yardAreaStatus}");
       });
     } catch (e) {
-      print("error ${e}");
+      print("error $e");
     }
   }
 }

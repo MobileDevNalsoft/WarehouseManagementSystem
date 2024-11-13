@@ -6,7 +6,6 @@ import 'package:warehouse_3d/constants/app_constants.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/logger/logger.dart';
 import 'package:warehouse_3d/models/activity_area_model.dart';
-import 'package:warehouse_3d/network_util.dart';
 
 import '../../local_network_calls.dart';
 import '../../models/area_response.dart';

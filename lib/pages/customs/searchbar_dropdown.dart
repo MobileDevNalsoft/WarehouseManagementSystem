@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class SearchBarDropdown extends StatefulWidget {
-  SearchBarDropdown({required this.size});
+  SearchBarDropdown({super.key, required this.size});
   Size size;
   @override
   _SearchBarDropdownState createState() => _SearchBarDropdownState();
@@ -33,13 +33,13 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       height: height,
       width: size.width * 0.26,
       child: Stack(
         children: [
           AnimatedContainer(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             height: bottomHeight,
             width: size.width * 0.1,
             color: Colors.transparent,
@@ -75,7 +75,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                         child: Text(
                           item,
                           style: TextStyle(
-                            color: item == dropdownValue ? Colors.blue.shade900 : Colors.black,
+                            color: item == dropdownValue ? Color.fromRGBO(68, 98, 136, 1) : Colors.black,
                             fontWeight: FontWeight.w500,
                             fontSize: size.height * 0.022,
                           ),
@@ -110,7 +110,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade900, // Purple background
+                      color: Color.fromRGBO(68, 98, 136, 1), // Purple background
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: Row(
@@ -150,7 +150,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               contentPadding: EdgeInsets.only(left: size.width*0.008, top: size.height*0.012),
                               isCollapsed: true,
                               hintStyle: TextStyle(
-                                color: Colors.blue.shade900.withAlpha(200), // Purple
+                                color: Colors.black, // Purple
                                 fontSize: size.height * 0.022,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -158,7 +158,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                             ),
                             cursorHeight: size.height*0.03,
                             style: TextStyle(
-                              color: Colors.blue.shade900,
+                              color: Color.fromRGBO(68, 98, 136, 1),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -166,7 +166,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                       ),
                       Icon(
                         Icons.search,
-                        color: Colors.blue.shade900,
+                        color: Color.fromRGBO(68, 98, 136, 1),
                         size: size.height * 0.035,
                       ),
                     ],

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class OnHoverButton extends StatefulWidget {
@@ -30,7 +29,7 @@ class _OnHoverButtonState extends State<OnHoverButton> {
             top: 0,
             bottom: 0,
             left: 0,
-            child: AnimatedContainer(duration: Duration(milliseconds: 300), height: _isHovered ? size.height*0.2:0, width: size.width*0.3, decoration: BoxDecoration(color: Colors.black),),
+            child: AnimatedContainer(duration: const Duration(milliseconds: 300), height: _isHovered ? size.height*0.2:0, width: size.width*0.3, decoration: const BoxDecoration(color: Colors.black),),
           )
         ],
       ),

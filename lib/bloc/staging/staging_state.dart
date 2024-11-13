@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:warehouse_3d/models/receiving_area_model.dart';
 import 'package:warehouse_3d/models/staging_area_model.dart';
 
 enum  StagingAreaStatus {initial, loading, success, failure }
@@ -15,7 +14,7 @@ StagingState({this.stagingStatus,this.stagingArea,this.pageNum,this.stagingList}
  
 
   factory StagingState.initial() {
-    return StagingState(stagingStatus: StagingAreaStatus.initial,pageNum: 0,stagingList: []);
+    return StagingState(stagingStatus: StagingAreaStatus.initial,pageNum: 0,stagingList: const []);
   }
 
   

@@ -108,7 +108,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                           child: Customs.WMSPieChart(
@@ -136,7 +136,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                           child: Column(
@@ -166,7 +166,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                             child: _getRadialGauge()),
@@ -181,7 +181,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                             child: Customs.WMSCartesianChart(
@@ -195,7 +195,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                             child: Customs.WMSCartesianChart(
@@ -209,7 +209,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                             child: Customs.WMSCartesianChart(
@@ -229,7 +229,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                             child: SfCircularChart(
@@ -284,7 +284,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                             child: Stack(
@@ -330,7 +330,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           height: constraints.maxHeight * 0.48,
                           width: constraints.maxWidth * 0.3,
                           decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                             child: SfCircularChart(
@@ -401,8 +401,8 @@ class ReceivingAreaDashboard extends StatelessWidget {
             gauge.GaugeRange(startValue: 0, endValue: 50, color: Colors.orange, startWidth: 10, endWidth: 10),
             gauge.GaugeRange(startValue: 50, endValue: 100, color: Colors.green, startWidth: 10, endWidth: 10),
             gauge.GaugeRange(startValue: 100, endValue: 150, color: Colors.red, startWidth: 10, endWidth: 10)
-          ], pointers: <gauge.GaugePointer>[
-            const gauge.NeedlePointer(
+          ], pointers: const <gauge.GaugePointer>[
+            gauge.NeedlePointer(
               value: 90,
               enableAnimation: true,
               animationType: gauge.AnimationType.ease,

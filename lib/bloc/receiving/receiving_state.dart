@@ -14,7 +14,7 @@ ReceivingState({this.receivingStatus,this.receivingArea,this.pageNum,this.receiv
  
 
   factory ReceivingState.initial() {
-    return ReceivingState(receivingStatus: ReceivingAreaStatus.initial,pageNum: 0,receiveList: []);
+    return ReceivingState(receivingStatus: ReceivingAreaStatus.initial,pageNum: 0,receiveList: const []);
   }
 
   

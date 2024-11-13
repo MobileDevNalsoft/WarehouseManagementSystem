@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/dock_area/dock_area_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
+import 'package:warehouse_3d/pages/customs/expandable_list_view.dart';
 
 class DockAreaDataSheet extends StatefulWidget {
   const DockAreaDataSheet({super.key});
@@ -15,6 +16,102 @@ class DockAreaDataSheet extends StatefulWidget {
 class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
   final ScrollController _controller = ScrollController();
   late DockAreaBloc _dockAreaBloc;
+
+  final Map<String, dynamic> response1 = {
+    "Truck-01" : [
+      {
+        "name": "Vendor-101"
+      },
+      {
+        "name": "Vendor-102"
+      },
+      {
+        "name": "Vendor-103"
+      }
+    ],
+    "Truck-02" : [
+      {
+        "name": "Vendor-201"
+      },
+      {
+        "name": "Vendor-202"
+      },
+      {
+        "name": "Vendor-203"
+      }
+    ],
+    "Truck-03" : [
+      {
+        "name": "Vendor-301"
+      },
+      {
+        "name": "Vendor-302"
+      },
+      {
+        "name": "Vendor-303"
+      }
+    ],
+    "Truck-04" : [
+      {
+        "name": "Vendor-401"
+      },
+      {
+        "name": "Vendor-402"
+      },
+      {
+        "name": "Vendor-403"
+      }
+    ],
+    "Truck-05" : [
+      {
+        "name": "Vendor-501"
+      },
+      {
+        "name": "Vendor-502"
+      },
+      {
+        "name": "Vendor-503"
+      }
+    ]
+  };
+
+  final Map<String, dynamic> response2 = {
+    "Vendor-101": [
+      {
+        "po_num": "PO-101-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      },
+      {
+        "po_num": "PO-101-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      },
+      {
+        "po_num": "PO-101-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      }
+    ],
+    "Vendor-102": [
+      {
+        "po_num": "PO-102-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      },
+      {
+        "po_num": "PO-102-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      },
+      {
+        "po_num": "PO-102-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      }
+    ]
+  };
+
 
   @override
   void initState() {
@@ -43,52 +140,30 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
       size: size,
       title: 'Dock Area',
       children: [
-        const Text(
-            'Materials',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-          Gap(size.height * 0.02),
           BlocBuilder<DockAreaBloc, DockAreaState>(
             builder: (context, state) {
               bool isEnabled = state.getDataState != GetDataState.success;
-              return Skeletonizer(
+              return Expanded(
+                child: Skeletonizer(
                   enabled: isEnabled,
                   enableSwitchAnimation: true,
-                  child: SizedBox(
-                    height: size.height * 0.6,
-                    child: ListView.separated(
+                  child: ExpandableListView(data: [response1, response2])
+                ),
+              );
+            },
+          )
+      ]
+    );
+  }
+}
+
+
+/*
+ListView.builder(
                         controller: _controller,
-                        itemBuilder: (context, index) => index < state.dockAreaItems!.length
+                        itemBuilder: (context, index) => index < response1.length
                                 ? 
-                            Container(
-                              height: size.height*0.2,
-                            width: size.width*0.15,
-                            decoration: BoxDecoration(color: Colors.blueGrey.shade500, borderRadius: BorderRadius.circular(20)),
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  height: size.height*0.09,
-                                  width: size.width*0.09,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueGrey.shade200,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [BoxShadow(
-                                      color: Colors.grey,
-                                      blurRadius: 5,
-                                    )]
-                                  ),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Transform.translate(offset: Offset(0, size.height*0.004),child: Image.asset('assets/images/qty_cart.png', scale: size.height*0.02,)),
-                                      Text(state.dockAreaItems![index].qty!.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.height*0.019),),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            )
+                            ExpandableListView(height: size.height, data: [response1, response2],)
                             //     Customs.MapInfo(size: size, keys: [
                             //   // 'Dock Type',
                             //   'Truck No.',
@@ -112,13 +187,13 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
                               child: Card(
                                 child: Row(
                                   children: [
-                                    Spacer(),
+                                    const Spacer(),
                                     CircleAvatar(
                                       backgroundColor: Colors.black,
                                       child: Column(
                                         children: [
-                                          Text("10", style: TextStyle(color: Colors.white),),
-                                          Image.asset('assets/images/qty_cart.png', color: Colors.white,)
+                                          const Text("10", style: TextStyle(color: Colors.white),),
+                                          Image.asset('assets/images/truck.png', color: Colors.white,)
                                         ],
                                       ),
                                     )
@@ -142,12 +217,4 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
                               //   'Quantity'
                               // ]),
                             ),
-                        separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                        itemCount: isEnabled ? 8 : state.dockAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.dockAreaItems!.length + 1 : state.dockAreaItems!.length),
-                  ));
-            },
-          )
-      ]
-    );
-  }
-}
+                        itemCount: isEnabled ? 8 : state.dockAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.dockAreaItems!.length + 1 : state.dockAreaItems!.length),*/

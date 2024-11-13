@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
-import 'package:warehouse_3d/main.dart';
-import 'package:warehouse_3d/models/yard_area_model.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -37,7 +33,7 @@ class _HomePageState extends State<HomePage> {
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.blue.shade100, Colors.white], begin: Alignment.centerLeft, end: Alignment.centerRight, stops: [0.5, 1])),
+            gradient: LinearGradient(colors: [Colors.blue.shade100, Colors.white], begin: Alignment.centerLeft, end: Alignment.centerRight, stops: const [0.5, 1])),
         child: Stack(
           children: [
             Align(

@@ -1,9 +1,7 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:lottie/lottie.dart';
 import 'package:warehouse_3d/bloc/authentication/authentication_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
@@ -12,7 +10,7 @@ import '../navigations/navigator_service.dart';
 import 'customs/loginformfield.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -79,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                       // Custom text field for password
                       BlocConsumer<AuthenticationBloc, AuthenticationState>(
                         listenWhen: (previous, current) => current.authenticationStatus == AuthenticationStatus.invalidCredentials || current.authenticationStatus == AuthenticationStatus.failure,
-                        listener: (context, state) => Customs.AnimatedDialog(context: context, header: Icon(Icons.error, size: 35,), content: [Text(state.authenticationStatus == AuthenticationStatus.invalidCredentials ? 'Invalid Credentials' : 'Error', style: TextStyle(fontSize: 18),)]),
+                        listener: (context, state) => Customs.AnimatedDialog(context: context, header: const Icon(Icons.error, size: 35,), content: [Text(state.authenticationStatus == AuthenticationStatus.invalidCredentials ? 'Invalid Credentials' : 'Error', style: const TextStyle(fontSize: 18),)]),
                         builder: (context, state) {
                           return CustomTextFormField(
                             hintText: 'password',
@@ -127,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                               ), content: [SizedBox(
                                 height: size.height*0.06,
                                 width: size.width*0.13,
-                                child: Text(message, style: TextStyle(fontSize: 18),softWrap: true, textAlign: TextAlign.center,))]);
+                                child: Text(message, style: const TextStyle(fontSize: 18),softWrap: true, textAlign: TextAlign.center,))]);
                           } else {
                             // unfocuses all the focused fields
                             FocusManager.instance.primaryFocus?.unfocus();

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 
 import 'package:warehouse_3d/pages/customs/customs.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class StorageAreaDashboard extends StatelessWidget {
   StorageAreaDashboard({super.key});
@@ -27,8 +24,8 @@ class StorageAreaDashboard extends StatelessWidget {
   ];
 
   List<PieData> warehouseUtilizationDataSource = [
-    PieData(xData: "Occupied Bins", yData: 300, color: const Color.fromARGB(255, 181, 166, 221)),
-    PieData(xData: "Avalable Bins", yData: 60, color: const Color.fromARGB(255, 238, 236, 135)),
+    PieData(xData: "Occupied Bins", yData: 300, color: const Color.fromARGB(255, 102, 82, 156)),
+    PieData(xData: "Avalable Bins", yData: 60, color: const Color.fromARGB(255, 178, 166, 209)),
   ];
 
   List<PieData> inventorySummaryDataSource = [
@@ -44,7 +41,7 @@ class StorageAreaDashboard extends StatelessWidget {
   ];
 
   final List<TimeData> chartData1 = [
-    TimeData('David', 81, const Color.fromRGBO(183, 200, 224, 1)),
+    TimeData('David', 81, const Color.fromARGB(255, 151, 174, 206)),
     TimeData('sd', 19, Colors.transparent),
   ];
 
@@ -68,13 +65,12 @@ class StorageAreaDashboard extends StatelessWidget {
                       height: size.height * 0.45,
                       width: size.width * 0.25,
                       decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
                       child: SfCircularChart(
                         title: ChartTitle(
                           text: 'Location Utilization',
-                          alignment: ChartAlignment.center,
                           textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                         ),
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -104,13 +100,12 @@ class StorageAreaDashboard extends StatelessWidget {
                       height: size.height * 0.45,
                       width: size.width * 0.25,
                       decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
                       child: SfCircularChart(
                         title: ChartTitle(
                           text: 'Warehouse Utilization',
-                          alignment: ChartAlignment.center,
                           textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                         ),
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -138,13 +133,12 @@ class StorageAreaDashboard extends StatelessWidget {
                       height: size.height * 0.45,
                       width: size.width * 0.25,
                       decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
                       child: SfCircularChart(
                         title: ChartTitle(
                           text: 'Inventory Summary',
-                          alignment: ChartAlignment.center,
                           textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                         ),
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -175,13 +169,12 @@ class StorageAreaDashboard extends StatelessWidget {
                       height: size.height * 0.45,
                       width: size.width * 0.25,
                       decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
                       child: SfCircularChart(
                         title: ChartTitle(
                           text: 'Inventory Aging',
-                          alignment: ChartAlignment.center,
                           textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                         ),
                         legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -210,7 +203,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]
+                          boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]
                         ),
                         padding: EdgeInsets.all(size.height*0.035),
                         alignment: Alignment.bottomCenter,
@@ -223,13 +216,12 @@ class StorageAreaDashboard extends StatelessWidget {
                         height: size.height * 0.45,
                         width: size.width * 0.25,
                         decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
                         alignment: Alignment.topCenter,
                         child: SfCircularChart(
                           title: ChartTitle(
                               text: "Avg Storage Time",
-                              alignment: ChartAlignment.center,
                               textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
                           annotations: <CircularChartAnnotation>[
                             CircularChartAnnotation(
@@ -277,7 +269,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         height: size.height * 0.45,
                         width: size.width * 0.25,
                         decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
                         alignment: Alignment.topCenter,
                         child: Gauges.SfRadialGauge(

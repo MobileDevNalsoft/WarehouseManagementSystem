@@ -11,7 +11,7 @@ final class ActivityAreaState extends Equatable {
   int? pageNum;
 
   factory ActivityAreaState.initial() {
-    return ActivityAreaState(getDataState: GetDataState.initial, activityAreaItems: [], pageNum: 0);
+    return ActivityAreaState(getDataState: GetDataState.initial, activityAreaItems: const [], pageNum: 0);
   }
 
   ActivityAreaState copyWith({
