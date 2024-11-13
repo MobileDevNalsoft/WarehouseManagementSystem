@@ -70,7 +70,7 @@ class DockAreaDashboard extends StatelessWidget {
                       alignment: Alignment.bottomCenter,
                       child: Customs.WMSCartesianChart(
                         title: "Daywise Utilization",
-                              yAxisTitle: 'Number of Vehicles', barCount: 2, barColors: [Colors.teal, Colors.greenAccent], dataSources: [dockINDayWiseDataSource, dockOUTDayWiseDataSource], legendVisibility: true),
+                              yAxisTitle: 'Number of Vehicles', barCount: 2, barColors: [Colors.teal, Colors.greenAccent], dataSources: [dockINDayWiseDataSource, dockOUTDayWiseDataSource], ),
                     ),
                     Container(
                     margin: EdgeInsets.all(aspectRatio * 8),

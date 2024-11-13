@@ -66,6 +66,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
     ];
 
     Size size = MediaQuery.of(context).size;
+    double aspectRatio = size.width / size.height;
 
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;
@@ -397,12 +398,15 @@ class ReceivingAreaDashboard extends StatelessWidget {
         animationDuration: 2000,
         title: const gauge.GaugeTitle(text: 'Putaway Accuracy', textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
         axes: <gauge.RadialAxis>[
-          gauge.RadialAxis(minimum: 0, maximum: 100, ranges: <gauge.GaugeRange>[
-            gauge.GaugeRange(startValue: 0, endValue: 50, color: Colors.orange, startWidth: 10, endWidth: 10),
-            gauge.GaugeRange(startValue: 50, endValue: 100, color: Colors.green, startWidth: 10, endWidth: 10),
-            gauge.GaugeRange(startValue: 100, endValue: 150, color: Colors.red, startWidth: 10, endWidth: 10)
-          ], pointers: const <gauge.GaugePointer>[
-            gauge.NeedlePointer(
+          gauge.RadialAxis(
+            showLastLabel: true,
+            labelsPosition: ElementsPosition.outside,
+            minimum: 0, maximum: 100, ranges: <gauge.GaugeRange>[
+            gauge.GaugeRange(startValue: 0, endValue: 50, color: Colors.orange, startWidth: 30, endWidth: 30),
+            gauge.GaugeRange(startValue: 50, endValue: 100, color: Colors.green, startWidth: 30, endWidth: 30),
+   
+          ], pointers: <gauge.GaugePointer>[
+            const gauge.NeedlePointer(
               value: 90,
               enableAnimation: true,
               animationType: gauge.AnimationType.ease,

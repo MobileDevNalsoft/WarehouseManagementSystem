@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class YardAreaDashboard extends StatelessWidget {
@@ -246,149 +247,146 @@ class YardAreaDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Gap(size.height * 0.03),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Yard Area Dashboard',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-        Gap(size.height * 0.03),
-        Expanded(
-          child: ListView(
+     double aspectRatio = size.width / size.height;
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDefaults.padding * 1,
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(AppDefaults.padding),
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(95, 154, 152, 152),
-                    borderRadius: BorderRadius.all(Radius.circular(AppDefaults.borderRadius)),
-                  ),
+              Container(
+                      margin: EdgeInsets.all(aspectRatio * 8),
+                      height: size.height * 0.45,
+                      width: size.width * 0.25,
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                      padding: EdgeInsets.all(size.height * 0.035),
+                      alignment: Alignment.bottomCenter,
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                              height: size.height * 0.32,
-                              width: size.width * 0.24,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
-                                  color: Colors.white),
-                              child: WMSCartesianChart(
-                                  title: 'Vehicle Detention', barCount: 1, dataSources: [vehicleDetentionData], yAxisTitle: 'Number of Vehicles')),
-                          Container(
-                              height: size.height * 0.32,
-                              width: size.width * 0.28,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
-                                  color: Colors.white),
-                              child: WMSPieChart(
-                                title: 'Yard Utilization',
-                                dataSource: [PieData("Available Locations", 10, "10"), PieData("Occupied", 4, "4")],
-                                pointColorMapper: (piedata, index) {
-                                  if (index == 0) {
-                                    return const Color.fromRGBO(255, 182, 24, 1);
-                                  } else if (index == 1) {
-                                    return const Color.fromRGBO(161, 40, 40, 0.8);
-                                  }
-                                  return null;
-                                },
-                              )),
-                          Container(
-                              height: size.height * 0.32,
-                              width: size.width * 0.24,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
-                                  color: Colors.white),
-                              child: WMSCartesianChart(
-
-                                  title: 'Day wise yard Utlization',
-                                  primaryColor: Colors.blueAccent,
-                                  secondaryColor: const Color.fromARGB(255, 138, 40, 155),
-                                  barCount: 2,
-                                  isLegendVisible: true,
-                                  legendText: ["Loading", "Unloading"],
-                                  dataSources: [inBoundData, outBoundData],
-                                  yAxisTitle: 'Number of Vehicles')),
-                        ],
+                       Text(
+                          'Vehicle Detention',
+                          style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
+                        ),
+                      SizedBox(
+                          height: size.height * 0.3,
+                            width: size.width * 0.25,
+                        child: Customs.WMSCartesianChart(
+                            title: '', barCount: 1, dataSources: [vehicleDetentionData], yAxisTitle: 'Number of Vehicles',legendVisibility: false),
                       ),
-                      Gap(size.height * 0.04),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                              height: size.height * 0.32,
-                              width: size.width * 0.24,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
-                                  color: Colors.white),
-
-                              child: WMSSfCircularChart(size: size, chartData: avgYardTime, title: "Average Yard Time", contentText: "5h 25m",width: 150,height: 150,radius: "72%")),
-                       
-                          Container(
-                              height: size.height * 0.32,
-                              width: size.width * 0.24,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [BoxShadow(color: Colors.black45,blurRadius: 0.4,spreadRadius: 0.4)],
-                                  color: Colors.white),
-                     child:   SfCircularChart(
-                          title:const ChartTitle(text: "Previous month yard acitvity"),
-                          legend: const Legend(isResponsive: true,isVisible: true),
-                        series: <CircularSeries>[
-                            // Renders radial bar chart
-                            RadialBarSeries<ChartData, String>(
-                                dataSource: chartData,
-                               dataLabelSettings: const DataLabelSettings(
-                                    // Renders the data label
-                                    isVisible: true,
-                                      textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                    alignment: ChartAlignment.near
-                                ),
-                                name: "Loading and Unloading Count",
-                                pointColorMapper: (datum, index) {
-                                  if(datum.x=="Loading"){
-                                    return  const Color.fromRGBO(187, 44, 42, 1);
-                                  }
-                                  else{
-                                    return const Color.fromRGBO(	255,	166	,0,1);
-                                  }
-                                },
-                                xValueMapper: (ChartData data, _) => data.x,
-                                yValueMapper: (ChartData data, _) => data.y,
-                                
-                            )
-                        ]
-                    ))
-                        ],
-                      ),
-                      
                     ],
-                  ),
-                ),
-              ),
+                  )),
+             Container(
+                      margin: EdgeInsets.all(aspectRatio * 8),
+                      height: size.height * 0.45,
+                      width: size.width * 0.25,
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                      padding: EdgeInsets.all(size.height * 0.035),
+                      alignment: Alignment.topCenter,
+                  child: Customs.WMSPieChart(
+                      title:'Yard Utilization',
+                    dataSource: [PieData(xData: "Available Locations", yData: 10,text: "10"), PieData(xData: "Occupied", yData: 4, text: "4")],
+                    legendVisibility: true,
+                    pointColorMapper: (piedata, index) {
+                      if (index == 0) {
+                        return Color.fromRGBO(255, 182, 24, 1);
+                      } else if (index == 1) {
+                        return Color.fromRGBO(161, 40, 40, 0.8);
+                      }
+                    },
+                  )),
+              Container(
+                      margin: EdgeInsets.all(aspectRatio * 8),
+                      height: size.height * 0.45,
+                      width: size.width * 0.25,
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                      padding: EdgeInsets.all(size.height * 0.035),
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Day Wise Task Summary ',
+                            style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: size.height * 0.3,
+                            width: size.width * 0.25,
+                        child: WMSCartesianChart(
+                                  
+                            title: '',
+                            primaryColor: Colors.blueAccent,
+                            secondaryColor: const Color.fromARGB(255, 138, 40, 155),
+                            barCount: 2,
+                            isLegendVisible: true,
+                            legendText: ["Loading", "Unloading"],
+                            dataSources: [inBoundData, outBoundData],
+                            yAxisTitle: 'Number of Vehicles'),
+                      ),
+                    ],
+                  )),
             ],
           ),
-        ),
-      ],
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+                Container(
+                      margin: EdgeInsets.all(aspectRatio * 8),
+                      height: size.height * 0.45,
+                      width: size.width * 0.25,
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                      padding: EdgeInsets.all( size.height * 0.035),
+                      alignment: Alignment.topCenter,
+                  child: Customs.WMSSfCircularChart(size: size, chartData: avgYardTime, title: "Average Yard Time", contentText: "5h 25m",width: 150,height: 150,radius: "60%")),
+           
+             Container(
+                      margin: EdgeInsets.all(aspectRatio * 8),
+                      height: size.height * 0.45,
+                      width: size.width * 0.25,
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                      padding: EdgeInsets.all(size.height * 0.035),
+                      alignment: Alignment.topCenter, 
+         child:   SfCircularChart(
+              title:ChartTitle(text: "Previous month yard acitvity"),
+              legend: Legend(isResponsive: true,isVisible: true),
+            series: <CircularSeries>[
+                // Renders radial bar chart
+                RadialBarSeries<ChartData, String>(
+                    dataSource: chartData,
+                     cornerStyle: CornerStyle.bothCurve,
+                            innerRadius: "45%",
+                   dataLabelSettings: DataLabelSettings(
+                        // Renders the data label
+                        
+                        isVisible: true,
+                          textStyle: TextStyle(fontWeight: FontWeight.bold),
+                        alignment: ChartAlignment.near
+                    ),
+                    name: "Loading and Unloading Count",
+                    pointColorMapper: (datum, index) {
+                      if(datum.x=="Loading"){
+                        return  Color.fromRGBO(187, 44, 42, 1);
+                      }
+                      else{
+                        return const Color.fromRGBO(	255,	166	,0,1);
+                      }
+                    },
+                    xValueMapper: (ChartData data, _) => data.x,
+                    yValueMapper: (ChartData data, _) => data.y,
+                    
+                )
+            ]
+        ))
+            ],
+          ),
+          
+        ],
+      ),
     );
   }
 }
@@ -399,24 +397,24 @@ class YardAreaDashboard extends StatelessWidget {
         final double y;
     }
 // models for charts
-class PieData {
-  PieData(this.xData, this.yData, [this.text]);
-  final String xData;
-  final num yData;
-  String? text;
-}
+// class PieData {
+//   PieData(this.xData, this.yData, [this.text]);
+//   final String xData;
+//   final num yData;
+//   String? text;
+// }
 
-class BarData {
-  String xLabel;
-  int yValue;
-  String abbreviation;
-  BarData({required this.xLabel, required this.yValue, required this.abbreviation});
-}
+// class BarData {
+//   String xLabel;
+//   int yValue;
+//   String abbreviation;
+//   BarData({required this.xLabel, required this.yValue, required this.abbreviation});
+// }
 
 
-class AnalogChartData {
-        AnalogChartData(this.x, this.y, this.color);
-            final String x;
-            final double y;
-            final Color color;
-    }
+// class AnalogChartData {
+//         AnalogChartData(this.x, this.y, this.color);
+//             final String x;
+//             final double y;
+//             final Color color;
+//     }

@@ -41,7 +41,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                         child: Customs.MapInfo(size: size, keys: [
                               'Truck number',
                               'Vehicle location',
-                              'Vehicle entry time'
+                              'Vehicle entry time',
                               'Vendor code',
                               'PO number',
                               'Shipment number',
