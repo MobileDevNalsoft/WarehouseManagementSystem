@@ -66,6 +66,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
     ];
 
     Size size = MediaQuery.of(context).size;
+    double aspectRatio = size.width / size.height;
 
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;

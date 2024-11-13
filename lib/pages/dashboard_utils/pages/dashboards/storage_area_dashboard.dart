@@ -203,6 +203,7 @@ class StorageAreaDashboard extends StatelessWidget {
                         ],
                       ),
                     ),
+                    
                     Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
                         height: size.height * 0.45,
@@ -218,6 +219,7 @@ class StorageAreaDashboard extends StatelessWidget {
                           title: 'Supplierwise Inventory',
                                 yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource]),
                       ),
+
                       Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
                         height: size.height * 0.45,

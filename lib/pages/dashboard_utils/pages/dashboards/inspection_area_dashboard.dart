@@ -44,7 +44,8 @@ class InspectionAreaDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+     Size size = MediaQuery.of(context).size;
+    double aspectRatio = size.width / size.height;
 
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;
@@ -92,7 +93,7 @@ class InspectionAreaDashboard extends StatelessWidget {
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                               child: Customs.WMSPieChart(
-                                  title: "Today Quality Status",
+                                  title:'Today Quality Status',
                                   dataSource: [PieData(xData: "Marked for QC",yData:  10,text:  "10"), PieData(xData: "QC Approved",yData:  6,text:  "6"), PieData(xData: "QC Rejected", yData: 3,text:  "3")],
                                   pointColorMapper: (datum, index) {
                                     if (datum.text == '10') {
