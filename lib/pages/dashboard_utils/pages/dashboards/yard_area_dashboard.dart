@@ -285,11 +285,7 @@ class YardAreaDashboard extends StatelessWidget {
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
                   child: Customs.WMSPieChart(
-                      title: ChartTitle(
-                            text: 'Yard Utilization',
-                            alignment: ChartAlignment.near,
-                            textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                          ),
+                      title:'Yard Utilization',
                     dataSource: [PieData(xData: "Available Locations", yData: 10,text: "10"), PieData(xData: "Occupied", yData: 4, text: "4")],
                     legendVisibility: true,
                     pointColorMapper: (piedata, index) {
@@ -345,7 +341,7 @@ class YardAreaDashboard extends StatelessWidget {
                           color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all( size.height * 0.035),
                       alignment: Alignment.topCenter,
-                  child: Customs.WMSSfCircularChart(size: size, chartData: avgYardTime, title: "Average Yard Time", contentText: "5h 25m",width: 150,height: 150,radius: "72%")),
+                  child: Customs.WMSSfCircularChart(size: size, chartData: avgYardTime, title: "Average Yard Time", contentText: "5h 25m",width: 150,height: 150,radius: "60%")),
            
              Container(
                       margin: EdgeInsets.all(aspectRatio * 8),
@@ -362,8 +358,11 @@ class YardAreaDashboard extends StatelessWidget {
                 // Renders radial bar chart
                 RadialBarSeries<ChartData, String>(
                     dataSource: chartData,
+                     cornerStyle: CornerStyle.bothCurve,
+                            innerRadius: "45%",
                    dataLabelSettings: DataLabelSettings(
                         // Renders the data label
+                        
                         isVisible: true,
                           textStyle: TextStyle(fontWeight: FontWeight.bold),
                         alignment: ChartAlignment.near

@@ -176,11 +176,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
                       child: Customs.WMSPieChart(
-                          title: ChartTitle(
-                            text: 'Inventory Summary',
-                            alignment: ChartAlignment.near,
-                            textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                          ),
+                          title: 'Inventory Summary',
                           dataSource: [
                             PieData(xData: "Created", yData: 16, text: "16"),
                             PieData(xData: "Completed", yData: 6, text: "6"),
@@ -208,11 +204,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                     padding: EdgeInsets.all(size.height * 0.035),
                     alignment: Alignment.topCenter,
                     child: Customs.WMSPieChart(
-                      title: ChartTitle(
-                        text: 'Task Type Summary',
-                        alignment: ChartAlignment.near,
-                        textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                      ),
+                      title: 'Task Type Summary',
                       dataSource: [
                         PieData(xData: "Cycle Count", yData: 10, text: "10"),
                         PieData(xData: "Pick Tasks", yData: 4, text: "4"),
@@ -230,11 +222,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
                       child: Customs.WMSPieChart(
-                          title: ChartTitle(
-                            text: 'Today Work Order Summary',
-                            alignment: ChartAlignment.near,
-                            textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                          ),
+                          title:'Today Work Order Summary',
                           dataSource: [
                             PieData(xData: "Created", yData: 16, text: "16"),
                             PieData(xData: "Work In Progress", yData: 6, text: "6"),

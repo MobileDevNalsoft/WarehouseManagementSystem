@@ -96,6 +96,7 @@ class Customs {
                   fontWeight: FontWeight.bold,
                   fontSize: constraints.maxHeight*0.045
                 )),
+                
             primaryXAxis: CategoryAxis(
               labelStyle: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.04),
               majorGridLines: MajorGridLines(
@@ -130,22 +131,7 @@ class Customs {
         
             ),
             plotAreaBorderWidth: 0,
-            // tooltipBehavior: TooltipBehavior(
-            //   enable: true,
-            //   color: Colors.black,
-            //   textStyle: const TextStyle(color: Colors.black),
-            //   textAlignment: ChartAlignment.center,
-            //   animationDuration: 100,
-            //   duration: 2000,
-            //   shadowColor: Colors.black,
-            //   builder: (data, point, series, pointIndex, seriesIndex) => IntrinsicWidth(
-            //     child: Container(
-            //         height: size.height * 0.01,
-            //         margin: EdgeInsets.only(
-            //             left: size.width * 0.03, right: size.width * 0.03,),
-            //         child: Text((data as BarData).abbreviation, style: TextStyle(color: Colors.white),)),
-            //   ),
-            // ),
+            
             borderWidth: 0,
             enableAxisAnimation: true,
 
@@ -164,7 +150,7 @@ class Customs {
                   useSeriesColor: true,
                   builder: (data, point, series, pointIndex, seriesIndex) => Text(
                     (data as BarData).yValue.toString(),
-                    style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.035),
+                    style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.06),
                   ),
                 ),
                 width: 0.6,

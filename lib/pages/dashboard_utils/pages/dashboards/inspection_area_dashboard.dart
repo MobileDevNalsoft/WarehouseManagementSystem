@@ -100,10 +100,7 @@ class InspectionAreaDashboard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(20),
                                   color: Colors.white),
                               child: Customs.WMSPieChart(
-                                  title:  ChartTitle(
-                          text: 'Today Quality Status',
-                          alignment: ChartAlignment.near,
-                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),),
+                                  title:'Today Quality Status',
                                   dataSource: [PieData(xData: "Marked for QC",yData:  10,text:  "10"), PieData(xData: "QC Approved",yData:  6,text:  "6"), PieData(xData: "QC Rejected", yData: 3,text:  "3")],
                                   pointColorMapper: (datum, index) {
                                     if (datum.text == '10') {
