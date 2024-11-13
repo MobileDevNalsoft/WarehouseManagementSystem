@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 
@@ -42,6 +43,7 @@ class StagingAreaDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    double aspectRatio = size.width / size.height;
     return Column(
       children: [
         Gap(size.height * 0.03),
@@ -87,7 +89,10 @@ class StagingAreaDashboard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white),
                                 child: Customs.WMSPieChart(
-                                    title: "Trucks Info",
+                                    title:  ChartTitle(
+                          text: "Trucks Info",
+                          alignment: ChartAlignment.near,
+                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),),
                                     dataSource: [PieData(xData: "Available",yData:  16,text:  "16"), PieData(xData: "Occupied",yData:  4,text:  "4")],
                                     pointColorMapper: (datum, index) {
                                       if (datum.text == '16') {
@@ -134,7 +139,10 @@ class StagingAreaDashboard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white),
                                 child:
-                                    Customs.WMSPieChart(title: 'In Bound vs Out Bound', dataSource: [PieData(xData: "Total",yData:  10,text:  "10"), PieData(xData: "Active",yData:  4,text:  "4")])),
+                                    Customs.WMSPieChart(title:  ChartTitle(
+                          text: 'In Bound vs Out Bound',
+                          alignment: ChartAlignment.near,
+                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),), dataSource: [PieData(xData: "Total",yData:  10,text:  "10"), PieData(xData: "Active",yData:  4,text:  "4")])),
                           ],
                         )
                       ],

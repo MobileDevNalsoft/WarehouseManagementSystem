@@ -226,7 +226,7 @@ class StorageAreaDashboard extends StatelessWidget {
                               width: size.width*0.25,
                               child: Customs.WMSCartesianChart(
                                 title: "",
-                                      yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource]),
+                                      yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource],legendVisibility: false),
                             )
                           ],
                         ),

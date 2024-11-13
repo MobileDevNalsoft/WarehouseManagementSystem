@@ -84,7 +84,7 @@ class Customs {
     );
   }
 
-  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title", List<Color> barColors = const [Colors.blue], bool legendVisibility = false}) {
+  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title", List<Color> barColors = const [Colors.blue],bool? legendVisibility}) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SfCartesianChart(
@@ -104,7 +104,7 @@ class Customs {
               majorTickLines: MajorTickLines(width: 0),
               axisLine: AxisLine(width: 0),
             ),
-            legend: Legend(isVisible: legendVisibility, alignment: ChartAlignment.near, legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
+            legend: Legend(isVisible: legendVisibility??true, alignment: ChartAlignment.near, legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
               height: constraints.maxHeight*0.1,
               width: constraints.maxWidth*0.2,
               child: Row(
@@ -148,17 +148,16 @@ class Customs {
             // ),
             borderWidth: 0,
             enableAxisAnimation: true,
-            
+
             series: List.generate(
               barCount,
               (index) => ColumnSeries<BarData, String>(
                 spacing: 0.15,
-                
                 dataSource: dataSources![index],
                 xValueMapper: (BarData data, _) => data.xLabel,
                 yValueMapper: (BarData data, _) => data.yValue,
                 borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(colors: [barColors[index], Colors.black54    ], stops: [0.8,1],),
+                gradient: LinearGradient(colors: [barColors[index], Colors.black], stops: [0.8,1],),
                 dataLabelMapper: (datum, index) => datum.yValue.toString(),
                 dataLabelSettings: DataLabelSettings(
                   isVisible: true,
@@ -168,7 +167,7 @@ class Customs {
                     style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.035),
                   ),
                 ),
-                width: barCount == 1 ? 0.4 : 0.5,
+                width: 0.6,
               ),
             ));
       }
@@ -176,14 +175,9 @@ class Customs {
   }
 
   static Widget WMSPieChart(
-      {String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
+      {required ChartTitle title , List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
     return SfCircularChart(
-        title: ChartTitle(
-            text: title,
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
-            )),
+        title:title,
         tooltipBehavior: TooltipBehavior(
           enable: true,
         ),
@@ -210,6 +204,69 @@ class Customs {
                   labelAlignment: ChartDataLabelAlignment.top)),
         ]);
   }
+
+static Widget WMSSfCircularChart(
+      {required List<AnalogChartData> chartData,
+      String? title,
+      String? contentText,
+      required Size size,
+      double? height,
+      double? width,
+      String? radius,
+      Color? textColor}) {
+    return SfCircularChart(
+      title: ChartTitle(text: title ?? "title"),
+      annotations: <CircularChartAnnotation>[
+        CircularChartAnnotation(
+          widget: Container(
+            width: size.height * 0.12,
+            height: size.height * 0.12,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color.fromARGB(255, 232, 229, 229),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 10,
+                  offset: Offset(0, 4), // Adjust to set shadow direction
+                ),
+              ],
+            ),
+          ),
+        ),
+        CircularChartAnnotation(
+          widget: Container(
+            height: size.height * 0.12,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueGrey.shade100, boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade900,
+                blurRadius: 10, // Adjust to set shadow direction
+              ),
+            ]),
+            child: Text(
+              contentText ?? "chart",
+              style: TextStyle(
+                color: textColor ?? Color.fromARGB(255, 101, 10, 10),
+                fontSize: 25,
+              ),
+            ),
+          ),
+        ),
+      ],
+      series: <CircularSeries>[
+        DoughnutSeries<AnalogChartData, String>(
+          dataSource: chartData,
+          xValueMapper: (AnalogChartData data, _) => data.x,
+          yValueMapper: (AnalogChartData data, _) => data.y,
+          radius: radius ?? '50%', // Adjust the radius as needed
+          innerRadius: '20%', // Optional: adjust for a thinner ring
+          pointColorMapper: (AnalogChartData data, _) => data.color,
+        )
+      ],
+    );
+  }
+
 
   static void AnimatedDialog({
     required BuildContext context,
@@ -373,6 +430,14 @@ class BarData {
 }
 class TimeData {
   TimeData(this.x, this.y, this.color);
+  final String x;
+  final double y;
+  final Color color;
+}
+
+  
+  class AnalogChartData {
+  AnalogChartData(this.x, this.y, this.color);
   final String x;
   final double y;
   final Color color;

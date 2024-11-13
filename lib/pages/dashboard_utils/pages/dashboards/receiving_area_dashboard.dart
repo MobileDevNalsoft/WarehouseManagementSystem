@@ -66,6 +66,7 @@ class ReceivingAreaDashboard extends StatelessWidget {
     ];
 
     Size size = MediaQuery.of(context).size;
+    double aspectRatio = size.width / size.height;
 
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;
@@ -112,7 +113,10 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           padding: EdgeInsets.all(size.height * 0.035),
                           alignment: Alignment.topCenter,
                           child: Customs.WMSPieChart(
-                              title: "Total ASN Status",
+                              title:  ChartTitle(
+                          text: "Total ASN Status",
+                          alignment: ChartAlignment.near,
+                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),),
                               dataSource: [
                                 PieData(xData: "In-Transit", yData: 8, text: "8"),
                                 PieData(xData: "In Receiving", yData: 4, text: "4"),
@@ -142,7 +146,10 @@ class ReceivingAreaDashboard extends StatelessWidget {
                           child: Column(
                               children: [
                                 Customs.WMSPieChart(
-                                    title: "Total Inbound Summary",
+                                    title:  ChartTitle(
+                          text: "Total Inbound Summary",
+                          alignment: ChartAlignment.near,
+                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),),
                                     dataSource: [
                                       PieData(xData: "Open", yData: 16, text: "16"),
                                       PieData(xData: "In Receiving", yData: 4, text: "4"),
