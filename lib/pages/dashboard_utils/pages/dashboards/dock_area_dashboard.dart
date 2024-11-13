@@ -87,7 +87,7 @@ class DockAreaDashboard extends StatelessWidget {
                     child: SfCircularChart(
                       title: ChartTitle(
                         text: 'Dock-IN Utilization',
-                        alignment: ChartAlignment.near,
+                        alignment: ChartAlignment.center,
                         textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                       ),
                       legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -100,7 +100,7 @@ class DockAreaDashboard extends StatelessWidget {
                               // Renders the data label
                               isVisible: true,
                               textStyle: TextStyle(fontWeight: FontWeight.bold),
-                              alignment: ChartAlignment.near),
+                              alignment: ChartAlignment.center),
                           pointColorMapper: (datum, index) {
                             return dockINDataSource[index].color;
                           },
@@ -126,7 +126,7 @@ class DockAreaDashboard extends StatelessWidget {
                     child: SfCircularChart(
                       title: ChartTitle(
                         text: 'Dock-OUT Utilization',
-                        alignment: ChartAlignment.near,
+                        alignment: ChartAlignment.center,
                         textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                       ),
                       legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -139,7 +139,7 @@ class DockAreaDashboard extends StatelessWidget {
                               // Renders the data label
                               isVisible: true,
                               textStyle: TextStyle(fontWeight: FontWeight.bold),
-                              alignment: ChartAlignment.near),
+                              alignment: ChartAlignment.center),
                           pointColorMapper: (datum, index) {
                             return dockOUTDataSource[index].color;
                           },
@@ -160,7 +160,7 @@ class DockAreaDashboard extends StatelessWidget {
                               child: SfCircularChart(
                                 title: ChartTitle(
                                     text: "Avg Loading Time",
-                                    alignment: ChartAlignment.near,
+                                    alignment: ChartAlignment.center,
                                     textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(
@@ -215,7 +215,7 @@ class DockAreaDashboard extends StatelessWidget {
                               child: SfCircularChart(
                                 title: ChartTitle(
                                     text: "Avg Unloading Time",
-                                    alignment: ChartAlignment.near,
+                                    alignment: ChartAlignment.center,
                                     textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(
@@ -265,7 +265,7 @@ class DockAreaDashboard extends StatelessWidget {
                               child: SfCircularChart(
                                 title: ChartTitle(
                                     text: "Avg Dock TAT",
-                                    alignment: ChartAlignment.near,
+                                    alignment: ChartAlignment.center,
                                     textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(

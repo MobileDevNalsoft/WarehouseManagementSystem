@@ -76,6 +76,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _storageStreamController.onListen = () {
       print("messageFromJS");
     };
+    // just for debugging
+    animationController.forward();
   }
 
   @override
@@ -233,59 +235,60 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                 focusNode.unfocus();
                                 print("unfocused");
                               },
-                              child: InAppWebView(
-                                initialFile: 'assets/web_code/model.html',
-                                onConsoleMessage: (controller, consoleMessage) {
-                                  try {
-                                    if (consoleMessage.messageLevel.toNativeValue() == 1) {
-                                      Map<String, dynamic> message = jsonDecode(consoleMessage.message);
-                                      _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message));
-                                    }
-                                  } catch (e) {
-                                    print("error $e");
-                                  }
-                                },
-                                onWebViewCreated: (controller) async {
-                                  _warehouseInteractionBloc.state.inAppWebViewController = controller;
+                              child: SizedBox()
+                              // InAppWebView(
+                              //   initialFile: 'assets/web_code/model.html',
+                              //   onConsoleMessage: (controller, consoleMessage) {
+                              //     try {
+                              //       if (consoleMessage.messageLevel.toNativeValue() == 1) {
+                              //         Map<String, dynamic> message = jsonDecode(consoleMessage.message);
+                              //         _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message));
+                              //       }
+                              //     } catch (e) {
+                              //       print("error $e");
+                              //     }
+                              //   },
+                              //   onWebViewCreated: (controller) async {
+                              //     _warehouseInteractionBloc.state.inAppWebViewController = controller;
                               
-                                  Timer.periodic(
-                                    const Duration(milliseconds: 500),
-                                    (timer) async {
-                                      // _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
-                                      //   value.forEach((e) {
-                                      //     print(e);
-                                      //   });
-                                      // });
+                              //     Timer.periodic(
+                              //       const Duration(milliseconds: 500),
+                              //       (timer) async {
+                              //         // _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
+                              //         //   value.forEach((e) {
+                              //         //     print(e);
+                              //         //   });
+                              //         // });
                               
-                                      // ignore: prefer_conditional_assignment
-                                      if (objectNames == null) {
-                                        objectNames =
-                                            await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "modelObjectNames");
-                                      }
+                              //         // ignore: prefer_conditional_assignment
+                              //         if (objectNames == null) {
+                              //           objectNames =
+                              //               await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "modelObjectNames");
+                              //         }
                               
-                                      bool? isLoaded =
-                                          await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                      if (isLoaded != null) {
-                                        _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                                        _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
-                                      }
+                              //         bool? isLoaded =
+                              //             await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
+                              //         if (isLoaded != null) {
+                              //           _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                              //           _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                              //         }
                               
-                                      String? requestedData =
-                                          await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "getData");
-                                      if (requestedData != null) {
-                                        if (requestedData.toLowerCase() == "yardarea") {
-                                          context.read<YardBloc>().add(GetYardData());
-                                          _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
-                                        }else if (requestedData.contains("rack")) {
-                                          context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
-                                          _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
-                                        }
-                                      }
-                                    },
-                                  );
-                                },
-                                onLoadStop: (controller, url) async {},
-                              ),
+                              //         String? requestedData =
+                              //             await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "getData");
+                              //         if (requestedData != null) {
+                              //           if (requestedData.toLowerCase() == "yardarea") {
+                              //             context.read<YardBloc>().add(GetYardData());
+                              //             _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
+                              //           }else if (requestedData.contains("rack")) {
+                              //             context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
+                              //             _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
+                              //           }
+                              //         }
+                              //       },
+                              //     );
+                              //   },
+                              //   onLoadStop: (controller, url) async {},
+                              // ),
                             ),
                           ),
                         );
@@ -296,8 +299,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     builder: (context, child) {
                       return Positioned(
                         right: positionAnimation.value,
-                        child: getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
-                                context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) ??
+                        child: const DockAreaDataSheet()
+                        // getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
+                        //         context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) 
+                                ??
                             const SizedBox(),
                       );
                     }),
