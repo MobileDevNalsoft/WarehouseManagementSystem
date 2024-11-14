@@ -19,13 +19,21 @@ class ReceivingBloc extends Bloc<ReceivingEvent, ReceivingState> {
 
   void _onGetReceivingData(GetReceivingData event, Emitter<ReceivingState> emit) async {
     try {
-      await _customApi.get(
-        AppConstants.RECEIVING_AREA,
-        queryParameters: {"facility_id": 243, "page_num": state.pageNum},
-      ).then((value) {
+      emit(state.copyWith(receivingStatus: ReceivingAreaStatus.initial));
+      await _customApi
+          .get(
+        event.searchText != null ? AppConstants.SEARCH : AppConstants.RECEIVING_AREA,
+        queryParameters: event.searchText != null
+            ? {"search_text": event.searchText, "search_area": "RECEIVING", "facility_id": '243', "page_num": state.pageNum}
+            : {"facility_id": 243, "page_num": state.pageNum},
+      )
+          .then((value) {
         ReceivingArea receivingArea = ReceivingArea.fromJson(jsonDecode(value.response!.data));
-
-        state.receiveList!.addAll(receivingArea.data!);
+        if (state.pageNum == 0) {
+          state.receiveList = receivingArea.data;
+        } else {
+          state.receiveList!.addAll(receivingArea.data!);
+        }
 
         emit(state.copyWith(receivingArea: receivingArea, receivingStatus: ReceivingAreaStatus.success, receiveList: state.receiveList!));
       });

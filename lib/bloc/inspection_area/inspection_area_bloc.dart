@@ -28,10 +28,18 @@ class InspectionAreaBloc extends Bloc<InspectionEvent, InspectionAreaState> {
 
     while (checkList.isNotEmpty) {
       try {
-        await _customApi.get(AppConstants.INSPECTION_AREA, queryParameters: {"facility_id": 243, "page_num": pageNum}).then((apiResponse) {
-          AreaResponse<InspectionAreaItem> inspectionAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data),(json) => InspectionAreaItem.fromJson(json));
+        emit(state.copyWith(getDataState: GetDataState.initial));
+        await _customApi
+            .get(event.searchText!=null ? AppConstants.SEARCH : AppConstants.INSPECTION_AREA,
+                queryParameters: event.searchText!=null
+                    ? {"search_text": event.searchText, "search_area": "INSPECTION", "facility_id": '243', "page_num": pageNum}
+                    : {"facility_id": '243', "page_num": pageNum})
+            .then((apiResponse) {
+          AreaResponse<InspectionAreaItem> inspectionAreaResponse =
+              AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => InspectionAreaItem.fromJson(json));
           state.inspectionAreaItems!.addAll(inspectionAreaResponse.data!);
           emit(state.copyWith(inspectionAreaItems: state.inspectionAreaItems, getDataState: GetDataState.success));
+          // emit(state.copyWith(getDataState: GetDataState.initial));
           checkList = jsonDecode(apiResponse.response!.data)["data"];
           pageNum += 1;
         });

@@ -46,6 +46,7 @@ class AppConstants {
   static const STAGING_AREA = 'staging_area';
   static const STORAGE_AISLE = 'storage_aisle';
   static const STORAGE_BIN = 'storage_bin';
+  static const SEARCH = 'search';
 }
 
  

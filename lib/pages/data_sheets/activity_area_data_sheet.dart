@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
+import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
@@ -24,7 +25,7 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
 
     _activityBloc = context.read<ActivityAreaBloc>();
     if (_activityBloc.state.getDataState == GetDataState.initial) {
-      _activityBloc.add(const GetActivityAreaData());
+      _activityBloc.add( GetActivityAreaData( searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     }
     _controller.addListener(_scrollListener);
   }
@@ -32,7 +33,7 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       _activityBloc.state.pageNum = _activityBloc.state.pageNum! + 1;
-      _activityBloc.add(const GetActivityAreaData());
+      _activityBloc.add( GetActivityAreaData( searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     }
   }
 

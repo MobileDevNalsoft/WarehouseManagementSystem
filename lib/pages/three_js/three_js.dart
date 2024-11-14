@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:three_js/three_js.dart';
 import 'package:touchable/touchable.dart';
 import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
+import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
@@ -76,8 +77,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _storageStreamController.onListen = () {
       print("messageFromJS");
     };
-    // just for debugging
-    animationController.forward();
+    
   }
 
   @override
@@ -235,60 +235,60 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                 focusNode.unfocus();
                                 print("unfocused");
                               },
-                              child: SizedBox()
-                              // InAppWebView(
-                              //   initialFile: 'assets/web_code/model.html',
-                              //   onConsoleMessage: (controller, consoleMessage) {
-                              //     try {
-                              //       if (consoleMessage.messageLevel.toNativeValue() == 1) {
-                              //         Map<String, dynamic> message = jsonDecode(consoleMessage.message);
-                              //         _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message));
-                              //       }
-                              //     } catch (e) {
-                              //       print("error $e");
-                              //     }
-                              //   },
-                              //   onWebViewCreated: (controller) async {
-                              //     _warehouseInteractionBloc.state.inAppWebViewController = controller;
+                              child:
+                              InAppWebView(
+                                initialFile: 'assets/web_code/model.html',
+                                onConsoleMessage: (controller, consoleMessage) {
+                                  try {
+                                    if (consoleMessage.messageLevel.toNativeValue() == 1) {
+                                      Map<String, dynamic> message = jsonDecode(consoleMessage.message);
+                                      print("mes $message ${message.runtimeType}");
+                                      _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message));
+                                    }
+                                  } catch (e) {
+                                    print("error $e");
+                                  }
+                                },
+                                onWebViewCreated: (controller) async {
+                                  _warehouseInteractionBloc.state.inAppWebViewController = controller;
                               
-                              //     Timer.periodic(
-                              //       const Duration(milliseconds: 500),
-                              //       (timer) async {
-                              //         // _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
-                              //         //   value.forEach((e) {
-                              //         //     print(e);
-                              //         //   });
-                              //         // });
+                                  Timer.periodic(
+                                    const Duration(milliseconds: 500),
+                                    (timer) async {
+                                      // _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
+                                      //   value.forEach((e) {
+                                      //     print(e);
+                                      //   });
+                                      // });
                               
-                              //         // ignore: prefer_conditional_assignment
-                              //         if (objectNames == null) {
-                              //           objectNames =
-                              //               await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "modelObjectNames");
-                              //         }
+                                      // ignore: prefer_conditional_assignment
+                                      if (objectNames == null) {
+                                        objectNames =
+                                            await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "modelObjectNames");
+                                      }
                               
-                              //         bool? isLoaded =
-                              //             await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                              //         if (isLoaded != null) {
-                              //           _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                              //           _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
-                              //         }
+                                      bool? isLoaded =
+                                          await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
+                                      if (isLoaded != null) {
+                                        _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                                        _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                      }
                               
-                              //         String? requestedData =
-                              //             await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "getData");
-                              //         if (requestedData != null) {
-                              //           if (requestedData.toLowerCase() == "yardarea") {
-                              //             context.read<YardBloc>().add(GetYardData());
-                              //             _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
-                              //           }else if (requestedData.contains("rack")) {
-                              //             context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
-                              //             _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
-                              //           }
-                              //         }
-                              //       },
-                              //     );
-                              //   },
-                              //   onLoadStop: (controller, url) async {},
-                              // ),
+                                      String? requestedData =
+                                          await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "getData");
+                                      if (requestedData != null) {
+                                        if (requestedData.toLowerCase() == "yardarea") {
+                                          _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
+                                        }else if (requestedData.contains("rack")) {
+                                          context.read<StorageBloc>().add(AddStorageAreaData(selectedRack: requestedData.split("rack").last.toUpperCase()));
+                                          _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getData");
+                                        }
+                                      }
+                                    },
+                                  );
+                                },
+                                onLoadStop: (controller, url) async {},
+                              ),
                             ),
                           ),
                         );
@@ -299,9 +299,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     builder: (context, child) {
                       return Positioned(
                         right: positionAnimation.value,
-                        child: const DockAreaDataSheet()
-                        // getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
-                        //         context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) 
+                        child:
+                        getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
+                                context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) 
                                 ??
                             const SizedBox(),
                       );
@@ -319,6 +319,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                 //     borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20))
                 //   ),
                 //   height: size.height*0.4,
+
                 //   width: size.width*0.1,
                 //   child: Column(
                 //     children: [
@@ -358,20 +359,22 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
          context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS!['bin']}"));
         return  BinDataSheet();
       case 'area':
-        switch (objectValue) {
-          case 'stagingArea':
-            return const StagingAreaDataSheet();
-          case 'activityArea':
-            return const ActivityAreaDataSheet();
-          case 'receivingArea':
-            return const ReceivingAreaDataSheet();
-          case 'inspectionArea':
-            return const InspectionAreaDataSheet();
-          case 'dockArea-IN':
-            return const DockAreaDataSheet();
-          case 'dockArea-OUT':
-            return const DockAreaDataSheet();
-          case 'yardArea':
+        switch (objectValue.toLowerCase()) {
+          case 'stagingarea':
+            return  StagingAreaDataSheet();
+          case 'activityarea':
+            return  ActivityAreaDataSheet();
+          case 'receivingarea':
+            return  ReceivingAreaDataSheet();
+          case 'inspectionarea':
+            print("inside switch inspection area ");
+            return  InspectionAreaDataSheet();
+          case 'dockarea-in':
+            return  DockAreaDataSheet();
+          case 'dockarea-out':
+            return  DockAreaDataSheet();
+          case 'yardarea':
+            context.read<YardBloc>().add(GetYardData());
             return YardAreaDataSheet();
 
           default:

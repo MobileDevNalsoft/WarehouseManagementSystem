@@ -7,5 +7,6 @@ abstract class InspectionEvent extends Equatable {
 }
 
 class GetInspectionAreaData extends InspectionEvent {
-  const GetInspectionAreaData();
+  String? searchText;
+  GetInspectionAreaData({this.searchText});
 }

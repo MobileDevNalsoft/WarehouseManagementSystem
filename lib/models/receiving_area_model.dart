@@ -27,7 +27,7 @@ class ReceivingArea {
   }
 }
 
-class ReceiveData {
+class   ReceiveData {
   String? asn;
   String? poNum;
   String? vendor;

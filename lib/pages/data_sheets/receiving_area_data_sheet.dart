@@ -5,6 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_event.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_state.dart';
+import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class ReceivingAreaDataSheet extends StatefulWidget {
@@ -24,7 +25,7 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
     _receivingBloc = context.read<ReceivingBloc>();
 
     if (_receivingBloc!.state.receivingStatus == ReceivingAreaStatus.initial) {
-      _receivingBloc!.add(const GetReceivingData());
+      _receivingBloc!.add( GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     }
 
     _controller.addListener(_scrollListener);
@@ -33,7 +34,7 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       _receivingBloc!.state.pageNum = _receivingBloc!.state.pageNum! + 1;
-      _receivingBloc!.add(const GetReceivingData());
+      _receivingBloc!.add(GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     }
   }
 

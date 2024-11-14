@@ -11,36 +11,33 @@ enum GetReceivingAreaDataState { initial, loading, success, failure }
 enum GetInspectionAreaDataState { initial, loading, success, failure }
 
 // ignore: must_be_immutable
-final class WarehouseInteractionState extends Equatable {
-  WarehouseInteractionState(
-      {this.dataFromJS,
-      this.inAppWebViewController,
-      this.isModelLoaded=false});
+final class WarehouseInteractionState{
+  WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "Storage", this.searchText});
 
-  Map<String, dynamic>? dataFromJS;
+  Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
   bool isModelLoaded;
+  String selectedSearchArea;
+  String? searchText;
   factory WarehouseInteractionState.initial() {
-    return WarehouseInteractionState(
-        dataFromJS: const {"object": "null"},
-        isModelLoaded: false
-        );
+    return WarehouseInteractionState(dataFromJS: {"object": "null"}, isModelLoaded: false);
   }
 
-  WarehouseInteractionState copyWith({
-    Map<String, dynamic>? dataFromJS,
-    bool? isModelLoaded
-  }) {
+  WarehouseInteractionState copyWith({Map<String, dynamic>? dataFromJS, bool? isModelLoaded, String? selectedSearchArea, String? searchText}) {
     return WarehouseInteractionState(
-      dataFromJS: dataFromJS ?? this.dataFromJS,
-      isModelLoaded: isModelLoaded??this.isModelLoaded,
-      inAppWebViewController: inAppWebViewController
-    );
+        dataFromJS: dataFromJS ?? this.dataFromJS,
+        isModelLoaded: isModelLoaded ?? this.isModelLoaded,
+        inAppWebViewController: inAppWebViewController,
+        selectedSearchArea: selectedSearchArea ?? this.selectedSearchArea,
+        searchText: searchText ?? this.searchText);
   }
 
   @override
   List<Object?> get props => [
         dataFromJS,
-        isModelLoaded
+        inAppWebViewController,
+        isModelLoaded,
+        selectedSearchArea,
+        searchText,
       ];
 }

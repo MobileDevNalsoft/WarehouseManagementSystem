@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
+import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
+import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
+import 'package:warehouse_3d/bloc/receiving/receiving_event.dart';
+import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 
 class SearchBarDropdown extends StatefulWidget {
   SearchBarDropdown({required this.size});
@@ -11,7 +17,16 @@ class SearchBarDropdown extends StatefulWidget {
 class _SearchBarDropdownState extends State<SearchBarDropdown> {
   bool isDropdownOpen = false;
 
-  final List<String> dropdownItems = ['Storage Area', 'Inspection Area', 'Staging Area', 'Activity Area', 'Receiving Area', 'Dock Area IN', 'Dock Area OUT'];
+  final List<String> dropdownItems = [
+    'Storage Area',
+    'Inspection Area',
+    'Staging Area',
+    'Activity Area',
+    'Receiving Area',
+    'Dock Area IN',
+    'Dock Area OUT',
+    'Yard Area'
+  ];
 
   String? placeholderText;
   String? dropdownValue;
@@ -19,7 +34,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
   double? height;
   double? bottomHeight;
   double turns = 1;
-
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
   @override
   void initState() {
     super.initState();
@@ -27,6 +42,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     bottomHeight = widget.size.height * 0.06;
     placeholderText = 'Search in ${dropdownItems[0]}...';
     dropdownValue = dropdownItems[0];
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
   }
 
   @override
@@ -45,7 +61,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
             color: Colors.transparent,
             child: Container(
               margin: EdgeInsets.only(top: size.height * 0.06),
-              padding: EdgeInsets.symmetric(vertical: size.height*0.015),
+              padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
@@ -57,6 +73,9 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                   children: dropdownItems.map((item) {
                     return GestureDetector(
                       onTap: () {
+                        print("item selected $item");
+
+                        _warehouseInteractionBloc.state.selectedSearchArea = item.replaceAll(" ", '');
                         setState(() {
                           dropdownValue = item;
                           placeholderText = 'Search in $item...';
@@ -68,7 +87,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                         });
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: size.height*0.01, horizontal: size.width*0.01),
+                        padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width * 0.01),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                         ),
@@ -99,6 +118,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
               children: [
                 GestureDetector(
                   onTap: () {
+                    _warehouseInteractionBloc.state.selectedSearchArea = _warehouseInteractionBloc.state.selectedSearchArea.split("Area")[0].trim();
                     setState(() {
                       height = height == size.height * 0.08
                           ? size.height * 0.3
@@ -120,13 +140,13 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           dropdownValue!,
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
                         ),
-                        Gap(size.width*0.005),
+                        Gap(size.width * 0.005),
                         AnimatedRotation(
                           turns: turns,
                           duration: const Duration(milliseconds: 200),
                           child: Icon(
                             Icons.keyboard_arrow_down_rounded,
-                            size: size.height*0.025,
+                            size: size.height * 0.025,
                             color: Colors.white,
                           ),
                         ),
@@ -141,13 +161,69 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                     children: [
                       Expanded(
                         child: Transform.translate(
-                          offset: Offset(0, -size.height*0.005),
+                          offset: Offset(0, -size.height * 0.005),
                           child: TextField(
+                            onSubmitted: (value) {
+                              print("dataFromJS ${_warehouseInteractionBloc.state.dataFromJS} ");
+                              if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area")) {
+                                _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${_warehouseInteractionBloc.state.selectedSearchArea}"}));
+                              } else {
+                                print(_warehouseInteractionBloc.state.selectedSearchArea);
+                                switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
+                                  case 'stagingarea':
+                                  case 'activityarea':
+                                    context.read<ActivityAreaBloc>().state.pageNum = 0;
+                                    context
+                                        .read<ActivityAreaBloc>()
+                                        .add(GetActivityAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    break;
+                                  case 'receivingarea':
+                                    context.read<ReceivingBloc>().state.pageNum = 0;
+                                    context.read<ReceivingBloc>().add(GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                  case 'inspectionarea':
+                                    context
+                                        .read<InspectionAreaBloc>()
+                                        .add(GetInspectionAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    break;
+                                  case 'dockarea-in':
+                                  case 'dockarea-out':
+                                  case 'yardarea':
+                                  default:
+                                    return null;
+                                }
+                              }
+                              print("${_warehouseInteractionBloc.state.selectedSearchArea}area");
+                            },
+                            onChanged: (value) {
+                              if (value.trim() == "") {
+                                _warehouseInteractionBloc.state.searchText = null;
+                                switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
+                                  case 'stagingarea':
+                                  case 'activityarea':
+                                    context.read<ActivityAreaBloc>().state.pageNum = 0;
+                                    context.read<ActivityAreaBloc>().add(GetActivityAreaData());
+                                    break;
+                                  case 'receivingarea':
+                                    context.read<ReceivingBloc>().state.pageNum = 0;
+                                    context.read<ReceivingBloc>().add(GetReceivingData());
+                                  case 'inspectionarea':
+                                    context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
+                                    break;
+                                  case 'dockarea-in':
+                                  case 'dockarea-out':
+                                  case 'yardarea':
+                                  default:
+                                    return null;
+                                }
+                              } else {
+                                _warehouseInteractionBloc.state.searchText = value.trim();
+                              }
+                            },
                             textAlignVertical: TextAlignVertical.center,
                             maxLines: 1,
                             decoration: InputDecoration(
                               hintText: placeholderText,
-                              contentPadding: EdgeInsets.only(left: size.width*0.008, top: size.height*0.012),
+                              contentPadding: EdgeInsets.only(left: size.width * 0.008, top: size.height * 0.012),
                               isCollapsed: true,
                               hintStyle: TextStyle(
                                 color: Colors.blue.shade900.withAlpha(200), // Purple
@@ -156,7 +232,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               ),
                               border: InputBorder.none,
                             ),
-                            cursorHeight: size.height*0.03,
+                            cursorHeight: size.height * 0.03,
                             style: TextStyle(
                               color: Colors.blue.shade900,
                               fontWeight: FontWeight.w500,

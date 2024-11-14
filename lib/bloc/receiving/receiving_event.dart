@@ -8,5 +8,6 @@ abstract class ReceivingEvent  extends Equatable{
 }
 
 class GetReceivingData extends ReceivingEvent{
-  const GetReceivingData();
+  String? searchText;
+  GetReceivingData({this.searchText});
 }

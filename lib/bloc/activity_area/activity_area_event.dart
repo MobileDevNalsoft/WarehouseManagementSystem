@@ -7,5 +7,6 @@ abstract class ActivityAreaEvent extends Equatable {
 }
 
 class GetActivityAreaData extends ActivityAreaEvent {
-  const GetActivityAreaData();
+  String? searchText;
+  GetActivityAreaData({this.searchText});
 }
