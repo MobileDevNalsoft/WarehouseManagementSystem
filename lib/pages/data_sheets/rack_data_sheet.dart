@@ -32,20 +32,16 @@ class _RackDataSheetState extends State<RackDataSheet> {
   @override
   void initState() {
     super.initState();
-    print('initState');
     _storageBloc = context.read<StorageBloc>();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    if (_storageBloc.state.storageAreaStatus == StorageAreaStatus.initial) {
-      print('event triggered');
-      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS!.values.first));
-    }
+      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS.values.first));
     _controller.addListener(_scrollListener);
   }
 
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       _storageBloc.state.pageNum = _storageBloc.state.pageNum! + 1;
-      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS!.values.first));
+      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS.values.first));
     }
   }
 
@@ -62,31 +58,43 @@ class _RackDataSheetState extends State<RackDataSheet> {
                     return Skeletonizer(
                       enabled: isEnabled,
                       enableSwitchAnimation: true,
-                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Color.fromRGBO(112, 144, 185, 1),
-                                          borderRadius: BorderRadius.circular(15),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          height: lsize.maxHeight*0.16,
+                                          decoration: BoxDecoration(
+                                            color: Color.fromRGBO(112, 144, 185, 1),
+                                            borderRadius: BorderRadius.circular(15),
+                                          ),
+                                          padding: EdgeInsets.all(size.height*0.02),
+                                          margin: EdgeInsets.only(top: size.height*0.01),
+                                          child: Column(
+                                            children: [
+                                              Row(children: [
+                                                Padding(
+                                                 padding: EdgeInsets.only(left: size.width*0.002,right: size.width*0.008),
+                                                  child: Image.asset('assets/images/rack.png', scale: size.height*0.002,),
+                                                ),
+                                                Text(isEnabled ? 'Rack XR' : state.storageArea!.data!.first.aisle!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold), maxLines: 1,),
+                                                ],),
+                                              Gap(size.height*0.01),
+                                              Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(right: size.width*0.008),
+                                                  child: Image.asset('assets/images/rack_type.png', scale: size.height*0.0019,),
+                                                ),
+                                                Text(isEnabled ? 'TYPE FROZEN' : state.storageArea!.data!.first.locationCategory!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                                Spacer(),
+                                                Padding(
+                                                  padding: EdgeInsets.only(right: size.width*0.008),
+                                                  child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
+                                                ),
+                                                Text(isEnabled ? '36' : state.storageArea!.data!.length.toString(), style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)
+                                              ],)
+                                            ],
+                                          ),
                                         ),
-                                        padding: EdgeInsets.all(size.height*0.01),
-                                        margin: EdgeInsets.only(top: size.height*0.01),
-                                        child: Column(
-                                          children: [
-                                            Row(children: [
-                                              Text(isEnabled ? 'Rack XR' : 'Rack ${state.storageArea!.data!.first.aisle!}', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold), maxLines: 1,),
-                                              ],),
-                                            Gap(size.height*0.01),
-                                            Row(children: [
-                                              Text(isEnabled ? 'TYPE FROZEN' : 'Type ${state.storageArea!.data!.first.locationCategory!}', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
-                                              Spacer(),
-                                              Padding(
-                                                padding: EdgeInsets.only(right: size.width*0.008),
-                                                child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
-                                              ),
-                                              Text(isEnabled ? '36' : state.storageArea!.data!.length.toString(), style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)
-                                            ],)
-                                          ],
-                                        ),
-                                      ),
+                      ),
                     );
                   }
                 ),

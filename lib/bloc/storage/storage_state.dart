@@ -5,19 +5,19 @@ enum  StorageBinStatus {initial, loading, success, failure }
 
 final class StorageState {
   
-  StorageState({this.storageArea,this.storageAreaStatus,this.storageBin,this.storageBinStatus, this.pageNum});
+  StorageState({this.storageArea,this.storageAreaStatus,this.storageBinItems,this.storageBinStatus, this.pageNum});
 
   StorageAisle? storageArea;
   StorageAreaStatus? storageAreaStatus;
-  StorageBin? storageBin; 
+  List<StorageBinItem>? storageBinItems; 
   int? pageNum;
   StorageBinStatus? storageBinStatus;
 
   factory StorageState.initial(){
-  return StorageState(storageAreaStatus: StorageAreaStatus.initial, storageBinStatus: StorageBinStatus.initial);
+  return StorageState(storageAreaStatus: StorageAreaStatus.initial, storageBinStatus: StorageBinStatus.initial, storageBinItems: [], pageNum: 0);
 }
-  StorageState copyWith({StorageAisle? storageArea,StorageAreaStatus? storageAreaStatus,StorageBin? storageBin,StorageBinStatus? storageBinStatus, int? pageNum }){
-    return StorageState(storageArea: storageArea??this.storageArea,storageAreaStatus:storageAreaStatus??this.storageAreaStatus,storageBin: storageBin??this.storageBin,storageBinStatus: storageBinStatus??this.storageBinStatus, pageNum: pageNum ?? this.pageNum);
+  StorageState copyWith({StorageAisle? storageArea,StorageAreaStatus? storageAreaStatus,List<StorageBinItem>? storageBinItems,StorageBinStatus? storageBinStatus, int? pageNum }){
+    return StorageState(storageArea: storageArea??this.storageArea,storageAreaStatus:storageAreaStatus??this.storageAreaStatus,storageBinItems: storageBinItems??this.storageBinItems,storageBinStatus: storageBinStatus??this.storageBinStatus, pageNum: pageNum ?? this.pageNum);
   }
 
 

@@ -46,49 +46,106 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
       size: size,
       title: 'Activity Area',
       children: [
-        const Text(
-            'Materials',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-          Gap(size.height * 0.02),
-          BlocBuilder<ActivityAreaBloc, ActivityAreaState>(
+        BlocBuilder<ActivityAreaBloc, ActivityAreaState>(
             builder: (context, state) {
               bool isEnabled = state.getDataState != GetDataState.success;
-              return Skeletonizer(
-                  enabled: isEnabled,
-                  enableSwitchAnimation: true,
-                  child: SizedBox(
-                    height: size.height * 0.6,
-                    child: ListView.separated(
-                        controller: _controller,
-                        itemBuilder: (context, index) => index < state.activityAreaItems!.length
-                                ? Customs.MapInfo(size: size, keys: [
-                              'Work Order Number',
-                              'Work Order Type',
-                              'Status',
-                              'Quantity'
-                            ], values: [
-                              isEnabled ? 'Work Order Number' : state.activityAreaItems![index].workOrderNum!,
-                              isEnabled ? 'Work Order Type' : state.activityAreaItems![index].workOrderType!,
-                              isEnabled ? 'Item' : state.activityAreaItems![index].item!,
-                              isEnabled ? 'Quantity' : state.activityAreaItems![index].qty!.toString()
-                            ]) : Skeletonizer(
-                              child: Customs.MapInfo(size: size, keys: [
-                                'Work Order Number',
-                                'Work Order Type',
-                                'Status',
-                                'Quantity'
-                              ], values: [
-                                'Work Order Number',
-                                'Work Order Type',
-                                'Item',
-                                'Quantity'
-                              ]),
-                            ),
-                        separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                        itemCount: isEnabled ? 8 : state.activityAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.activityAreaItems!.length + 1 : state.activityAreaItems!.length),
-                  ));
+              return Expanded(
+                child: LayoutBuilder(
+                  builder: (context, lsize) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: ListView.builder(
+                            controller: _controller,
+                            itemBuilder: (context, index) => index < state.activityAreaItems!.length
+                                    ? 
+                               Container(
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(112, 144, 185, 1),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      padding: EdgeInsets.all(size.height*0.01),
+                                      margin: EdgeInsets.only(top: size.height*0.01),
+                                      child: Column(
+                                        children: [
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.008, right: size.width*0.006),
+                                              child: Image.asset('assets/images/wo.png', scale: size.height*0.0019, color: Colors.grey.shade900,),
+                                            ),
+                                            Text(state.activityAreaItems![index].workOrderNum!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.005, right: size.width*0.004),
+                                              child: Image.asset('assets/images/wo_type.png', scale: size.height*0.0018,color: Colors.grey.shade900),
+                                            ),
+                                            Text(state.activityAreaItems![index].workOrderType!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.01, right: size.width*0.006),
+                                              child: Image.asset('assets/images/item.png', scale: size.height*0.0045,color: Colors.grey.shade900),
+                                            ),
+                                            Text(state.activityAreaItems![index].item!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                            Spacer(),
+                                            Padding(
+                                              padding: EdgeInsets.only(right: size.width*0.005),
+                                              child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
+                                            ),
+                                            SizedBox(width: lsize.maxWidth*0.15, child: Text(state.activityAreaItems![index].qty!.toString(), style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
+                                          ],),
+                                        ],
+                                      ),
+                                    )
+                                : 
+                                Container(
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(112, 144, 185, 1),
+                                      borderRadius: BorderRadius.circular(15)
+                                    ),
+                                    padding: EdgeInsets.all(size.height*0.01),
+                                    margin: EdgeInsets.only(top: size.height*0.01),
+                                    child: Column(
+                                      children: [
+                                        Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.008, right: size.width*0.006),
+                                              child: Image.asset('assets/images/wo.png', scale: size.height*0.0019, color: Colors.grey.shade900,),
+                                            ),
+                                            Skeletonizer(enableSwitchAnimation: true,child: Text("WORK ORDER", style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.005, right: size.width*0.004),
+                                              child: Image.asset('assets/images/wo_type.png', scale: size.height*0.0018,color: Colors.grey.shade900),
+                                            ),
+                                            Skeletonizer(enableSwitchAnimation: true,child: Text('WORK TYPE', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.01, right: size.width*0.006),
+                                              child: Image.asset('assets/images/item.png', scale: size.height*0.0045,color: Colors.grey.shade900),
+                                            ),
+                                            Skeletonizer(enableSwitchAnimation: true,child: Text('ITEM', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                            Spacer(),
+                                            Padding(
+                                              padding: EdgeInsets.only(right: size.width*0.005),
+                                              child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
+                                            ),
+                                            Skeletonizer(enableSwitchAnimation: true,child: Text('QTY', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
+                                          ],),
+                                      ],
+                                    ),
+                                  ),
+                            itemCount: isEnabled ? 8 : state.activityAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.activityAreaItems!.length + 1 : state.activityAreaItems!.length),
+                    );
+                  }
+                ),
+              );
             },
           )
       ]
