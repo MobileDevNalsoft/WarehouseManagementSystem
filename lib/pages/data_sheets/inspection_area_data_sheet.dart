@@ -26,7 +26,7 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
       _inspectionAreaBloc.add(GetInspectionAreaData(
           searchText: context.read<WarehouseInteractionBloc>().state.searchText
               ));
-
+    
     _controller.addListener(_scrollListener);
   }
 

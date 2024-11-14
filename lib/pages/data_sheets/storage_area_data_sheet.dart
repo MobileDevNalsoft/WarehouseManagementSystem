@@ -37,6 +37,7 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     print('event triggered');
     _storageBloc.add(AddStorageAislesData(searchText: _warehouseInteractionBloc.state.searchText??""));
+     _warehouseInteractionBloc.state.selectedSearchArea = "Storage Area";
     // _controller.addListener(_scrollListener);
   }
 

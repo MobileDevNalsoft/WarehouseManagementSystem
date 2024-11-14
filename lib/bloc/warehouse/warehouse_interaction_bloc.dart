@@ -18,7 +18,14 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
 
   void _onSelectedObject(SelectedObject event, Emitter<WarehouseInteractionState> emit) {
     print('event ${event.dataFromJS}');
-    emit(state.copyWith(dataFromJS: event.dataFromJS));
+    String? searchArea;
+    if(event.dataFromJS.containsKey("area") && !event.dataFromJS["area"].toString().contains('compound')){
+      searchArea = event.dataFromJS["area"].toString()[0].toUpperCase()+event.dataFromJS["area"].toString().substring(1); 
+    }
+    else if(event.dataFromJS.containsKey("bin")){
+      searchArea = "Bin";
+    }
+    emit(state.copyWith(dataFromJS: event.dataFromJS,selectedSearchArea: searchArea??state.selectedSearchArea));
   }
   
   void _onModelLoaded(ModelLoaded event, Emitter<WarehouseInteractionState> emit) {

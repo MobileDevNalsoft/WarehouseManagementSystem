@@ -7,5 +7,7 @@ abstract class DockEvent extends Equatable {
 }
 
 class GetDockAreaData extends DockEvent {
-  const GetDockAreaData();
+  String? searchText;
+  String? searchArea;
+  GetDockAreaData({this.searchText,this.searchArea});
 }

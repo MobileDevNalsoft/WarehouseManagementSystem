@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
+import 'package:warehouse_3d/bloc/dock_area/dock_area_bloc.dart';
 import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_event.dart';
@@ -10,6 +11,7 @@ import 'package:warehouse_3d/bloc/staging/staging_event.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
+import 'package:warehouse_3d/pages/test_code/warehouse.dart';
 
 class SearchBarDropdown extends StatefulWidget {
   SearchBarDropdown({super.key, required this.size});
@@ -28,8 +30,8 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     'Staging Area',
     'Activity Area',
     'Receiving Area',
-    'Dock Area IN',
-    'Dock Area OUT',
+    'Dock Area In',
+    'Dock Area Out',
     'Yard Area'
   ];
 
@@ -45,7 +47,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     super.initState();
     height = widget.size.height * 0.08;
     bottomHeight = widget.size.height * 0.06;
-    placeholderText = 'Search in ${dropdownItems[0]}...';
+    placeholderText = 'Search';
     dropdownValue = dropdownItems[0];
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
   }
@@ -79,11 +81,10 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                     return GestureDetector(
                       onTap: () {
                         print("item selected $item");
-                        if(item.toLowerCase().contains("bin") ){
+                        if (item.toLowerCase().contains("bin")) {
                           _warehouseInteractionBloc.state.selectedSearchArea = "bin";
-                        }
-                        else{
-                        _warehouseInteractionBloc.state.selectedSearchArea = item.replaceAll(" ", '');
+                        } else {
+                          _warehouseInteractionBloc.state.selectedSearchArea = item.replaceAll(" ", '');
                         }
                         setState(() {
                           dropdownValue = item;
@@ -146,7 +147,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          dropdownValue!,
+                          context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("Area").join(" "),
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
                         ),
                         Gap(size.width * 0.005),
@@ -174,13 +175,13 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           child: TextField(
                             onSubmitted: (value) {
                               print("dataFromJS ${_warehouseInteractionBloc.state.dataFromJS} ");
-                              if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") && !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
-                                      if(_warehouseInteractionBloc.state.selectedSearchArea == "bin"){
-                                          _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": "${_warehouseInteractionBloc.state.selectedSearchArea}"}));
-                                      }else{
-
-                                      _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${_warehouseInteractionBloc.state.selectedSearchArea}"}));
-                                      }
+                              if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") &&
+                                  !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
+                                if (_warehouseInteractionBloc.state.selectedSearchArea == "bin") {
+                                  _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": "${_warehouseInteractionBloc.state.selectedSearchArea}"}));
+                                } else {
+                                  _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${_warehouseInteractionBloc.state.selectedSearchArea}"}));
+                                }
                               } else {
                                 print("else part ${_warehouseInteractionBloc.state.selectedSearchArea}");
                                 switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
@@ -190,7 +191,9 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                     break;
                                   case 'activityarea':
                                     context.read<ActivityAreaBloc>().state.pageNum = 0;
-                                    context.read<ActivityAreaBloc>().add(GetActivityAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    context
+                                        .read<ActivityAreaBloc>()
+                                        .add(GetActivityAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
                                     break;
                                   case 'receivingarea':
                                     context.read<ReceivingBloc>().state.pageNum = 0;
@@ -198,23 +201,40 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                     break;
                                   case 'inspectionarea':
                                     context.read<InspectionAreaBloc>().state.pageNum = 0;
-                                    context.read<InspectionAreaBloc>().add(GetInspectionAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    context
+                                        .read<InspectionAreaBloc>()
+                                        .add(GetInspectionAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
                                     break;
                                   case 'dockarea-in':
+                                    context.read<DockAreaBloc>().state.pageNum = 0;
+
+                                    context
+                                        .read<DockAreaBloc>()
+                                        .add(GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText, searchArea: "DOCK_OUT"));
+                                    break;
                                   case 'dockarea-out':
+                                    context.read<DockAreaBloc>().state.pageNum = 0;
+
+                                    context
+                                        .read<DockAreaBloc>()
+                                        .add(GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText, searchArea: "DOCK_OUT"));
+                                    break;
                                   case 'yardarea':
                                     context.read<YardBloc>().state.pageNum = 0;
                                     context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
                                   case 'storage':
-                                      if(context.read<WarehouseInteractionBloc>().state.searchText!=null && context.read<WarehouseInteractionBloc>().state.searchText!=""){
-                                        context.read<StorageBloc>().state.pageNum = 0;
-                                        context.read<StorageBloc>().add(AddStorageAislesData(searchText: context.read<WarehouseInteractionBloc>().state.searchText??""));
-                                        }
-                                        break;
-                                 case 'bin':
-                                       context.read<StorageBloc>().state.pageNum = 0;
-                                       context.read<StorageBloc>().add(GetBinData(searchText:context.read<WarehouseInteractionBloc>().state.searchText??""  ));
-                                        
+                                    if (context.read<WarehouseInteractionBloc>().state.searchText != null &&
+                                        context.read<WarehouseInteractionBloc>().state.searchText != "") {
+                                      context.read<StorageBloc>().state.pageNum = 0;
+                                      context
+                                          .read<StorageBloc>()
+                                          .add(AddStorageAislesData(searchText: context.read<WarehouseInteractionBloc>().state.searchText ?? ""));
+                                    }
+                                    break;
+                                  case 'bin':
+                                    context.read<StorageBloc>().state.pageNum = 0;
+                                    context.read<StorageBloc>().add(GetBinData(searchText: context.read<WarehouseInteractionBloc>().state.searchText ?? ""));
+
                                   default:
                                     return null;
                                 }
@@ -226,8 +246,8 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                 switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
                                   case 'stagingarea':
                                     context.read<StagingBloc>().state.pageNum = 0;
-                                     context.read<StagingBloc>().add(GetStagingData());
-                                     break;
+                                    context.read<StagingBloc>().add(GetStagingData());
+                                    break;
                                   case 'activityarea':
                                     context.read<ActivityAreaBloc>().state.pageNum = 0;
                                     context.read<ActivityAreaBloc>().add(GetActivityAreaData());
@@ -241,9 +261,16 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                     context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
                                     break;
                                   case 'dockarea-in':
+                                    context.read<DockAreaBloc>().state.pageNum = 0;
+
+                                    context.read<DockAreaBloc>().add(GetDockAreaData());
+
                                   case 'dockarea-out':
+                                    context.read<DockAreaBloc>().state.pageNum = 0;
+
+                                    context.read<DockAreaBloc>().add(GetDockAreaData());
                                   case 'yardarea':
-                                   context.read<YardBloc>().state.pageNum = 0;
+                                    context.read<YardBloc>().state.pageNum = 0;
                                     context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
                                     break;
                                   default:
@@ -260,7 +287,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               contentPadding: EdgeInsets.only(left: size.width * 0.008, top: size.height * 0.012),
                               isCollapsed: true,
                               hintStyle: TextStyle(
-                                color: Colors.black, // Purple
+                                color: Colors.black54, // Purple
                                 fontSize: size.height * 0.022,
                                 fontWeight: FontWeight.w500,
                               ),
