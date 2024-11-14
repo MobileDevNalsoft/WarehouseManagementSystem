@@ -40,7 +40,7 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
     emit( state.copyWith(storageBinStatus: StorageBinStatus.loading));   
     try{
         await _customApi.get(event.searchText!=null?AppConstants.SEARCH : AppConstants.STORAGE_BIN, queryParameters:event.searchText!=null? {"search_text": event.searchText, "search_area": "STORAGE_BIN", "facility_id": '243', "page_num": 0} : {"facility_id":"243", "barcode":event.selectedBin!.toUpperCase(),"page_num":0}).then((value){      
-         AreaResponse<StorageBinItem> storageBinResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => StorageBinItem.fromJson(json));
+         AreaResponse<StorageBinItem> storageBinResponse = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => StorageBinItem.fromJson(json));
             state.storageBinItems!.addAll(storageBinResponse.data!);
             emit( state.copyWith(storageBinItems: state.storageBinItems,storageBinStatus: StorageBinStatus.success));
       });
