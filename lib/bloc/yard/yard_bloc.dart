@@ -25,9 +25,19 @@ class YardBloc extends Bloc<YardEvent, YardState> {
 
   void _onGetYardData(GetYardData event, Emitter<YardState> emit) async {
     try {
-      await _customApi.get(AppConstants.YARD_AREA, queryParameters: {"facility_id": 243, "page_num": state.pageNum}).then((apiResponse) {
+      await _customApi
+          .get(event.searchText != null ? AppConstants.SEARCH : AppConstants.YARD_AREA,
+              queryParameters: event.searchText != null
+                  ? {"search_text": event.searchText, "search_area": "YARD", "facility_id": '243', "page_num": state.pageNum}
+                  : {"facility_id": 243, "page_num": state.pageNum})
+          .then((apiResponse) {
         AreaResponse<YardAreaItem> dockAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => YardAreaItem.fromJson(json));
-        state.yardAreaItems!.addAll(dockAreaResponse.data!);
+
+        if (state.pageNum == 0) {
+          state.yardAreaItems = dockAreaResponse.data;
+        } else {
+          state.yardAreaItems!.addAll(dockAreaResponse.data!);
+        }
         emit(state.copyWith(yardAreaItems: state.yardAreaItems, yardAreaStatus: YardAreaStatus.success));
       });
     } catch (e) {

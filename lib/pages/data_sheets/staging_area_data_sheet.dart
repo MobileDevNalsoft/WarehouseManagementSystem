@@ -5,6 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/staging/staging_bloc.dart';
 import 'package:warehouse_3d/bloc/staging/staging_event.dart';
 import 'package:warehouse_3d/bloc/staging/staging_state.dart';
+import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class StagingAreaDataSheet extends StatefulWidget {
@@ -22,12 +23,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
   void initState() {
     super.initState();
      _stagingBloc = context.read<StagingBloc>();
-
-    if(_stagingBloc!.state.stagingStatus == StagingAreaStatus.initial){
-
-       _stagingBloc!.add(const GetStagingData());
-    }
-
+     _stagingBloc!.add( GetStagingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     _controller.addListener(_scrollListener);
   }
 
@@ -41,7 +37,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
 
         print("before api call in scroll");
 
-       _stagingBloc!.add(const GetStagingData());
+       _stagingBloc!.add( GetStagingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
 
 
     

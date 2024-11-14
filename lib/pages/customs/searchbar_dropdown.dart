@@ -5,7 +5,11 @@ import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
 import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_event.dart';
+import 'package:warehouse_3d/bloc/staging/staging_bloc.dart';
+import 'package:warehouse_3d/bloc/staging/staging_event.dart';
+import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 
 class SearchBarDropdown extends StatefulWidget {
   SearchBarDropdown({super.key, required this.size});
@@ -19,6 +23,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
 
   final List<String> dropdownItems = [
     'Storage Area',
+    'Storage Bin',
     'Inspection Area',
     'Staging Area',
     'Activity Area',
@@ -74,8 +79,12 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                     return GestureDetector(
                       onTap: () {
                         print("item selected $item");
-
+                        if(item.toLowerCase().contains("bin") ){
+                          _warehouseInteractionBloc.state.selectedSearchArea = "bin";
+                        }
+                        else{
                         _warehouseInteractionBloc.state.selectedSearchArea = item.replaceAll(" ", '');
+                        }
                         setState(() {
                           dropdownValue = item;
                           placeholderText = 'Search in $item...';
@@ -165,40 +174,60 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           child: TextField(
                             onSubmitted: (value) {
                               print("dataFromJS ${_warehouseInteractionBloc.state.dataFromJS} ");
-                              if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area")) {
-                                _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${_warehouseInteractionBloc.state.selectedSearchArea}"}));
+                              if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") && !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
+                                      if(_warehouseInteractionBloc.state.selectedSearchArea == "bin"){
+                                          _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": "${_warehouseInteractionBloc.state.selectedSearchArea}"}));
+                                      }else{
+
+                                      _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${_warehouseInteractionBloc.state.selectedSearchArea}"}));
+                                      }
                               } else {
-                                print(_warehouseInteractionBloc.state.selectedSearchArea);
+                                print("else part ${_warehouseInteractionBloc.state.selectedSearchArea}");
                                 switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
                                   case 'stagingarea':
+                                    context.read<StagingBloc>().state.pageNum = 0;
+                                    context.read<StagingBloc>().add(GetStagingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    break;
                                   case 'activityarea':
                                     context.read<ActivityAreaBloc>().state.pageNum = 0;
-                                    context
-                                        .read<ActivityAreaBloc>()
-                                        .add(GetActivityAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    context.read<ActivityAreaBloc>().add(GetActivityAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
                                     break;
                                   case 'receivingarea':
                                     context.read<ReceivingBloc>().state.pageNum = 0;
                                     context.read<ReceivingBloc>().add(GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    break;
                                   case 'inspectionarea':
-                                    context
-                                        .read<InspectionAreaBloc>()
-                                        .add(GetInspectionAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    context.read<InspectionAreaBloc>().state.pageNum = 0;
+                                    context.read<InspectionAreaBloc>().add(GetInspectionAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
                                     break;
                                   case 'dockarea-in':
                                   case 'dockarea-out':
                                   case 'yardarea':
+                                    context.read<YardBloc>().state.pageNum = 0;
+                                    context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                  case 'storage':
+                                      if(context.read<WarehouseInteractionBloc>().state.searchText!=null && context.read<WarehouseInteractionBloc>().state.searchText!=""){
+                                        context.read<StorageBloc>().state.pageNum = 0;
+                                        context.read<StorageBloc>().add(AddStorageAislesData(searchText: context.read<WarehouseInteractionBloc>().state.searchText??""));
+                                        }
+                                        break;
+                                 case 'bin':
+                                       context.read<StorageBloc>().state.pageNum = 0;
+                                       context.read<StorageBloc>().add(GetBinData(searchText:context.read<WarehouseInteractionBloc>().state.searchText??""  ));
+                                        
                                   default:
                                     return null;
                                 }
                               }
-                              print("${_warehouseInteractionBloc.state.selectedSearchArea}area");
                             },
                             onChanged: (value) {
                               if (value.trim() == "") {
                                 _warehouseInteractionBloc.state.searchText = null;
                                 switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
                                   case 'stagingarea':
+                                    context.read<StagingBloc>().state.pageNum = 0;
+                                     context.read<StagingBloc>().add(GetStagingData());
+                                     break;
                                   case 'activityarea':
                                     context.read<ActivityAreaBloc>().state.pageNum = 0;
                                     context.read<ActivityAreaBloc>().add(GetActivityAreaData());
@@ -206,12 +235,17 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                   case 'receivingarea':
                                     context.read<ReceivingBloc>().state.pageNum = 0;
                                     context.read<ReceivingBloc>().add(GetReceivingData());
+                                    break;
                                   case 'inspectionarea':
+                                    context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
                                     context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
                                     break;
                                   case 'dockarea-in':
                                   case 'dockarea-out':
                                   case 'yardarea':
+                                   context.read<YardBloc>().state.pageNum = 0;
+                                    context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    break;
                                   default:
                                     return null;
                                 }

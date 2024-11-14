@@ -8,5 +8,6 @@ abstract class StagingEvent  extends Equatable{
 }
 
 class GetStagingData extends StagingEvent{
-  const GetStagingData();
+  String? searchText;
+  GetStagingData({this.searchText});
 }

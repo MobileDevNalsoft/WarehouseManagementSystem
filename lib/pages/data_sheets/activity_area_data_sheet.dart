@@ -24,9 +24,8 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
     super.initState();
 
     _activityBloc = context.read<ActivityAreaBloc>();
-    if (_activityBloc.state.getDataState == GetDataState.initial) {
-      _activityBloc.add( GetActivityAreaData( searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-    }
+     _activityBloc.add( GetActivityAreaData( searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+
     _controller.addListener(_scrollListener);
   }
 

@@ -7,10 +7,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:three_js/three_js.dart';
-import 'package:touchable/touchable.dart';
-import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
-import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
@@ -20,6 +16,7 @@ import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/rack_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/staging_area_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/storage_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/yard_area_data_sheet.dart';
 import '../../bloc/warehouse/warehouse_interaction_bloc.dart';
 import '../../js_interop_service/js_inter.dart';
@@ -325,11 +322,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
       case 'rack':
         return RackDataSheet(objectNames: objectNames,);
       case 'bin':
-         context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS['bin']}"));
-        return  const BinDataSheet();
+        return   BinDataSheet();
       case 'area':
         switch (objectValue.toLowerCase()) {
           case 'stagingarea':
+            
             return  StagingAreaDataSheet();
           case 'activityarea':
             return  ActivityAreaDataSheet();
@@ -343,7 +340,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             return  DockAreaDataSheet();
           case 'yardarea':
             return YardAreaDataSheet();
-
+          case 'storage':
+            return StorageAreaDataSheet();
           default:
             return null;
         }

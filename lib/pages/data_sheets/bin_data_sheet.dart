@@ -21,6 +21,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _storageBloc = context.read<StorageBloc>();
+    _storageBloc.add(GetBinData(searchText:context.read<WarehouseInteractionBloc>().state.searchText ));
    
   }
 
@@ -39,7 +40,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
             enabled: isEnabled,
             child: Column(
               children: [
-                Text("RC${_warehouseInteractionBloc.state.dataFromJS!['bin'].toString().toUpperCase()}",style: const TextStyle(fontWeight: FontWeight.bold),),
+               if(_warehouseInteractionBloc.state.searchText==null||_warehouseInteractionBloc.state.searchText=="") Text("RC${_warehouseInteractionBloc.state.dataFromJS!['bin'].toString().toUpperCase()}",style: const TextStyle(fontWeight: FontWeight.bold),),
                 isEnabled?const Text("-"):
                 state.storageBin!.data!.isEmpty?const Text("Empty bin"):
               SizedBox(
@@ -49,6 +50,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                     return Customs.MapInfo(size: size, 
                           keys: [
                             'LPN Number',
+                            'Barcode',
                             'ASN',
                             'PO Number',
                             'Vendor',
@@ -61,6 +63,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                             'Serial Number'
                           ], values: [
                              isEnabled ? 'LPN Number' : state.storageBin!.data![index].containerNbr??"NA",
+                             isEnabled ? 'Barcode' : state.storageBin!.data![index].locationKey??"NA",
                              isEnabled ? 'ASN' : state.storageBin!.data![index].serialNbrKey??"NA",
                              isEnabled ? 'PO Number' : state.storageBin!.data![index].refPoNbr??"NA",
                              isEnabled ? 'Vendor' : state.storageBin!.data![index].vendor??"NA",
