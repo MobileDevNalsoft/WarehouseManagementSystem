@@ -9,6 +9,7 @@ import 'package:warehouse_3d/models/storage_aisle_model.dart';
 import 'package:warehouse_3d/models/storage_bin.dart';
 
 import '../../local_network_calls.dart';
+import '../../models/area_response.dart';
 
 part 'storage_event.dart';
 part 'storage_state.dart';
@@ -36,12 +37,12 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
   }
 
   void _onGetBinData(GetBinData event,Emitter<StorageState> emit) async{
-    emit( state.copyWith(storageBinStatus: StorageBinStatus.initial,storageBin: null));   
+    emit( state.copyWith(storageBinStatus: StorageBinStatus.loading));   
     try{
         await _customApi.get(event.searchText!=null?AppConstants.SEARCH : AppConstants.STORAGE_BIN, queryParameters:event.searchText!=null? {"search_text": event.searchText, "search_area": "STORAGE_BIN", "facility_id": '243', "page_num": 0} : {"facility_id":"243", "barcode":event.selectedBin!.toUpperCase(),"page_num":0}).then((value){      
-            StorageBin storageBin = StorageBin.fromJson(jsonDecode(value.response!.data));
-            print(storageBin.data);
-            emit( state.copyWith(storageBin: storageBin,storageBinStatus: StorageBinStatus.success));
+         AreaResponse<StorageBinItem> storageBinResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => StorageBinItem.fromJson(json));
+            state.storageBinItems!.addAll(storageBinResponse.data!);
+            emit( state.copyWith(storageBinItems: state.storageBinItems,storageBinStatus: StorageBinStatus.success));
       });
     }
     catch(e){

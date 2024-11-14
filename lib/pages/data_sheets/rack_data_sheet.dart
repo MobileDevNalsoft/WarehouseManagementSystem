@@ -32,18 +32,16 @@ class _RackDataSheetState extends State<RackDataSheet> {
   @override
   void initState() {
     super.initState();
-    print('initState');
     _storageBloc = context.read<StorageBloc>();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    print('event triggered');
-    _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS.values.first));
+      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS.values.first));
     _controller.addListener(_scrollListener);
   }
 
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       _storageBloc.state.pageNum = _storageBloc.state.pageNum! + 1;
-      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS!.values.first));
+      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS.values.first));
     }
   }
 
