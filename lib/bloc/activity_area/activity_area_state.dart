@@ -3,7 +3,7 @@ part of 'activity_area_bloc.dart';
 enum GetDataState { initial, loading, success, failure }
 
 // ignore: must_be_immutable
-final class ActivityAreaState extends Equatable {
+final class ActivityAreaState {
   ActivityAreaState({this.getDataState, this.activityAreaItems, this.pageNum});
 
   GetDataState? getDataState;
@@ -11,7 +11,7 @@ final class ActivityAreaState extends Equatable {
   int? pageNum;
 
   factory ActivityAreaState.initial() {
-    return ActivityAreaState(getDataState: GetDataState.initial, activityAreaItems: const [], pageNum: 0);
+    return ActivityAreaState(getDataState: GetDataState.initial, activityAreaItems: [], pageNum: 0);
   }
 
   ActivityAreaState copyWith({
@@ -21,7 +21,4 @@ final class ActivityAreaState extends Equatable {
   }) {
     return ActivityAreaState(getDataState: getDataState ?? this.getDataState, activityAreaItems: activityAreaItems ?? this.activityAreaItems, pageNum: pageNum ?? this.pageNum);
   }
-
-  @override
-  List<Object?> get props => [getDataState, activityAreaItems, pageNum];
 }

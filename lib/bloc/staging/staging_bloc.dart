@@ -26,9 +26,7 @@ class StagingBloc  extends Bloc<StagingEvent,StagingState>{
         queryParameters: {"facility_id": 243, "page_num": state.pageNum},
     ).then((value) {
              StagingArea stagingArea = StagingArea.fromJson(jsonDecode(value.response!.data));
-      
        state.stagingList!.addAll(stagingArea.data!);
-
        emit(state.copyWith(stagingArea: stagingArea,stagingStatus:StagingAreaStatus.success,stagingList: state.stagingList!));
        
       });

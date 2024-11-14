@@ -144,10 +144,100 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
             builder: (context, state) {
               bool isEnabled = state.getDataState != GetDataState.success;
               return Expanded(
-                child: Skeletonizer(
-                  enabled: isEnabled,
-                  enableSwitchAnimation: true,
-                  child: ExpandableListView(data: [response1, response2])
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: ListView.builder(
+                        controller: _controller,
+                        itemBuilder: (context, index) => index < state.dockAreaItems!.length
+                                ? 
+                           Container(
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(112, 144, 185, 1),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  padding: EdgeInsets.all(size.height*0.01),
+                                  margin: EdgeInsets.only(top: size.height*0.01),
+                                  child: Column(
+                                    children: [
+                                      Row(children: [
+                                        Image.asset('assets/images/truck.png', scale: size.height*0.0018,),
+                                        Text(state.dockAreaItems![index].truckNum!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                        Spacer(),
+                                        Image.asset('assets/images/businessman.png', scale: size.height*0.0018,),
+                                        Text(state.dockAreaItems![index].vendor!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)
+                                      ],),
+                                      Gap(size.height*0.01),
+                                      Row(children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.007),
+                                          child: Image.asset('assets/images/po.png', scale: size.height*0.0018,),
+                                        ),
+                                        Text(state.dockAreaItems![index].poNum!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                        Spacer(),
+                                        Padding(
+                                          padding: EdgeInsets.only(right: size.width*0.008),
+                                          child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
+                                        ),
+                                        Text(state.dockAreaItems![index].qty!.toString(), style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)
+                                      ],),
+                                      Gap(size.height*0.01),
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.009),
+                                            child: Image.asset('assets/images/clock.png', scale: size.height*0.0008,),
+                                          ),
+                                          Text(state.dockAreaItems![index].checkInTS!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                            : 
+                            Container(
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(112, 144, 185, 1),
+                                  borderRadius: BorderRadius.circular(15)
+                                ),
+                                padding: EdgeInsets.all(size.height*0.01),
+                                margin: EdgeInsets.only(top: size.height*0.01),
+                                child: Column(
+                                  children: [
+                                    Row(children: [
+                                      Image.asset('assets/images/truck.png', scale: size.height*0.0018,),
+                                      Skeletonizer(enableSwitchAnimation: true,child: Text('TS 02 ED 7884', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                      Spacer(),
+                                      Image.asset('assets/images/businessman.png', scale: size.height*0.0018,),
+                                      Skeletonizer(enableSwitchAnimation: true,child: Text('ORACLE', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
+                                    ],),
+                                    Gap(size.height*0.01),
+                                    Row(children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.007),
+                                        child: Image.asset('assets/images/po.png', scale: size.height*0.0018,),
+                                      ),
+                                      Skeletonizer(enableSwitchAnimation: true,child: Text('MI-PO-234', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                      Spacer(),
+                                      Padding(
+                                        padding: EdgeInsets.only(right: size.width*0.008),
+                                        child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
+                                      ),
+                                      Skeletonizer(enableSwitchAnimation: true,child: Text('2000', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
+                                    ],),
+                                    Gap(size.height*0.01),
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.009),
+                                          child: Image.asset('assets/images/clock.png', scale: size.height*0.0008,),
+                                        ),
+                                        Skeletonizer(enableSwitchAnimation: true,child: Text('3:15pm', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                        itemCount: isEnabled ? 8 : state.dockAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.dockAreaItems!.length + 1 : state.dockAreaItems!.length),
                 ),
               );
             },
@@ -159,62 +249,4 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
 
 
 /*
-ListView.builder(
-                        controller: _controller,
-                        itemBuilder: (context, index) => index < response1.length
-                                ? 
-                            ExpandableListView(height: size.height, data: [response1, response2],)
-                            //     Customs.MapInfo(size: size, keys: [
-                            //   // 'Dock Type',
-                            //   'Truck No.',
-                            //   'PO No.',
-                            //   'Vendor',
-                            //   'CheckIn TS',
-                            //   'Quantity'
-                            // ], values: [
-                            //   // isEnabled ? 'Dock Type' : state.dockAreaItems![index].dockType!,
-                            //   isEnabled ? 'Truck No.' : state.dockAreaItems![index].truckNum!,
-                            //   isEnabled ? 'PO No.' : state.dockAreaItems![index].poNum!,
-                            //   isEnabled ? 'Vendor' : state.dockAreaItems![index].vendor!,
-                            //   isEnabled ? 'CheckIn TS': state.dockAreaItems![index].checkInTS!,
-                            //   isEnabled ? 'Quantity' : state.dockAreaItems![index].qty!.toString()
-                            // ]) 
-                            : 
-                            Skeletonizer(
-                              child: SizedBox(
-                              height: size.height*0.1,
-                              width: size.width*0.15,
-                              child: Card(
-                                child: Row(
-                                  children: [
-                                    const Spacer(),
-                                    CircleAvatar(
-                                      backgroundColor: Colors.black,
-                                      child: Column(
-                                        children: [
-                                          const Text("10", style: TextStyle(color: Colors.white),),
-                                          Image.asset('assets/images/truck.png', color: Colors.white,)
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ),
-                            )
-                              // Customs.MapInfo(size: size, keys: [
-                              //   // 'Dock Type',
-                              //   'Truck No.',
-                              //   'PO No.',
-                              //   'Vendor',
-                              //   'CheckIn TS',
-                              //   'Quantity'
-                              // ], values: [
-                              //   // 'Dock Type',
-                              //   'Truck No.',
-                              //   'PO No.',
-                              //   'Vendor',
-                              //   'CheckIn TS',
-                              //   'Quantity'
-                              // ]),
-                            ),
-                        itemCount: isEnabled ? 8 : state.dockAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.dockAreaItems!.length + 1 : state.dockAreaItems!.length),*/
+*/

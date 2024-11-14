@@ -13,7 +13,7 @@ class Customs {
       height: size.height * 0.92,
       width: size.width * 0.22,
       decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Color.fromRGBO(206, 218, 233, 1),
           boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
           ),
       padding: EdgeInsets.all(size.height*0.02),
@@ -24,7 +24,7 @@ class Customs {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-              Text("Dock Area", style: TextStyle(color: Color.fromRGBO(68, 98, 136, 1), fontSize: layout.maxWidth*0.1, fontWeight: FontWeight.bold),),
+              Text(title, style: TextStyle(color: Color.fromRGBO(68, 98, 136, 1), fontSize: layout.maxWidth*0.1, fontWeight: FontWeight.bold),),
               Spacer(),
               InkWell(
                 onTap: () async {
@@ -35,7 +35,7 @@ class Customs {
                               : "compoundArea");
                       getIt<JsInteropService>().resetTrucks();
                     },
-                child: Image.asset('assets/images/home.png', scale: size.height*0.0025, color: Color.fromRGBO(68, 98, 136, 1),),
+                child: Icon(Icons.cancel_rounded, color: Color.fromRGBO(68, 98, 136, 1))
               )
                 ],
               ),

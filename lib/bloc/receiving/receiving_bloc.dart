@@ -24,9 +24,7 @@ class ReceivingBloc extends Bloc<ReceivingEvent, ReceivingState> {
         queryParameters: {"facility_id": 243, "page_num": state.pageNum},
       ).then((value) {
         ReceivingArea receivingArea = ReceivingArea.fromJson(jsonDecode(value.response!.data));
-
         state.receiveList!.addAll(receivingArea.data!);
-
         emit(state.copyWith(receivingArea: receivingArea, receivingStatus: ReceivingAreaStatus.success, receiveList: state.receiveList!));
       });
     } catch (e) {

@@ -23,21 +23,15 @@ class InspectionAreaBloc extends Bloc<InspectionEvent, InspectionAreaState> {
   final NetworkCalls _customApi;
 
   Future<void> _onGetInspectionAreaData(GetInspectionAreaData event, Emitter<InspectionAreaState> emit) async {
-    List<dynamic> checkList = ["Not Empty"];
-    int pageNum = 0;
-
-    while (checkList.isNotEmpty) {
-      try {
-        await _customApi.get(AppConstants.INSPECTION_AREA, queryParameters: {"facility_id": 243, "page_num": pageNum}).then((apiResponse) {
-          AreaResponse<InspectionAreaItem> inspectionAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data),(json) => InspectionAreaItem.fromJson(json));
-          state.inspectionAreaItems!.addAll(inspectionAreaResponse.data!);
-          emit(state.copyWith(inspectionAreaItems: state.inspectionAreaItems, getDataState: GetDataState.success));
-          checkList = jsonDecode(apiResponse.response!.data)["data"];
-          pageNum += 1;
-        });
-      } catch (e) {
-        Log.e(e.toString());
-      }
+    try {
+      await _customApi.get(AppConstants.INSPECTION_AREA, queryParameters: {"facility_id": 243, "page_num": state.pageNum}).then((apiResponse) {
+        AreaResponse<InspectionAreaItem> dockAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => InspectionAreaItem.fromJson(json));
+        state.inspectionAreaItems!.addAll(dockAreaResponse.data!);
+        emit(state.copyWith(inspectionAreaItems: state.inspectionAreaItems, getDataState: GetDataState.success));
+      });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getDataState: GetDataState.failure));
     }
   }
 }

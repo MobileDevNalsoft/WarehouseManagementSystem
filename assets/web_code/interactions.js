@@ -88,7 +88,7 @@ export function addInteractions(scene, model, camera, controls) {
           targetObject.name.toString().includes("Area")
         ) {
           if (name.includes("rack")) {
-            console.log('{"rack":"' + name + '"}');
+            console.log('{"rack":"' + name.substring(name.length-2, name.length).toUpperCase() + '"}');
             
             window.localStorage.setItem("getData", name);
           } else if (!name.includes("storage")) {
@@ -176,7 +176,7 @@ export function addInteractions(scene, model, camera, controls) {
         moveToBin(object, camera, controls);
       } else {
         object.userData.active = false;
-        console.log('{"rack":"' + prevNav.split("_")[0] + '"}');
+        console.log('{"rack":"' + prevNav.split("_")[0].substring(prevNav.split("_")[0].length-2, prevNav.split("_")[0].length).toUpperCase() + '"}');
         switchCamera(scene, prevNav.split("_")[0], camera, controls);
       }
     }

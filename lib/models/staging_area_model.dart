@@ -37,7 +37,7 @@ class StagingData {
 
   StagingData.fromJson(Map<String, dynamic> json) {
     orderNum = json['order_num'];
-    custName = json['cust_name'];
+    custName = json['cust_name'] ?? '';
     item = json['item'];
     qty = json['qty'];
   }

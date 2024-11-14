@@ -1,27 +1,20 @@
 part of 'yard_bloc.dart';
-enum  YardAreaStatus {initial, loading, success, failure }
 
-final class YardState extends Equatable {
-  
-  YardArea? yardArea;
+enum YardAreaStatus { initial, loading, success, failure }
+
+final class YardState {
+  YardState({this.yardAreaItems, this.yardAreaStatus = YardAreaStatus.initial, this.pageNum});
+
+  List<YardAreaItem>? yardAreaItems;
   YardAreaStatus yardAreaStatus;
+  int? pageNum;
 
-  YardState({this.yardArea, this.yardAreaStatus=YardAreaStatus.initial});
-
-  YardState copyWith({
-    YardArea? yardArea,
-    YardAreaStatus? yardAreaStatus
-    }
-  ) {
-    return YardState( yardArea: yardArea ?? this.yardArea, yardAreaStatus:yardAreaStatus?? this.yardAreaStatus);
+  factory YardState.initial() {
+    return YardState(yardAreaStatus: YardAreaStatus.initial, yardAreaItems: [], pageNum: 0);
   }
 
-factory YardState.initial(){
-  return YardState();
-}
-  @override
-  List<Object?> get props => [
-    yardArea,
-    yardAreaStatus
-  ];
+  YardState copyWith({List<YardAreaItem>? yardAreaItems, YardAreaStatus? yardAreaStatus, int? pageNum}) {
+    return YardState(
+        yardAreaItems: yardAreaItems ?? this.yardAreaItems, yardAreaStatus: yardAreaStatus ?? this.yardAreaStatus, pageNum: pageNum ?? this.pageNum);
+  }
 }

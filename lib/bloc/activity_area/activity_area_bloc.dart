@@ -28,7 +28,6 @@ class ActivityAreaBloc extends Bloc<ActivityAreaEvent, ActivityAreaState> {
         AreaResponse<ActivityAreaItem> activityAreaResponse =
             AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityAreaItem.fromJson(json));
         state.activityAreaItems!.addAll(activityAreaResponse.data!);
-        state.getDataState = GetDataState.initial;
         emit(state.copyWith(activityAreaItems: state.activityAreaItems, getDataState: GetDataState.success));
       });
     } catch (e) {
