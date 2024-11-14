@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/receiving_area_dashboard.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/pages/entry_point.dart';
 import 'package:warehouse_3d/pages/home.dart';
 import 'package:warehouse_3d/pages/select_warehouse.dart';
@@ -15,7 +14,7 @@ class RouteGenerator {
       case '/home':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) => HomePage(),
+          pageBuilder: (context, animation, secondaryAnimation) => const HomePage(),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -30,7 +29,7 @@ class RouteGenerator {
       case '/login':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+          pageBuilder: (context, animation, secondaryAnimation) => const LoginPage(),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -60,7 +59,7 @@ class RouteGenerator {
       case '/selectWarehouse':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) => SelectWarehouse(),
+          pageBuilder: (context, animation, secondaryAnimation) => const SelectWarehouse(),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

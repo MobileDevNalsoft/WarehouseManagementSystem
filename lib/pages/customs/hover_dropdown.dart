@@ -29,17 +29,17 @@ class _HoverDropdownState extends State<HoverDropdown> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       height: height,
       width: size.width * 0.12,
       child: Stack(
         children: [
           AnimatedContainer(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             height: bottomHeight,
             width: size.width * 0.12,
             child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               child: Column(
                 children: [
                   Gap(size.height * 0.08),
@@ -53,7 +53,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                             });
                             Navigator.push(context, MaterialPageRoute(builder: (context) => EntryPoint(),));
                           },
-                          child: ForHover(text: "Dashboard"))),
+                          child: const ForHover(text: "Dashboard"))),
                   PointerInterceptor(
                       child: InkWell(
                           onTap: () {
@@ -64,7 +64,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                             });
                             launch('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/',isNewTab: true);
                           },
-                          child: ForHover(text: "WMS Cloud"))),
+                          child: const ForHover(text: "WMS Cloud"))),
                 ],
               ),
             ),
@@ -132,7 +132,7 @@ class _ForHoverState extends State<ForHover> {
       onEnter: (event) {
         // change color on hover
         setState(() {
-          hoverColor = Colors.blue.shade900;
+          hoverColor = Color.fromRGBO(68, 98, 136, 1);
           textColor = Colors.white;
         });
       },

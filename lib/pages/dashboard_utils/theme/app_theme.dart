@@ -52,14 +52,14 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDefaults.borderRadius),
           ),
-          side: BorderSide(color: AppColors.highlightLight, width: 2),
+          side: const BorderSide(color: AppColors.highlightLight, width: 2),
         ),
       ),
       inputDecorationTheme: AppTextFormFieldTheme.lightInputDecorationTheme,
       expansionTileTheme:
-          const ExpansionTileThemeData(shape: const RoundedRectangleBorder()),
+          const ExpansionTileThemeData(shape: RoundedRectangleBorder()),
       badgeTheme:
-          BadgeThemeData(backgroundColor: AppColors.error, smallSize: 8),
+          const BadgeThemeData(backgroundColor: AppColors.error, smallSize: 8),
     );
   }
 }

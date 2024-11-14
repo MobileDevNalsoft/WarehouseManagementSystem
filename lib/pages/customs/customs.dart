@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
@@ -14,43 +13,37 @@ class Customs {
       height: size.height * 0.92,
       width: size.width * 0.22,
       decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            bottomLeft: Radius.circular(20),
+          color: Color.fromRGBO(206, 218, 233, 1),
+          boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
           ),
-          border: Border(left: BorderSide(), top: BorderSide(), bottom: BorderSide())),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+      padding: EdgeInsets.all(size.height*0.02),
+      child: LayoutBuilder(
+        builder: (context, layout) {
+          return Column(
             children: [
-              IconButton(
-                  onPressed: () async {
-                    getIt<JsInteropService>().switchToMainCam(
-                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
-                                "storageArea"
-                            ? "storageArea"
-                            : "compoundArea");
-                    getIt<JsInteropService>().resetTrucks();
-                  },
-                  icon: const Icon(Icons.close_rounded))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+              Text(title, style: TextStyle(color: Color.fromRGBO(68, 98, 136, 1), fontSize: layout.maxWidth*0.1, fontWeight: FontWeight.bold),),
+              Spacer(),
+              InkWell(
+                onTap: () async {
+                      getIt<JsInteropService>().switchToMainCam(
+                          await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
+                                  "storageArea"
+                              ? "storageArea"
+                              : "compoundArea");
+                      getIt<JsInteropService>().resetTrucks();
+                    },
+                child: Icon(Icons.cancel_rounded, color: Color.fromRGBO(68, 98, 136, 1))
+              )
+                ],
+              ),
+              Gap(size.height * 0.01),
+              ...children
             ],
-          ),
-          Container(
-            height: size.height * 0.06,
-            width: size.width * 0.12,
-            margin: EdgeInsets.symmetric(vertical: size.height * 0.005),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(color: Colors.blue.shade900, borderRadius: const BorderRadius.all(Radius.circular(20))),
-            child: Text(
-              title,
-              style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-          ),
-          Gap(size.height * 0.02),
-          ...children
-        ],
+          );
+        }
       ),
     );
   }
@@ -99,11 +92,11 @@ class Customs {
                 
             primaryXAxis: CategoryAxis(
               labelStyle: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.04),
-              majorGridLines: MajorGridLines(
+              majorGridLines: const MajorGridLines(
                 width: 0,
               ),
-              majorTickLines: MajorTickLines(width: 0),
-              axisLine: AxisLine(width: 0),
+              majorTickLines: const MajorTickLines(width: 0),
+              axisLine: const AxisLine(width: 0),
             ),
             legend: Legend(isVisible: legendVisibility??true, alignment: ChartAlignment.near, legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
               height: constraints.maxHeight*0.1,
@@ -143,7 +136,7 @@ class Customs {
                 xValueMapper: (BarData data, _) => data.xLabel,
                 yValueMapper: (BarData data, _) => data.yValue,
                 borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(colors: [barColors[index], Colors.black], stops: [0.8,1],),
+                gradient: LinearGradient(colors: [barColors[index], Colors.black54    ], stops: const [0.8,1],),
                 dataLabelMapper: (datum, index) => datum.yValue.toString(),
                 dataLabelSettings: DataLabelSettings(
                   isVisible: true,

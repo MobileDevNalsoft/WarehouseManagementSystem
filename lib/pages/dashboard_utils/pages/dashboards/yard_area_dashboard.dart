@@ -15,7 +15,7 @@ class YardAreaDashboard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     )),
                     
-                    legend: isLegendVisible!=null? Legend(alignment: ChartAlignment.near,isVisible: isLegendVisible?? false,isResponsive: true,position: LegendPosition.bottom):Legend(),
+                    legend: isLegendVisible!=null? Legend(alignment: ChartAlignment.near,isVisible: isLegendVisible?? false,isResponsive: true,position: LegendPosition.bottom):const Legend(),
                     onLegendItemRender: (legendRenderArgs) {
                       if(legendText!=null){
                       legendRenderArgs.text = legendText[legendRenderArgs.seriesIndex!];}
@@ -129,7 +129,7 @@ class YardAreaDashboard extends StatelessWidget {
                                             BoxShadow(
                                               color: Colors.black.withOpacity(0.3),
                                               blurRadius: 10,
-                                              offset: Offset(0, 4), // Adjust to set shadow direction
+                                              offset: const Offset(0, 4), // Adjust to set shadow direction
                                             ),
                                           ],
                                         ),
@@ -140,7 +140,7 @@ class YardAreaDashboard extends StatelessWidget {
                                         child:  Text(
                                           contentText??"chart",
                                           style: TextStyle(
-                                            color: textColor??Color.fromARGB(255, 101, 10, 10),
+                                            color: textColor??const Color.fromARGB(255, 101, 10, 10),
                                             fontSize: 25,
                                           ),
                                         ),
@@ -222,7 +222,7 @@ class YardAreaDashboard extends StatelessWidget {
   ];
 
   final List<AnalogChartData> avgYardTime = [
-    AnalogChartData('Yard time', 45, Color.fromRGBO(147,0,119,1)),
+    AnalogChartData('Yard time', 45, const Color.fromRGBO(147,0,119,1)),
     AnalogChartData('rest', 55, Colors.transparent),
     // AnalogChartData('rest', 75, Color.fromRGBO(9, 0, 136, 1))
     // AnalogChartData('Jack', 34, Color.fromRGBO(228,0,124,1)),
@@ -232,8 +232,8 @@ class YardAreaDashboard extends StatelessWidget {
  final List<AnalogChartData> loadingUnloadingCount = [
     // AnalogChartData('Yard time', 45, Color.fromRGBO(147,0,119,1)),
     // AnalogChartData('rest', 55, Colors.transparent),
-    AnalogChartData('Loading', 75, Color.fromRGBO(9, 0, 136, 1)),
-    AnalogChartData('Unloading', 34, Color.fromRGBO(138, 68, 27, 1))
+    AnalogChartData('Loading', 75, const Color.fromRGBO(9, 0, 136, 1)),
+    AnalogChartData('Unloading', 34, const Color.fromRGBO(138, 68, 27, 1))
     // AnalogChartData('Others', 52, Color.fromRGBO(255,189,57,1))
   ];
 

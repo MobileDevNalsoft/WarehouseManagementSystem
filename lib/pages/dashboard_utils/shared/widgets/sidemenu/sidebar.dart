@@ -1,14 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/ghaps.dart';
 
-import '../../constants/config.dart';
-import '../../constants/defaults.dart';
-import 'menu_tile.dart';
 
 class Sidebar extends StatefulWidget {
   const Sidebar({super.key});
@@ -34,8 +29,8 @@ class _SidebarState extends State<Sidebar> {
     return SafeArea(
       child: Container(
         width: size.width*0.2,
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(99,109,121,1)
+        decoration: const BoxDecoration(
+          color: Color.fromRGBO(68, 98, 136, 1)
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,8 +58,8 @@ class _SidebarState extends State<Sidebar> {
                         padding: EdgeInsets.only(left: size.width*0.02),
                         alignment: Alignment.centerLeft,
                         decoration: BoxDecoration(
-                          color: index == state.index ? Colors.white : Color.fromRGBO(99,109,121,1),
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+                          color: index == state.index ? Colors.white : Color.fromRGBO(12, 46, 87, 1),
+                          borderRadius: const BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
                         ),
                         child: Text(dashboardTitles[index], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: index == state.index ? Colors.black : Colors.white),),
                       ),

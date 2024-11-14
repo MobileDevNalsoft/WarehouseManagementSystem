@@ -11,15 +11,15 @@ class StorageAisle {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['response_code'] = this.responseCode;
-    data['response_message'] = this.responseMessage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['response_code'] = responseCode;
+    data['response_message'] = responseMessage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -59,15 +59,15 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['area'] = this.area;
-    data['aisle'] = this.aisle;
-    data['bay'] = this.bay;
-    data['level'] = this.level;
-    data['position'] = this.position;
-    data['barcode'] = this.barcode;
-    data['location_category'] = this.locationCategory;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['area'] = area;
+    data['aisle'] = aisle;
+    data['bay'] = bay;
+    data['level'] = level;
+    data['position'] = position;
+    data['barcode'] = barcode;
+    data['location_category'] = locationCategory;
     return data;
   }
 }

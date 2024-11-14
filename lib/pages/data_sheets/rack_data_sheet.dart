@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
+import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
@@ -23,36 +25,76 @@ class _RackDataSheetState extends State<RackDataSheet> {
 
   String? selectedBin;
 
+  final ScrollController _controller = ScrollController();
+  late StorageBloc _storageBloc;
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    print('initState');
+    _storageBloc = context.read<StorageBloc>();
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+    if (_storageBloc.state.storageAreaStatus == StorageAreaStatus.initial) {
+      print('event triggered');
+      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS!.values.first));
+    }
+    _controller.addListener(_scrollListener);
+  }
+
+  void _scrollListener() async {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+      _storageBloc.state.pageNum = _storageBloc.state.pageNum! + 1;
+      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS!.values.first));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Customs.DataSheet(context: context, size: size, title: 'Storage Area', children: [
+      BlocBuilder<StorageBloc, StorageState>(
+            builder: (context, state) {
+              bool isEnabled = state.storageAreaStatus != StorageAreaStatus.success;
+              return Expanded(
+                child: LayoutBuilder(
+                  builder: (context, lsize) {
+                    return Skeletonizer(
+                      enabled: isEnabled,
+                      enableSwitchAnimation: true,
+                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color.fromRGBO(112, 144, 185, 1),
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
+                                        padding: EdgeInsets.all(size.height*0.01),
+                                        margin: EdgeInsets.only(top: size.height*0.01),
+                                        child: Column(
+                                          children: [
+                                            Row(children: [
+                                              Text(isEnabled ? 'Rack XR' : 'Rack ${state.storageArea!.data!.first.aisle!}', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold), maxLines: 1,),
+                                              ],),
+                                            Gap(size.height*0.01),
+                                            Row(children: [
+                                              Text(isEnabled ? 'TYPE FROZEN' : 'Type ${state.storageArea!.data!.first.locationCategory!}', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                              Spacer(),
+                                              Padding(
+                                                padding: EdgeInsets.only(right: size.width*0.008),
+                                                child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
+                                              ),
+                                              Text(isEnabled ? '36' : state.storageArea!.data!.length.toString(), style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)
+                                            ],)
+                                          ],
+                                        ),
+                                      ),
+                    );
+                  }
+                ),
+              );
+            },
+          ),
       Gap(size.height * 0.02),
-      Expanded(
-        child: BlocBuilder<StorageBloc, StorageState>(
-          builder: (context, state) {
-            bool isEnabled = state.storageAreaStatus != StorageAreaStatus.success;
-              return Skeletonizer(
-                enabled: isEnabled,
-                enableSwitchAnimation: true,
-                child: state.storageArea?.data?.isEmpty ?? true?
-                Text("No items")
-                :
-                Column(
-                  children: [
-                    Customs.MapInfo(size: size, 
-                    
-                    keys: [
-                      'Asile',
-                      'Type',
-                      'Number of bins'
-                    ], values: [
-                      isEnabled ? 'Asile' : state.storageArea!.data![0].aisle??"-",
-                      isEnabled ? 'Type' : state.storageArea!.data![0].locationCategory??"-",
-                      isEnabled ? 'Number of bins' : state.storageArea!.data!.length.toString(),
-                    ]),
-                    Gap(size.height * 0.05),
-                    SizedBox(
+      SizedBox(
                       height: size.height * 0.08,
                       width: size.width * 0.1,
                       child: TypeAheadField(
@@ -76,7 +118,7 @@ class _RackDataSheetState extends State<RackDataSheet> {
                                   cursorColor: Colors.black,
                                   decoration: InputDecoration(
                                       hintText: focusNode.hasFocus ? 'Choose' : "Choose",
-                                      border: OutlineInputBorder(),
+                                      border: const OutlineInputBorder(),
                                       hintStyle: const TextStyle(
                                         color: Colors.black54,
                                         fontWeight: FontWeight.normal,
@@ -124,13 +166,6 @@ class _RackDataSheetState extends State<RackDataSheet> {
                         hideOnSelect: false,
                       ),
                     ),
-                  ],
-                ),
-              );
-          
-          },
-        ),
-      )
     ]);
   }
 }

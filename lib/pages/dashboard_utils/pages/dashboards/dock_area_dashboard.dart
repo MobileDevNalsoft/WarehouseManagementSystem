@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class DockAreaDashboard extends StatelessWidget {
   DockAreaDashboard({super.key});
@@ -30,23 +26,23 @@ class DockAreaDashboard extends StatelessWidget {
   ];
 
   final List<TimeData> chartData1 = [
-    TimeData('David', 81, const Color.fromARGB(255, 172, 189, 213)),
+    TimeData('David', 81, const Color.fromARGB(255, 151, 174, 206)),
     TimeData('sd', 19, Colors.transparent),
   ];
 
   final List<TimeData> chartData2 = [
-    TimeData('David', 81, const Color.fromARGB(255, 183, 214, 153)),
+    TimeData('David', 81, const Color.fromARGB(255, 176, 211, 141)),
     TimeData('sd', 19, Colors.transparent),
   ];
 
   final List<TimeData> chartData3 = [
-    TimeData('David', 81, const Color.fromARGB(255, 202, 159, 209)),
+    TimeData('David', 81, const Color.fromARGB(255, 196, 141, 204)),
     TimeData('sd', 19, Colors.transparent),
   ];
 
-  List<PieData> dockINDataSource = [PieData(xData: "Utilized Docks",yData:  3, color: const Color.fromARGB(255, 102, 82, 156)), PieData(xData: "Avalable Docks",yData:  6, color: const Color.fromARGB(255, 175, 163, 207))];
+  List<PieData> dockINDataSource = [PieData(xData: "Utilized Docks",yData:  3, color: const Color.fromARGB(255, 102, 82, 156)), PieData(xData: "Avalable Docks",yData:  6, color: const Color.fromARGB(255, 178, 166, 209))];
 
-  List<PieData> dockOUTDataSource = [PieData(xData: "Utilized Docks",yData:  4, color: const Color.fromARGB(255, 71, 143, 147)), PieData(xData: "Avalable Docks",yData:  5, color: const Color.fromARGB(255, 154, 197, 200))];
+  List<PieData> dockOUTDataSource = [PieData(xData: "Utilized Docks",yData:  4, color: const Color.fromARGB(255, 52, 132, 136)), PieData(xData: "Avalable Docks",yData:  5, color: const Color.fromARGB(255, 154, 197, 200))];
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +64,7 @@ class DockAreaDashboard extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]
+                        boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]
                       ),
                       padding: EdgeInsets.only(left : size.height * 0.035, top : size.height * 0.035, bottom : size.height * 0.035),
                       alignment: Alignment.bottomCenter,
@@ -81,13 +77,12 @@ class DockAreaDashboard extends StatelessWidget {
                     height: size.height * 0.45,
                     width: size.width * 0.3,
                     decoration: BoxDecoration(
-                        color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                        color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                     padding: EdgeInsets.only(left : size.height * 0.035, top : size.height * 0.035, bottom : size.height * 0.035),
                     alignment: Alignment.topCenter,
                     child: SfCircularChart(
                       title: ChartTitle(
                         text: 'Dock-IN Utilization',
-                        alignment: ChartAlignment.center,
                         textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                       ),
                       legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -120,13 +115,12 @@ class DockAreaDashboard extends StatelessWidget {
                     height: size.height * 0.45,
                     width: size.width * 0.3,
                     decoration: BoxDecoration(
-                        color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                        color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                     padding: EdgeInsets.only(left : size.height * 0.035, top : size.height * 0.035, bottom : size.height * 0.035),
                     alignment: Alignment.topCenter,
                     child: SfCircularChart(
                       title: ChartTitle(
                         text: 'Dock-OUT Utilization',
-                        alignment: ChartAlignment.center,
                         textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
                       ),
                       legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
@@ -154,13 +148,12 @@ class DockAreaDashboard extends StatelessWidget {
                               height: size.height * 0.45,
                               width: size.width * 0.3,
                               decoration: BoxDecoration(
-                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
                               child: SfCircularChart(
                                 title: ChartTitle(
                                     text: "Avg Loading Time",
-                                    alignment: ChartAlignment.center,
                                     textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(
@@ -209,13 +202,12 @@ class DockAreaDashboard extends StatelessWidget {
                               height: size.height * 0.45,
                               width: size.width * 0.3,
                               decoration: BoxDecoration(
-                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
                               child: SfCircularChart(
                                 title: ChartTitle(
                                     text: "Avg Unloading Time",
-                                    alignment: ChartAlignment.center,
                                     textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(
@@ -259,13 +251,12 @@ class DockAreaDashboard extends StatelessWidget {
                               height: size.height * 0.45,
                               width: size.width * 0.3,
                               decoration: BoxDecoration(
-                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
                               child: SfCircularChart(
                                 title: ChartTitle(
                                     text: "Avg Dock TAT",
-                                    alignment: ChartAlignment.center,
                                     textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(

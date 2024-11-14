@@ -38,7 +38,7 @@ class ReceivingBloc extends Bloc<ReceivingEvent, ReceivingState> {
         emit(state.copyWith(receivingArea: receivingArea, receivingStatus: ReceivingAreaStatus.success, receiveList: state.receiveList!));
       });
     } catch (e) {
-      print("error ${e}");
+      print("error $e");
     }
   }
 }

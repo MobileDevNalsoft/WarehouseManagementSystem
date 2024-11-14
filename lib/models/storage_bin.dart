@@ -11,15 +11,15 @@ class StorageBin {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['response_code'] = this.responseCode;
-    data['response_message'] = this.responseMessage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['response_code'] = responseCode;
+    data['response_message'] = responseMessage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -74,20 +74,20 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['container_nbr'] = this.containerNbr;
-    data['location_key'] = this.locationKey;
-    data['serial_nbr_key'] = this.serialNbrKey;
-    data['batch_nbr_id'] = this.batchNbrKey;
-    data['rcvd_shipment_key'] = this.rcvdShipmentKey;
-    data['ref_po_nbr'] = this.refPoNbr;
-    data['vendor'] = this.vendor;
-    data['putawaytype_key'] = this.putawaytypeKey;
-    data['item_key'] = this.itemKey;
-    data['curr_qty'] = this.currQty;
-    data['curr_location_id'] = this.currLocationId;
-    data['manufacture_date'] = this.manufactureDate;
-    data['expiry_date'] = this.expiryDate;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['container_nbr'] = containerNbr;
+    data['location_key'] = locationKey;
+    data['serial_nbr_key'] = serialNbrKey;
+    data['batch_nbr_id'] = batchNbrKey;
+    data['rcvd_shipment_key'] = rcvdShipmentKey;
+    data['ref_po_nbr'] = refPoNbr;
+    data['vendor'] = vendor;
+    data['putawaytype_key'] = putawaytypeKey;
+    data['item_key'] = itemKey;
+    data['curr_qty'] = currQty;
+    data['curr_location_id'] = currLocationId;
+    data['manufacture_date'] = manufactureDate;
+    data['expiry_date'] = expiryDate;
     return data;
   }
 }

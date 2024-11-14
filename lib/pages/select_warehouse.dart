@@ -1,19 +1,13 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:warehouse_3d/bloc/authentication/authentication_bloc.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
-import 'customs/loginformfield.dart';
 
 class SelectWarehouse extends StatefulWidget {
-  SelectWarehouse({super.key});
+  const SelectWarehouse({super.key});
 
   @override
   State<SelectWarehouse> createState() => _SelectWarehouseState();
@@ -87,7 +81,7 @@ class _SelectWarehouseState extends State<SelectWarehouse> {
                         ),
                         offset: Offset(0, -size.height*0.003)),
                     menuItemStyleData: MenuItemStyleData(
-                      overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                       selectedMenuItemBuilder: (context, child) {
                         return SizedBox(
                           height: size.height*0.03,

@@ -38,8 +38,8 @@ class InspectionAreaDashboard extends StatelessWidget {
   ];
 
   final List<ChartData> chartData = [
-    ChartData('David', 45, Color.fromRGBO(3, 109, 97, 1)),
-    ChartData('sd', 55, Colors.transparent),
+    ChartData('David', 68, Color.fromRGBO(3, 109, 97, 1)),
+    ChartData('sd', 32, Colors.transparent),
   ];
 
   @override
@@ -65,7 +65,7 @@ class InspectionAreaDashboard extends StatelessWidget {
       return Column(
         children: [
           Gap(constraints.maxHeight * 0.03),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
@@ -84,21 +84,14 @@ class InspectionAreaDashboard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                              height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                  const  BoxShadow(
-                                      offset: Offset(2, 2),
-                                      blurRadius: 5,
-                                     
-                                      color: Color.fromARGB(255, 69, 65, 61)
-                                    )
-                                  ],
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white),
+                           Container(
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                               child: Customs.WMSPieChart(
                                   title:'Today Quality Status',
                                   dataSource: [PieData(xData: "Marked for QC",yData:  10,text:  "10"), PieData(xData: "QC Approved",yData:  6,text:  "6"), PieData(xData: "QC Rejected", yData: 3,text:  "3")],
@@ -112,44 +105,25 @@ class InspectionAreaDashboard extends StatelessWidget {
                                     }
                                   })),
                           Container(
-                              height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  const  BoxShadow(
-                                      offset: Offset(2, 2),
-                                      blurRadius: 5,
-                                     
-                                      color: Color.fromARGB(255, 69, 65, 61)
-                                    )
-                                  ],
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white),
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                               child: _getRadialGauge()),
-                        ],
-                      ),
-                      Gap(constraints.maxHeight * 0.05),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                              height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  const  BoxShadow(
-                                      offset: Offset(2, 2),
-                                      blurRadius: 5,
-                                     
-                                      color: Color.fromARGB(255, 69, 65, 61)
-                                    )
-                                  ],
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white),
+
+                           Container(
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                               child: SfCircularChart(
-                                title: ChartTitle(text: "Material Quality", textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                                title: const ChartTitle(text: "Material Quality", textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(
                                     widget: Container(
@@ -164,7 +138,7 @@ class InspectionAreaDashboard extends StatelessWidget {
                                           BoxShadow(
                                             color: Colors.black.withOpacity(0.3),
                                             blurRadius: 10,
-                                            offset: Offset(0, 4), // Adjust to set shadow direction
+                                            offset: const Offset(0, 4), // Adjust to set shadow direction
                                           ),
                                         ],
                                       ),
@@ -173,7 +147,7 @@ class InspectionAreaDashboard extends StatelessWidget {
                                   CircularChartAnnotation(
                                     widget: Container(
                                       child: const Text(
-                                        '45%',
+                                        '68%',
                                         style: TextStyle(
                                           color: Color.fromARGB(255, 101, 10, 10),
                                           fontSize: 25,
@@ -193,48 +167,35 @@ class InspectionAreaDashboard extends StatelessWidget {
                                   )
                                 ],
                               )),
-                          Container(
-                              height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                              decoration: BoxDecoration(
-                                 boxShadow: [
-                                  const  BoxShadow(
-                                      offset: Offset(2, 2),
-                                      blurRadius: 5,
-                                     
-                                      color: Color.fromARGB(255, 69, 65, 61)
-                                    )
-                                  ],
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white),
-                              child: Customs.WMSCartesianChart(
-                                  title: 'Day Wise Quality Summary  ',
-                                  barCount: 1,
-                                  dataSources: [barData],
-                                  yAxisTitle: 'Quality Enabled LPNs',
-                                  barColors: const [Color.fromARGB(255, 114, 68, 5)])),
                         ],
                       ),
                       Gap(constraints.maxHeight * 0.05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          
                           Container(
-                              height: constraints.maxHeight * 0.4,
-                              width: constraints.maxWidth * 0.43,
-                              decoration: BoxDecoration(
-                                 boxShadow: [
-                                  const  BoxShadow(
-                                      offset: Offset(2, 2),
-                                      blurRadius: 5,
-                                     
-                                      color: Color.fromARGB(255, 69, 65, 61)
-                                    )
-                                  ],
-                                  border: Border.all(color: const Color.fromARGB(137, 172, 170, 170)),
-                                  borderRadius: BorderRadius.circular(0),
-                                  color: Colors.white),
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
+                              child: Customs.WMSCartesianChart(
+                                  title: 'Day Wise Quality Summary  ',
+                                  barCount: 1,
+                                  dataSources: [barData],
+                                  yAxisTitle: 'Quality Enabled LPNs',
+                                  barColors: const [Color.fromARGB(255, 114, 68, 5)])),
+                                  Container(
+                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                          height: constraints.maxHeight * 0.48,
+                          width: constraints.maxWidth * 0.3,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
                               child: Customs.WMSCartesianChart(
                                   title: 'Supplier Wise Quality  ',
                                   barCount: 1,
@@ -242,7 +203,8 @@ class InspectionAreaDashboard extends StatelessWidget {
                                   yAxisTitle: 'Quality In Percentage',
                                   barColors: const [Color.fromARGB(255, 114, 68, 5)]))
                         ],
-                      )
+                      ),
+                      
                     ],
                   ),
                 ),
@@ -257,12 +219,12 @@ class InspectionAreaDashboard extends StatelessWidget {
   Widget _getRadialGauge() {
     return gauge.SfRadialGauge(
         animationDuration: 2000,
-        title: gauge.GaugeTitle(text: 'Quality Efficiency', textStyle: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+        title: const gauge.GaugeTitle(text: 'Quality Efficiency', textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
         axes: <gauge.RadialAxis>[
           gauge.RadialAxis(labelsPosition: gauge.ElementsPosition.outside, showLastLabel: true, minimum: 0, maximum: 100, ranges: <gauge.GaugeRange>[
             gauge.GaugeRange(startValue: 0, endValue: 50, color: const Color.fromARGB(255, 4, 112, 122), startWidth: 30, endWidth: 30),
             gauge.GaugeRange(startValue: 50, endValue: 100, color: const Color.fromARGB(255, 178, 123, 223), startWidth: 30, endWidth: 30),
-          ], pointers: <gauge.GaugePointer>[
+          ], pointers: const <gauge.GaugePointer>[
             gauge.NeedlePointer(
               value: 20,
               enableAnimation: true,

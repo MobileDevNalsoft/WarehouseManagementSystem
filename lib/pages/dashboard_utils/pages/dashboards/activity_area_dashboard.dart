@@ -8,7 +8,7 @@ import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class ActivityAreaDashboard extends StatefulWidget {
-  ActivityAreaDashboard({super.key});
+  const ActivityAreaDashboard({super.key});
 
   @override
   State<ActivityAreaDashboard> createState() => _ActivityAreaDashboardState();
@@ -104,7 +104,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   List<BarData> empTaskdata = [];
 
   final List<AnalogChartData> avgTaskExecutionTime = [
-    AnalogChartData('Execution time', 60, Color.fromRGBO(147, 0, 119, 1)),
+    AnalogChartData('Execution time', 60, const Color.fromRGBO(147, 0, 119, 1)),
     AnalogChartData('rest', 40, Colors.transparent),
     // AnalogChartData('rest', 75, Color.fromRGBO(9, 0, 136, 1))
     // AnalogChartData('Jack', 34, Color.fromRGBO(228,0,124,1)),
@@ -112,7 +112,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   ];
 
   final List<AnalogChartData> avgPickTime = [
-    AnalogChartData('Execution time', 40, Color.fromRGBO(9, 0, 136, 1)),
+    AnalogChartData('Execution time', 40, const Color.fromRGBO(9, 0, 136, 1)),
     AnalogChartData('rest', 60, Colors.transparent),
   ];
   late Map<String, List<String>> employeeSuggestionRange;

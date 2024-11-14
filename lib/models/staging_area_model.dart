@@ -11,15 +11,15 @@ class StagingArea {
     if (json['data'] != null) {
       data = <StagingData>[];
       json['data'].forEach((v) {
-        data!.add(new StagingData.fromJson(v));
+        data!.add(StagingData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['response_code'] = this.responseCode;
-    data['response_message'] = this.responseMessage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['response_code'] = responseCode;
+    data['response_message'] = responseMessage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -37,17 +37,17 @@ class StagingData {
 
   StagingData.fromJson(Map<String, dynamic> json) {
     orderNum = json['order_num'];
-    custName = json['cust_name'];
+    custName = json['cust_name'] ?? '';
     item = json['item'];
     qty = json['qty'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['order_num'] = this.orderNum;
-    data['cust_name'] = this.custName;
-    data['item'] = this.item;
-    data['qty'] = this.qty;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['order_num'] = orderNum;
+    data['cust_name'] = custName;
+    data['item'] = item;
+    data['qty'] = qty;
     return data;
   }
 }
