@@ -10,7 +10,7 @@ final class DashboardsState extends Equatable {
   int? index;
 
   factory DashboardsState.initial() {
-    return DashboardsState(getDataState: GetDataState.initial, index: 0);
+    return DashboardsState(getDataState: GetDataState.initial, index: 6);
   }
 
   DashboardsState copyWith({
