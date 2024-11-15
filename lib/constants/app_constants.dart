@@ -5,6 +5,8 @@ class AppConstants {
   // authentication constants
   static const IDCS_URL = "https://idcs-ceca8ff48a7341bebbe31aba04db25b2.identity.oraclecloud.com/";
 
+  static const WMS_URL = "https://tg1.wms.ocs.oraclecloud.com:443/emg_test/wms/lgfapi/v10/entity/";
+
   static const String GET_OCI_TOKEN = "oauth2/v1/token";
   static const String AUTHENCTICATE_USER_NAME = "sso/v1/sdk/authenticate";
 

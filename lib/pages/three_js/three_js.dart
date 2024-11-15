@@ -8,6 +8,10 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:touchable/touchable.dart';
+import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
+import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
