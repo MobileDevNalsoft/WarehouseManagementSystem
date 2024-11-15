@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
@@ -18,10 +20,13 @@ class _HomePageState extends State<HomePage> {
   final NavigatorService navigator = getIt<NavigatorService>();
 
   final SharedPreferences sharedPreferences = getIt();
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
 
   @override
   void initState() {
     // TODO: implement initState
+
+  
     super.initState();
   }
 

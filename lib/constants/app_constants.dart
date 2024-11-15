@@ -36,6 +36,8 @@ class AppConstants {
 
   static const INVENTORY_HISTORY = 'inventory_history/';
   static const LOCATION = 'location/';
+  static const COMPANY = 'company/';
+  static const FACILITY = 'facility/';
    
   // methods
   static const ACTIVITY_AREA = 'activity_area';

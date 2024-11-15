@@ -77,6 +77,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _storageStreamController.onListen = () {
       print("messageFromJS");
     };
+
+     
+    _warehouseInteractionBloc.add(GetCompanyData());
     // just for debugging
     // animationController.forward();
   }
@@ -87,7 +90,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     return Scaffold(
         body: Stack(
       children: [
-        Column(
+
+        BlocBuilder<WarehouseInteractionBloc,WarehouseInteractionState>(builder: (context,state){
+
+
+          print("data ${state.companyModel}");
+            print("STATE ${state.getState}");
+        return Column(
           children: [
             Container(
               height: size.height * 0.08,
@@ -96,36 +105,30 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
               child: Row(
                 children: [
                   Gap(size.width * 0.006),
-                  DropdownButtonHideUnderline(
+            state.getState!=GetCompanyDataState.success ? SizedBox():       DropdownButtonHideUnderline(
                     child: DropdownButton2<String>(
                       isExpanded: false,
                       hint: const SizedBox(),
-                      items: [
-                        DropdownMenuItem<String>(
-                            value: '0',
+                      items: state.companyModel!.results!.map((company){
+                         return DropdownMenuItem<String>(
+                            value: company.id.toString(),
                             onTap: () {},
                             alignment: Alignment.center,
                             child: PointerInterceptor(
                               child: Text(
-                                'company 1',
+                                company.name!,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
                               ),
-                            )),
-                        DropdownMenuItem<String>(
-                            value: '1',
-                            onTap: () {},
-                            alignment: Alignment.center,
-                            child: PointerInterceptor(
-                              child: Text(
-                                'company 2',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
-                              ),
-                            ))
-                      ],
-                      value: '1',
-                      onChanged: (String? value) {},
+                            ));
+
+                      }).toList(),
+                     value: state.selectedCompanyVal,
+                      onChanged: (String? value) {
+                            
+                         context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!));
+                         context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: int.parse(value!)));
+                      },
                       buttonStyleData: ButtonStyleData(
                         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
@@ -153,36 +156,30 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     ),
                   ),
                   Gap(size.width * 0.006),
-                  DropdownButtonHideUnderline(
+                 state.getState ==GetCompanyDataState.success  ? state.facilityDataState != GetFacilityDataState.success?SizedBox():DropdownButtonHideUnderline(
                     child: DropdownButton2<String>(
                       isExpanded: false,
                       hint: const SizedBox(),
-                      items: [
-                        DropdownMenuItem<String>(
-                            value: '0',
+                      items: state.facilityModel!.results!.map((facility){
+                         return DropdownMenuItem<String>(
+                            value: facility.id.toString(),
                             onTap: () {},
                             alignment: Alignment.center,
                             child: PointerInterceptor(
                               child: Text(
-                                'warehouse 1',
+                                facility.name!,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
                               ),
-                            )),
-                        DropdownMenuItem<String>(
-                            value: '1',
-                            onTap: () {},
-                            alignment: Alignment.center,
-                            child: PointerInterceptor(
-                              child: Text(
-                                'warehouse 2',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
-                              ),
-                            ))
-                      ],
-                      value: '0',
-                      onChanged: (String? value) {},
+                            ));
+
+                      }).toList(),
+                      
+                      value: state.selectedFacilityVal,
+                      onChanged: (String? value) {
+                            
+                         context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!));
+                      },
                       buttonStyleData: ButtonStyleData(
                         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
@@ -208,7 +205,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         },
                       ),
                     ),
-                  ),
+                  ):SizedBox(),
                   const Spacer(),
                   Image.asset(
                     'assets/images/nalsoft_logo.png',
@@ -302,7 +299,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
               ],
             ),
           ],
-        ),
+        );
+        }),
+        
         Positioned(
           right: size.width*0.25,
           top: size.height*0.013,
