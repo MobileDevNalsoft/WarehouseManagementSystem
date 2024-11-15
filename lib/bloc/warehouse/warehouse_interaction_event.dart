@@ -20,3 +20,5 @@ class ModelLoaded extends WarehouseInteractionEvent {
   @override
   List<Object> get props => [isLoaded];
 }
+
+

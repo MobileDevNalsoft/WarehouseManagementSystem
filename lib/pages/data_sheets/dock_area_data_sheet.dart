@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/dock_area/dock_area_bloc.dart';
+import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/customs/expandable_list_view.dart';
 
@@ -118,16 +119,15 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
     super.initState();
 
     _dockAreaBloc = context.read<DockAreaBloc>();
-    if (_dockAreaBloc.state.getDataState == GetDataState.initial) {
-      _dockAreaBloc.add(const GetDockAreaData());
-    }
+      _dockAreaBloc.add( GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText,searchArea:context.read<WarehouseInteractionBloc>().state.selectedSearchArea.contains('in')?"DOCK_IN":"DOCK_OUT" ));
+    
     _controller.addListener(_scrollListener);
   }
 
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       _dockAreaBloc.state.pageNum = _dockAreaBloc.state.pageNum! + 1;
-      _dockAreaBloc.add(const GetDockAreaData());
+      _dockAreaBloc.add( GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText,searchArea:context.read<WarehouseInteractionBloc>().state.selectedSearchArea.contains('in')?"DOCK_IN":"DOCK_OUT" ));
     }
   }
 

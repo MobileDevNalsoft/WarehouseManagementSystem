@@ -20,13 +20,20 @@ class StagingBloc  extends Bloc<StagingEvent,StagingState>{
 
   void _onGetStagingData(GetStagingData event, Emitter<StagingState> emit) async {
     try {
-      print("page_num ${state.pageNum}");
+      emit(state.copyWith(stagingStatus:StagingAreaStatus.initial,stagingList: state.pageNum==0?[]: state.stagingList!));
       await _customApi.get(
+        event.searchText!=null ? AppConstants.SEARCH :
         AppConstants.STAGING_AREA,
-        queryParameters: {"facility_id": 243, "page_num": state.pageNum},
+        queryParameters:event.searchText!=null
+                    ? {"search_text": event.searchText, "search_area": "STAGING", "facility_id": '243', "page_num": state.pageNum}: {"facility_id": 243, "page_num": state.pageNum},
     ).then((value) {
-             StagingArea stagingArea = StagingArea.fromJson(jsonDecode(value.response!.data));
+       StagingArea stagingArea = StagingArea.fromJson(jsonDecode(value.response!.data));
+       if(state.pageNum==0){
+      state.stagingList=stagingArea.data!;
+       }
+       else{
        state.stagingList!.addAll(stagingArea.data!);
+       }
        emit(state.copyWith(stagingArea: stagingArea,stagingStatus:StagingAreaStatus.success,stagingList: state.stagingList!));
        
       });

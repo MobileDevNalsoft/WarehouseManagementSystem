@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,9 @@ import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/rack_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/staging_area_data_sheet.dart';
+import 'package:warehouse_3d/pages/data_sheets/storage_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/yard_area_data_sheet.dart';
+
 import '../../bloc/warehouse/warehouse_interaction_bloc.dart';
 import '../../js_interop_service/js_inter.dart';
 import '../../navigations/navigator_service.dart';
@@ -325,11 +328,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
       case 'rack':
         return RackDataSheet(objectNames: objectNames,);
       case 'bin':
-         context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS['bin']}"));
-        return  const BinDataSheet();
+        return   BinDataSheet();
       case 'area':
         switch (objectValue.toLowerCase()) {
           case 'stagingarea':
+            
             return  StagingAreaDataSheet();
           case 'activityarea':
             return  ActivityAreaDataSheet();
@@ -343,7 +346,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             return  DockAreaDataSheet();
           case 'yardarea':
             return YardAreaDataSheet();
-
+          case 'storage':
+            return StorageAreaDataSheet();
           default:
             return null;
         }

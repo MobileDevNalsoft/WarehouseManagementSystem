@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
@@ -328,7 +329,134 @@ class DockAreaDashboard extends StatelessWidget {
             )
           ),
         ),
-        Container()
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, lsize) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: size.height*0.125,
+                    width: lsize.maxWidth,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(12, 46, 87, 1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    margin: EdgeInsets.only(top: lsize.maxHeight*0.018),
+                    padding: EdgeInsets.all(size.width*0.01),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Appointments', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: size.height*0.02),),
+                        Gap(lsize.maxHeight*0.02),
+                        Row(
+                          children: [
+                            Text('Fri, Nov 15',  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: size.height*0.02)),
+                            Gap(lsize.maxWidth*0.04),
+                            Container(
+                              alignment: Alignment.center,
+                                      height: lsize.maxHeight*0.03,
+                                      width: lsize.maxWidth*0.22,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(192, 208, 230, 1),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                              padding: EdgeInsets.all(lsize.maxHeight*0.002),
+                              child: InkWell(
+                                onTap: () {
+                                  
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      height: lsize.maxHeight*0.03,
+                                      width: lsize.maxWidth*0.1,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(12, 46, 87, 1),
+                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                                      ),
+                                      child: Icon(Icons.arrow_left_outlined, color: Colors.white,),
+                                    ),
+                                    Gap(lsize.maxWidth*0.005),
+                                    Container(
+                                      alignment: Alignment.center,
+                                      height: lsize.maxHeight*0.03,
+                                      width: lsize.maxWidth*0.1,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(12, 46, 87, 1),
+                                        borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
+                                      ),
+                                      child: Icon(Icons.arrow_right_outlined,  color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Gap(lsize.maxWidth*0.04),
+                            InkWell(
+                              onTap: () {
+                                
+                              },
+                              child: Icon(Icons.calendar_month, size: lsize.maxWidth*0.08,color: Colors.white,),
+                            )
+                          ],
+                        )
+                      ],
+                    )),
+                    Expanded(
+                      child: Container(
+                      width: lsize.maxWidth,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(12, 46, 87, 1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      margin: EdgeInsets.only(top: size.height*0.01),
+                      padding: EdgeInsets.symmetric(vertical: lsize.maxHeight*0.02, horizontal: lsize.maxWidth*0.03),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: ListView.builder(itemCount: 10, itemBuilder: (context, index) => Container(
+                          height:lsize.maxHeight*0.1,
+                                            width: lsize.maxWidth,
+                                            decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            margin: EdgeInsets.only(bottom: lsize.maxHeight*0.01),
+                                            padding: EdgeInsets.all(lsize.maxHeight*0.02),
+                                            child: Row(
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text('9:00 AM', style: TextStyle(color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth*0.045, fontWeight: FontWeight.bold),),
+                                                    Gap(lsize.maxHeight*0.008),
+                                                    Text('10:00 AM', style: TextStyle(color: Color.fromRGBO(95, 116, 143, 1), fontSize: lsize.maxWidth*0.035, fontWeight: FontWeight.bold))
+                                                  ],
+                                                ),
+                                                Container(margin: EdgeInsets.symmetric(horizontal: lsize.maxWidth*0.05),decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(500)), width: lsize.maxHeight*0.003,),
+                                                Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text('APDEMODEMOWH1000021', style: TextStyle(color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth*0.04, fontWeight: FontWeight.bold),),
+                                                     Gap(lsize.maxHeight*0.008),
+                                                    Text('DOCK-IN-01', style: TextStyle(color: Color.fromRGBO(95, 116, 143, 1), fontSize: lsize.maxWidth*0.035, fontWeight: FontWeight.bold))
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                        ),),
+                      ),
+                      ),
+                    )
+                ],
+              );
+            }
+          ),
+        )
       ],
     );
   }

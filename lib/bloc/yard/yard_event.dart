@@ -7,7 +7,8 @@ abstract class YardEvent extends Equatable {
 }
 
 class GetYardData extends YardEvent{
-  const GetYardData();
+  String? searchText;
+  GetYardData({this.searchText});
 }
 
 class YardTruckExpanded extends YardEvent{

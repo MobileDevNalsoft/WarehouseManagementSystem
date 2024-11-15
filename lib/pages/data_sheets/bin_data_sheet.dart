@@ -16,12 +16,27 @@ class BinDataSheet extends StatefulWidget {
 class _BinDataSheetState extends State<BinDataSheet> {
   late WarehouseInteractionBloc _warehouseInteractionBloc;
   late StorageBloc _storageBloc;
+  final ScrollController _controller = ScrollController();
+
   @override
   void initState() {
     super.initState();
+
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _storageBloc = context.read<StorageBloc>();
+    _storageBloc.add(GetBinData(searchText:context.read<WarehouseInteractionBloc>().state.searchText ));
    
+    _storageBloc.state.storageBinItems = [];
+      _storageBloc.add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS['bin']}"));
+
+    _controller.addListener(_scrollListener);
+  }
+
+  void _scrollListener() async {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+      _storageBloc.state.pageNum = _storageBloc.state.pageNum! + 1;
+      _storageBloc.add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS['bin']}"));
+    }
   }
 
   @override
@@ -32,59 +47,169 @@ class _BinDataSheetState extends State<BinDataSheet> {
       context: context,
       size: size, 
       title: 'Storage Bin', children: [
-      BlocBuilder<StorageBloc, StorageState>(
-        builder: (context, state) {
-          bool isEnabled = state.storageBinStatus != StorageBinStatus.success;
-          return Skeletonizer(
-            enabled: isEnabled,
-            child: Column(
-              children: [
-                Text("RC${_warehouseInteractionBloc.state.dataFromJS!['bin'].toString().toUpperCase()}",style: const TextStyle(fontWeight: FontWeight.bold),),
-                isEnabled?const Text("-"):
-                state.storageBin!.data!.isEmpty?const Text("Empty bin"):
-              SizedBox(
-                height: size.height * 0.6,
-                child: ListView.separated(
-                  itemBuilder: (context,index) {
-                    return Customs.MapInfo(size: size, 
-                          keys: [
-                            'LPN Number',
-                            'ASN',
-                            'PO Number',
-                            'Vendor',
-                            'Item',
-                            'Item Category',
-                            'Quantity',
-                            'Manufacturing Date',
-                            'Expiry Date',
-                            'Batch Number',
-                            'Serial Number'
-                          ], values: [
-                             isEnabled ? 'LPN Number' : state.storageBin!.data![index].containerNbr??"NA",
-                             isEnabled ? 'ASN' : state.storageBin!.data![index].serialNbrKey??"NA",
-                             isEnabled ? 'PO Number' : state.storageBin!.data![index].refPoNbr??"NA",
-                             isEnabled ? 'Vendor' : state.storageBin!.data![index].vendor??"NA",
-                             isEnabled ? 'Item' : state.storageBin!.data![index].itemKey??"NA",
-                             isEnabled ? 'Item Category' : state.storageBin!.data![index].putawaytypeKey??"NA",
-                             isEnabled ? 'Quantity' : state.storageBin!.data![index].currQty??"NA",
-                             isEnabled ? 'Manufacturing Date' : state.storageBin!.data![index].manufactureDate??"NA",
-                             isEnabled ? 'Expiry Date' : state.storageBin!.data![index].expiryDate??"NA",
-                             isEnabled ? 'Batch Number' : state.storageBin!.data![index].batchNbrKey??"NA",
-                             isEnabled ? 'Serial Number Key' : state.storageBin!.data![index].serialNbrKey??"NA",
-                
-                          ]);
-                  },
-                          separatorBuilder: (context, index) => Gap(size.height * 0.025),
-                          itemCount: isEnabled ? 8 : state.storageBin!.data!.length,
+        BlocBuilder<StorageBloc, StorageState>(
+            builder: (context, state) {
+              bool isEnabled = state.storageBinStatus != StorageBinStatus.success;
+              return Expanded(
+                child: LayoutBuilder(
+                  builder: (context, lsize) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: ListView.builder(
+                            controller: _controller,
+                            itemBuilder: (context, index) => index < state.storageBinItems!.length
+                                    ? 
+                               Container(
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(112, 144, 185, 1),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      padding: EdgeInsets.all(size.height*0.01),
+                                      margin: EdgeInsets.only(top: size.height*0.01),
+                                      child: Column(
+                                        children: [
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/bin.png', scale: size.height*0.0018,),
+                                            ),
+                                            Text(state.storageBinItems![index].containerNbr!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                            Spacer(),
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/location.png', scale: size.height*0.0018,),
+                                            ),
+                                            SizedBox(width: lsize.maxWidth*0.3, child: Text(state.storageBinItems![index].currLocationId!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.01),
+                                              child: Image.asset('assets/images/location.png', scale: size.height*0.0018,),
+                                            ),
+                                            Text(state.storageBinItems![index].currLocationId!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                            // Padding(
+                                            //   padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                            //   child: Image.asset('assets/images/batch_no.png', scale: size.height*0.0018,),
+                                            // ),
+                                            // Text(state.storageBinItems![index].batchNbrID!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                            Spacer(),
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/serial_no.png', scale: size.height*0.0018,),
+                                            ),
+                                             SizedBox(width: lsize.maxWidth*0.3, child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].serialNbrKey!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))),
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/shipment.png', scale: size.height*0.0018,),
+                                            ),
+                                            Text(state.storageBinItems![index].rcvdShipmentKey!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                            Spacer(),
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/po.png', scale: size.height*0.0018,),
+                                            ),
+                                             SizedBox(width: lsize.maxWidth*0.3, child: Text(state.storageBinItems![index].refPoNbr!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                          ],),
+                                          Gap(size.height*0.015),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/businessman.png', scale: size.height*0.0018,),
+                                            ),
+                                            Text(state.storageBinItems![index].vendor!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
+                                            Spacer(),
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/location.png', scale: size.height*0.0018,),
+                                            ),
+                                             SizedBox(width: lsize.maxWidth*0.3, child:  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].putawaytypeKey!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold)),)),
+                                          ],),
+                                          Gap(size.height*0.015),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/item.png', scale: size.height*0.0045,),
+                                            ),
+                                             SizedBox(width: lsize.maxWidth*0.3, child:  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].itemKey!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))),
+                                            Spacer(),
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
+                                            ),
+                                             SizedBox(width: lsize.maxWidth*0.3, child: Text(state.storageBinItems![index].currQty!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                          ],),
+                                        ],
+                                      ),
+                                    )
+                                : 
+                                Container(
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(112, 144, 185, 1),
+                                      borderRadius: BorderRadius.circular(15)
+                                    ),
+                                    padding: EdgeInsets.all(size.height*0.01),
+                                    margin: EdgeInsets.only(top: size.height*0.01),
+                                    child: Column(
+                                      children: [
+                                        Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/location.png', scale: size.height*0.0018,),
+                                            ),
+                                            Skeletonizer(enableSwitchAnimation: true, child: Text('ASN NUM', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                            
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.006),
+                                              child: Image.asset('assets/images/lpn.png', scale: size.height*0.0018,),
+                                            ),
+                                            Skeletonizer(enableSwitchAnimation: true, child: Text('ASN NUM', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                            
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.01),
+                                              child: Image.asset('assets/images/po.png', scale: size.height*0.0018,),
+                                            ),
+                                            Skeletonizer(enableSwitchAnimation: true, child: Text('PO NUM', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                            Spacer(),
+                                            Image.asset('assets/images/businessman.png', scale: size.height*0.0018,),
+                                            Skeletonizer(enableSwitchAnimation: true, child: Text('VENDOR', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
+                                          ],),
+                                          Gap(size.height*0.01),
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.013),
+                                                child: Image.asset('assets/images/item.png', scale: size.height*0.0045,),
+                                              ),
+                                              Skeletonizer(enableSwitchAnimation: true, child: Text('ITEM', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
+                                              Spacer(),
+                                              Padding(
+                                                padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.009),
+                                                child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
+                                              ),
+                                              Skeletonizer(enableSwitchAnimation: true, child: Text('QuanT', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
+                                            ],
+                                          )
+                                      ],
+                                    ),
+                                  ),
+                            itemCount: isEnabled ? 8 : state.storageBinItems!.length + 1 > (state.pageNum!+1)*100 ? state.storageBinItems!.length + 1 : state.storageBinItems!.length),
+                    );
+                  }
                 ),
-              ),
-                    Gap(size.height * 0.05),
-                   
-              ],
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+      
     ]);
   }
 }

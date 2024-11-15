@@ -23,10 +23,9 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
   void initState() {
     super.initState();
     _receivingBloc = context.read<ReceivingBloc>();
-
-    if (_receivingBloc!.state.receivingStatus == ReceivingAreaStatus.initial) {
+    print("inside receiving init state");
       _receivingBloc!.add( GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-    }
+
 
     _controller.addListener(_scrollListener);
   }
