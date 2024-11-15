@@ -29,17 +29,17 @@ class _HoverDropdownState extends State<HoverDropdown> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: Duration(milliseconds: 200),
       height: height,
       width: size.width * 0.12,
       child: Stack(
         children: [
           AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 200),
             height: bottomHeight,
             width: size.width * 0.12,
             child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               child: Column(
                 children: [
                   Gap(size.height * 0.08),
@@ -51,9 +51,10 @@ class _HoverDropdownState extends State<HoverDropdown> {
                               bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.07 : size.height*0.2;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
+                            
                             Navigator.push(context, MaterialPageRoute(builder: (context) => EntryPoint(),));
                           },
-                          child: const ForHover(text: "Dashboard"))),
+                          child: ForHover(text: "Dashboard"))),
                   PointerInterceptor(
                       child: InkWell(
                           onTap: () {
@@ -64,7 +65,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                             });
                             launch('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/',isNewTab: true);
                           },
-                          child: const ForHover(text: "WMS Cloud"))),
+                          child: ForHover(text: "WMS Cloud"))),
                 ],
               ),
             ),
@@ -132,7 +133,7 @@ class _ForHoverState extends State<ForHover> {
       onEnter: (event) {
         // change color on hover
         setState(() {
-          hoverColor = Color.fromRGBO(68, 98, 136, 1);
+          hoverColor = Colors.blue.shade900;
           textColor = Colors.white;
         });
       },
