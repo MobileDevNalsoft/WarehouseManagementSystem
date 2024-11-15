@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:warehouse_3d/constants/app_constants.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/logger/logger.dart';
+import 'package:warehouse_3d/models/dashboard_response.dart';
 import 'package:warehouse_3d/models/dock_area_model.dart';
 
 import '../../local_network_calls.dart';
@@ -40,4 +41,6 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
       emit(state.copyWith(getDataState: GetDataState.failure));
     }
   }
+
+  
 }

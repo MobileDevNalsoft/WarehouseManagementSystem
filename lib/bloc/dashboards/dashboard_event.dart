@@ -13,3 +13,28 @@ class DashboardChanged extends DashboardsEvent{
   @override
   List<Object> get props => [index];
 }
+
+
+class GetDockAppointments extends DashboardsEvent {
+  String date;
+  GetDockAppointments({required this.date});
+
+  @override
+  List<Object> get props => [date];
+}
+
+class UpdateDate extends DashboardsEvent{
+  DateTime date;
+  UpdateDate({required this.date});
+
+  @override
+  List<Object> get props => [date];
+}
+
+class ToggleCalendar extends DashboardsEvent{
+  bool toggleCalendar;
+  ToggleCalendar({required this.toggleCalendar});
+
+  @override
+  List<Object> get props => [toggleCalendar];
+}
