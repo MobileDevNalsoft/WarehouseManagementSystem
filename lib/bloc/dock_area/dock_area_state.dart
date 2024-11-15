@@ -2,11 +2,13 @@ part of 'dock_area_bloc.dart';
 
 enum GetDataState { initial, loading, success, failure }
 
+
 // ignore: must_be_immutable
 final class DockAreaState {
   DockAreaState({this.getDataState, this.dockAreaItems, this.pageNum});
 
   GetDataState? getDataState;
+
   List<DockAreaItem>? dockAreaItems;
   int? pageNum;
 

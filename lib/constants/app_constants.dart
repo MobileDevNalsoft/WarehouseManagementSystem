@@ -49,6 +49,8 @@ class AppConstants {
   static const STORAGE_AISLE = 'storage_aisle';
   static const STORAGE_BIN = 'storage_bin';
   static const SEARCH = 'search';
+  static const DOCK_DASHBOARD = 'dock_dashboard';
+  static const DOCK_APPOINTMENTS = 'dock_appointments';
 }
 
  
