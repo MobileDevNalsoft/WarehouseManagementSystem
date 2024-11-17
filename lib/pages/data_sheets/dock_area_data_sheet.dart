@@ -119,7 +119,7 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
     super.initState();
 
     _dockAreaBloc = context.read<DockAreaBloc>();
-      _dockAreaBloc.add( GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText,searchArea:context.read<WarehouseInteractionBloc>().state.selectedSearchArea.contains('in')?"DOCK_IN":"DOCK_OUT" ));
+      _dockAreaBloc.add( GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText, searchArea:context.read<WarehouseInteractionBloc>().state.selectedSearchArea.contains('in')?"DOCK_IN":"DOCK_OUT" ));
     
     _controller.addListener(_scrollListener);
   }
@@ -127,7 +127,7 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       _dockAreaBloc.state.pageNum = _dockAreaBloc.state.pageNum! + 1;
-      _dockAreaBloc.add( GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText,searchArea:context.read<WarehouseInteractionBloc>().state.selectedSearchArea.contains('in')?"DOCK_IN":"DOCK_OUT" ));
+      _dockAreaBloc.add( GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText, searchArea:context.read<WarehouseInteractionBloc>().state.selectedSearchArea.contains('in')?"DOCK_IN":"DOCK_OUT" ));
     }
   }
 

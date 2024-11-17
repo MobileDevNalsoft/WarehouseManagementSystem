@@ -14,7 +14,7 @@ enum  GetCompanyDataState {initial, loading, success, failure }
 enum GetFacilityDataState{initial, loading, success, failure}
 // ignore: must_be_immutable
 final class WarehouseInteractionState{
-  WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "Storage", this.searchText,this.getState = GetCompanyDataState.initial,this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal});
+  WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "storagearea", this.searchText,this.getState = GetCompanyDataState.initial,this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal});
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -27,6 +27,7 @@ final class WarehouseInteractionState{
   GetFacilityDataState? facilityDataState;
   String? selectedCompanyVal;
   String? selectedFacilityVal;
+  TextEditingController searchController = TextEditingController();
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(dataFromJS: {"object": "null"}, isModelLoaded: false,getState: GetCompanyDataState.initial,facilityDataState: GetFacilityDataState.initial);
   }

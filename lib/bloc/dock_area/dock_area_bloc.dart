@@ -26,7 +26,7 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
   Future<void> _onGetDockAreaData(GetDockAreaData event, Emitter<DockAreaState> emit) async {
     try {
        emit(state.copyWith(dockAreaItems:state.pageNum==0?[]: state.dockAreaItems, getDataState: GetDataState.initial));
-      await _customApi.get(event.searchText!=null?AppConstants.SEARCH:AppConstants.DOCK_AREA,  queryParameters:event.searchText!=null?{"search_text": event.searchText, "search_area": event.searchArea, "facility_id": '243', "page_num": state.pageNum}: {"facility_id": 243, "page_num": state.pageNum}).then((apiResponse) {
+      await _customApi.get((event.searchText!=null&&event.searchText!="")?AppConstants.SEARCH:AppConstants.DOCK_AREA,  queryParameters:event.searchText!=null?{"search_text": event.searchText, "search_area": event.searchArea, "facility_id": '243', "page_num": state.pageNum}: {"facility_id": 243, "page_num": state.pageNum}).then((apiResponse) {
         AreaResponse<DockAreaItem> dockAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => DockAreaItem.fromJson(json));
         if(state.pageNum==0){
           state.dockAreaItems=dockAreaResponse.data!;

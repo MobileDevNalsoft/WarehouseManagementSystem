@@ -187,7 +187,7 @@ function getPositionAndTarget(scene, name) {
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       target.y = target.y + 10;
-      console.log('{"object":"null"}');
+      // console.log('{"object":"null"}');
       break;
     case "inspectionArea":
       position.set(18, 50, -50);

@@ -240,7 +240,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                   try {
                                     if (consoleMessage.messageLevel.toNativeValue() == 1) {
                                       Map<String, dynamic> message = jsonDecode(consoleMessage.message);
-                                      _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message));
+                                      if(message.containsKey("area")){
+
+                                      message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
+                                      }
+                                      _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message,clearSearchText: true));
+                                     
+                                      
                                     }
                                   } catch (e) {
                                     print("error $e");
@@ -323,13 +329,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     String objectName,
     String objectValue,
   ) {
-    switch (objectName) {
+    switch (objectName.toLowerCase()) {
       case 'rack':
         return RackDataSheet(objectNames: objectNames,);
       case 'bin':
         return   BinDataSheet();
       case 'area':
-        switch (objectValue.toLowerCase()) {
+        switch (objectValue.toLowerCase().replaceAll("-", "")) {
           case 'stagingarea':
             
             return  StagingAreaDataSheet();
@@ -339,13 +345,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             return  ReceivingAreaDataSheet();
           case 'inspectionarea':
             return  InspectionAreaDataSheet();
-          case 'dockarea-in':
+          case 'dockareain':
             return  DockAreaDataSheet();
-          case 'dockarea-out':
+          case 'dockareaout':
             return  DockAreaDataSheet();
           case 'yardarea':
             return YardAreaDataSheet();
-          case 'storage':
+          case 'storagearea':
             return StorageAreaDataSheet();
           default:
             return null;

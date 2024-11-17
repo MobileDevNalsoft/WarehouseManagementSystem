@@ -24,7 +24,7 @@ class StagingBloc  extends Bloc<StagingEvent,StagingState>{
       await _customApi.get(
         event.searchText!=null ? AppConstants.SEARCH :
         AppConstants.STAGING_AREA,
-        queryParameters:event.searchText!=null
+        queryParameters: (event.searchText != null && event.searchText!="")
                     ? {"search_text": event.searchText, "search_area": "STAGING", "facility_id": '243', "page_num": state.pageNum}: {"facility_id": 243, "page_num": state.pageNum},
     ).then((value) {
        StagingArea stagingArea = StagingArea.fromJson(jsonDecode(value.response!.data));

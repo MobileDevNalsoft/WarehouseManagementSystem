@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
 
       case "resetTrucks":
-        resetTrucksAnimation();
+        resetTrucksAnimation(scene);
         break;
       default:
         break;
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
         currentObject = model;
 
         scene.getObjectByName("r1rb11004").material.color.set(0xff0000);
-        resetTrucksAnimation();
+        resetTrucksAnimation(scene);
 
         scene.updateMatrixWorld(true);
 
@@ -492,7 +492,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
           switchCamera("warehouse");
           if (prevNav.includes("yard")) {
-            resetTrucksAnimation();
+            resetTrucksAnimation(scene);
           }
           prevNav = targetObject.name.toString();
         }

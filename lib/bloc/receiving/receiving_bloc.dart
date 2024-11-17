@@ -22,7 +22,7 @@ class ReceivingBloc extends Bloc<ReceivingEvent, ReceivingState> {
       emit(state.copyWith(receivingStatus: ReceivingAreaStatus.initial,receiveList: state.pageNum==0?[]:state.receiveList));
       await _customApi
           .get(
-        event.searchText != null ? AppConstants.SEARCH : AppConstants.RECEIVING_AREA,
+         (event.searchText != null && event.searchText!="")? AppConstants.SEARCH : AppConstants.RECEIVING_AREA,
         queryParameters: event.searchText != null
             ? {"search_text": event.searchText, "search_area": "RECEIVING", "facility_id": '243', "page_num": state.pageNum}
             : {"facility_id": 243, "page_num": state.pageNum},
