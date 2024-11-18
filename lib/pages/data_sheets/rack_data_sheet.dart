@@ -34,7 +34,8 @@ class _RackDataSheetState extends State<RackDataSheet> {
     super.initState();
     _storageBloc = context.read<StorageBloc>();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS.values.first));
+      _storageBloc.add(AddStorageAreaData(selectedRack: _warehouseInteractionBloc.state.dataFromJS.values.first
+      ));
     _controller.addListener(_scrollListener);
   }
 
@@ -57,55 +58,60 @@ class _RackDataSheetState extends State<RackDataSheet> {
               return Skeletonizer(
                 enabled: isEnabled,
                 enableSwitchAnimation: true,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(112, 144, 185, 1),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  padding: EdgeInsets.all(size.height * 0.01),
-                  margin: EdgeInsets.only(top: size.height * 0.01),
+                child: Align(
+                  alignment: Alignment.topCenter,
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            isEnabled ? 'Rack XR' : 'Rack ${state.storageArea!.data!.first.aisle!}',
-                            style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                          ),
-                        ],
+                      Container(
+                        
+                       height: lsize.maxHeight * 0.12,
+                                  width: lsize.maxWidth * 0.96,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(112, 144, 185, 1),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  padding: EdgeInsets.all(lsize.maxHeight * 0.01),
+                                  margin: EdgeInsets.only(top: lsize.maxWidth * 0.01),
+                                  child: LayoutBuilder(builder: (context, containerSize) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      isEnabled ? 'Rack XR' : 'Rack ${state.storageArea!.data!.first.aisle!}',
+                                      style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                      maxLines: 1,
+                                    ),
+                                  ],
+                                ),
+                                // Gap(size.height * 0.01),
+                                Row(
+                                  children: [
+                                    Text(
+                                      isEnabled ? 'TYPE FROZEN' : 'Type ${state.storageArea!.data!.first.locationCategory!}',
+                                      style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                    ),
+                                    Spacer(),
+                                    Padding(
+                                      padding: EdgeInsets.only(right: size.width * 0.008),
+                                      child: Image.asset(
+                                        'assets/images/qty.png',
+                                        scale: size.height * 0.0018,
+                                      ),
+                                    ),
+                                    Text(
+                                      isEnabled ? '36' : state.storageArea!.data!.length.toString(),
+                                      style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                )
+                              ],
+                            );
+                          }
+                        ),
                       ),
-                      Gap(size.height * 0.01),
-                      Row(
-                        children: [
-                          Text(
-                            isEnabled ? 'TYPE FROZEN' : 'Type ${state.storageArea!.data!.first.locationCategory!}',
-                            style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                          ),
-                          Spacer(),
-                          Padding(
-                            padding: EdgeInsets.only(right: size.width * 0.008),
-                            child: Image.asset(
-                              'assets/images/qty.png',
-                              scale: size.height * 0.0018,
-                            ),
-                          ),
-                          Text(
-                            isEnabled ? '36' : state.storageArea!.data!.length.toString(),
-                            style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              );
-            }),
-          );
-        },
-      ),
-      Gap(size.height * 0.02),
-      SizedBox(
+                      SizedBox(
         height: size.height * 0.08,
         width: size.width * 0.1,
         child: TypeAheadField(
@@ -174,6 +180,15 @@ class _RackDataSheetState extends State<RackDataSheet> {
           constraints: BoxConstraints(minWidth: size.width * 0.5, maxWidth: size.width * 0.6),
           hideOnSelect: false,
         ),
+      ),
+    
+                    ],
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     ]);
   }

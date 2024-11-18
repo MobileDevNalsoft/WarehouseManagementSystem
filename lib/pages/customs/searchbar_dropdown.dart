@@ -84,6 +84,12 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                     return GestureDetector(
                       onTap: () {
                         print("item selected $item");
+                        try{
+                        context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "rack_cam");
+                        }
+                        catch(e){
+                            print(e);
+                        }
                       switch(item.replaceAll(" ","").toLowerCase()){
                           case "storagearea":
                                   getIt<JsInteropService>().switchToMainCam("storageArea");
@@ -119,6 +125,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                   getIt<JsInteropService>().switchToMainCam("yardArea");
                                    _warehouseInteractionBloc.state.searchText="";
                                   _warehouseInteractionBloc.state.searchController.text="";
+
                                   break;
                             case "dockareain":
                                   getIt<JsInteropService>().switchToMainCam("dockArea-IN");

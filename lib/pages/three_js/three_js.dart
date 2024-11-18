@@ -177,7 +177,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                       
                       value: state.selectedFacilityVal,
                       onChanged: (String? value) {
-                            
                          context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!));
                       },
                       buttonStyleData: ButtonStyleData(
@@ -242,7 +241,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                       Map<String, dynamic> message = jsonDecode(consoleMessage.message);
                                       if(message.containsKey("area")){
 
-                                      message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
+                                        message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
+                                      }
+                                      else if(message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")){
+
+                                          context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
                                       }
                                       _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message,clearSearchText: true));
                                      
@@ -281,6 +284,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                 },
                                 onLoadStop: (controller, url) async {},
                               ),
+                           
+                           
                             ),
                           ),
                         );
@@ -289,9 +294,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                 AnimatedBuilder(
                     animation: positionAnimation,
                     builder: (context, child) {
+                    
                       return Positioned(
                         right: positionAnimation.value,
-                        child: 
+                        child:
                         getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
                                 context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) 
                                 ??
@@ -333,7 +339,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
       case 'rack':
         return RackDataSheet(objectNames: objectNames,);
       case 'bin':
-        return   BinDataSheet();
+                
+        return   BinDataSheet();  
       case 'area':
         switch (objectValue.toLowerCase().replaceAll("-", "")) {
           case 'stagingarea':

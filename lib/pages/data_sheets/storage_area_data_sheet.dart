@@ -64,47 +64,53 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                  ListView.builder(
                     controller: _controller,
                     itemCount:state.storageAisles==null?4: state.storageAisles!.data!.length,
-                   itemBuilder: (context,index) {
+                    itemBuilder: (context,index) {
                      return Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(112, 144, 185, 1),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      padding: EdgeInsets.all(size.height * 0.01),
-                      margin: EdgeInsets.only(top: size.height * 0.01),
-                      child: Column(
-                        children: [
-                          Row(
+                      height: lsize.maxHeight * 0.1,
+                            width: lsize.maxWidth * 0.96,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(112, 144, 185, 1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            padding: EdgeInsets.all(lsize.maxHeight * 0.02),
+                            margin: EdgeInsets.only(top: lsize.maxWidth * 0.01),
+                            child: LayoutBuilder(builder: (context, containerSize) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                isEnabled ? 'Rack XR' : 'Rack ${state.storageAisles!.data![index].aisle!}',
-                                style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                                maxLines: 1,
+                              Row(
+                                children: [
+                                  Text(
+                                    isEnabled ? 'Rack XR' : 'Rack ${state.storageAisles!.data![index].aisle!}',
+                                    style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016,fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          Gap(size.height * 0.01),
-                          Row(
-                            children: [
-                              Text(
-                                isEnabled ? 'Type Frozen' : '${state.storageAisles!.data![index].locationCategory!}',
-                                style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                              ),
-                              Spacer(),
-                              Padding(
-                                padding: EdgeInsets.only(right: size.width * 0.008),
-                                child: Image.asset(
-                                  'assets/images/qty.png',
-                                  scale: size.height * 0.0018,
-                                ),
-                              ),
-                              Text(
-                                isEnabled ? '36' : state.storageAisles!.data![index].barcode.toString(),
-                                style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
+                              Gap(containerSize.maxHeight* 0.048),
+                              Row(
+                                children: [
+                                  Text(
+                                    isEnabled ? 'Type Frozen' : '${state.storageAisles!.data![index].locationCategory!}',
+                                    style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016,fontWeight: FontWeight.bold),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding: EdgeInsets.only(right: size.width * 0.008),
+                                    child: Image.asset(
+                                      'assets/images/qty.png',
+                                     height: containerSize.maxHeight*0.36, width: containerSize.maxWidth*0.16,
+                                    ),
+                                  ),
+                                  Text(
+                                    isEnabled ? '36' : state.storageAisles!.data![index].barcode.toString(),
+                                    style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016,fontWeight: FontWeight.bold),
+                                  )
+                                ],
                               )
                             ],
-                          )
-                        ],
+                          );
+                        }
                       ),
                                      );
                    }

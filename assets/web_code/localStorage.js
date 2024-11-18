@@ -14,8 +14,12 @@ export function localStorageSetup(scene, camera, controls) {
         isRackDataLoaded = event.newValue;
         break;
       case "setNumberOfTrucks":
+
         for (let i = 1; i <= parseInt(event.newValue); i++) {
           scene.getObjectByName("truck_Y" + i).visible = true;
+        }
+        for (let i = parseInt(event.newValue)+1; i <= 20; i++) {
+          scene.getObjectByName("truck_Y" + i).visible = false;
         }
         window.localStorage.removeItem("setNumberOfTrucks");
         break;
