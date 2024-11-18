@@ -155,7 +155,9 @@ document.addEventListener("DOMContentLoaded", function () {
       function (error) {
         
       }
-    );
+    ).then((value) => {
+      
+    });
 
     renderer.setSize(container.clientWidth, container.clientHeight);
 

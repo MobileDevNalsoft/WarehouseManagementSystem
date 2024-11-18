@@ -50,107 +50,124 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                     controller: _controller,
                     itemBuilder: (context, index) => index < state.yardAreaItems!.length
                         ? Container(
+                            height: lsize.maxHeight * 0.12,
+                            width: lsize.maxWidth * 0.96,
                             decoration: BoxDecoration(
                               color: Color.fromRGBO(112, 144, 185, 1),
                               borderRadius: BorderRadius.circular(15),
                             ),
-                            padding: EdgeInsets.all(size.height * 0.01),
-                            margin: EdgeInsets.only(top: size.height * 0.01),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/truck.png',
-                                      scale: size.height * 0.0018,
-                                    ),
-                                    Text(
-                                      state.yardAreaItems![index].truckNbr!,
-                                      style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                Gap(size.height * 0.01),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(left: size.width * 0.008, right: size.width * 0.008),
-                                      child: Image.asset(
-                                        'assets/images/location.png',
-                                        scale: size.height * 0.0018,
+                            padding: EdgeInsets.all(lsize.maxHeight * 0.01),
+                            margin: EdgeInsets.only(top: lsize.maxWidth * 0.01),
+                            child: LayoutBuilder(builder: (context, containerSize) {
+                              return Column( mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding:  EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.016),
+                                        child: Image.asset(
+                                          'assets/images/truck.png',
+                                          height: containerSize.maxHeight*0.36, width: containerSize.maxWidth*0.16,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      state.yardAreaItems![index].vehicleLocation!,
-                                      style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                                    ),
-                                    Spacer(),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: size.width * 0.005),
-                                      child: Image.asset('assets/images/clock.png', scale: size.height * 0.001),
-                                    ),
-                                    SizedBox(
-                                        width: lsize.maxWidth * 0.15,
-                                        child: Text(
-                                          state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5),
-                                          style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                                        ))
-                                  ],
-                                ),
-                              ],
-                            ),
+                                      Text(
+                                        state.yardAreaItems![index].truckNbr!,
+                                        style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding:EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.016),
+                                        child: Image.asset(
+                                          'assets/images/location.png',
+                                          height: containerSize.maxHeight*0.28, width: containerSize.maxWidth*0.16,
+                                        ),
+                                      ),
+                                      Text(
+                                        state.yardAreaItems![index].vehicleLocation!,
+                                        style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                      ),
+                                      Spacer(),
+                                      Padding(
+                                        padding:EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.001),
+                                        child: Image.asset('assets/images/clock.png',height: containerSize.maxHeight*0.32, width: containerSize.maxWidth*0.12,),
+                                      ),
+                                      SizedBox(
+                                          width: containerSize.maxWidth*0.16,
+                                          child: Text(
+                                            
+                                            state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5),
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                          ))
+                                    ],
+                                  ),
+                                ],
+                              );
+                            }),
                           )
                         : Container(
-                            decoration: BoxDecoration(color: Color.fromRGBO(112, 144, 185, 1), borderRadius: BorderRadius.circular(15)),
-                            padding: EdgeInsets.all(size.height * 0.01),
-                            margin: EdgeInsets.only(top: size.height * 0.01),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/truck.png',
-                                      scale: size.height * 0.0018,
-                                    ),
-                                    Skeletonizer(
-                                        enableSwitchAnimation: true,
-                                        child: Text(
-                                          'TRUCK NUMBER',
-                                          style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                                        )),
-                                  ],
-                                ),
-                                Gap(size.height * 0.01),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(left: size.width * 0.006, right: size.width * 0.007),
-                                      child: Image.asset(
-                                        'assets/images/location.png',
-                                        scale: size.height * 0.0018,
+                           height: lsize.maxHeight*0.12,
+                                  width: lsize.maxWidth*0.96,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(112, 144, 185, 1),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
-                                    ),
-                                    Skeletonizer(
-                                        enableSwitchAnimation: true,
-                                        child: Text(
-                                          'LOCATION',
-                                          style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold),
-                                        )),
-                                    Spacer(),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: size.width * 0.008),
-                                      child: Image.asset(
-                                        'assets/images/clock.png',
-                                        scale: size.height * 0.001,
+                                      padding: EdgeInsets.all( lsize.maxHeight*0.01),
+                                      margin: EdgeInsets.only(top: lsize.maxWidth*0.01),
+                                      child: LayoutBuilder(
+                                        builder: (context,containerSize) {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      children: [
+                                         Padding(
+                                        padding:  EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.016),
+                                        child: Image.asset(
+                                          'assets/images/truck.png',
+                                          height: containerSize.maxHeight*0.36, width: containerSize.maxWidth*0.16,
+                                        ),
                                       ),
+                                        Skeletonizer(
+                                            enableSwitchAnimation: true,
+                                            child: Text(
+                                              'TRUCK NUMBER',
+                                              style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                            )),
+                                      ],
                                     ),
-                                    Skeletonizer(
-                                      enableSwitchAnimation: true,
-                                      child: Text('TIME', style: TextStyle(fontSize: size.height * 0.018, fontWeight: FontWeight.bold)),
-                                    )
+                                    Row(
+                                      children: [
+                                       Padding(
+                                        padding:EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.016),
+                                        child: Image.asset(
+                                          'assets/images/location.png',
+                                          height: containerSize.maxHeight*0.28, width: containerSize.maxWidth*0.16,
+                                        ),
+                                      ),
+                                        Skeletonizer(
+                                            enableSwitchAnimation: true,
+                                            child: Text(
+                                              'LOCATION',
+                                              style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                            )),
+                                        Spacer(),
+                                          Padding(
+                                        padding:EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.001),
+                                        child: Image.asset('assets/images/clock.png',height: containerSize.maxHeight*0.32, width: containerSize.maxWidth*0.12,),
+                                      ),
+                                        Skeletonizer(
+                                          enableSwitchAnimation: true,
+                                          child: Text('TIME', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold)),
+                                        )
+                                      ],
+                                    ),
                                   ],
-                                ),
-                              ],
+                                );
+                              }
                             ),
                           ),
                     itemCount: isEnabled

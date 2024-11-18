@@ -11,9 +11,9 @@ export function loadModel() {
             },
             undefined,
             function (error) {
-                console.error('{"Error":"' + error.toString() + '"}');
+                console.error('{"Error":"' + error.toString() + '"}');  
                 reject(error); // Reject if there's an error
             }
         );
-    });
+    })
 }

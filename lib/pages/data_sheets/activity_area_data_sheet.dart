@@ -7,6 +7,7 @@ import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/ghaps.dart';
 
 class ActivityAreaDataSheet extends StatefulWidget {
   const ActivityAreaDataSheet({super.key});
@@ -58,86 +59,101 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
                             itemBuilder: (context, index) => index < state.activityAreaItems!.length
                                     ? 
                                Container(
+                                   height: lsize.maxHeight*0.18,
+                                  width: lsize.maxWidth*0.96,
                                       decoration: BoxDecoration(
                                         color: Color.fromRGBO(112, 144, 185, 1),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
                                       padding: EdgeInsets.all(size.height*0.01),
                                       margin: EdgeInsets.only(top: size.height*0.01),
-                                      child: Column(
-                                        children: [
-                                          Row(children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(left:size.width*0.008, right: size.width*0.006),
-                                              child: Image.asset('assets/images/wo.png', scale: size.height*0.0019, color: Colors.grey.shade900,),
-                                            ),
-                                            Text(state.activityAreaItems![index].workOrderNum!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
-                                          ],),
-                                          Gap(size.height*0.01),
-                                          Row(children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(left:size.width*0.005, right: size.width*0.004),
-                                              child: Image.asset('assets/images/wo_type.png', scale: size.height*0.0018,color: Colors.grey.shade900),
-                                            ),
-                                            Text(state.activityAreaItems![index].workOrderType!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
-                                          ],),
-                                          Gap(size.height*0.01),
-                                          Row(children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(left:size.width*0.01, right: size.width*0.006),
-                                              child: Image.asset('assets/images/item.png', scale: size.height*0.0045,color: Colors.grey.shade900),
-                                            ),
-                                            Text(state.activityAreaItems![index].item!, style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),),
-                                            Spacer(),
-                                            Padding(
-                                              padding: EdgeInsets.only(right: size.width*0.005),
-                                              child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
-                                            ),
-                                            SizedBox(width: lsize.maxWidth*0.15, child: Text(state.activityAreaItems![index].qty!.toString(), style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
-                                          ],),
-                                        ],
+                                      child: LayoutBuilder(
+                                        builder: (context,containerSize) {
+                                          return Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.002, right: containerSize.maxWidth*0.004),
+                                                  child: Image.asset('assets/images/wo.png',  height: containerSize.maxHeight*0.2, width: containerSize.maxWidth*0.12, color: Colors.grey.shade900,),
+                                                ),
+                                                Text(state.activityAreaItems![index].workOrderNum!, style: TextStyle(fontSize:containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                              ],),
+                                              // Gap(size.height*0.01),
+                                              Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.002, right: containerSize.maxWidth*0.004),
+                                                  child: Image.asset('assets/images/wo_type.png', height: containerSize.maxHeight*0.2, width: containerSize.maxWidth*0.12,color: Colors.grey.shade900),
+                                                ),
+                                                Text(state.activityAreaItems![index].workOrderType!, style: TextStyle(fontSize:containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                              ],),
+                                              // Gap(size.height*0.01),
+                                              Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.02, right: containerSize.maxWidth*0.008),
+                                                  child: Image.asset('assets/images/item.png',  height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.1,color: Colors.grey.shade900),
+                                                ),
+                                                Text(state.activityAreaItems![index].item!, style: TextStyle(fontSize:containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Spacer(),
+                                                Padding(
+                                                  padding: EdgeInsets.only(right:containerSize.maxWidth*0.008),
+                                                  child: Image.asset('assets/images/qty.png',   height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                Gap(containerSize.maxWidth*0.024),
+                                                SizedBox(width: containerSize.maxWidth*0.16, child: Text(state.activityAreaItems![index].qty!.toString(), style: TextStyle(fontSize:containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
+                                              ],),
+                                            ],
+                                          );
+                                        }
                                       ),
                                     )
                                 : 
                                 Container(
+                                  height: lsize.maxHeight*0.18,
+                                  width: lsize.maxWidth*0.96,
                                     decoration: BoxDecoration(
                                       color: Color.fromRGBO(112, 144, 185, 1),
                                       borderRadius: BorderRadius.circular(15)
                                     ),
                                     padding: EdgeInsets.all(size.height*0.01),
                                     margin: EdgeInsets.only(top: size.height*0.01),
-                                    child: Column(
-                                      children: [
-                                        Row(children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(left:size.width*0.008, right: size.width*0.006),
-                                              child: Image.asset('assets/images/wo.png', scale: size.height*0.0019, color: Colors.grey.shade900,),
-                                            ),
-                                            Skeletonizer(enableSwitchAnimation: true,child: Text("WORK ORDER", style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
-                                          ],),
-                                          Gap(size.height*0.01),
-                                          Row(children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(left:size.width*0.005, right: size.width*0.004),
-                                              child: Image.asset('assets/images/wo_type.png', scale: size.height*0.0018,color: Colors.grey.shade900),
-                                            ),
-                                            Skeletonizer(enableSwitchAnimation: true,child: Text('WORK TYPE', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
-                                          ],),
-                                          Gap(size.height*0.01),
-                                          Row(children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(left:size.width*0.01, right: size.width*0.006),
-                                              child: Image.asset('assets/images/item.png', scale: size.height*0.0045,color: Colors.grey.shade900),
-                                            ),
-                                            Skeletonizer(enableSwitchAnimation: true,child: Text('ITEM', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),)),
-                                            Spacer(),
-                                            Padding(
-                                              padding: EdgeInsets.only(right: size.width*0.005),
-                                              child: Image.asset('assets/images/qty.png', scale: size.height*0.0018,),
-                                            ),
-                                            Skeletonizer(enableSwitchAnimation: true,child: Text('QTY', style: TextStyle(fontSize: size.height*0.018, fontWeight: FontWeight.bold),))
-                                          ],),
-                                      ],
+                                    child: LayoutBuilder(
+                                        builder: (context,containerSize) {
+                                        return Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.002, right: containerSize.maxWidth*0.004),
+                                                  child: Image.asset('assets/images/wo.png',  height: containerSize.maxHeight*0.2, width: containerSize.maxWidth*0.12, color: Colors.grey.shade900,),
+                                                ),
+                                                Skeletonizer(enableSwitchAnimation: true,child: Text("WORK ORDER", style: TextStyle(fontSize:containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
+                                              ],),
+                                              // Gap(size.height*0.01),
+                                              Row(children: [
+                                               Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.002, right: containerSize.maxWidth*0.004),
+                                                  child: Image.asset('assets/images/wo_type.png', height: containerSize.maxHeight*0.2, width: containerSize.maxWidth*0.12,color: Colors.grey.shade900),
+                                                ),
+                                                Skeletonizer(enableSwitchAnimation: true,child: Text('WORK TYPE', style: TextStyle(fontSize:containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
+                                              ],),
+                                              // Gap(size.height*0.01),
+                                              Row(children: [
+                                             Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.02, right: containerSize.maxWidth*0.008),
+                                                  child: Image.asset('assets/images/item.png',  height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.1,color: Colors.grey.shade900),
+                                                ),
+                                                Skeletonizer(enableSwitchAnimation: true,child: Text('ITEM', style: TextStyle(fontSize:containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
+                                                Spacer(),
+                                               Padding(
+                                                  padding: EdgeInsets.only(right:containerSize.maxWidth*0.008),
+                                                  child: Image.asset('assets/images/qty.png',   height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                SizedBox(width: containerSize.maxWidth*0.16,child: Skeletonizer(enableSwitchAnimation: true,child: Text('QTY', style: TextStyle(fontSize:containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)))
+                                              ],),
+                                          ],
+                                        );
+                                      }
                                     ),
                                   ),
                             itemCount: isEnabled ? 8 : state.activityAreaItems!.length + 1 > (state.pageNum!+1)*100 ? state.activityAreaItems!.length + 1 : state.activityAreaItems!.length),

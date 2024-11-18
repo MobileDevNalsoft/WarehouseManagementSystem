@@ -33,6 +33,7 @@ class Customs {
                                   "storageArea"
                               ? "storageArea"
                               : "compoundArea");
+                              
                       getIt<JsInteropService>().resetTrucks();
                     },
                 child: Icon(Icons.cancel_rounded, color: Color.fromRGBO(68, 98, 136, 1))
