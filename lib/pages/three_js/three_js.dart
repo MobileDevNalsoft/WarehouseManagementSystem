@@ -15,6 +15,7 @@ import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/company_dropdown.dart';
 import 'package:warehouse_3d/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/bin_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
@@ -104,107 +105,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
               color:  Color.fromRGBO(68, 98, 136, 1),
               child: Row(
                 children: [
-                  Gap(size.width * 0.006),
-            state.getState!=GetCompanyDataState.success ? SizedBox():       DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      isExpanded: true,
-                      hint: const SizedBox(),
-                      items: state.companyModel!.results!.map((company){
-                         return DropdownMenuItem<String>(
-                            value: company.id.toString(),
-                            onTap: () {},
-                            alignment: Alignment.center,
-                            child: PointerInterceptor(
-                              child: Text(
-                                company.name!,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
-                              ),
-                            ));
-
-                      }).toList(),
-                     value: state.selectedCompanyVal,
-                      onChanged: (String? value) {
-                            
-                         context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!));
-                         context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: int.parse(value!)));
-                      },
-                      buttonStyleData: ButtonStyleData(
-                        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-                        height: size.height * (0.05),
-                        width: size.width * 0.2,
-                        padding: EdgeInsets.only(left: size.width * 0.015, right: size.width * 0.003),
-                      ),
-                      dropdownStyleData: DropdownStyleData(
-                          width: size.width * (0.2),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
-                          offset: Offset(0, -size.height * 0.003)),
-                      menuItemStyleData: MenuItemStyleData(
-                        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                        selectedMenuItemBuilder: (context, child) {
-                          return Container(
-                            height: size.height * 0.06,
-                            decoration: BoxDecoration(color: Colors.grey.shade300),
-                            child: child,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  Gap(size.width * 0.006),
-                 state.getState ==GetCompanyDataState.success  ? state.facilityDataState != GetFacilityDataState.success?SizedBox():DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      isExpanded: true,
-                      hint: const SizedBox(),
-                      items: state.facilityModel!.results!.map((facility){
-                         return DropdownMenuItem<String>(
-                            value: facility.id.toString(),
-                            onTap: () {},
-                            alignment: Alignment.center,
-                            child: PointerInterceptor(
-                              child: Text(
-                                facility.name!,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: size.height * 0.022),
-                              ),
-                            ));
-
-                      }).toList(),
-                      
-                      value: state.selectedFacilityVal,
-                      onChanged: (String? value) {
-                         context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!));
-                      },
-                      buttonStyleData: ButtonStyleData(
-                        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-                        height: size.height * (0.05),
-                        width: size.width * 0.2,
-                        padding: EdgeInsets.only(left: size.width * 0.015, right: size.width * 0.003),
-                      ),
-                      dropdownStyleData: DropdownStyleData(
-                          width: size.width * (0.2),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
-                          offset: Offset(0, -size.height * 0.003)),
-                      menuItemStyleData: MenuItemStyleData(
-                        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                        selectedMenuItemBuilder: (context, child) {
-                          return Container(
-                            height: size.height * 0.06,
-                            decoration: BoxDecoration(color: Colors.grey.shade300),
-                            child: child,
-                          );
-                        },
-                      ),
-                    ),
-                  ):SizedBox(),
                   const Spacer(),
                   Image.asset(
                     'assets/images/nalsoft_logo.png',
@@ -313,7 +213,31 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           ],
         );
         }),
-        
+        Positioned(
+          left: size.width*0.01,
+          top: size.height*0.013,
+          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
+            return state.getState!=GetCompanyDataState.success ? SizedBox():   PointerInterceptor(
+              child: CompanyDropdown(size: size, dropDownItems: state.companyModel!.results!.map((company)=> company.address1!).toList(),  onChanged: (String? value) {
+                                
+                             context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!));
+                             context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: int.parse('1')));
+                          }, selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,),
+            )  ;
+          },),
+        ),
+        Positioned(
+          left: size.width*0.15,
+          top: size.height*0.013,
+          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
+            return state.getState ==GetCompanyDataState.success  ? state.facilityDataState != GetFacilityDataState.success ? SizedBox():   PointerInterceptor(
+              child: CompanyDropdown(size: size, dropDownItems: state.facilityModel!.results!.map((facility)=> facility.id!.toString()).toList(),  onChanged: (String? value) {
+                                
+                            context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!));
+                          }, selectedValue: state.selectedFacilityVal,),
+            ) : SizedBox() ;
+          },),
+        ),
         Positioned(
           right: size.width*0.25,
           top: size.height*0.013,
