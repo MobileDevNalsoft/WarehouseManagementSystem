@@ -107,7 +107,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   Gap(size.width * 0.006),
             state.getState!=GetCompanyDataState.success ? SizedBox():       DropdownButtonHideUnderline(
                     child: DropdownButton2<String>(
-                      isExpanded: false,
+                      isExpanded: true,
                       hint: const SizedBox(),
                       items: state.companyModel!.results!.map((company){
                          return DropdownMenuItem<String>(
@@ -132,12 +132,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                       buttonStyleData: ButtonStyleData(
                         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-                        height: size.height * (0.045),
-                        width: size.width * 0.1,
+                        height: size.height * (0.05),
+                        width: size.width * 0.2,
                         padding: EdgeInsets.only(left: size.width * 0.015, right: size.width * 0.003),
                       ),
                       dropdownStyleData: DropdownStyleData(
-                          width: size.width * (0.1),
+                          width: size.width * (0.2),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white,
@@ -158,7 +158,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   Gap(size.width * 0.006),
                  state.getState ==GetCompanyDataState.success  ? state.facilityDataState != GetFacilityDataState.success?SizedBox():DropdownButtonHideUnderline(
                     child: DropdownButton2<String>(
-                      isExpanded: false,
+                      isExpanded: true,
                       hint: const SizedBox(),
                       items: state.facilityModel!.results!.map((facility){
                          return DropdownMenuItem<String>(
@@ -183,12 +183,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                       buttonStyleData: ButtonStyleData(
                         overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-                        height: size.height * (0.045),
-                        width: size.width * 0.12,
+                        height: size.height * (0.05),
+                        width: size.width * 0.2,
                         padding: EdgeInsets.only(left: size.width * 0.015, right: size.width * 0.003),
                       ),
                       dropdownStyleData: DropdownStyleData(
-                          width: size.width * (0.12),
+                          width: size.width * (0.2),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white,

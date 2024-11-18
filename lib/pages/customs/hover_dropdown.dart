@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/pages/entry_point.dart';
+ import 'dart:html' as html;
 
 class HoverDropdown extends StatefulWidget {
   HoverDropdown({super.key, required this.size});
@@ -17,7 +18,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
   double? height;
   double? bottomHeight;
   double turns = 1;
-  
+  final UrlNavigator urlNavigator = UrlNavigator();
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +65,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                               bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.07 : size.height*0.2;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
-                            launch('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/',isNewTab: true);
+                             urlNavigator.launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
                           },
                           child: ForHover(text: "WMS Cloud"))),
                 ],
@@ -106,12 +108,9 @@ class _HoverDropdownState extends State<HoverDropdown> {
       ),
     );
   }
-  Future<void> launch(String url, {bool isNewTab = true}) async {
-    await launchUrl(
-      Uri.parse(url),
-     
-    );
-  }
+
+
+
 }
 
 // Widget that holds hover animation for the text and its background
@@ -160,5 +159,24 @@ class _ForHoverState extends State<ForHover> {
         ),
       ),
     );
+  }
+}
+
+class UrlNavigator {
+   void launchOrFocusUrl(String url) {
+    // Check if the URL is already stored in local storage
+    String? openedUrl = html.window.localStorage['openedUrl'];
+
+    if (openedUrl == url) {
+      // If it's already opened, just focus it (this will not work due to browser limitations)
+      // There is no direct way to focus an already opened tab.
+      // Instead, we can just inform the user or handle it gracefully.
+      
+        html.window.open(url, '_blank'); // Opens in 
+    } else {
+      // Open the new URL in a new tab and store it
+      html.window.localStorage['openedUrl'] = url;
+      html.window.open(url, '_blank'); // Opens in a new tab
+    }
   }
 }
