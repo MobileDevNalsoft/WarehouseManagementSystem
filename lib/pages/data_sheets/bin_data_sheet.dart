@@ -24,10 +24,16 @@ class _BinDataSheetState extends State<BinDataSheet> {
 
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _storageBloc = context.read<StorageBloc>();
-    _storageBloc.add(GetBinData(searchText:context.read<WarehouseInteractionBloc>().state.searchText ));
-   
+    if(_warehouseInteractionBloc.state.dataFromJS['bin'].toString()==""){
+
+    _storageBloc.add(GetBinData(searchText:context.read<WarehouseInteractionBloc>().state.searchText));
+
+    }
+else{
+   _storageBloc.add(GetBinData(selectedBin:"RC${_warehouseInteractionBloc.state.dataFromJS['bin']}"));
+}   
     _storageBloc.state.storageBinItems = [];
-      _storageBloc.add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS['bin']}"));
+    // _storageBloc.add(GetBinData(selectedBin: "RC${}"));
 
     _controller.addListener(_scrollListener);
   }

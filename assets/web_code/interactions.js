@@ -82,7 +82,6 @@ export function addInteractions(scene, model, camera, controls) {
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
-
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")
@@ -91,7 +90,7 @@ export function addInteractions(scene, model, camera, controls) {
             console.log('{"rack":"' + name.substring(name.length-2, name.length).toUpperCase() + '"}');
             
             window.localStorage.setItem("getData", name);
-          } else if (!name.includes("storage")) {
+          } else  {
             console.log('{"area":"' + name + '"}');
             window.localStorage.setItem( "getData", name );
             if (name == "yardArea") {
@@ -126,7 +125,7 @@ export function addInteractions(scene, model, camera, controls) {
           }
           switchCamera(scene, "compoundArea", camera, controls);
           if (prevNav.includes("yard")) {
-            resetTrucksAnimation();
+            resetTrucksAnimation(scene);
           }
           prevNav = name;
         }

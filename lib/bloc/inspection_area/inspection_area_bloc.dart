@@ -25,7 +25,7 @@ class InspectionAreaBloc extends Bloc<InspectionEvent, InspectionAreaState> {
   Future<void> _onGetInspectionAreaData(GetInspectionAreaData event, Emitter<InspectionAreaState> emit) async {
     try {
       emit(state.copyWith(getDataState: GetDataState.initial,inspectionAreaItems: state.pageNum==0?[]:state.inspectionAreaItems));
-      await _customApi.get(event.searchText!=null ? AppConstants.SEARCH : AppConstants.INSPECTION_AREA,
+      await _customApi.get( (event.searchText != null && event.searchText!="")? AppConstants.SEARCH : AppConstants.INSPECTION_AREA,
                 queryParameters: event.searchText!=null
                     ? {"search_text": event.searchText, "search_area": "INSPECTION", "facility_id": '243', "page_num": state.pageNum}
                     : {"facility_id": '243', "page_num": state.pageNum}).then((apiResponse) {

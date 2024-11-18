@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:warehouse_3d/constants/app_constants.dart';
@@ -42,7 +43,7 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
     else if(event.dataFromJS.containsKey("bin")){
       searchArea = "Bin";
     }
-    emit(state.copyWith(dataFromJS: event.dataFromJS,selectedSearchArea: searchArea??state.selectedSearchArea));
+    emit(state.copyWith(dataFromJS: event.dataFromJS,selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));
   }
   
   void _onModelLoaded(ModelLoaded event, Emitter<WarehouseInteractionState> emit) {

@@ -1,5 +1,6 @@
 part of 'warehouse_interaction_bloc.dart';
 
+
 abstract class WarehouseInteractionEvent extends Equatable {
   @override
   List<Object> get props => [];
@@ -7,7 +8,8 @@ abstract class WarehouseInteractionEvent extends Equatable {
 
 class SelectedObject extends WarehouseInteractionEvent {
   final Map<String, dynamic> dataFromJS;
-  SelectedObject({required this.dataFromJS});
+  bool? clearSearchText;
+  SelectedObject({required this.dataFromJS,this.clearSearchText});
 
   @override
   List<Object> get props => [dataFromJS];

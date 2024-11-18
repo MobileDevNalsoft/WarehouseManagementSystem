@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -27,7 +26,7 @@ class YardBloc extends Bloc<YardEvent, YardState> {
     try {
       await _customApi
           .get(event.searchText != null ? AppConstants.SEARCH : AppConstants.YARD_AREA,
-              queryParameters: event.searchText != null
+              queryParameters: (event.searchText != null && event.searchText!="")
                   ? {"search_text": event.searchText, "search_area": "YARD", "facility_id": '243', "page_num": state.pageNum}
                   : {"facility_id": 243, "page_num": state.pageNum})
           .then((apiResponse) {
@@ -39,6 +38,7 @@ class YardBloc extends Bloc<YardEvent, YardState> {
           state.yardAreaItems!.addAll(dockAreaResponse.data!);
         }
         emit(state.copyWith(yardAreaItems: state.yardAreaItems, yardAreaStatus: YardAreaStatus.success));
+        getIt<JsInteropService>().setNumberOfTrucks(state.yardAreaItems!.length.toString());
       });
     } catch (e) {
       Log.e(e.toString());
