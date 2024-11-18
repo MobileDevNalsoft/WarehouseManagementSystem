@@ -22,14 +22,15 @@ class StagingBloc  extends Bloc<StagingEvent,StagingState>{
     try {
       emit(state.copyWith(stagingStatus:StagingAreaStatus.initial,stagingList: state.pageNum==0?[]: state.stagingList!));
       await _customApi.get(
-        event.searchText!=null ? AppConstants.SEARCH :
+        (event.searchText!=null&& event.searchText!="") ? AppConstants.SEARCH :
         AppConstants.STAGING_AREA,
         queryParameters: (event.searchText != null && event.searchText!="")
                     ? {"search_text": event.searchText, "search_area": "STAGING", "facility_id": '243', "page_num": state.pageNum}: {"facility_id": 243, "page_num": state.pageNum},
     ).then((value) {
        StagingArea stagingArea = StagingArea.fromJson(jsonDecode(value.response!.data));
        if(state.pageNum==0){
-      state.stagingList=stagingArea.data!;
+        print("staging are data ${stagingArea.data}");
+      state.stagingList=stagingArea.data;
        }
        else{
        state.stagingList!.addAll(stagingArea.data!);

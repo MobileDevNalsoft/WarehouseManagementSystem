@@ -26,7 +26,7 @@ class InspectionAreaBloc extends Bloc<InspectionEvent, InspectionAreaState> {
     try {
       emit(state.copyWith(getDataState: GetDataState.initial,inspectionAreaItems: state.pageNum==0?[]:state.inspectionAreaItems));
       await _customApi.get( (event.searchText != null && event.searchText!="")? AppConstants.SEARCH : AppConstants.INSPECTION_AREA,
-                queryParameters: event.searchText!=null
+                queryParameters: (event.searchText!=null && event.searchText!="")
                     ? {"search_text": event.searchText, "search_area": "INSPECTION", "facility_id": '243', "page_num": state.pageNum}
                     : {"facility_id": '243', "page_num": state.pageNum}).then((apiResponse) {
         AreaResponse<InspectionAreaItem> dockAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => InspectionAreaItem.fromJson(json));

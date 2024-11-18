@@ -23,7 +23,7 @@ class ReceivingBloc extends Bloc<ReceivingEvent, ReceivingState> {
       await _customApi
           .get(
          (event.searchText != null && event.searchText!="")? AppConstants.SEARCH : AppConstants.RECEIVING_AREA,
-        queryParameters: event.searchText != null
+        queryParameters: (event.searchText != null&& event.searchText!="")
             ? {"search_text": event.searchText, "search_area": "RECEIVING", "facility_id": '243', "page_num": state.pageNum}
             : {"facility_id": 243, "page_num": state.pageNum},
       )
