@@ -15,7 +15,7 @@ import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/models/company_model.dart';
-import 'package:warehouse_3d/models/facility_model.dart' as facility;
+import 'package:warehouse_3d/models/facility_model.dart';
 import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/company_dropdown.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/facility_dropdown.dart';
@@ -82,7 +82,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
       print("messageFromJS");
     };
 
-     
     _warehouseInteractionBloc.add(GetCompanyData());
     // just for debugging
     // animationController.forward();
@@ -94,157 +93,165 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     return Scaffold(
         body: Stack(
       children: [
-
-        BlocBuilder<WarehouseInteractionBloc,WarehouseInteractionState>(builder: (context,state){
-
-
+        BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
           print("data ${state.companyModel}");
-            print("STATE ${state.getState}");
-        return Column(
-          children: [
-            Container(
-              height: size.height * 0.08,
-              width: size.width,
-              color:  Color.fromRGBO(68, 98, 136, 1),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  Image.asset(
-                    'assets/images/nalsoft_logo.png',
-                    scale: size.height * 0.004,
-                    isAntiAlias: true,
-                  ),
-                  Gap(size.width * 0.06),
-                ],
+          print("STATE ${state.getState}");
+          return Column(
+            children: [
+              Container(
+                height: size.height * 0.08,
+                width: size.width,
+                color: Color.fromRGBO(68, 98, 136, 1),
+                child: Row(
+                  children: [
+                    const Spacer(),
+                    Image.asset(
+                      'assets/images/nalsoft_logo.png',
+                      scale: size.height * 0.004,
+                      isAntiAlias: true,
+                    ),
+                    Gap(size.width * 0.06),
+                  ],
+                ),
               ),
-            ),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: AnimatedBuilder(
-                      animation: widthAnimation,
-                      builder: (context, child) {
-                        return SizedBox(
-                          height: size.height * 0.92,
-                          width: size.width * widthAnimation.value,
-                          child: PointerInterceptor(
-                            child: InkWell(
-                              onTap: () {
-                                focusNode.unfocus();
-                                print("unfocused");
-                              },
-                              child:
-                              InAppWebView(
-                                initialFile: 'assets/web_code/model.html',
-                                onConsoleMessage: (controller, consoleMessage) {
-                                  try {
-                                    if (consoleMessage.messageLevel.toNativeValue() == 1) {
-                                      Map<String, dynamic> message = jsonDecode(consoleMessage.message);
-                                      if(message.containsKey("area")){
-
-                                      message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
-                                      }
-                                      else if(message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")){
-
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: AnimatedBuilder(
+                        animation: widthAnimation,
+                        builder: (context, child) {
+                          return SizedBox(
+                            height: size.height * 0.92,
+                            width: size.width * widthAnimation.value,
+                            child: PointerInterceptor(
+                              child: InkWell(
+                                onTap: () {
+                                  focusNode.unfocus();
+                                  print("unfocused");
+                                },
+                                child: InAppWebView(
+                                  initialFile: 'assets/web_code/model.html',
+                                  onConsoleMessage: (controller, consoleMessage) {
+                                    try {
+                                      if (consoleMessage.messageLevel.toNativeValue() == 1) {
+                                        Map<String, dynamic> message = jsonDecode(consoleMessage.message);
+                                        if (message.containsKey("area")) {
+                                          message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
+                                        } else if (message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
                                           context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
+                                        }
+                                        _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: true));
                                       }
-                                      _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message,clearSearchText: true));
-                                     
-                                      
+                                    } catch (e) {
+                                      print("error $e");
                                     }
-                                  } catch (e) {
-                                    print("error $e");
-                                  }
-                                },
-                                onWebViewCreated: (controller) async {
-                                  _warehouseInteractionBloc.state.inAppWebViewController = controller;
-                              
-                                  Timer.periodic(
-                                    const Duration(milliseconds: 500),
-                                    (timer) async {
-                                      // _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
-                                      //   value.forEach((e) {
-                                      //     print(e);
-                                      //   });
-                                      // });
-                              
-                                      // ignore: prefer_conditional_assignment
-                                      if (objectNames.isEmpty) {
-                                        objectNames =
-                                            await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "modelObjectNames") ?? [];
-                                      }
-                              
-                                      bool? isLoaded =
-                                          await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                      if (isLoaded != null) {
-                                        _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                                        _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
-                                      }
-                                    },
-                                  );
-                                },
-                                onLoadStop: (controller, url) async {},
+                                  },
+                                  onWebViewCreated: (controller) async {
+                                    _warehouseInteractionBloc.state.inAppWebViewController = controller;
+
+                                    Timer.periodic(
+                                      const Duration(milliseconds: 500),
+                                      (timer) async {
+                                        // _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
+                                        //   value.forEach((e) {
+                                        //     print(e);
+                                        //   });
+                                        // });
+
+                                        // ignore: prefer_conditional_assignment
+                                        if (objectNames.isEmpty) {
+                                          objectNames = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
+                                                  .getItem(key: "modelObjectNames") ??
+                                              [];
+                                        }
+
+                                        bool? isLoaded =
+                                            await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
+                                        if (isLoaded != null) {
+                                          _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                                          _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                        }
+                                      },
+                                    );
+                                  },
+                                  onLoadStop: (controller, url) async {},
+                                ),
                               ),
-                           
-                           
                             ),
-                          ),
+                          );
+                        }),
+                  ),
+                  AnimatedBuilder(
+                      animation: positionAnimation,
+                      builder: (context, child) {
+                        return Positioned(
+                          right: positionAnimation.value,
+                          child: getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
+                                  context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) ??
+                              const SizedBox(),
                         );
                       }),
-                ),
-                AnimatedBuilder(
-                    animation: positionAnimation,
-                    builder: (context, child) {
-                    
-                      return Positioned(
-                        right: positionAnimation.value,
-                        child: 
-                        getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
-                                context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) 
-                                ??
-                            const SizedBox(),
-                      );
-                    }),
-                if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded)
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-              ],
-            ),
-          ],
-        );
+                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded)
+                    const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                ],
+              ),
+            ],
+          );
         }),
         Positioned(
-          left: size.width*0.01,
-          top: size.height*0.013,
-          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
-            return state.getState!=GetCompanyDataState.success ? SizedBox():   PointerInterceptor(
-              child: CompanyDropdown(size: size, dropDownItems: state.companyModel!.results!,  onChanged: (Results? value) {
-                                
-                             context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
-                             context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
-                          }, selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,),
-            )  ;
-          },),
+          left: size.width * 0.01,
+          top: size.height * 0.013,
+          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+            builder: (context, state) {
+              return state.getState != GetCompanyDataState.success
+                  ? SizedBox()
+                  : PointerInterceptor(
+                      child: CompanyDropdown(
+                        buttonHeight: size.height * 0.055,
+                        buttonWidth: size.width * 0.15,
+                        dropDownHeight: size.height * 0.6,
+                        dropDownWidth: size.width * 0.15,
+                        dropDownItems: state.companyModel!.results!,
+                        onChanged: (CompanyResults? value) {
+                          context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
+                          context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
+                        },
+                        selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
+                      ),
+                    );
+            },
+          ),
         ),
         Positioned(
-          left: size.width*0.15,
-          top: size.height*0.013,
-          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
-            return state.getState ==GetCompanyDataState.success  ? state.facilityDataState != GetFacilityDataState.success ? SizedBox():   PointerInterceptor(
-              child: FacilityDropdown(size: size, dropDownItems: state.facilityModel!.results!,  onChanged: (facility.Results? value) {
-                                
-                            context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!.name.toString()));
-                          }, selectedValue: state.selectedFacilityVal,),
-            ) : SizedBox() ;
-          },),
+          left: size.width * 0.18,
+          top: size.height * 0.013,
+          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+            builder: (context, state) {
+              return state.getState == GetCompanyDataState.success
+                  ? state.facilityDataState != GetFacilityDataState.success
+                      ? SizedBox()
+                      : PointerInterceptor(
+                          child: FacilityDropdown(
+                            buttonHeight: size.height * 0.055,
+                            buttonWidth: size.width * 0.15,
+                            dropDownHeight: size.height * 0.4,
+                            dropDownWidth: size.width * 0.15,
+                            dropDownItems: state.facilityModel!.results!,
+                            onChanged: (FacilityResults? value) {
+                              context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!.name.toString()));
+                            },
+                            selectedValue: state.selectedFacilityVal,
+                          ),
+                        )
+                  : SizedBox();
+            },
+          ),
         ),
-        Positioned(
-          right: size.width*0.25,
-          top: size.height*0.013,
-          child: PointerInterceptor(child: SearchBarDropdown(size: size))),
+        Positioned(right: size.width * 0.25, top: size.height * 0.013, child: PointerInterceptor(child: SearchBarDropdown(size: size))),
         Positioned(
           right: 0,
           top: 0,
@@ -264,25 +271,25 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   ) {
     switch (objectName.toLowerCase()) {
       case 'rack':
-        return RackDataSheet(objectNames: objectNames,);
+        return RackDataSheet(
+          objectNames: objectNames,
+        );
       case 'bin':
-                
-        return   BinDataSheet();
+        return BinDataSheet();
       case 'area':
         switch (objectValue.toLowerCase().replaceAll("-", "")) {
           case 'stagingarea':
-            
-            return  StagingAreaDataSheet();
+            return StagingAreaDataSheet();
           case 'activityarea':
-            return  ActivityAreaDataSheet();
+            return ActivityAreaDataSheet();
           case 'receivingarea':
-            return  ReceivingAreaDataSheet();
+            return ReceivingAreaDataSheet();
           case 'inspectionarea':
-            return  InspectionAreaDataSheet();
+            return InspectionAreaDataSheet();
           case 'dockareain':
-            return  DockAreaDataSheet();
+            return DockAreaDataSheet();
           case 'dockareaout':
-            return  DockAreaDataSheet();
+            return DockAreaDataSheet();
           case 'yardarea':
             return YardAreaDataSheet();
           case 'storagearea':

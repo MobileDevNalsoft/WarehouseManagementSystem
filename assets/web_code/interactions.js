@@ -92,6 +92,7 @@ export function addInteractions(scene, model, camera, controls) {
             window.localStorage.setItem("getData", name);
           } else  {
             console.log('{"area":"' + name + '"}');
+            window.localStorage.setItem("rack_cam", "warehouse");
             window.localStorage.setItem( "getData", name );
             if (name == "yardArea") {
               for (let i = 1; i <= 20; i++) {

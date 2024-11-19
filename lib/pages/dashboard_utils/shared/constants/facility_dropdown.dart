@@ -1,52 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
-import 'package:warehouse_3d/bloc/dock_area/dock_area_bloc.dart';
-import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_event.dart';
-import 'package:warehouse_3d/bloc/staging/staging_bloc.dart';
-import 'package:warehouse_3d/bloc/staging/staging_event.dart';
-import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
-import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/js_interop_service/js_inter.dart';
+import 'package:warehouse_3d/models/company_model.dart';
 import 'package:warehouse_3d/models/facility_model.dart';
-import 'package:warehouse_3d/pages/test_code/warehouse.dart';
 
 class FacilityDropdown extends StatefulWidget {
-  FacilityDropdown({super.key, required this.size, required this.dropDownItems, required this.onChanged, this.selectedValue});
-  Size size;
-  List<Results> dropDownItems;
+  FacilityDropdown({super.key, required this.buttonHeight, required this.buttonWidth, required this.dropDownHeight, required this.dropDownWidth, required this.dropDownItems, required this.onChanged, this.selectedValue, this.listItemTextColor});
+  double buttonHeight;
+  double buttonWidth;
+  double dropDownHeight;
+  double dropDownWidth;
+  Color? listItemTextColor;
+  List<FacilityResults> dropDownItems;
   String? selectedValue;
-  void Function(Results?)? onChanged;
+  void Function(FacilityResults?)? onChanged;
   
   @override
   _FacilityDropdownState createState() => _FacilityDropdownState();
 }
 
 class _FacilityDropdownState extends State<FacilityDropdown> {
-  bool isDropdownOpen = false;
-
-
-  String? placeholderText;
-  String? dropdownValue;
-  
   double? height;
   double? bottomHeight;
   double turns = 1;
-  late WarehouseInteractionBloc _warehouseInteractionBloc;
   @override
   void initState() {
     super.initState();
-    height = widget.size.height * 0.08;
-    bottomHeight = widget.size.height * 0.06;
-    placeholderText = 'Search';
-    dropdownValue = "Area";
-    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    
+    height = widget.buttonHeight;
+    bottomHeight = widget.buttonHeight*0.08;
   }
 
   @override
@@ -55,13 +37,13 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       height: height,
-      width: size.width * 0.12,
+      width: widget.dropDownWidth,
       child: Stack(
         children: [
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             height: bottomHeight,
-            width: size.width * 0.1,
+            width: widget.dropDownWidth,
             color: Colors.transparent,
             child: Container(
               margin: EdgeInsets.only(top: size.height * 0.06),
@@ -77,16 +59,12 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                   children: widget.dropDownItems.map((item) {
                     return GestureDetector(
                       onTap: () {
-                            
                         widget.onChanged!(item);
                         setState(() {
-                          // dropdownValue = item;
-                          print('set state');
-                          placeholderText = 'Search...';
-                          height = height == size.height * 0.3
-                              ? size.height * 0.08
-                              : size.height * 0.3; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                          bottomHeight = bottomHeight == size.height * 0.3 ? size.height * 0.06 : size.height * 0.3;
+                          height = height == widget.dropDownHeight
+                              ? widget.buttonHeight
+                              : widget.dropDownHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                          bottomHeight = bottomHeight == widget.dropDownHeight ? widget.buttonHeight*0.08 : widget.dropDownHeight;
                           turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                         });
                       },
@@ -95,12 +73,15 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                         ),
+                        alignment: Alignment.centerLeft,
                         child: Text(
                           item.name!,
+                          textAlign: TextAlign.left,
                           style: TextStyle(
-                            color: item == dropdownValue ? Color.fromRGBO(68, 98, 136, 1) : Colors.black,
+                            color: widget.listItemTextColor ?? Colors.black,
                             fontWeight: FontWeight.w500,
-                            fontSize: size.height * 0.022,
+                            fontSize: widget.buttonHeight * 0.5,
+                            overflow: TextOverflow.ellipsis
                           ),
                         ),
                       ),
@@ -111,23 +92,20 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
             ),
           ),
           Container(
-            height: size.height * 0.055,
-            width: size.width * 0.26,
+            height: widget.buttonHeight,
+            width: widget.buttonWidth,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(50),
             ),
-            padding: EdgeInsets.only(left: size.width * 0.002, right: size.width * 0.006, top: size.width * 0.002, bottom: size.width * 0.002),
+            padding: EdgeInsets.all(size.height*0.003),
             child: GestureDetector(
               onTap: () {
-                print("dropdown");
-                // _warehouseInteractionBloc.state.selectedSearchArea = _warehouseInteractionBloc.state.selectedSearchArea.split("Area")[0].trim();
-                
                 setState(() {
-                  height = height == size.height * 0.08
-                      ? size.height * 0.3
-                      : size.height * 0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                  bottomHeight = bottomHeight == size.height * 0.06 ? size.height * 0.3 : size.height * 0.06;
+                  height = height == widget.buttonHeight
+                      ? widget.dropDownHeight
+                      : widget.buttonHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                  bottomHeight = bottomHeight == widget.buttonHeight*0.08 ? widget.dropDownHeight : widget.buttonHeight*0.08;
                   turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                 });
               },
@@ -137,13 +115,16 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                   color: Color.fromRGBO(68, 98, 136, 1), // Purple background
                   borderRadius: BorderRadius.circular(50),
                 ),
+                alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: size.width*0.05,
+                      width: widget.buttonWidth*0.72,
                       child: Text(
                         widget.selectedValue!,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022, overflow: TextOverflow.ellipsis),
                       ),
                     ),

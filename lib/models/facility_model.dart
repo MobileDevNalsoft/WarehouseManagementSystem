@@ -4,7 +4,7 @@ class FacilityModel {
   int? pageNbr;
   int? nextPage;
   int? previousPage;
-  List<Results>? results;
+  List<FacilityResults>? results;
 
   FacilityModel(
       {this.resultCount,
@@ -21,9 +21,9 @@ class FacilityModel {
     nextPage = json['next_page'];
     previousPage = json['previous_page'];
     if (json['results'] != null) {
-      results = <Results>[];
+      results = <FacilityResults>[];
       json['results'].forEach((v) {
-        results!.add(new Results.fromJson(v));
+        results!.add(new FacilityResults.fromJson(v));
       });
     }
   }
@@ -42,7 +42,7 @@ class FacilityModel {
   }
 }
 
-class Results {
+class FacilityResults {
   int? id;
   String? url;
   String? createUser;
@@ -79,7 +79,7 @@ class Results {
   String? latitude;
   String? longitude;
 
-  Results(
+  FacilityResults(
       {this.id,
       this.url,
       this.createUser,
@@ -116,7 +116,7 @@ class Results {
       this.latitude,
       this.longitude});
 
-  Results.fromJson(Map<String, dynamic> json) {
+  FacilityResults.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     url = json['url'];
     createUser = json['create_user'];
