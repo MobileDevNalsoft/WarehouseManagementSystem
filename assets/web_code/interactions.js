@@ -488,7 +488,10 @@ export function addInteractions(scene, model, camera, controls) {
   });
 }
 
-document.addEventListener("wheel", () => {
+document.addEventListener("wheel", (event) => {
+  // console.log(event.deltaY);
+  // console.log(event.movementX);
+  // console.log(event.movementY);
   const arrows = document.querySelectorAll(".arrow");
   arrows.forEach((arrow) => {
     arrow.style.display = "none";

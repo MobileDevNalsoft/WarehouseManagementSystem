@@ -51,6 +51,7 @@ class AppConstants {
   static const SEARCH = 'search';
   static const DOCK_DASHBOARD = 'dock_dashboard';
   static const DOCK_APPOINTMENTS = 'dock_appointments';
+  static const RECEIVING_DASHBOARD = 'receiving_dashboard';
 }
 
  

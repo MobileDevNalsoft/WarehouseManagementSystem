@@ -10,6 +10,7 @@ import 'package:warehouse_3d/models/area_response.dart';
 import 'package:warehouse_3d/models/dashboard_response.dart';
 import 'package:warehouse_3d/models/dock_area_model.dart';
 import 'package:intl/intl.dart';
+import 'package:warehouse_3d/models/receiving_area_model.dart';
 import '../../local_network_calls.dart';
 
 part 'dashboard_event.dart';
@@ -24,6 +25,8 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     on<GetDockAppointments>(_onGetDockAppointments);
     on<UpdateDate>(_onUpdateDate);
     on<ToggleCalendar>(_onToggleCalendar);
+    on<GetDockDashboardData>(_onGetDockDashboardData);
+    on<GetReceivingDashboardData>(_onGetReceivingDashboardData);
   }
   final NetworkCalls _customApi;
 
@@ -50,6 +53,34 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     } catch (e) {
       Log.e(e.toString());
       emit(state.copyWith(getAppointmentsState: AppointmentsState.failure));
+    }
+  }
+
+  Future<void> _onGetDockDashboardData(GetDockDashboardData event, Emitter<DashboardsState> emit) async {
+    try{
+      emit(state.copyWith(getDockDashboardState: DockDashboardState.loading));
+      await _customApi.get(AppConstants.DOCK_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
+        print(apiResponse.response!.data);
+        DashboardResponse<DockDashboard> dockDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => DockDashboard.fromJson(json));
+        emit(state.copyWith(dockDashboardData: dockDashboardResponse.data!, getDockDashboardState:DockDashboardState.success));
+      });
+    } catch(e){
+      Log.e(e.toString());
+      emit(state.copyWith(getDockDashboardState: DockDashboardState.failure));
+    }
+  }
+
+  Future<void> _onGetReceivingDashboardData(GetReceivingDashboardData event, Emitter<DashboardsState> emit) async {
+    try{
+      emit(state.copyWith(getReceivingDashboardState: ReceivingDashboardState.loading));
+      await _customApi.get(AppConstants.RECEIVING_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
+        print(apiResponse.response!.data);
+        DashboardResponse<ReceivingDashboard> receivingDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ReceivingDashboard.fromJson(json));
+        emit(state.copyWith(receivingDashboardData: receivingDashboardResponse.data!, getReceivingDashboardState:ReceivingDashboardState.success));
+      });
+    } catch(e){
+      Log.e(e.toString());
+      emit(state.copyWith(getReceivingDashboardState: ReceivingDashboardState.failure));
     }
   }
 }

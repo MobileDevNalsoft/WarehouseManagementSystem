@@ -13,21 +13,21 @@ import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
-import 'package:warehouse_3d/models/company_model.dart';
+import 'package:warehouse_3d/models/facility_model.dart';
 import 'package:warehouse_3d/pages/test_code/warehouse.dart';
 
-class CompanyDropdown extends StatefulWidget {
-  CompanyDropdown({super.key, required this.size, required this.dropDownItems, required this.onChanged, this.selectedValue});
+class FacilityDropdown extends StatefulWidget {
+  FacilityDropdown({super.key, required this.size, required this.dropDownItems, required this.onChanged, this.selectedValue});
   Size size;
   List<Results> dropDownItems;
   String? selectedValue;
   void Function(Results?)? onChanged;
   
   @override
-  _CompanyDropdownState createState() => _CompanyDropdownState();
+  _FacilityDropdownState createState() => _FacilityDropdownState();
 }
 
-class _CompanyDropdownState extends State<CompanyDropdown> {
+class _FacilityDropdownState extends State<FacilityDropdown> {
   bool isDropdownOpen = false;
 
 

@@ -14,8 +14,11 @@ import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
 import 'package:warehouse_3d/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
+import 'package:warehouse_3d/models/company_model.dart';
+import 'package:warehouse_3d/models/facility_model.dart' as facility;
 import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/company_dropdown.dart';
+import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/facility_dropdown.dart';
 import 'package:warehouse_3d/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/bin_data_sheet.dart';
 import 'package:warehouse_3d/pages/data_sheets/inspection_area_data_sheet.dart';
@@ -141,7 +144,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                       Map<String, dynamic> message = jsonDecode(consoleMessage.message);
                                       if(message.containsKey("area")){
 
-                                        message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
+                                      message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
                                       }
                                       else if(message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")){
 
@@ -197,7 +200,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     
                       return Positioned(
                         right: positionAnimation.value,
-                        child:
+                        child: 
                         getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
                                 context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) 
                                 ??
@@ -218,10 +221,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           top: size.height*0.013,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
             return state.getState!=GetCompanyDataState.success ? SizedBox():   PointerInterceptor(
-              child: CompanyDropdown(size: size, dropDownItems: state.companyModel!.results!.map((company)=> company.address1!).toList(),  onChanged: (String? value) {
+              child: CompanyDropdown(size: size, dropDownItems: state.companyModel!.results!,  onChanged: (Results? value) {
                                 
-                             context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!));
-                             context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: int.parse('1')));
+                             context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
+                             context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
                           }, selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,),
             )  ;
           },),
@@ -231,9 +234,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           top: size.height*0.013,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
             return state.getState ==GetCompanyDataState.success  ? state.facilityDataState != GetFacilityDataState.success ? SizedBox():   PointerInterceptor(
-              child: CompanyDropdown(size: size, dropDownItems: state.facilityModel!.results!.map((facility)=> facility.id!.toString()).toList(),  onChanged: (String? value) {
+              child: FacilityDropdown(size: size, dropDownItems: state.facilityModel!.results!,  onChanged: (facility.Results? value) {
                                 
-                            context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!));
+                            context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!.name.toString()));
                           }, selectedValue: state.selectedFacilityVal,),
             ) : SizedBox() ;
           },),
@@ -264,7 +267,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         return RackDataSheet(objectNames: objectNames,);
       case 'bin':
                 
-        return   BinDataSheet();  
+        return   BinDataSheet();
       case 'area':
         switch (objectValue.toLowerCase().replaceAll("-", "")) {
           case 'stagingarea':

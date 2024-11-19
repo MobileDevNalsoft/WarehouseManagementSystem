@@ -54,3 +54,24 @@ class   ReceiveData {
     return data;
   }
 }
+
+
+class ReceivingDashboard{
+  List<InBoundSummary>? totalInBoundSummary;
+  ReceivingDashboard({this.totalInBoundSummary});
+
+  ReceivingDashboard.fromJson(Map<String, dynamic> json){
+    totalInBoundSummary = (json['total_inbound_summary'] as List).map((e) => InBoundSummary.fromJson(e)).toList();
+  }
+}
+
+class InBoundSummary{
+  String? status;
+  int? total;
+  InBoundSummary({this.status, this.total});
+
+  InBoundSummary.fromJson(Map<String, dynamic> json){
+    status = json.keys.first;
+    total = json.values.first;
+  }
+}
