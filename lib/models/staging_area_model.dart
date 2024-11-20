@@ -51,3 +51,9 @@ class StagingData {
     return data;
   }
 }
+
+class StagingDashboard{
+  StagingDashboard.fromJson(Map<String, dynamic> json){
+    
+  }
+}

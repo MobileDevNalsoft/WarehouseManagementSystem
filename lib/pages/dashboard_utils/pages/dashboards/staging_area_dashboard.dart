@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
+import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
@@ -128,6 +131,8 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
     BarData(xLabel: '>7 days', yValue: 6, abbreviation: '>7 days'),
   ];
 
+  late DashboardsBloc _dashboardsBloc;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -151,6 +156,9 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
       "121-130": ["121", "122", "123", "124", "125", "126", "127", "128", "129", "130"],
       "131-140": ["131", "132", "133", "134", "135", "136", "137", "138", "139", "140"],
     };
+
+    _dashboardsBloc = context.read<DashboardsBloc>();
+    _dashboardsBloc.add(GetStagingDashboardData(facilityID: 243));
   }
 
   @override
@@ -158,103 +166,35 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
     Size size = MediaQuery.of(context).size;
     double aspectRatio = size.width / size.height;
     return SingleChildScrollView(
-        child: Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
+        child: BlocBuilder<DashboardsBloc, DashboardsState>(
+          builder: (context, state) {
+            return Column(
+                  children: [
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: SfCircularChart(
-                          title: ChartTitle(
-                              text: "Avg Lead Time",
-                              alignment: ChartAlignment.center,
-                              textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
-                          annotations: <CircularChartAnnotation>[
-                            CircularChartAnnotation(
-                              verticalAlignment: ChartAlignment.center,
-                              widget: Container(
-                                  height: size.height * 0.12,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.blueGrey.shade100,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade900,
-                                        blurRadius: 10, // Adjust to set shadow direction
-                                      ),
-                                    ],
-                                  ),
-                                  child: Text(
-                                    '02h:15m',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: size.height * 0.02,
-                                    ),
-                                  )),
-                            ),
-                          ],
-                          series: <CircularSeries>[
-                            DoughnutSeries<TimeData, String>(
-                              dataSource: avgLeadTimeData,
-                              xValueMapper: (TimeData data, _) => data.x,
-                              yValueMapper: (TimeData data, _) => data.y,
-                              radius: '60%', // Adjust the radius as needed
-                              innerRadius: '40%', // Optional: adjust for a thinner ring
-                              pointColorMapper: (TimeData data, _) => data.color,
-                            )
-                          ],
-                        )),
-
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: Customs.WMSPieChart(
-                          title: 'Inventory Summary',
-                          dataSource: orderSummaryDataSource,
-                          legendVisibility: true,
-                        )),
-
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: Gauges.SfRadialGauge(
-                          title: Gauges.GaugeTitle(
-                              text: "Shipping Efficiency",
-                              alignment: Gauges.GaugeAlignment.center,
-                              textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
-                          axes: [
-                            Gauges.RadialAxis(
-                              maximum: 100,
-                              minimum: 0,
-                              interval: 25,
-                              canScaleToFit: true,
-                              annotations: [
-                                Gauges.GaugeAnnotation(
-                                    verticalAlignment: Gauges.GaugeAlignment.center,
-                                    widget: Container(
+                    Row(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.topCenter,
+                            child: SfCircularChart(
+                              title: ChartTitle(
+                                  text: "Avg Lead Time",
+                                  alignment: ChartAlignment.center,
+                                  textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                              annotations: <CircularChartAnnotation>[
+                                CircularChartAnnotation(
+                                  verticalAlignment: ChartAlignment.center,
+                                  widget: Container(
                                       height: size.height * 0.12,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
@@ -268,441 +208,513 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                         ],
                                       ),
                                       child: Text(
-                                        "85%",
-                                        style: TextStyle(fontSize: aspectRatio * 10),
-                                      ),
-                                    ))
+                                        '02h:15m',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.02,
+                                        ),
+                                      )),
+                                ),
                               ],
-                              axisLineStyle: const Gauges.AxisLineStyle(
-                                  thickness: 35, color: Color.fromARGB(255, 189, 187, 64), cornerStyle: Gauges.CornerStyle.bothCurve),
-                              showTicks: false,
-                              showLabels: false,
-                              radiusFactor: aspectRatio * 0.3,
-                              pointers: const [
-                                Gauges.MarkerPointer(
-                                  value: 85,
-                                  markerType: Gauges.MarkerType.invertedTriangle,
-                                  markerHeight: 20,
-                                  markerWidth: 20,
-                                  color: Colors.white,
-                                  enableAnimation: true,
-                                  elevation: 10,
+                              series: <CircularSeries>[
+                                DoughnutSeries<TimeData, String>(
+                                  dataSource: avgLeadTimeData,
+                                  xValueMapper: (TimeData data, _) => data.x,
+                                  yValueMapper: (TimeData data, _) => data.y,
+                                  radius: '60%', // Adjust the radius as needed
+                                  innerRadius: '40%', // Optional: adjust for a thinner ring
+                                  pointColorMapper: (TimeData data, _) => data.color,
                                 )
                               ],
-                            )
-                          ],
-                        )),
-
-                    //  Container(
-                    //     margin: EdgeInsets.all(aspectRatio * 8),
-                    //     height: size.height * 0.45,
-                    //     width: size.width * 0.25,
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.white,
-                    //       borderRadius: BorderRadius.circular(20),
-                    //       boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]
-                    //     ),
-                    //     padding: EdgeInsets.all(size.height*0.035),
-                    //     alignment: Alignment.bottomCenter,
-                    //     child: Customs.WMSCartesianChart(
-                    //       title: 'Supplierwise Inventory',
-                    //             yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource]),
-                    //   ),
-
-                    //  Container(
-                    //   margin: EdgeInsets.all(aspectRatio * 8),
-                    //   height: size.height * 0.45,
-                    //   width: size.width * 0.25,
-                    //   decoration: BoxDecoration(
-                    //       color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                    //   padding: EdgeInsets.all(size.height * 0.035),
-                    //   alignment: Alignment.topCenter,
-                    //   child: SfCircularChart(
-                    //     title: ChartTitle(
-                    //       text: 'Order Lead Time',
-                    //       alignment: ChartAlignment.center,
-                    //       textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                    //     ),
-                    //     legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                    //     series: <CircularSeries>[
-                    //       // Renders radial bar chart
-
-                    //       DoughnutSeries<PieData, String>(
-                    //         dataSource: warehouseUtilizationDataSource,
-                    //         dataLabelSettings: const DataLabelSettings(
-                    //             // Renders the data label
-                    //             isVisible: true,
-                    //             textStyle: TextStyle(fontWeight: FontWeight.bold),
-                    //             alignment: ChartAlignment.center),
-                    //         pointColorMapper: (datum, index) {
-                    //           return warehouseUtilizationDataSource[index].color;
-                    //         },
-                    //         xValueMapper: (PieData data, _) => data.xData,
-                    //         yValueMapper: (PieData data, _) => data.yData,
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Order Aging',
-                              style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.3,
-                              width: size.width * 0.25,
-                              child: Customs.WMSCartesianChart(
-                                  title: '',
-                                  barCount: 1,
-                                  dataSources: [orderAgingData],
-                                  yAxisTitle: 'Aging time',
-                                  legendVisibility: false,
-                                  barColors: [Colors.deepPurple.shade200]),
-                            ),
-                          ],
-                        )),
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: SfCircularChart(
-                          title: ChartTitle(
-                              text: "Fulfilment Time",
-                              alignment: ChartAlignment.center,
-                              textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
-                          annotations: <CircularChartAnnotation>[
-                            CircularChartAnnotation(
-                              verticalAlignment: ChartAlignment.center,
-                              widget: Container(
-                                  height: size.height * 0.12,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.blueGrey.shade100,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade900,
-                                        blurRadius: 10, // Adjust to set shadow direction
-                                      ),
-                                    ],
-                                  ),
-                                  child: Text(
-                                    '01h:45m',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: size.height * 0.02,
-                                    ),
-                                  )),
-                            ),
-                          ],
-                          series: <CircularSeries>[
-                            DoughnutSeries<TimeData, String>(
-                              dataSource: avgFulfilmentTimeData,
-                              xValueMapper: (TimeData data, _) => data.x,
-                              yValueMapper: (TimeData data, _) => data.y,
-                              radius: '60%', // Adjust the radius as needed
-                              innerRadius: '40%', // Optional: adjust for a thinner ring
-                              pointColorMapper: (TimeData data, _) => data.color,
-                            )
-                          ],
-                        )),
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Day Wise Order Summary',
-                              style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.3,
-                              width: size.width * 0.25,
-                              child: Customs.WMSCartesianChart(
-                                title: "",
-                                legendVisibility: false,
-                                barCount: 1,
-                                dataSources: [dayWiseOrderSummary],
-                                yAxisTitle: 'Number of orders',
-                                barColors: [Colors.blueGrey.shade500],
-                              ),
-                            ),
-                          ],
-                        )),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.bottomCenter,
-                        child: Customs.WMSCartesianChart(
-                          title: "Today Channel Wise Order Summary",
-                          legendVisibility: false,
-                          barCount: 1,
-                          dataSources: [channelWiseOrderSummary],
-                          yAxisTitle: 'Number of orders',
-                          barColors: [const Color.fromRGBO(202, 108, 15, 1)],
-                        )),
-
-
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.52,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
-                        alignment: Alignment.bottomCenter,
-                        child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: size.width * 0.36,
-                              child: Customs.WMSCartesianChart(
-                                  title: 'User Efficiency',
-                                  barCount: 1,
-                                  legendVisibility: false,
-                                  dataSources: [userEfficiencyGraphData],
-                                  yAxisTitle: 'Number of Orders',
-                                  barColors: [Color.fromRGBO(147, 0, 120, 0.5)]),
-                            ),
-                            Gap(size.width * 0.016),
-                            Container(
-                              width: size.width * 0.1,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TypeAheadField(
-                                          suggestionsController: suggestionsController,
-                                          builder: (context, textController, focusNode) {
-                                            typeAheadController = textController;
-                                            typeAheadFocusNode = focusNode;
-                                            textController = textController;
-                                            focusNode = focusNode;
-                                            focusNode.addListener(() {
-                                              if (!focusNode.hasFocus) {
-                                                textController.clear();
-                                              }
-                                            });
-                                            return TextFormField(
-                                              textAlign: TextAlign.center,
-                                              onTap: () {},
-                                              cursorColor: Colors.black,
-                                              decoration: InputDecoration(
-                                                  hintText: rangeSelection ? 'Choose' : "Compare",
-                                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                                                  hintStyle: const TextStyle(
-                                                    color: Colors.black54,
-                                                    fontWeight: FontWeight.normal,
-                                                  ),
-                                                  // suffixIconConstraints: const BoxConstraints(minWidth: 16, minHeight: 8)
-                                                  )
-                                                  ,
-                                              controller: textController,
-                                              focusNode: focusNode,
-                                            );
-                                          },
-                                          suggestionsCallback: (pattern) {
-                                            userSuggestions = [];
-                                            if (rangeSelection) {
-                                              userSuggestions = employeeSuggestionRange.keys.toList();
-                                            } else {
-                                              for (var empList in employeeSuggestionRange.values) {
-                                                print(empList);
-                                                userSuggestions.addAll(empList);
-                                              }
-                                              print("emp suggestios $userSuggestions");
-                                            }
-                                            return userSuggestions;
-                                          },
-                                          itemBuilder: (context, suggestion) => Row(
-                                            children: [
-                                              SizedBox(
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: SizedBox(
-                                                    // width: size.width*0.1,
-                                                      child: Row(
-                                                    children: [
-                                                      Transform.scale(
-                                                        scale: aspectRatio*0.4,
-                                                        child: Checkbox(
-                                                            visualDensity: VisualDensity.compact,
-                                                            shape: OvalBorder(),
-                                                            value: rangeSelection ? selectedUserRange == suggestion : selectedUsers.contains(suggestion),
-                                                            onChanged: (value) {
-                                                              setState(() {
-                                                                if (rangeSelection != true) {
-                                                                  if (selectedUsers.contains(suggestion)) {
-                                                                    selectedUsers.remove(suggestion);
-                                                                    userEfficiencyGraphData.removeWhere((data) => data.xLabel == suggestion);
-                                                                    suggestionsController.refresh();
-                                                                  } else if (selectedUsers.length < 10) {
-                                                                    selectedUsers.add(suggestion);
-                                                                    userEfficiencyGraphData
-                                                                        .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                                    suggestionsController.refresh();
-                                                                  }
-                                                                } else {
-                                                                  selectedUserRange = suggestion;
-                                                                  userEfficiencyGraphData = [];
-                                                                  selectedUsers = [];
-                                                                  List<String> employees = employeeSuggestionRange[suggestion]!;
-                                                                  selectedUsers.addAll(employees);
-                                                                  for (var emp in selectedUsers) {
-                                                                    userEfficiencyGraphData
-                                                                        .add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                                  }
-                                                                }
-                                                              });
-                                                            }),
-                                                      ),
-                                                      Text(
-                                                        suggestion.toString(),
-                                                        textAlign: TextAlign.justify,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ],
-                                                  )),
-                                                ),
+                            )),
+            
+                        Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.topCenter,
+                            child: Customs.WMSPieChart(
+                              title: 'Inventory Summary',
+                              dataSource: orderSummaryDataSource,
+                              legendVisibility: true,
+                            )),
+            
+                        Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.topCenter,
+                            child: Gauges.SfRadialGauge(
+                              title: Gauges.GaugeTitle(
+                                  text: "Shipping Efficiency",
+                                  alignment: Gauges.GaugeAlignment.center,
+                                  textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
+                              axes: [
+                                Gauges.RadialAxis(
+                                  maximum: 100,
+                                  minimum: 0,
+                                  interval: 25,
+                                  canScaleToFit: true,
+                                  annotations: [
+                                    Gauges.GaugeAnnotation(
+                                        verticalAlignment: Gauges.GaugeAlignment.center,
+                                        widget: Container(
+                                          height: size.height * 0.12,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.blueGrey.shade100,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade900,
+                                                blurRadius: 10, // Adjust to set shadow direction
                                               ),
                                             ],
                                           ),
-                                          onSelected: (suggestion) {
-                                            if (rangeSelection == false) {
-                                              setState(
-                                                () {
-                                                  if (selectedUsers.contains(suggestion)) {
-                                                    selectedUsers.remove(suggestion);
-                                                    userEfficiencyGraphData.removeWhere((data) => data.xLabel == suggestion);
-                                                    suggestionsController.refresh();
-                                                  } else if (selectedUsers.length < 10) {
-                                                    selectedUsers.add(suggestion);
-                                                    userEfficiencyGraphData
-                                                        .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                    // typeAheadController.clear();
-                                                    // suggestionsController.close();
-                                                    suggestionsController.refresh();
-                                                  }
-                                                },
-                                              );
-                                            } else {
-                                              setState(() {
-                                                selectedUserRange = suggestion;
-                                                List<String> employees = employeeSuggestionRange[suggestion]!;
-                                                userEfficiencyGraphData = [];
-                                                selectedUsers = [];
-                    
-                                                selectedUsers.addAll(employees);
-                                                for (var emp in selectedUsers) {
-                                                  userEfficiencyGraphData.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                }
-                                              });
-                                            }
-                                          },
-                                          hideOnSelect: false,
-                                        ),
+                                          child: Text(
+                                            "85%",
+                                            style: TextStyle(fontSize: aspectRatio * 10),
+                                          ),
+                                        ))
+                                  ],
+                                  axisLineStyle: const Gauges.AxisLineStyle(
+                                      thickness: 35, color: Color.fromARGB(255, 189, 187, 64), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                  showTicks: false,
+                                  showLabels: false,
+                                  radiusFactor: aspectRatio * 0.3,
+                                  pointers: const [
+                                    Gauges.MarkerPointer(
+                                      value: 85,
+                                      markerType: Gauges.MarkerType.invertedTriangle,
+                                      markerHeight: 20,
+                                      markerWidth: 20,
+                                      color: Colors.white,
+                                      enableAnimation: true,
+                                      elevation: 10,
+                                    )
+                                  ],
+                                )
+                              ],
+                            )),
+            
+                        //  Container(
+                        //     margin: EdgeInsets.all(aspectRatio * 8),
+                        //     height: size.height * 0.45,
+                        //     width: size.width * 0.25,
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.white,
+                        //       borderRadius: BorderRadius.circular(20),
+                        //       boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]
+                        //     ),
+                        //     padding: EdgeInsets.all(size.height*0.035),
+                        //     alignment: Alignment.bottomCenter,
+                        //     child: Customs.WMSCartesianChart(
+                        //       title: 'Supplierwise Inventory',
+                        //             yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource]),
+                        //   ),
+            
+                        //  Container(
+                        //   margin: EdgeInsets.all(aspectRatio * 8),
+                        //   height: size.height * 0.45,
+                        //   width: size.width * 0.25,
+                        //   decoration: BoxDecoration(
+                        //       color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                        //   padding: EdgeInsets.all(size.height * 0.035),
+                        //   alignment: Alignment.topCenter,
+                        //   child: SfCircularChart(
+                        //     title: ChartTitle(
+                        //       text: 'Order Lead Time',
+                        //       alignment: ChartAlignment.center,
+                        //       textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                        //     ),
+                        //     legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                        //     series: <CircularSeries>[
+                        //       // Renders radial bar chart
+            
+                        //       DoughnutSeries<PieData, String>(
+                        //         dataSource: warehouseUtilizationDataSource,
+                        //         dataLabelSettings: const DataLabelSettings(
+                        //             // Renders the data label
+                        //             isVisible: true,
+                        //             textStyle: TextStyle(fontWeight: FontWeight.bold),
+                        //             alignment: ChartAlignment.center),
+                        //         pointColorMapper: (datum, index) {
+                        //           return warehouseUtilizationDataSource[index].color;
+                        //         },
+                        //         xValueMapper: (PieData data, _) => data.xData,
+                        //         yValueMapper: (PieData data, _) => data.yData,
+                        //       )
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.bottomCenter,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Order Aging',
+                                  style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: size.height * 0.3,
+                                  width: size.width * 0.25,
+                                  child: Customs.WMSCartesianChart(
+                                      title: '',
+                                      barCount: 1,
+                                      dataSources: [orderAgingData],
+                                      yAxisTitle: 'Aging time',
+                                      legendVisibility: false,
+                                      barColors: [Colors.deepPurple.shade200]),
+                                ),
+                              ],
+                            )),
+                        Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.topCenter,
+                            child: SfCircularChart(
+                              title: ChartTitle(
+                                  text: "Fulfilment Time",
+                                  alignment: ChartAlignment.center,
+                                  textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                              annotations: <CircularChartAnnotation>[
+                                CircularChartAnnotation(
+                                  verticalAlignment: ChartAlignment.center,
+                                  widget: Container(
+                                      height: size.height * 0.12,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blueGrey.shade100,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade900,
+                                            blurRadius: 10, // Adjust to set shadow direction
+                                          ),
+                                        ],
                                       ),
-                                      // Gap(size.width * 0.01),
-                                      Transform.scale(
-                                        scale: 0.7,
-                                        child: Switch(
-                                          value: rangeSelection,
-                                          onChanged: (value) {
-                                            print(rangeSelection);
-                                            setState(() {
-                                              rangeSelection = value;
-                                              suggestionsController.refresh();
-                                              selectedUserRange = "";
-                                              selectedUsers = [];
-                                              userEfficiencyGraphData = [];
-                                            });
-                                          },
+                                      child: Text(
+                                        '01h:45m',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.02,
                                         ),
-                                      )
+                                      )),
+                                ),
+                              ],
+                              series: <CircularSeries>[
+                                DoughnutSeries<TimeData, String>(
+                                  dataSource: avgFulfilmentTimeData,
+                                  xValueMapper: (TimeData data, _) => data.x,
+                                  yValueMapper: (TimeData data, _) => data.y,
+                                  radius: '60%', // Adjust the radius as needed
+                                  innerRadius: '40%', // Optional: adjust for a thinner ring
+                                  pointColorMapper: (TimeData data, _) => data.color,
+                                )
+                              ],
+                            )),
+                        Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.bottomCenter,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Day Wise Order Summary',
+                                  style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: size.height * 0.3,
+                                  width: size.width * 0.25,
+                                  child: Customs.WMSCartesianChart(
+                                    title: "",
+                                    legendVisibility: false,
+                                    barCount: 1,
+                                    dataSources: [dayWiseOrderSummary],
+                                    yAxisTitle: 'Number of orders',
+                                    barColors: [Colors.blueGrey.shade500],
+                                  ),
+                                ),
+                              ],
+                            )),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.bottomCenter,
+                            child: Customs.WMSCartesianChart(
+                              title: "Today Channel Wise Order Summary",
+                              legendVisibility: false,
+                              barCount: 1,
+                              dataSources: [channelWiseOrderSummary],
+                              yAxisTitle: 'Number of orders',
+                              barColors: [const Color.fromRGBO(202, 108, 15, 1)],
+                            )),
+            
+            
+                        Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.52,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
+                            alignment: Alignment.bottomCenter,
+                            child: Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: size.width * 0.36,
+                                  child: Customs.WMSCartesianChart(
+                                      title: 'User Efficiency',
+                                      barCount: 1,
+                                      legendVisibility: false,
+                                      dataSources: [userEfficiencyGraphData],
+                                      yAxisTitle: 'Number of Orders',
+                                      barColors: [Color.fromRGBO(147, 0, 120, 0.5)]),
+                                ),
+                                Gap(size.width * 0.016),
+                                Container(
+                                  width: size.width * 0.1,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: TypeAheadField(
+                                              suggestionsController: suggestionsController,
+                                              builder: (context, textController, focusNode) {
+                                                typeAheadController = textController;
+                                                typeAheadFocusNode = focusNode;
+                                                textController = textController;
+                                                focusNode = focusNode;
+                                                focusNode.addListener(() {
+                                                  if (!focusNode.hasFocus) {
+                                                    textController.clear();
+                                                  }
+                                                });
+                                                return TextFormField(
+                                                  textAlign: TextAlign.center,
+                                                  onTap: () {},
+                                                  cursorColor: Colors.black,
+                                                  decoration: InputDecoration(
+                                                      hintText: rangeSelection ? 'Choose' : "Compare",
+                                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+                                                      hintStyle: const TextStyle(
+                                                        color: Colors.black54,
+                                                        fontWeight: FontWeight.normal,
+                                                      ),
+                                                      // suffixIconConstraints: const BoxConstraints(minWidth: 16, minHeight: 8)
+                                                      )
+                                                      ,
+                                                  controller: textController,
+                                                  focusNode: focusNode,
+                                                );
+                                              },
+                                              suggestionsCallback: (pattern) {
+                                                userSuggestions = [];
+                                                if (rangeSelection) {
+                                                  userSuggestions = employeeSuggestionRange.keys.toList();
+                                                } else {
+                                                  for (var empList in employeeSuggestionRange.values) {
+                                                    print(empList);
+                                                    userSuggestions.addAll(empList);
+                                                  }
+                                                  print("emp suggestios $userSuggestions");
+                                                }
+                                                return userSuggestions;
+                                              },
+                                              itemBuilder: (context, suggestion) => Row(
+                                                children: [
+                                                  SizedBox(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: SizedBox(
+                                                        // width: size.width*0.1,
+                                                          child: Row(
+                                                        children: [
+                                                          Transform.scale(
+                                                            scale: aspectRatio*0.4,
+                                                            child: Checkbox(
+                                                                visualDensity: VisualDensity.compact,
+                                                                shape: OvalBorder(),
+                                                                value: rangeSelection ? selectedUserRange == suggestion : selectedUsers.contains(suggestion),
+                                                                onChanged: (value) {
+                                                                  setState(() {
+                                                                    if (rangeSelection != true) {
+                                                                      if (selectedUsers.contains(suggestion)) {
+                                                                        selectedUsers.remove(suggestion);
+                                                                        userEfficiencyGraphData.removeWhere((data) => data.xLabel == suggestion);
+                                                                        suggestionsController.refresh();
+                                                                      } else if (selectedUsers.length < 10) {
+                                                                        selectedUsers.add(suggestion);
+                                                                        userEfficiencyGraphData
+                                                                            .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                                        suggestionsController.refresh();
+                                                                      }
+                                                                    } else {
+                                                                      selectedUserRange = suggestion;
+                                                                      userEfficiencyGraphData = [];
+                                                                      selectedUsers = [];
+                                                                      List<String> employees = employeeSuggestionRange[suggestion]!;
+                                                                      selectedUsers.addAll(employees);
+                                                                      for (var emp in selectedUsers) {
+                                                                        userEfficiencyGraphData
+                                                                            .add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                                      }
+                                                                    }
+                                                                  });
+                                                                }),
+                                                          ),
+                                                          Text(
+                                                            suggestion.toString(),
+                                                            textAlign: TextAlign.justify,
+                                                            overflow: TextOverflow.ellipsis,
+                                                          ),
+                                                        ],
+                                                      )),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              onSelected: (suggestion) {
+                                                if (rangeSelection == false) {
+                                                  setState(
+                                                    () {
+                                                      if (selectedUsers.contains(suggestion)) {
+                                                        selectedUsers.remove(suggestion);
+                                                        userEfficiencyGraphData.removeWhere((data) => data.xLabel == suggestion);
+                                                        suggestionsController.refresh();
+                                                      } else if (selectedUsers.length < 10) {
+                                                        selectedUsers.add(suggestion);
+                                                        userEfficiencyGraphData
+                                                            .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                        // typeAheadController.clear();
+                                                        // suggestionsController.close();
+                                                        suggestionsController.refresh();
+                                                      }
+                                                    },
+                                                  );
+                                                } else {
+                                                  setState(() {
+                                                    selectedUserRange = suggestion;
+                                                    List<String> employees = employeeSuggestionRange[suggestion]!;
+                                                    userEfficiencyGraphData = [];
+                                                    selectedUsers = [];
+                        
+                                                    selectedUsers.addAll(employees);
+                                                    for (var emp in selectedUsers) {
+                                                      userEfficiencyGraphData.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                    }
+                                                  });
+                                                }
+                                              },
+                                              hideOnSelect: false,
+                                            ),
+                                          ),
+                                          // Gap(size.width * 0.01),
+                                          Transform.scale(
+                                            scale: 0.7,
+                                            child: Switch(
+                                              value: rangeSelection,
+                                              onChanged: (value) {
+                                                print(rangeSelection);
+                                                setState(() {
+                                                  rangeSelection = value;
+                                                  suggestionsController.refresh();
+                                                  selectedUserRange = "";
+                                                  selectedUsers = [];
+                                                  userEfficiencyGraphData = [];
+                                                });
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Gap(size.height * 0.012),
+                                      Container(
+                                          width: size.width * 0.1,
+                                          height: size.height * 0.3,
+                                          decoration: BoxDecoration(),
+                                          child:
+                                              ListView(
+                                            children: selectedUsers
+                                                .map((emp) => Container(
+                                                    margin: EdgeInsets.only(bottom: 4),
+                                                    decoration:
+                                                        BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(12), color: Colors.black12),
+                                                    child: Row(
+                                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Gap(size.width * 0.01),
+                                                        Expanded(
+                                                            child: Text(
+                                                          emp,
+                                                          style: TextStyle(fontSize: 22,overflow: TextOverflow.ellipsis),
+                                                        )),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              selectedUsers.remove(emp);
+                                                              userEfficiencyGraphData.removeWhere((data) => data.xLabel == emp);
+                                                            });
+                                                          },
+                                                          icon: Icon(Icons.cancel_rounded),
+                                                          iconSize: size.width * 0.01,
+                                                          splashRadius: 5,
+                                                          visualDensity: VisualDensity.compact,
+                                                        ),
+                                                      ],
+                                                    )))
+                                                .toList(),
+                                          ))
                                     ],
                                   ),
-                                  Gap(size.height * 0.012),
-                                  Container(
-                                      width: size.width * 0.1,
-                                      height: size.height * 0.3,
-                                      decoration: BoxDecoration(),
-                                      child:
-                                          ListView(
-                                        children: selectedUsers
-                                            .map((emp) => Container(
-                                                margin: EdgeInsets.only(bottom: 4),
-                                                decoration:
-                                                    BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(12), color: Colors.black12),
-                                                child: Row(
-                                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Gap(size.width * 0.01),
-                                                    Expanded(
-                                                        child: Text(
-                                                      emp,
-                                                      style: TextStyle(fontSize: 22,overflow: TextOverflow.ellipsis),
-                                                    )),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          selectedUsers.remove(emp);
-                                                          userEfficiencyGraphData.removeWhere((data) => data.xLabel == emp);
-                                                        });
-                                                      },
-                                                      icon: Icon(Icons.cancel_rounded),
-                                                      iconSize: size.width * 0.01,
-                                                      splashRadius: 5,
-                                                      visualDensity: VisualDensity.compact,
-                                                    ),
-                                                  ],
-                                                )))
-                                            .toList(),
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ],
-                        )),
+                                ),
+                              ],
+                            )),
+                      ],
+                    )
                   ],
-                )
+                ),
               ],
             ),
-          ],
-        ),
-      ],
-    ));
+                  ],
+                );
+          }
+        ));
   }
 }
