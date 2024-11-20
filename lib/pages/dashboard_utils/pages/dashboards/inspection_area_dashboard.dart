@@ -212,12 +212,16 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                   color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
-                                  child: Customs.WMSCartesianChart(
-                                      title: 'Day Wise Quality Summary  ',
-                                      barCount: 1,
-                                      dataSources: [barData],
-                                      yAxisTitle: 'Quality Enabled LPNs',
-                                      barColors: const [Color.fromARGB(255, 114, 68, 5)])),
+                                  child: Skeletonizer(
+                                    enableSwitchAnimation: true,
+                                    enabled: state.getInspectionDashboardState != InspectionDashboardState.success,
+                                    child: Customs.WMSCartesianChart(
+                                        title: 'Day Wise Quality Summary  ',
+                                        barCount: 1,
+                                        dataSources: state.getInspectionDashboardState != InspectionDashboardState.success ? [barData] : [state.inspectionDashboardData!.daywiseQualitySummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                        yAxisTitle: 'Quality Enabled LPNs',
+                                        barColors: const [Color.fromARGB(255, 114, 68, 5)]),
+                                  )),
                                       Container(
                                 margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
                               height: constraints.maxHeight * 0.48,

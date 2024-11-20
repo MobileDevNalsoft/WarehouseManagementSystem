@@ -42,13 +42,11 @@ class DockDashboard{
 }
 
 class DockUtilization{
-  int? total;
   int? available;
   int? utilized;
-  DockUtilization({this.total, this.available, this.utilized});
+  DockUtilization({this.available, this.utilized});
 
   DockUtilization.fromJson(Map<String, dynamic> json){
-    total = json['total'];
     available = json['available'];
     utilized = json['utilized'];
   }

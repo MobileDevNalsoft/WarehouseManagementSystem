@@ -1,3 +1,5 @@
+import 'package:warehouse_3d/models/inspection_area_model.dart';
+
 class ReceivingArea {
   int? responseCode;
   String? responseMessage;
@@ -61,13 +63,17 @@ class ReceivingDashboard{
   String? avgPutawayTime;
   String? avgReceivingTime;
   List<UserCount>? userReceivingEfficiency;
-  ReceivingDashboard({this.totalInBoundSummary, this.avgPutawayTime, this.avgReceivingTime, this.userReceivingEfficiency});
+  List<StatusCount>? supplierwiseInboundSummary;
+  double? putawayAccuracy;
+  ReceivingDashboard({this.totalInBoundSummary, this.avgPutawayTime, this.avgReceivingTime, this.userReceivingEfficiency, this.supplierwiseInboundSummary, this.putawayAccuracy});
 
   ReceivingDashboard.fromJson(Map<String, dynamic> json){
     totalInBoundSummary = (json['total_inbound_summary'] as List).map((e) => InBoundSummary.fromJson(e)).toList();
     avgPutawayTime = json['avg_putaway_time'];
     avgReceivingTime = json['avg_receiving_time'];
     userReceivingEfficiency = (json['user_receiving_efficiency'] as List).map((e) => UserCount.fromJson(e)).toList();
+    supplierwiseInboundSummary = (json['supplierwise_inbound_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    putawayAccuracy = json['putaway_accuracy'];
   }
 }
 
