@@ -33,6 +33,9 @@ class Customs {
                                   "storageArea"
                               ? "storageArea"
                               : "compoundArea");
+
+
+                      context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));       
                               
                       getIt<JsInteropService>().resetTrucks();
                     },

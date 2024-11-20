@@ -517,7 +517,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
-                                                            Skeletonizer(enabled: isEnabled,enableSwitchAnimation: true,child: Text(isEnabled ? 'APDEMODEMO' : state.appointments![index].apptNbr!, style: TextStyle(color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth*0.04, fontWeight: FontWeight.bold),)),
+                                                            Skeletonizer(enabled: isEnabled,enableSwitchAnimation: true,child: Text(isEnabled ? 'APDEMODEMO' : state.appointments![index].apptNbr!, style: TextStyle(color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth*0.037, fontWeight: FontWeight.bold),)),
                                                              Gap(lsize.maxHeight*0.008),
                                                             Skeletonizer(enabled: isEnabled,enableSwitchAnimation: true,child: Text(isEnabled ? 'DOCK-IN-01' : state.appointments![index].dockNbr!, style: TextStyle(color: Color.fromRGBO(95, 116, 143, 1), fontSize: lsize.maxWidth*0.035, fontWeight: FontWeight.bold)))
                                                           ],
