@@ -82,11 +82,12 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
       }
     ]
   };
-
+late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   @override
   void initState() {
     super.initState();
 
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _dockAreaBloc = context.read<DockAreaBloc>();
     _dockAreaBloc.add(GetDockAreaData(
         searchText: context.read<WarehouseInteractionBloc>().state.searchText,
@@ -116,7 +117,9 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
             child: LayoutBuilder(builder: (context, lsize) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: ListView.builder(
+                child:(state.getDataState== GetDataState.success &&  state.dockAreaItems!.length==0)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                       : ListView.builder(
                     controller: _controller,
                     itemBuilder: (context, index) => index < state.dockAreaItems!.length
                         ? Container(

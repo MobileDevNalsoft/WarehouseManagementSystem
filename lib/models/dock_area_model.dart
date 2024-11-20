@@ -20,11 +20,48 @@ class DockAreaItem {
 }
 
 class DockDashboard{
-  List<Appointment>? appointments;
-  DockDashboard({this.appointments});
+  DockUtilization? dockInUtilization;
+  DockUtilization? dockOutUtilization;
+  List<DaywiseDockUtilization>? daywiseDockInUtilization;
+  List<DaywiseDockUtilization>? daywiseDockOutUtilization;
+  String? avgLoadingTime;
+  String? avgUnloadingTime;
+  String? avgDockTAT;
+
+  DockDashboard({this.dockInUtilization, this.dockOutUtilization, this.avgLoadingTime, this.avgUnloadingTime, this.avgDockTAT});
 
   DockDashboard.fromJson(Map<String, dynamic> json){
-    appointments = (json['appointments'] as List).map((e) => Appointment.fromJson(e)).toList();
+    dockInUtilization = DockUtilization.fromJson(json['dock_in_utilization']);
+    dockOutUtilization = DockUtilization.fromJson(json['dock_out_utilization']);
+    daywiseDockInUtilization = (json['daywise_dock_in'] as List).map((e) => DaywiseDockUtilization.fromJson(e)).toList();
+    daywiseDockOutUtilization = (json['daywise_dock_out'] as List).map((e) => DaywiseDockUtilization.fromJson(e)).toList();
+    avgLoadingTime = json['avg_loading_time'];
+    avgUnloadingTime = json['avg_unloading_time'];
+    avgDockTAT = json['avg_dock_tat'];
+  }
+}
+
+class DockUtilization{
+  int? total;
+  int? available;
+  int? utilized;
+  DockUtilization({this.total, this.available, this.utilized});
+
+  DockUtilization.fromJson(Map<String, dynamic> json){
+    total = json['total'];
+    available = json['available'];
+    utilized = json['utilized'];
+  }
+}
+
+class DaywiseDockUtilization{
+  String? date;
+  int? vehicleCount;
+  DaywiseDockUtilization({this.date, this.vehicleCount});
+
+  DaywiseDockUtilization.fromJson(Map<String, dynamic> json){
+    date = json.keys.first;
+    vehicleCount = json.values.first;
   }
 }
 

@@ -17,11 +17,12 @@ class YardAreaDataSheet extends StatefulWidget {
 class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
   late YardBloc _yardBloc;
   final ScrollController _controller = ScrollController();
-
+late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   @override
   void initState() {
     super.initState();
 
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _yardBloc = context.read<YardBloc>();
     _yardBloc.add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
 
@@ -46,7 +47,9 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
             child: LayoutBuilder(builder: (context, lsize) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: ListView.builder(
+                child: (state.yardAreaStatus== YardAreaStatus.success &&  state.yardAreaItems!.length==0)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                       :ListView.builder(
                     controller: _controller,
                     itemBuilder: (context, index) => index < state.yardAreaItems!.length
                         ? Container(

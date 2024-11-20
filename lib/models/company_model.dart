@@ -4,7 +4,7 @@ class CompanyModel {
   int? pageNbr;
   int? nextPage;
   int? previousPage;
-  List<Results>? results;
+  List<CompanyResults>? results;
 
   CompanyModel(
       {this.resultCount,
@@ -21,9 +21,9 @@ class CompanyModel {
     nextPage = json['next_page'];
     previousPage = json['previous_page'];
     if (json['results'] != null) {
-      results = <Results>[];
+      results = <CompanyResults>[];
       json['results'].forEach((v) {
-        results!.add(new Results.fromJson(v));
+        results!.add(new CompanyResults.fromJson(v));
       });
     }
   }
@@ -42,7 +42,7 @@ class CompanyModel {
   }
 }
 
-class Results {
+class CompanyResults {
   int? id;
   String? url;
   String? createUser;
@@ -76,7 +76,7 @@ class Results {
   String? custField4;
   String? custField5;
 
-  Results(
+  CompanyResults(
       {this.id,
       this.url,
       this.createUser,
@@ -110,7 +110,7 @@ class Results {
       this.custField4,
       this.custField5});
 
-  Results.fromJson(Map<String, dynamic> json) {
+  CompanyResults.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     url = json['url'];
     createUser = json['create_user'];

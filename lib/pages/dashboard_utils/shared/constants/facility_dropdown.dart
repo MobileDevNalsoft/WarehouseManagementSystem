@@ -3,23 +3,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/models/company_model.dart';
+import 'package:warehouse_3d/models/facility_model.dart';
 
-class CompanyDropdown extends StatefulWidget {
-  CompanyDropdown({super.key, required this.buttonHeight, required this.buttonWidth, required this.dropDownHeight, required this.dropDownWidth, required this.dropDownItems, required this.onChanged, this.selectedValue, this.listItemTextColor});
+class FacilityDropdown extends StatefulWidget {
+  FacilityDropdown({super.key, required this.buttonHeight, required this.buttonWidth, required this.dropDownHeight, required this.dropDownWidth, required this.dropDownItems, required this.onChanged, this.selectedValue, this.listItemTextColor});
   double buttonHeight;
   double buttonWidth;
   double dropDownHeight;
   double dropDownWidth;
   Color? listItemTextColor;
-  List<CompanyResults> dropDownItems;
+  List<FacilityResults> dropDownItems;
   String? selectedValue;
-  void Function(CompanyResults?)? onChanged;
+  void Function(FacilityResults?)? onChanged;
   
   @override
-  _CompanyDropdownState createState() => _CompanyDropdownState();
+  _FacilityDropdownState createState() => _FacilityDropdownState();
 }
 
-class _CompanyDropdownState extends State<CompanyDropdown> {
+class _FacilityDropdownState extends State<FacilityDropdown> {
   double? height;
   double? bottomHeight;
   double turns = 1;

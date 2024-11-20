@@ -92,6 +92,7 @@ export function addInteractions(scene, model, camera, controls) {
             window.localStorage.setItem("getData", name);
           } else  {
             console.log('{"area":"' + name + '"}');
+            window.localStorage.setItem("rack_cam", "warehouse");
             window.localStorage.setItem( "getData", name );
             if (name == "yardArea") {
               for (let i = 1; i <= 20; i++) {
@@ -488,7 +489,10 @@ export function addInteractions(scene, model, camera, controls) {
   });
 }
 
-document.addEventListener("wheel", () => {
+document.addEventListener("wheel", (event) => {
+  // console.log(event.deltaY);
+  // console.log(event.movementX);
+  // console.log(event.movementY);
   const arrows = document.querySelectorAll(".arrow");
   arrows.forEach((arrow) => {
     arrow.style.display = "none";

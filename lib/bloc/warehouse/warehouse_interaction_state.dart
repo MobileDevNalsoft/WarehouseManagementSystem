@@ -49,18 +49,4 @@ final class WarehouseInteractionState{
         );
   }
 
-  @override
-  List<Object?> get props => [
-        dataFromJS,
-        inAppWebViewController,
-        isModelLoaded,
-        selectedSearchArea,
-        searchText,
-        getState,
-        companyModel,
-        selectedCompanyVal,
-        facilityModel,
-        facilityDataState,
-        selectedFacilityVal
-      ];
 }

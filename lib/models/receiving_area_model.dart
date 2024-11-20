@@ -54,3 +54,41 @@ class   ReceiveData {
     return data;
   }
 }
+
+
+class ReceivingDashboard{
+  List<InBoundSummary>? totalInBoundSummary;
+  String? avgPutawayTime;
+  String? avgReceivingTime;
+  List<UserCount>? userReceivingEfficiency;
+  ReceivingDashboard({this.totalInBoundSummary, this.avgPutawayTime, this.avgReceivingTime, this.userReceivingEfficiency});
+
+  ReceivingDashboard.fromJson(Map<String, dynamic> json){
+    totalInBoundSummary = (json['total_inbound_summary'] as List).map((e) => InBoundSummary.fromJson(e)).toList();
+    avgPutawayTime = json['avg_putaway_time'];
+    avgReceivingTime = json['avg_receiving_time'];
+    userReceivingEfficiency = (json['user_receiving_efficiency'] as List).map((e) => UserCount.fromJson(e)).toList();
+  }
+}
+
+class InBoundSummary{
+  String? status;
+  int? total;
+  InBoundSummary({this.status, this.total});
+
+  InBoundSummary.fromJson(Map<String, dynamic> json){
+    status = json.keys.first;
+    total = json.values.first;
+  }
+}
+
+class UserCount{
+  String? userName;
+  int? count;
+  UserCount({this.userName, this.count});
+
+  UserCount.fromJson(Map<String, dynamic> json){
+    userName = json.keys.first;
+    count = json.values.first;
+  }
+}

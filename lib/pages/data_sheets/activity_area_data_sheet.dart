@@ -19,7 +19,7 @@ class ActivityAreaDataSheet extends StatefulWidget {
 class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
   final ScrollController _controller = ScrollController();
   late ActivityAreaBloc _activityBloc;
-
+late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   @override
   void initState() {
     super.initState();
@@ -27,6 +27,8 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
     _activityBloc = context.read<ActivityAreaBloc>();
      _activityBloc.add( GetActivityAreaData( searchText: context.read<WarehouseInteractionBloc>().state.searchText));
 
+  
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _controller.addListener(_scrollListener);
   }
 
@@ -54,7 +56,9 @@ class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
                   builder: (context, lsize) {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: ListView.builder(
+                      child: (state.getDataState== GetDataState.success &&  state.activityAreaItems!.length==0)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                       : ListView.builder(
                             controller: _controller,
                             itemBuilder: (context, index) => index < state.activityAreaItems!.length
                                     ? 
