@@ -31,8 +31,11 @@ class Customs {
                       getIt<JsInteropService>().switchToMainCam(
                           await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
                                   "storageArea"
-                                  ? "storageArea"
-                                  : "compoundArea");
+                              ? "storageArea"
+                              : "compoundArea");
+
+
+                      context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));       
                               
                       getIt<JsInteropService>().resetTrucks();
                     },
