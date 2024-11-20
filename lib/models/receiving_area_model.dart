@@ -60,17 +60,56 @@ class ReceivingDashboard{
   List<InBoundSummary>? totalInBoundSummary;
   String? avgPutawayTime;
   String? avgReceivingTime;
+  double? receivingEfficiency;
+  AsnStatus? asnStatus;
   List<UserCount>? userReceivingEfficiency;
-  ReceivingDashboard({this.totalInBoundSummary, this.avgPutawayTime, this.avgReceivingTime, this.userReceivingEfficiency});
+  List<DayWiseInboundSummary>? dayWiseInboundSummary;
+  ReceivingDashboard({this.totalInBoundSummary, this.avgPutawayTime, this.avgReceivingTime, this.userReceivingEfficiency,this.dayWiseInboundSummary,this.asnStatus,this.receivingEfficiency});
 
   ReceivingDashboard.fromJson(Map<String, dynamic> json){
     totalInBoundSummary = (json['total_inbound_summary'] as List).map((e) => InBoundSummary.fromJson(e)).toList();
     avgPutawayTime = json['avg_putaway_time'];
     avgReceivingTime = json['avg_receiving_time'];
+    asnStatus = AsnStatus.fromJson(json['today_asn_status']);
+    receivingEfficiency= json['receiving_efficiency'];
+    dayWiseInboundSummary = (json['day_wise_inbound_summary'] as List).map((e)=> DayWiseInboundSummary.fromJson(e) ).toList();
     userReceivingEfficiency = (json['user_receiving_efficiency'] as List).map((e) => UserCount.fromJson(e)).toList();
   }
 }
 
+class DayWiseInboundSummary {
+  String? verifiedDate;
+  int? shipmentCount;
+
+  DayWiseInboundSummary({this.verifiedDate, this.shipmentCount});
+
+  DayWiseInboundSummary.fromJson(Map<String, dynamic> json) {
+    verifiedDate = json['verified_date'];
+    shipmentCount = json['shipment_count'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['verified_date'] = this.verifiedDate;
+    data['shipment_count'] = this.shipmentCount;
+    return data;
+  }
+}
+class AsnStatus {
+  int? inTransit;
+  int? inReceiving;
+  int? receivied;
+  int? cancelled;
+
+  AsnStatus(
+      {this.inTransit, this.inReceiving, this.receivied, this.cancelled});
+
+  AsnStatus.fromJson(Map<String, dynamic> json) {
+    inTransit = json['in_transit'];
+    inReceiving = json['in_receiving'];
+    receivied = json['receivied'];
+    cancelled = json['cancelled '];
+  }}
 class InBoundSummary{
   String? status;
   int? total;

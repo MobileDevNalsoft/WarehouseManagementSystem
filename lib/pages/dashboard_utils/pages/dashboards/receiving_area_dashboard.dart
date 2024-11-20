@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as gauge;
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -18,6 +21,8 @@ class ReceivingAreaDashboard extends StatefulWidget {
 
 class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
   // Define lists for job card statuses and their corresponding values (replace with actual data)
+
+  
   List<BarData> barData = [
     BarData(xLabel: 'Mon', yValue: 10, abbreviation: 'Monday'),
     BarData(xLabel: 'Tue', yValue: 4, abbreviation: 'Tuesday'),
@@ -58,6 +63,15 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
     BarData(xLabel: 'Sun', yValue: 2, abbreviation: 'Sunday')
   ];
 
+var weekDays = {
+1:'Mon',
+2:'Tue',
+3:'Wed',
+4:'Thu',
+5:'Fri',
+6:'Sat',
+7:'Sun',
+};
   late DashboardsBloc _dashboardsBloc;
 
   @override
@@ -136,7 +150,14 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                               alignment: Alignment.topCenter,
                               child: Customs.WMSPieChart(
                                   title: "Total ASN Status",
-                                  dataSource: [
+                                  dataSource:
+                                  state.getReceivingDashboardState == ReceivingDashboardState.success?
+                                  [PieData(xData: "In-Transit", yData: state.receivingDashboardData!.asnStatus!.inTransit!, text:  state.receivingDashboardData!.asnStatus!.inTransit!.toString()),
+                                    PieData(xData: "In Receiving", yData: state.receivingDashboardData!.asnStatus!.inReceiving!, text:  state.receivingDashboardData!.asnStatus!.inReceiving!.toString()),
+                                    PieData(xData: "Received", yData: state.receivingDashboardData!.asnStatus!.receivied!, text:  state.receivingDashboardData!.asnStatus!.receivied!.toString()),
+                                    PieData(xData: "Cancelled", yData: state.receivingDashboardData!.asnStatus!.cancelled!, text:  state.receivingDashboardData!.asnStatus!.cancelled.toString())] 
+                                    :
+                                    [
                                     PieData(xData: "In-Transit", yData: 8, text: "8"),
                                     PieData(xData: "In Receiving", yData: 4, text: "4"),
                                     PieData(xData: "Received", yData: 3, text: "3"),
@@ -214,7 +235,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                                 child: Customs.WMSCartesianChart(
                                     title: 'Day Wise Inbound Summary  ',
                                     barCount: 1,
-                                    dataSources: [barData],
+                                    dataSources: (state.getReceivingDashboardState == ReceivingDashboardState.success)?  [state.receivingDashboardData!.dayWiseInboundSummary!.map((e)=>BarData(xLabel: weekDays[DateTime.parse(e.verifiedDate!.substring(0,10)).weekday]??"", yValue: e.shipmentCount??0, abbreviation:e.verifiedDate??"")).toList()]:[barData],
                                     yAxisTitle: 'No of ASNs Received',
                                     barColors: [const Color.fromARGB(255, 248, 190, 15)])),
                             Container(
@@ -347,16 +368,16 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                                             minimum: 0,
                                             maximum: 100,
                                             ranges: <GaugeRange>[
-                                              GaugeRange(startValue: 0, endValue: 50, color: const Color.fromARGB(255, 121, 43, 181), startWidth: 50, endWidth: 50),
+                                              GaugeRange(startValue: 0, endValue:(state.getReceivingDashboardState != ReceivingDashboardState.success )? 10: state.receivingDashboardData!.receivingEfficiency!.toDouble(), color: const Color.fromARGB(255, 121, 43, 181), startWidth: 50, endWidth: 50),
                                               GaugeRange(
-                                                  startValue: 50, endValue: 100, color: const Color.fromARGB(255, 189, 200, 210), startWidth: 50, endWidth: 50),
+                                                  startValue: (state.getReceivingDashboardState != ReceivingDashboardState.success )? 10: state.receivingDashboardData!.receivingEfficiency!.toDouble(), endValue: 100, color: const Color.fromARGB(255, 189, 200, 210), startWidth: 50, endWidth: 50),
                                             ])
                                       ],
                                     ),
-                                    const Positioned(
+                                     Positioned(
                                       bottom: 100,
                                       right: 150,
-                                      child: Text("50%"),
+                                      child: Text( (state.getReceivingDashboardState != ReceivingDashboardState.success )? "10": state.receivingDashboardData!.receivingEfficiency!.toDouble().truncate().toString(),),
                                     )
                                   ],
                                 )),
