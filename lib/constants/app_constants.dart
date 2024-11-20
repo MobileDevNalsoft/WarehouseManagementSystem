@@ -53,6 +53,7 @@ class AppConstants {
   static const DOCK_APPOINTMENTS = 'dock_appointments';
   static const YARD_DASHBOARD = 'yard_dashboard';
   static const RECEIVING_DASHBOARD = 'receiving_dashboard';
+  static const INSPECTION_DASHBOARD = 'inspection_dashboard';
 }
 
  

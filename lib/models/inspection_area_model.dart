@@ -16,3 +16,27 @@ class InspectionAreaItem {
     qty = int.parse(json['qty']);
   }
 }
+
+
+class InspectionDashboard{
+  List<StatusCount>? totalQualityStatus;
+  String? materialQuality;
+
+  InspectionDashboard({this.totalQualityStatus, this.materialQuality});
+
+  InspectionDashboard.fromJson(Map<String, dynamic> json){
+    totalQualityStatus = (json['total_quality_status'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    materialQuality = json['material_quality'];
+  }
+}
+
+class StatusCount{
+  String? status;
+  int? count;
+  StatusCount({this.status, this.count});
+
+  StatusCount.fromJson(Map<String, dynamic> json){
+    status = json.keys.first;
+    count = json.values.first;
+  }
+}

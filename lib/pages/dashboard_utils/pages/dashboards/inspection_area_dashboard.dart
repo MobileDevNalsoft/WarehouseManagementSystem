@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
+import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as gauge;
 
-class InspectionAreaDashboard extends StatelessWidget {
+class InspectionAreaDashboard extends StatefulWidget {
   InspectionAreaDashboard({super.key});
 
+  @override
+  State<InspectionAreaDashboard> createState() => _InspectionAreaDashboardState();
+}
+
+class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
   // Define lists for job card statuses and their corresponding values (replace with actual data)
   List<BarData> barData = [
     BarData(xLabel: 'Mon', yValue: 10, abbreviation: 'Monday'),
@@ -41,6 +50,17 @@ class InspectionAreaDashboard extends StatelessWidget {
     ChartData('David', 68, Color.fromRGBO(3, 109, 97, 1)),
     ChartData('sd', 32, Colors.transparent),
   ];
+
+  late DashboardsBloc _dashboardsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _dashboardsBloc = context.read<DashboardsBloc>();
+
+    _dashboardsBloc.add(GetInspectionDashboardData(facilityID: 243));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,133 +99,145 @@ class InspectionAreaDashboard extends StatelessWidget {
             child: ListView(
               children: [
                 Expanded(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  child: BlocBuilder<DashboardsBloc, DashboardsState>(
+                    builder: (context, state) {
+                      return Column(
                         children: [
-                           Container(
-                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                          height: constraints.maxHeight * 0.48,
-                          width: constraints.maxWidth * 0.3,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                              child: Customs.WMSPieChart(
-                                  title:'Today Quality Status',
-                                  dataSource: [PieData(xData: "Marked for QC",yData:  10,text:  "10"), PieData(xData: "QC Approved",yData:  6,text:  "6"), PieData(xData: "QC Rejected", yData: 3,text:  "3")],
-                                  pointColorMapper: (datum, index) {
-                                    if (datum.text == '10') {
-                                      return const Color.fromARGB(255, 7, 72, 100);
-                                    } else if (datum.text == '6') {
-                                      return const Color.fromARGB(255, 84, 9, 4);
-                                    } else {
-                                      return const Color.fromARGB(255, 17, 208, 119);
-                                    }
-                                  })),
-                          Container(
-                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                          height: constraints.maxHeight * 0.48,
-                          width: constraints.maxWidth * 0.3,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                              child: _getRadialGauge()),
-
-                           Container(
-                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                          height: constraints.maxHeight * 0.48,
-                          width: constraints.maxWidth * 0.3,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                              child: SfCircularChart(
-                                title: const ChartTitle(text: "Material Quality", textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                                annotations: <CircularChartAnnotation>[
-                                  CircularChartAnnotation(
-                                    widget: Container(
-                                      width: 100, // Set the size of the shadowed circle
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        
-                                        shape: BoxShape.circle,
-                                        color: const Color.fromARGB(255, 232, 229, 229),
-                                  
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.3),
-                                            blurRadius: 10,
-                                            offset: const Offset(0, 4), // Adjust to set shadow direction
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  CircularChartAnnotation(
-                                    widget: Container(
-                                      child: const Text(
-                                        '68%',
-                                        style: TextStyle(
-                                          color: Color.fromARGB(255, 101, 10, 10),
-                                          fontSize: 25,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                series: <CircularSeries>[
-                                  DoughnutSeries<ChartData, String>(
-                                    dataSource: chartData,
-                                    xValueMapper: (ChartData data, _) => data.x,
-                                    yValueMapper: (ChartData data, _) => data.y,
-                                    radius: '60%', // Adjust the radius as needed
-                                    innerRadius: '45%', // Optional: adjust for a thinner ring
-                                    pointColorMapper: (ChartData data, _) => data.color,
-                                  )
-                                ],
-                              )),
-                        ],
-                      ),
-                      Gap(constraints.maxHeight * 0.05),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          
-                          Container(
-                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                          height: constraints.maxHeight * 0.48,
-                          width: constraints.maxWidth * 0.3,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                              child: Customs.WMSCartesianChart(
-                                  title: 'Day Wise Quality Summary  ',
-                                  barCount: 1,
-                                  dataSources: [barData],
-                                  yAxisTitle: 'Quality Enabled LPNs',
-                                  barColors: const [Color.fromARGB(255, 114, 68, 5)])),
-                                  Container(
-                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                          height: constraints.maxHeight * 0.48,
-                          width: constraints.maxWidth * 0.3,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                              child: Customs.WMSCartesianChart(
-                                  title: 'Supplier Wise Quality  ',
-                                  barCount: 1,
-                                  dataSources: [barData_sup],
-                                  yAxisTitle: 'Quality In Percentage',
-                                  barColors: const [Color.fromARGB(255, 114, 68, 5)]))
-                        ],
-                      ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                               Container(
+                                margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                              height: constraints.maxHeight * 0.48,
+                              width: constraints.maxWidth * 0.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              padding: EdgeInsets.all(size.height * 0.035),
+                              alignment: Alignment.topCenter,
+                                  child: Skeletonizer(
+                                    enableSwitchAnimation: true,
+                                    enabled: state.getInspectionDashboardState != InspectionDashboardState.success,
+                                    child: Customs.WMSPieChart(
+                                        title:'Today Quality Status',
+                                        dataSource: state.getInspectionDashboardState != InspectionDashboardState.success ? [] : state.inspectionDashboardData!.totalQualityStatus!.map((e) => PieData(xData: e.status!, yData: e.count!,text: e.count!.toString())).toList(),
+                                        pointColorMapper: (datum, index) {
+                                          if (index == 1) {
+                                            return const Color.fromARGB(255, 7, 72, 100);
+                                          } else if (index == 2) {
+                                            return const Color.fromARGB(255, 84, 9, 4);
+                                          } else {
+                                            return const Color.fromARGB(255, 17, 208, 119);
+                                          }
+                                        }),
+                                  )),
+                              Container(
+                                margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                              height: constraints.maxHeight * 0.48,
+                              width: constraints.maxWidth * 0.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              padding: EdgeInsets.all(size.height * 0.035),
+                              alignment: Alignment.topCenter,
+                                  child: _getRadialGauge()),
                       
-                    ],
+                               Container(
+                                margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                              height: constraints.maxHeight * 0.48,
+                              width: constraints.maxWidth * 0.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              padding: EdgeInsets.all(size.height * 0.035),
+                              alignment: Alignment.topCenter,
+                                  child: Skeletonizer(
+                                    enableSwitchAnimation: true,
+                                    enabled: state.getInspectionDashboardState != InspectionDashboardState.success,
+                                    child: SfCircularChart(
+                                      title: const ChartTitle(text: "Material Quality", textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                                      annotations: <CircularChartAnnotation>[
+                                        CircularChartAnnotation(
+                                          widget: Container(
+                                            width: 100, // Set the size of the shadowed circle
+                                            height: 100,
+                                            decoration: BoxDecoration(
+                                              
+                                              shape: BoxShape.circle,
+                                              color: const Color.fromARGB(255, 232, 229, 229),
+                                        
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black.withOpacity(0.3),
+                                                  blurRadius: 10,
+                                                  offset: const Offset(0, 4), // Adjust to set shadow direction
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        CircularChartAnnotation(
+                                          widget: Container(
+                                            child: Text(
+                                              state.getInspectionDashboardState != InspectionDashboardState.success ? '68%' : state.inspectionDashboardData!.materialQuality!,
+                                              style: TextStyle(
+                                                color: Color.fromARGB(255, 101, 10, 10),
+                                                fontSize: 25,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      series: <CircularSeries>[
+                                        DoughnutSeries<ChartData, String>(
+                                          dataSource: chartData,
+                                          xValueMapper: (ChartData data, _) => data.x,
+                                          yValueMapper: (ChartData data, _) => data.y,
+                                          radius: '60%', // Adjust the radius as needed
+                                          innerRadius: '45%', // Optional: adjust for a thinner ring
+                                          pointColorMapper: (ChartData data, _) => data.color,
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                          ),
+                          Gap(constraints.maxHeight * 0.05),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              
+                              Container(
+                                margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                              height: constraints.maxHeight * 0.48,
+                              width: constraints.maxWidth * 0.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              padding: EdgeInsets.all(size.height * 0.035),
+                              alignment: Alignment.topCenter,
+                                  child: Customs.WMSCartesianChart(
+                                      title: 'Day Wise Quality Summary  ',
+                                      barCount: 1,
+                                      dataSources: [barData],
+                                      yAxisTitle: 'Quality Enabled LPNs',
+                                      barColors: const [Color.fromARGB(255, 114, 68, 5)])),
+                                      Container(
+                                margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
+                              height: constraints.maxHeight * 0.48,
+                              width: constraints.maxWidth * 0.3,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                              padding: EdgeInsets.all(size.height * 0.035),
+                              alignment: Alignment.topCenter,
+                                  child: Customs.WMSCartesianChart(
+                                      title: 'Supplier Wise Quality  ',
+                                      barCount: 1,
+                                      dataSources: [barData_sup],
+                                      yAxisTitle: 'Quality In Percentage',
+                                      barColors: const [Color.fromARGB(255, 114, 68, 5)]))
+                            ],
+                          ),
+                          
+                        ],
+                      );
+                    }
                   ),
                 ),
               ],

@@ -10,6 +10,7 @@ import 'package:warehouse_3d/models/area_response.dart';
 import 'package:warehouse_3d/models/dashboard_response.dart';
 import 'package:warehouse_3d/models/dock_area_model.dart';
 import 'package:intl/intl.dart';
+import 'package:warehouse_3d/models/inspection_area_model.dart';
 import 'package:warehouse_3d/models/receiving_area_model.dart';
 import '../../local_network_calls.dart';
 
@@ -27,6 +28,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     on<ToggleCalendar>(_onToggleCalendar);
     on<GetDockDashboardData>(_onGetDockDashboardData);
     on<GetReceivingDashboardData>(_onGetReceivingDashboardData);
+    on<GetInspectionDashboardData>(_onGetInspectionDashboardData);
   }
   final NetworkCalls _customApi;
 
@@ -73,7 +75,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
   Future<void> _onGetReceivingDashboardData(GetReceivingDashboardData event, Emitter<DashboardsState> emit) async {
     try{
       emit(state.copyWith(getReceivingDashboardState: ReceivingDashboardState.loading));
-      await _customApi.get(AppConstants.RECEIVING_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
+      await _customApi.get(AppConstants.RECEIVING_DASHBOARD,  queryParameters:{"facility_id": event.facilityID, "date": '2024-10-24'}).then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<ReceivingDashboard> receivingDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ReceivingDashboard.fromJson(json));
         emit(state.copyWith(receivingDashboardData: receivingDashboardResponse.data!, getReceivingDashboardState:ReceivingDashboardState.success));
@@ -81,6 +83,20 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     } catch(e){
       Log.e(e.toString());
       emit(state.copyWith(getReceivingDashboardState: ReceivingDashboardState.failure));
+    }
+  }
+
+  Future<void> _onGetInspectionDashboardData(GetInspectionDashboardData event, Emitter<DashboardsState> emit) async {
+    try{
+      emit(state.copyWith(getInspectionDashboardState: InspectionDashboardState.loading));
+      await _customApi.get(AppConstants.INSPECTION_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
+        print(apiResponse.response!.data);
+        DashboardResponse<InspectionDashboard> inspectionDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => InspectionDashboard.fromJson(json));
+        emit(state.copyWith(inspectionDashboardData: inspectionDashboardResponse.data!, getInspectionDashboardState:InspectionDashboardState.success));
+      });
+    } catch(e){
+      Log.e(e.toString());
+      emit(state.copyWith(getInspectionDashboardState: InspectionDashboardState.failure));
     }
   }
 }
