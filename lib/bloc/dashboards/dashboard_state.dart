@@ -5,11 +5,13 @@ enum DockDashboardState { initial, loading, success, failure}
 enum ReceivingDashboardState { initial, loading, success, failure}
 enum InspectionDashboardState { initial, loading, success, failure}
 enum ActivityDashboardState { initial, loading, success, failure}
+enum StagingDashboardState { initial, loading, success, failure}
+enum StorageDashboardState { initial, loading, success, failure}
 enum AppointmentsState { initial, loading, success, failure}
 
 // ignore: must_be_immutable
 final class DashboardsState {
-  DashboardsState({this.getDataState, this.index, this.getDockDashboardState, this.dockDashboardData, this.getReceivingDashboardState, this.receivingDashboardData, this.getInspectionDashboardState, this.inspectionDashboardData, this.getActivityDashboardState, this.activityDashboardData, this.appointments, this.getAppointmentsState, this.appointmentsDate, this.toggleCalendar});
+  DashboardsState({this.getDataState, this.index, this.getDockDashboardState, this.dockDashboardData, this.getReceivingDashboardState, this.receivingDashboardData, this.getInspectionDashboardState, this.inspectionDashboardData, this.getActivityDashboardState, this.activityDashboardData, this.getStagingDashboardState, this.stagingDashboardData, this.getStorageDashboardState, this.storageDashboardData, this.appointments, this.getAppointmentsState, this.appointmentsDate, this.toggleCalendar});
 
   GetDataState? getDataState;
   DockDashboard? dockDashboardData;
@@ -24,6 +26,10 @@ final class DashboardsState {
   InspectionDashboard? inspectionDashboardData;
   ActivityDashboardState? getActivityDashboardState;
   ActivityDashboard? activityDashboardData;
+  StagingDashboardState? getStagingDashboardState;
+  StagingDashboard? stagingDashboardData;
+  StorageDashboardState? getStorageDashboardState;
+  StorageDashboard? storageDashboardData;
   int? index;
 
   factory DashboardsState.initial() {
@@ -37,11 +43,13 @@ final class DashboardsState {
     ReceivingDashboardState? getReceivingDashboardState, ReceivingDashboard? receivingDashboardData,
     InspectionDashboardState? getInspectionDashboardState, InspectionDashboard? inspectionDashboardData,
     ActivityDashboardState? getActivityDashboardState, ActivityDashboard? activityDashboardData,
+    StagingDashboardState? getStagingDashboardState, StagingDashboard? stagingDashboardData,
+    StorageDashboardState? getStorageDashboardState, StorageDashboard? storageDashboardData,
     List<Appointment>? appointments,
     DateTime? appointmentsDate,
     bool? toggleCalendar,
     AppointmentsState? getAppointmentsState
   }) {
-    return DashboardsState(getDataState: getDataState ?? this.getDataState, index: index ?? this.index, getDockDashboardState: getDockDashboardState ?? this.getDockDashboardState, dockDashboardData: dockDashboardData ?? this.dockDashboardData, appointments: appointments ?? this.appointments,appointmentsDate: appointmentsDate ?? this.appointmentsDate, getAppointmentsState: getAppointmentsState ?? this.getAppointmentsState, toggleCalendar: toggleCalendar ?? this.toggleCalendar, getReceivingDashboardState: getReceivingDashboardState ?? this.getReceivingDashboardState, receivingDashboardData: receivingDashboardData ?? this.receivingDashboardData, getInspectionDashboardState: getInspectionDashboardState ?? this.getInspectionDashboardState, inspectionDashboardData: inspectionDashboardData ?? this.inspectionDashboardData, getActivityDashboardState: getActivityDashboardState ?? this.getActivityDashboardState, activityDashboardData: activityDashboardData ?? this.activityDashboardData);
+    return DashboardsState(getDataState: getDataState ?? this.getDataState, index: index ?? this.index, getDockDashboardState: getDockDashboardState ?? this.getDockDashboardState, dockDashboardData: dockDashboardData ?? this.dockDashboardData, appointments: appointments ?? this.appointments,appointmentsDate: appointmentsDate ?? this.appointmentsDate, getAppointmentsState: getAppointmentsState ?? this.getAppointmentsState, toggleCalendar: toggleCalendar ?? this.toggleCalendar, getReceivingDashboardState: getReceivingDashboardState ?? this.getReceivingDashboardState, receivingDashboardData: receivingDashboardData ?? this.receivingDashboardData, getInspectionDashboardState: getInspectionDashboardState ?? this.getInspectionDashboardState, inspectionDashboardData: inspectionDashboardData ?? this.inspectionDashboardData, getActivityDashboardState: getActivityDashboardState ?? this.getActivityDashboardState, activityDashboardData: activityDashboardData ?? this.activityDashboardData, getStagingDashboardState: getStagingDashboardState ?? this.getStagingDashboardState, stagingDashboardData: stagingDashboardData ?? this.stagingDashboardData, getStorageDashboardState: getStorageDashboardState ?? this.getStorageDashboardState, storageDashboardData: storageDashboardData ?? storageDashboardData);
   }
 }

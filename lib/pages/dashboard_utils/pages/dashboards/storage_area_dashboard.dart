@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
+import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
 
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
-class StorageAreaDashboard extends StatelessWidget {
+class StorageAreaDashboard extends StatefulWidget {
   StorageAreaDashboard({super.key});
 
+  @override
+  State<StorageAreaDashboard> createState() => _StorageAreaDashboardState();
+}
+
+class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
   List<BarData> supplierWiseDataSource = [
     BarData(xLabel: 'S1', yValue: 10, abbreviation: 'Supplier1'),
     BarData(xLabel: 'S2', yValue: 4, abbreviation: 'Supplier2'),
@@ -44,6 +51,16 @@ class StorageAreaDashboard extends StatelessWidget {
     TimeData('David', 81, const Color.fromARGB(255, 151, 174, 206)),
     TimeData('sd', 19, Colors.transparent),
   ];
+
+  late DashboardsBloc _dashboardsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _dashboardsBloc = context.read<DashboardsBloc>();
+    _dashboardsBloc.add(GetStagingDashboardData(facilityID: 243));
+  }
 
   @override
   Widget build(BuildContext context) {

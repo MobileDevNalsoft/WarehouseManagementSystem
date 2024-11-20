@@ -55,6 +55,8 @@ class AppConstants {
   static const RECEIVING_DASHBOARD = 'receiving_dashboard';
   static const INSPECTION_DASHBOARD = 'inspection_dashboard';
   static const ACTIVITY_DASHBOARD = 'activity_dashboard';
+  static const STAGING_DASHBOARD = 'staging_dashboard';
+  static const STORAGE_DASHBOARD = 'storage_dashboard';
 }
 
  

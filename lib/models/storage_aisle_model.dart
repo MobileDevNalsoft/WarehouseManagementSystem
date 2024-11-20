@@ -71,3 +71,10 @@ class Data {
     return data;
   }
 }
+
+
+class StorageDashboard{
+  StorageDashboard.fromJson(Map<String, dynamic> json){
+    
+  }
+}
