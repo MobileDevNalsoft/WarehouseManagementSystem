@@ -79,7 +79,7 @@ class _CompanyDropdownState extends State<CompanyDropdown> {
                           style: TextStyle(
                             color: widget.listItemTextColor ?? Colors.black,
                             fontWeight: FontWeight.w500,
-                            fontSize: widget.buttonHeight * 0.5,
+                            fontSize: widget.buttonHeight * 0.4,
                             overflow: TextOverflow.ellipsis
                           ),
                         ),
@@ -124,7 +124,7 @@ class _CompanyDropdownState extends State<CompanyDropdown> {
                       child: Text(
                         widget.selectedValue!,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022, overflow: TextOverflow.ellipsis),
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.018, overflow: TextOverflow.ellipsis),
                       ),
                     ),
                     Gap(size.width * 0.005),

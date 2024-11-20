@@ -80,7 +80,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                           style: TextStyle(
                             color: widget.listItemTextColor ?? Colors.black,
                             fontWeight: FontWeight.w500,
-                            fontSize: widget.buttonHeight * 0.5,
+                            fontSize: widget.buttonHeight * 0.4,
                             overflow: TextOverflow.ellipsis
                           ),
                         ),
@@ -125,7 +125,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                       child: Text(
                         widget.selectedValue!,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022, overflow: TextOverflow.ellipsis),
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.018, overflow: TextOverflow.ellipsis),
                       ),
                     ),
                     Gap(size.width * 0.005),

@@ -34,11 +34,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
     BarData(xLabel: 'ABC', yValue: 6, abbreviation: 'Wednesday'),
   ];
 
-  List<BarData> barData2 = [
-    BarData(xLabel: 'ABC', yValue: 10, abbreviation: ''),
-    BarData(xLabel: 'XYZ', yValue: 4, abbreviation: ''),
-    BarData(xLabel: 'SPD', yValue: 6, abbreviation: ''),
-  ];
+  List<BarData>? userReceivingEfficiency;
 
   // Define lists for job card statuses and their corresponding values (replace with actual data)
   List<BarData> inBoundData = [
@@ -118,7 +114,12 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
           Expanded(
             child: ListView(
               children: [
-                BlocBuilder<DashboardsBloc, DashboardsState>(
+                BlocConsumer<DashboardsBloc, DashboardsState>(
+                  listener: (context, state) {
+                    if(state.getReceivingDashboardState == ReceivingDashboardState.success){
+                      userReceivingEfficiency = state.receivingDashboardData!.userReceivingEfficiency!.map((e) => BarData(xLabel: e.userName!, yValue: e.count!, abbreviation: '')).toList();
+                    }
+                  },
                   builder: (context, state) {
                     return Column(
                       children: [
@@ -238,12 +239,16 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                                   color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
-                                child: Customs.WMSCartesianChart(
-                                    title: 'User Receiving Efficiency  ',
-                                    barCount: 1,
-                                    dataSources: [barData2],
-                                    yAxisTitle: 'No of LPNs Received',
-                                    barColors: [const Color.fromARGB(255, 15, 123, 189)]))
+                                child: Skeletonizer(
+                                  enableSwitchAnimation: true,
+                                  enabled: state.getReceivingDashboardState != ReceivingDashboardState.success,
+                                  child: Customs.WMSCartesianChart(
+                                      title: 'User Receiving Efficiency  ',
+                                      barCount: 1,
+                                      dataSources: state.getReceivingDashboardState != ReceivingDashboardState.success ? [[]] : [userReceivingEfficiency!],
+                                      yAxisTitle: 'No of LPNs Received',
+                                      barColors: [const Color.fromARGB(255, 15, 123, 189)]),
+                                ))
                           ],
                         ),
                         Gap(constraints.maxHeight * 0.05),
@@ -258,52 +263,56 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                                   color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
-                                child: SfCircularChart(
-                                  title: const ChartTitle(
-                                      text: "Avg Receiving Time",
-                                      textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  annotations: <CircularChartAnnotation>[
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        width: 100, // Set the size of the shadowed circle
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: const Color.fromARGB(255, 232, 229, 229),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 4), // Adjust to set shadow direction
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        child: const Text(
-                                          '05h:32m',
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 101, 10, 10),
-                                            fontSize: 25,
+                                child: Skeletonizer(
+                                  enableSwitchAnimation: true,
+                                  enabled: state.getReceivingDashboardState != ReceivingDashboardState.success,
+                                  child: SfCircularChart(
+                                    title: const ChartTitle(
+                                        text: "Avg Receiving Time",
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    annotations: <CircularChartAnnotation>[
+                                      CircularChartAnnotation(
+                                        widget: Container(
+                                          width: 100, // Set the size of the shadowed circle
+                                          height: 100,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: const Color.fromARGB(255, 232, 229, 229),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.3),
+                                                blurRadius: 10,
+                                                offset: const Offset(0, 4), // Adjust to set shadow direction
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                  series: <CircularSeries>[
-                                    DoughnutSeries<ChartData, String>(
-                                      dataSource: chartData,
-                                      xValueMapper: (ChartData data, _) => data.x,
-                                      yValueMapper: (ChartData data, _) => data.y,
-                                      radius: '60%', // Adjust the radius as needed
-                                      innerRadius: '40%', // Optional: adjust for a thinner ring
-                                      pointColorMapper: (ChartData data, _) => data.color,
-                                    )
-                                  ],
+                                      CircularChartAnnotation(
+                                        widget: Container(
+                                          child: Text(
+                                            state.getReceivingDashboardState != ReceivingDashboardState.success ? '05h:32m' : state.receivingDashboardData!.avgReceivingTime!,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(255, 101, 10, 10),
+                                              fontSize: 25,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    series: <CircularSeries>[
+                                      DoughnutSeries<ChartData, String>(
+                                        dataSource: chartData,
+                                        xValueMapper: (ChartData data, _) => data.x,
+                                        yValueMapper: (ChartData data, _) => data.y,
+                                        radius: '60%', // Adjust the radius as needed
+                                        innerRadius: '40%', // Optional: adjust for a thinner ring
+                                        pointColorMapper: (ChartData data, _) => data.color,
+                                      )
+                                    ],
+                                  ),
                                 )),
                             Container(
                                 margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
@@ -359,52 +368,56 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                                   color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
-                                child: SfCircularChart(
-                                  title: const ChartTitle(
-                                      text: "Avg PutAway Time",
-                                      textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                                  annotations: <CircularChartAnnotation>[
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        width: 100, // Set the size of the shadowed circle
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: const Color.fromARGB(255, 232, 229, 229),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 4), // Adjust to set shadow direction
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    CircularChartAnnotation(
-                                      widget: Container(
-                                        child: const Text(
-                                          '03h:15m',
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 20, 21, 22),
-                                            fontSize: 25,
+                                child: Skeletonizer(
+                                  enableSwitchAnimation: true,
+                                  enabled: state.getReceivingDashboardState != ReceivingDashboardState.success,
+                                  child: SfCircularChart(
+                                    title: const ChartTitle(
+                                        text: "Avg PutAway Time",
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                                    annotations: <CircularChartAnnotation>[
+                                      CircularChartAnnotation(
+                                        widget: Container(
+                                          width: 100, // Set the size of the shadowed circle
+                                          height: 100,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: const Color.fromARGB(255, 232, 229, 229),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.3),
+                                                blurRadius: 10,
+                                                offset: const Offset(0, 4), // Adjust to set shadow direction
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                  series: <CircularSeries>[
-                                    DoughnutSeries<ChartData, String>(
-                                      dataSource: chartData1,
-                                      xValueMapper: (ChartData data, _) => data.x,
-                                      yValueMapper: (ChartData data, _) => data.y,
-                                      radius: '60%', // Adjust the radius as needed
-                                      innerRadius: '40%', // Optional: adjust for a thinner ring
-                                      pointColorMapper: (ChartData data, _) => data.color,
-                                    )
-                                  ],
+                                      CircularChartAnnotation(
+                                        widget: Container(
+                                          child: Text(
+                                            state.getReceivingDashboardState != ReceivingDashboardState.success ? '03h:15m' : state.receivingDashboardData!.avgPutawayTime!,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(255, 20, 21, 22),
+                                              fontSize: 25,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    series: <CircularSeries>[
+                                      DoughnutSeries<ChartData, String>(
+                                        dataSource: chartData1,
+                                        xValueMapper: (ChartData data, _) => data.x,
+                                        yValueMapper: (ChartData data, _) => data.y,
+                                        radius: '60%', // Adjust the radius as needed
+                                        innerRadius: '40%', // Optional: adjust for a thinner ring
+                                        pointColorMapper: (ChartData data, _) => data.color,
+                                      )
+                                    ],
+                                  ),
                                 )),
                           ],
                         ),

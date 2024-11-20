@@ -211,7 +211,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   ? SizedBox()
                   : PointerInterceptor(
                       child: CompanyDropdown(
-                        buttonHeight: size.height * 0.055,
+                        buttonHeight: size.height * 0.052,
                         buttonWidth: size.width * 0.15,
                         dropDownHeight: size.height * 0.6,
                         dropDownWidth: size.width * 0.15,
@@ -236,7 +236,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                       ? SizedBox()
                       : PointerInterceptor(
                           child: FacilityDropdown(
-                            buttonHeight: size.height * 0.055,
+                            buttonHeight: size.height * 0.052,
                             buttonWidth: size.width * 0.15,
                             dropDownHeight: size.height * 0.4,
                             dropDownWidth: size.width * 0.15,
