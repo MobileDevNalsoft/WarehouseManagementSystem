@@ -16,7 +16,7 @@ class InspectionAreaDataSheet extends StatefulWidget {
 class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
   late InspectionAreaBloc _inspectionAreaBloc;
   final ScrollController _controller = ScrollController();
-
+late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   @override
   void initState() {
     super.initState();
@@ -27,6 +27,7 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
           searchText: context.read<WarehouseInteractionBloc>().state.searchText
               ));
     
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _controller.addListener(_scrollListener);
   }
 
@@ -50,11 +51,13 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
             builder: (context, state) {
               bool isEnabled = state.getDataState != GetDataState.success;
               return Expanded(
-                child: LayoutBuilder(
+                child:   LayoutBuilder(
                   builder: (context, lsize) {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: ListView.builder(
+                      child: (state.getDataState== GetDataState.success &&  state.inspectionAreaItems!.length==0)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                       :ListView.builder(
                             controller: _controller,
                             itemBuilder: (context, index) {
                               return 

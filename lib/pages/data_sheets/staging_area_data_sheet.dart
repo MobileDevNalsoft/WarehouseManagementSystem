@@ -18,6 +18,7 @@ class StagingAreaDataSheet extends StatefulWidget {
 class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
    final ScrollController _controller = ScrollController();
    StagingBloc? _stagingBloc;
+  late  WarehouseInteractionBloc _warehouseInteractionBloc ;
 
   @override
   void initState() {
@@ -25,6 +26,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
      _stagingBloc = context.read<StagingBloc>();
      _stagingBloc!.add( GetStagingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     _controller.addListener(_scrollListener);
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
   }
 
 
@@ -61,7 +63,10 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                   builder: (context, lsize) {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: ListView.builder(
+                      child:  (state.stagingStatus== StagingAreaStatus.success &&  state.stagingList!.length==0)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                       : 
+                      ListView.builder(
                             controller: _controller,
                             itemBuilder: (context, index) => index < state.stagingList!.length
                                     ? 

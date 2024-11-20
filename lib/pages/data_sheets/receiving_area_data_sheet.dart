@@ -18,11 +18,13 @@ class ReceivingAreaDataSheet extends StatefulWidget {
 class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
   final ScrollController _controller = ScrollController();
   ReceivingBloc? _receivingBloc;
-
+late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   @override
   void initState() {
     super.initState();
     _receivingBloc = context.read<ReceivingBloc>();
+    
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     print("inside receiving init state");
       _receivingBloc!.add( GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
 
@@ -54,7 +56,9 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
                   builder: (context, lsize) {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: ListView.builder(
+                      child:(state.receivingStatus== ReceivingAreaStatus.success &&  state.receiveList!.length==0)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                       : ListView.builder(
                             controller: _controller,
                             itemBuilder: (context, index) => index < state.receiveList!.length
                                     ? 
