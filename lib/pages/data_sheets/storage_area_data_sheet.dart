@@ -61,6 +61,9 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                 enabled: isEnabled,
                 enableSwitchAnimation: true,
                 child:
+                (state.storageAreaStatus== StorageAreaStatus.success &&  state.storageAisles!.data!.length==0)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                       :
                  ListView.builder(
                     controller: _controller,
                     itemCount:state.storageAisles==null?4: state.storageAisles!.data!.length,
