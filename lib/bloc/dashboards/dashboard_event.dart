@@ -47,6 +47,14 @@ class GetInspectionDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
+class GetActivityDashboardData extends DashboardsEvent{
+  int facilityID;
+  GetActivityDashboardData({required this.facilityID});
+
+  @override
+  List<Object> get props => [facilityID];
+}
+
 class UpdateDate extends DashboardsEvent{
   DateTime date;
   UpdateDate({required this.date});

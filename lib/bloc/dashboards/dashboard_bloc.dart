@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:warehouse_3d/constants/app_constants.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/logger/logger.dart';
+import 'package:warehouse_3d/models/activity_area_model.dart';
 import 'package:warehouse_3d/models/area_response.dart';
 import 'package:warehouse_3d/models/dashboard_response.dart';
 import 'package:warehouse_3d/models/dock_area_model.dart';
@@ -29,6 +30,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     on<GetDockDashboardData>(_onGetDockDashboardData);
     on<GetReceivingDashboardData>(_onGetReceivingDashboardData);
     on<GetInspectionDashboardData>(_onGetInspectionDashboardData);
+    on<GetActivityDashboardData>(_onGetActivityDashboardData);
   }
   final NetworkCalls _customApi;
 
@@ -97,6 +99,20 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     } catch(e){
       Log.e(e.toString());
       emit(state.copyWith(getInspectionDashboardState: InspectionDashboardState.failure));
+    }
+  }
+
+  Future<void> _onGetActivityDashboardData(GetActivityDashboardData event, Emitter<DashboardsState> emit) async {
+    try{
+      emit(state.copyWith(getActivityDashboardState: ActivityDashboardState.loading));
+      await _customApi.get(AppConstants.ACTIVITY_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
+        print(apiResponse.response!.data);
+        DashboardResponse<ActivityDashboard> activityDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityDashboard.fromJson(json));
+        emit(state.copyWith(activityDashboardData: activityDashboardResponse.data!, getActivityDashboardState:ActivityDashboardState.success));
+      });
+    } catch(e){
+      Log.e(e.toString());
+      emit(state.copyWith(getActivityDashboardState: ActivityDashboardState.failure));
     }
   }
 }

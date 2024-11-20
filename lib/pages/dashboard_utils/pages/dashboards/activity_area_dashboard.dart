@@ -1,9 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
+import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
 
@@ -120,6 +124,9 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   late bool rangeSelection;
   String selectedEmployeeRange = "";
   late List<String> employeeSuggestions;
+
+  late DashboardsBloc _dashboardsBloc;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -142,6 +149,9 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
       "121-130": ["121", "122", "123", "124", "125", "126", "127", "128", "129", "130"],
       "131-140": ["131", "132", "133", "134", "135", "136", "137", "138", "139", "140"],
     };
+
+    _dashboardsBloc = context.read<DashboardsBloc>();
+    _dashboardsBloc.add(GetActivityDashboardData(facilityID: 243));
   }
 
   void resetEmpGraphData() {
@@ -158,10 +168,9 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
     Size size = MediaQuery.of(context).size;
     double aspectRatio = size.width / size.height;
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
+      child: BlocBuilder<DashboardsBloc, DashboardsState>(
+        builder: (context, state) {
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -175,26 +184,30 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
-                      child: Customs.WMSPieChart(
-                          title: 'Inventory Summary',
-                          dataSource: [
-                            PieData(xData: "Created", yData: 16, text: "16"),
-                            PieData(xData: "Completed", yData: 6, text: "6"),
-                            PieData(xData: "In Progress", yData: 4, text: "4"),
-                            PieData(xData: "Cancelled", yData: 2, text: "2"),
-                          ],
-                          legendVisibility: true,
-                          pointColorMapper: (datum, index) {
-                            if (datum.xData == 'Created') {
-                              return Colors.lightBlueAccent.shade700;
-                            } else if (datum.xData == 'In Progress') {
-                              return Colors.orangeAccent;
-                            } else if (datum.xData == 'Completed') {
-                              return Colors.green;
-                            } else if (datum.xData == 'Cancelled') {
-                              return Colors.red;
-                            }
-                          })),
+                      child: Skeletonizer(
+                        enableSwitchAnimation: true,
+                        enabled: state.getActivityDashboardState != ActivityDashboardState.success,
+                        child: Customs.WMSPieChart(
+                            title: 'Today Task Summary',
+                            dataSource: state.getActivityDashboardState != ActivityDashboardState.success ? [
+                              PieData(xData: "Created", yData: 16, text: "16"),
+                              PieData(xData: "Completed", yData: 6, text: "6"),
+                              PieData(xData: "In Progress", yData: 4, text: "4"),
+                              PieData(xData: "Cancelled", yData: 2, text: "2"),
+                            ] : state.activityDashboardData!.todayTaskSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
+                            legendVisibility: true,
+                            pointColorMapper: (datum, index) {
+                              if (index == 0) {
+                                return Colors.lightBlueAccent.shade700;
+                              } else if (index == 1) {
+                                return Colors.orangeAccent;
+                              } else if (index == 2) {
+                                return Colors.green;
+                              } else if (index == 3) {
+                                return Colors.red;
+                              }
+                            }),
+                      )),
                   Container(
                     margin: EdgeInsets.all(aspectRatio * 8),
                     height: size.height * 0.45,
@@ -343,10 +356,10 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           width: 142,
                           height: 142,
                           radius: "70%")),
-
-
-
-
+          
+          
+          
+          
                   LayoutBuilder(
                     builder: (context,constraints) {
                       return Container(
@@ -579,8 +592,8 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                 ],
               ),
             ],
-          ),
-        ],
+          );
+        }
       ),
     );
   }
