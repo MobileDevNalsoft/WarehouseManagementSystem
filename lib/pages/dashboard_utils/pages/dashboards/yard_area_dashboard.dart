@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/bloc/yard/yard_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
@@ -274,8 +275,7 @@ _yardBloc.add(GetYardDashboardData());
     return BlocBuilder<YardBloc, YardState>(
       builder: (context, state) {
         bool isEnabled = state.yardAreaStatus!=YardAreaStatus.success;
-        if(state.yardAreaStatus==YardAreaStatus.success)
-        { initData();
+        initData();
           return SingleChildScrollView(
           child: Column(
             children: [
@@ -296,34 +296,40 @@ _yardBloc.add(GetYardDashboardData());
                               'Vehicle Detention',
                               style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
                             ),
-                          SizedBox(
-                              height: size.height * 0.3,
-                                width: size.width * 0.25,
-                            child: Customs.WMSCartesianChart(
-                                title: '', barCount: 1, dataSources: [vehicleDetentionData], yAxisTitle: 'Number of Vehicles',legendVisibility: false),
+                          Skeletonizer(
+                            enabled: isEnabled,
+                            child: SizedBox(
+                                height: size.height * 0.3,
+                                  width: size.width * 0.25,
+                              child: Customs.WMSCartesianChart(
+                                  title: '', barCount: 1, dataSources: [vehicleDetentionData], yAxisTitle: 'Number of Vehicles',legendVisibility: false),
+                            ),
                           ),
                         ],
                       )),
-                 Container(
-                          margin: EdgeInsets.all(aspectRatio * 8),
-                          height: size.height * 0.45,
-                          width: size.width * 0.25,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                      child: Customs.WMSPieChart(
-                          title:'Yard Utilization',
-                        dataSource: [PieData(xData: "Available Locations", yData: _yardBloc.state.yardDashboard!.yardUtilization!.totalLocations!-_yardBloc.state.yardDashboard!.yardUtilization!.occupied!,text: (_yardBloc.state.yardDashboard!.yardUtilization!.totalLocations!-_yardBloc.state.yardDashboard!.yardUtilization!.occupied!).toString()), PieData(xData: "Occupied", yData: _yardBloc.state.yardDashboard!.yardUtilization!.occupied!, text: (_yardBloc.state.yardDashboard!.yardUtilization!.occupied!).toString())],
-                        legendVisibility: true,
-                        pointColorMapper: (piedata, index) {
-                          if (index == 0) {
-                            return Color.fromRGBO(255, 182, 24, 1);
-                          } else if (index == 1) {
-                            return Color.fromRGBO(161, 40, 40, 0.8);
-                          }
-                        },
-                      )),
+                 Skeletonizer(
+                  enabled: isEnabled,
+                   child: Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.topCenter,
+                        child: Customs.WMSPieChart(
+                            title:'Yard Utilization',
+                          dataSource: [PieData(xData: "Available Locations", yData: _yardBloc.state.yardDashboard!.yardUtilization!.totalLocations!-_yardBloc.state.yardDashboard!.yardUtilization!.occupied!,text: (_yardBloc.state.yardDashboard!.yardUtilization!.totalLocations!-_yardBloc.state.yardDashboard!.yardUtilization!.occupied!).toString()), PieData(xData: "Occupied", yData: _yardBloc.state.yardDashboard!.yardUtilization!.occupied!, text: (_yardBloc.state.yardDashboard!.yardUtilization!.occupied!).toString())],
+                          legendVisibility: true,
+                          pointColorMapper: (piedata, index) {
+                            if (index == 0) {
+                              return Color.fromRGBO(255, 182, 24, 1);
+                            } else if (index == 1) {
+                              return Color.fromRGBO(161, 40, 40, 0.8);
+                            }
+                          },
+                        )),
+                 ),
                   Container(
                           margin: EdgeInsets.all(aspectRatio * 8),
                           height: size.height * 0.45,
@@ -340,20 +346,23 @@ _yardBloc.add(GetYardDashboardData());
                                 'Day Wise Task Summary ',
                                 style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
-                                height: size.height * 0.3,
-                                width: size.width * 0.25,
-                            child: YardAreaDashboard.WMSCartesianChart(
-                                      
-                                title: '',
-                                primaryColor: Colors.blueAccent,
-                                secondaryColor: const Color.fromARGB(255, 138, 40, 155),
-                                barCount: 2,
-                                isLegendVisible: true,
-                                legendText: ["Loading", "Unloading"],
-                                dataSources: [inBoundData, outBoundData],
-                                yAxisTitle: 'Number of Vehicles'),
-                          ),
+                              Skeletonizer(
+                                enabled: isEnabled,
+                                child: SizedBox(
+                                  height: size.height * 0.3,
+                                  width: size.width * 0.25,
+                                                            child: YardAreaDashboard.WMSCartesianChart(
+                                        
+                                  title: '',
+                                  primaryColor: Colors.blueAccent,
+                                  secondaryColor: const Color.fromARGB(255, 138, 40, 155),
+                                  barCount: 2,
+                                  isLegendVisible: true,
+                                  legendText: ["Loading", "Unloading"],
+                                  dataSources: [inBoundData, outBoundData],
+                                  yAxisTitle: 'Number of Vehicles'),
+                                                          ),
+                              ),
                         ],
                       )),
                 ],
@@ -361,65 +370,69 @@ _yardBloc.add(GetYardDashboardData());
               Row(
                 // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                    Container(
-                          margin: EdgeInsets.all(aspectRatio * 8),
-                          height: size.height * 0.45,
-                          width: size.width * 0.25,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all( size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                      child: Customs.WMSSfCircularChart(size: size, chartData: avgYardTime, title: "Average Yard Time", contentText: "${_yardBloc.state.yardDashboard!.averageYardTime!.avgYardTime!.truncate().toString()}H" ,width: 150,height: 150,radius: "60%")),
+                    Skeletonizer(
+                      enabled: isEnabled,
+                      child: Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all( size.height * 0.035),
+                            alignment: Alignment.topCenter,
+                        child: Customs.WMSSfCircularChart(size: size, chartData: avgYardTime, title: "Average Yard Time", contentText: "${_yardBloc.state.yardDashboard!.averageYardTime!.avgYardTime!.truncate().toString()}H" ,width: 150,height: 150,radius: "60%")),
+                    ),
                
-                 Container(
-                          margin: EdgeInsets.all(aspectRatio * 8),
-                          height: size.height * 0.45,
-                          width: size.width * 0.25,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter, 
-             child:   SfCircularChart(
-                  title:ChartTitle(text: "Previous month yard acitvity"),
-                  legend: Legend(isResponsive: true,isVisible: true),
-                series: <CircularSeries>[
-                    // Renders radial bar chart
-                    RadialBarSeries<ChartData, String>(
-                        dataSource: chartData,
-                         cornerStyle: CornerStyle.bothCurve,
-                                innerRadius: "45%",
-                       dataLabelSettings: DataLabelSettings(
-                            // Renders the data label
-                            
-                            isVisible: true,
-                              textStyle: TextStyle(fontWeight: FontWeight.bold),
-                            alignment: ChartAlignment.near
-                        ),
-                        name: "Loading and Unloading Count",
-                        pointColorMapper: (datum, index) {
-                          if(datum.x=="Loading"){
-                            return  Color.fromRGBO(187, 44, 42, 1);
-                          }
-                          else{
-                            return const Color.fromRGBO(	255,	166	,0,1);
-                          }
-                        },
-                        xValueMapper: (ChartData data, _) => data.x,
-                        yValueMapper: (ChartData data, _) => data.y,
-                        
-                    )
-                ]
-            ))
+                 Skeletonizer(
+                  enabled: isEnabled,
+                   child: Container(
+                            margin: EdgeInsets.all(aspectRatio * 8),
+                            height: size.height * 0.45,
+                            width: size.width * 0.25,
+                            decoration: BoxDecoration(
+                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                            padding: EdgeInsets.all(size.height * 0.035),
+                            alignment: Alignment.topCenter, 
+                                child:   SfCircularChart(
+                    title:ChartTitle(text: "Previous month yard acitvity"),
+                    legend: Legend(isResponsive: true,isVisible: true),
+                                   series: <CircularSeries>[
+                      // Renders radial bar chart
+                      RadialBarSeries<ChartData, String>(
+                          dataSource: chartData,
+                           cornerStyle: CornerStyle.bothCurve,
+                                  innerRadius: "45%",
+                         dataLabelSettings: DataLabelSettings(
+                              // Renders the data label
+                              
+                              isVisible: true,
+                                textStyle: TextStyle(fontWeight: FontWeight.bold),
+                              alignment: ChartAlignment.near
+                          ),
+                          name: "Loading and Unloading Count",
+                          pointColorMapper: (datum, index) {
+                            if(datum.x=="Loading"){
+                              return  Color.fromRGBO(187, 44, 42, 1);
+                            }
+                            else{
+                              return const Color.fromRGBO(	255,	166	,0,1);
+                            }
+                          },
+                          xValueMapper: (ChartData data, _) => data.x,
+                          yValueMapper: (ChartData data, _) => data.y,
+                          
+                      )
+                                   ]
+                               )),
+                 )
                 ],
               ),
               
             ],
           ),
         );
-      }
-      else{
-        return CircularProgressIndicator();
-      }
+      
+     
       },
     );
   }

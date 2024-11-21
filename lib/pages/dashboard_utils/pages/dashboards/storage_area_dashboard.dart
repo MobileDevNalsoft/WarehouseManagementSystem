@@ -292,7 +292,11 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                           series: <CircularSeries>[
                             // Renders radial bar chart
                             PieSeries<PieData, String>(
-                              dataSource: inventoryAgingDataSource,
+                              dataSource: isEnabled? inventoryAgingDataSource : [
+                                          PieData(xData: "< 30 Days", yData: state.storageDashboardData!.inventoryAging!.count30Days!.toDouble(), color: const Color.fromARGB(255, 148, 215, 224)),
+                                          PieData(xData: "30 - 90 Days", yData: state.storageDashboardData!.inventoryAging!.count30To90Days!.toDouble(), color: const Color.fromARGB(255, 159, 196, 161)),
+                                          PieData(xData: "> 90 Days", yData: state.storageDashboardData!.inventoryAging!.countGreaterThan90Days!.toDouble(), color: const Color.fromARGB(255, 180, 140, 164))
+                                        ],
                               dataLabelSettings: const DataLabelSettings(
                                   // Renders the data label
                                   isVisible: true,
@@ -320,7 +324,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                             yAxisTitle: 'Number of Items',
                             barCount: 1,
                             barColors: [Colors.teal],
-                            dataSources: [supplierWiseDataSource]),
+                            dataSources: isEnabled? [supplierWiseDataSource]:[state.storageDashboardData!.supplierWiseInventory!.map((e)=> BarData(xLabel: e.supplier.toString(), yValue: e.origQty!, abbreviation: e.supplier!),).toList()]),
                       ),
                       Container(
                           margin: EdgeInsets.all(aspectRatio * 8),
@@ -349,7 +353,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                       ],
                                     ),
                                     child: Text(
-                                      '03h:15m',
+                                      isEnabled?'03h:15m':state.storageDashboardData!.averageStorageTime.toString(),
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: size.height * 0.02,
@@ -408,7 +412,8 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                           ],
                                         ),
                                         child: Text(
-                                          "90%",
+                                          isEnabled?"90":state.storageDashboardData!.cycleCountAccuracy!.toStringAsFixed(2),
+                                          
                                           style: TextStyle(fontSize: aspectRatio * 10),
                                         ),
                                       ))
@@ -418,9 +423,9 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                 showTicks: false,
                                 showLabels: false,
                                 radiusFactor: aspectRatio * 0.3,
-                                pointers: const [
+                                pointers:  [
                                   Gauges.MarkerPointer(
-                                    value: 90,
+                                    value: isEnabled?90:state.storageDashboardData!.cycleCountAccuracy??0,
                                     markerType: Gauges.MarkerType.invertedTriangle,
                                     markerHeight: 20,
                                     markerWidth: 20,
