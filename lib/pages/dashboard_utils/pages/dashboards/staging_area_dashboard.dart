@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
@@ -168,6 +169,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
     return SingleChildScrollView(
         child: BlocBuilder<DashboardsBloc, DashboardsState>(
           builder: (context, state) {
+            bool isEnabled = state.getStagingDashboardState != StagingDashboardState.success;
             return Column(
                   children: [
             Row(
@@ -186,46 +188,50 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                             padding: EdgeInsets.all(size.height * 0.035),
                             alignment: Alignment.topCenter,
-                            child: SfCircularChart(
-                              title: ChartTitle(
-                                  text: "Avg Lead Time",
-                                  alignment: ChartAlignment.center,
-                                  textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
-                              annotations: <CircularChartAnnotation>[
-                                CircularChartAnnotation(
-                                  verticalAlignment: ChartAlignment.center,
-                                  widget: Container(
-                                      height: size.height * 0.12,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.blueGrey.shade100,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade900,
-                                            blurRadius: 10, // Adjust to set shadow direction
-                                          ),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        '02h:15m',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: size.height * 0.02,
+                            child: Skeletonizer(
+                              enableSwitchAnimation: true,
+                              enabled: isEnabled,
+                              child: SfCircularChart(
+                                title: ChartTitle(
+                                    text: "Avg Lead Time",
+                                    alignment: ChartAlignment.center,
+                                    textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                                annotations: <CircularChartAnnotation>[
+                                  CircularChartAnnotation(
+                                    verticalAlignment: ChartAlignment.center,
+                                    widget: Container(
+                                        height: size.height * 0.12,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.blueGrey.shade100,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade900,
+                                              blurRadius: 10, // Adjust to set shadow direction
+                                            ),
+                                          ],
                                         ),
-                                      )),
-                                ),
-                              ],
-                              series: <CircularSeries>[
-                                DoughnutSeries<TimeData, String>(
-                                  dataSource: avgLeadTimeData,
-                                  xValueMapper: (TimeData data, _) => data.x,
-                                  yValueMapper: (TimeData data, _) => data.y,
-                                  radius: '60%', // Adjust the radius as needed
-                                  innerRadius: '40%', // Optional: adjust for a thinner ring
-                                  pointColorMapper: (TimeData data, _) => data.color,
-                                )
-                              ],
+                                        child: Text(
+                                          isEnabled ? '02h:15m' : '${state.stagingDashboardData!.avgLeadTime!}m',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: size.height * 0.02,
+                                          ),
+                                        )),
+                                  ),
+                                ],
+                                series: <CircularSeries>[
+                                  DoughnutSeries<TimeData, String>(
+                                    dataSource: avgLeadTimeData,
+                                    xValueMapper: (TimeData data, _) => data.x,
+                                    yValueMapper: (TimeData data, _) => data.y,
+                                    radius: '60%', // Adjust the radius as needed
+                                    innerRadius: '40%', // Optional: adjust for a thinner ring
+                                    pointColorMapper: (TimeData data, _) => data.color,
+                                  )
+                                ],
+                              ),
                             )),
             
                         Container(
@@ -236,10 +242,14 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                             padding: EdgeInsets.all(size.height * 0.035),
                             alignment: Alignment.topCenter,
-                            child: Customs.WMSPieChart(
-                              title: 'Inventory Summary',
-                              dataSource: orderSummaryDataSource,
-                              legendVisibility: true,
+                            child: Skeletonizer(
+                              enableSwitchAnimation: true,
+                              enabled: isEnabled,
+                              child: Customs.WMSPieChart(
+                                title: 'Today Order Summary',
+                                dataSource: isEnabled ? orderSummaryDataSource : state.stagingDashboardData!.todayOrderSummary!.asMap().entries.map((e) => PieData(xData: e.value.status!, yData: e.value.count!, color: orderSummaryDataSource[e.key].color, text: e.value.count!.toString())).toList(),
+                                legendVisibility: true,
+                              ),
                             )),
             
                         Container(
@@ -250,57 +260,61 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                             padding: EdgeInsets.all(size.height * 0.035),
                             alignment: Alignment.topCenter,
-                            child: Gauges.SfRadialGauge(
-                              title: Gauges.GaugeTitle(
-                                  text: "Shipping Efficiency",
-                                  alignment: Gauges.GaugeAlignment.center,
-                                  textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
-                              axes: [
-                                Gauges.RadialAxis(
-                                  maximum: 100,
-                                  minimum: 0,
-                                  interval: 25,
-                                  canScaleToFit: true,
-                                  annotations: [
-                                    Gauges.GaugeAnnotation(
-                                        verticalAlignment: Gauges.GaugeAlignment.center,
-                                        widget: Container(
-                                          height: size.height * 0.12,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.blueGrey.shade100,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.shade900,
-                                                blurRadius: 10, // Adjust to set shadow direction
-                                              ),
-                                            ],
-                                          ),
-                                          child: Text(
-                                            "85%",
-                                            style: TextStyle(fontSize: aspectRatio * 10),
-                                          ),
-                                        ))
-                                  ],
-                                  axisLineStyle: const Gauges.AxisLineStyle(
-                                      thickness: 35, color: Color.fromARGB(255, 189, 187, 64), cornerStyle: Gauges.CornerStyle.bothCurve),
-                                  showTicks: false,
-                                  showLabels: false,
-                                  radiusFactor: aspectRatio * 0.3,
-                                  pointers: const [
-                                    Gauges.MarkerPointer(
-                                      value: 85,
-                                      markerType: Gauges.MarkerType.invertedTriangle,
-                                      markerHeight: 20,
-                                      markerWidth: 20,
-                                      color: Colors.white,
-                                      enableAnimation: true,
-                                      elevation: 10,
-                                    )
-                                  ],
-                                )
-                              ],
+                            child: Skeletonizer(
+                              enableSwitchAnimation: true,
+                              enabled: isEnabled,
+                              child: Gauges.SfRadialGauge(
+                                title: Gauges.GaugeTitle(
+                                    text: "Shipping Efficiency",
+                                    alignment: Gauges.GaugeAlignment.center,
+                                    textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
+                                axes: [
+                                  Gauges.RadialAxis(
+                                    maximum: 100,
+                                    minimum: 0,
+                                    interval: 25,
+                                    canScaleToFit: true,
+                                    annotations: [
+                                      Gauges.GaugeAnnotation(
+                                          verticalAlignment: Gauges.GaugeAlignment.center,
+                                          widget: Container(
+                                            height: size.height * 0.12,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.blueGrey.shade100,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade900,
+                                                  blurRadius: 10, // Adjust to set shadow direction
+                                                ),
+                                              ],
+                                            ),
+                                            child: Text(
+                                              isEnabled ? "85%" : state.stagingDashboardData!.shippingEfficiency!,
+                                              style: TextStyle(fontSize: aspectRatio * 10),
+                                            ),
+                                          ))
+                                    ],
+                                    axisLineStyle: const Gauges.AxisLineStyle(
+                                        thickness: 35, color: Color.fromARGB(255, 189, 187, 64), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                    showTicks: false,
+                                    showLabels: false,
+                                    radiusFactor: aspectRatio * 0.3,
+                                    pointers: [
+                                      Gauges.MarkerPointer(
+                                        value: isEnabled ? 85 : int.parse(state.stagingDashboardData!.shippingEfficiency!.replaceAll('%', '')).toDouble(),
+                                        markerType: Gauges.MarkerType.invertedTriangle,
+                                        markerHeight: 20,
+                                        markerWidth: 20,
+                                        color: Colors.white,
+                                        enableAnimation: true,
+                                        elevation: 10,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
                             )),
             
                         //  Container(
@@ -374,13 +388,17 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 SizedBox(
                                   height: size.height * 0.3,
                                   width: size.width * 0.25,
-                                  child: Customs.WMSCartesianChart(
-                                      title: '',
-                                      barCount: 1,
-                                      dataSources: [orderAgingData],
-                                      yAxisTitle: 'Aging time',
-                                      legendVisibility: false,
-                                      barColors: [Colors.deepPurple.shade200]),
+                                  child: Skeletonizer(
+                                    enableSwitchAnimation: true,
+                                    enabled: isEnabled,
+                                    child: Customs.WMSCartesianChart(
+                                        title: '',
+                                        barCount: 1,
+                                        dataSources: [isEnabled ? orderAgingData : state.stagingDashboardData!.orderAging!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                        yAxisTitle: 'Aging time',
+                                        legendVisibility: false,
+                                        barColors: [Colors.deepPurple.shade200]),
+                                  ),
                                 ),
                               ],
                             )),
@@ -392,46 +410,50 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                             padding: EdgeInsets.all(size.height * 0.035),
                             alignment: Alignment.topCenter,
-                            child: SfCircularChart(
-                              title: ChartTitle(
-                                  text: "Fulfilment Time",
-                                  alignment: ChartAlignment.center,
-                                  textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
-                              annotations: <CircularChartAnnotation>[
-                                CircularChartAnnotation(
-                                  verticalAlignment: ChartAlignment.center,
-                                  widget: Container(
-                                      height: size.height * 0.12,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.blueGrey.shade100,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade900,
-                                            blurRadius: 10, // Adjust to set shadow direction
-                                          ),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        '01h:45m',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: size.height * 0.02,
+                            child: Skeletonizer(
+                              enableSwitchAnimation: true,
+                              enabled: isEnabled,
+                              child: SfCircularChart(
+                                title: ChartTitle(
+                                    text: "Fulfilment Time",
+                                    alignment: ChartAlignment.center,
+                                    textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                                annotations: <CircularChartAnnotation>[
+                                  CircularChartAnnotation(
+                                    verticalAlignment: ChartAlignment.center,
+                                    widget: Container(
+                                        height: size.height * 0.12,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.blueGrey.shade100,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade900,
+                                              blurRadius: 10, // Adjust to set shadow direction
+                                            ),
+                                          ],
                                         ),
-                                      )),
-                                ),
-                              ],
-                              series: <CircularSeries>[
-                                DoughnutSeries<TimeData, String>(
-                                  dataSource: avgFulfilmentTimeData,
-                                  xValueMapper: (TimeData data, _) => data.x,
-                                  yValueMapper: (TimeData data, _) => data.y,
-                                  radius: '60%', // Adjust the radius as needed
-                                  innerRadius: '40%', // Optional: adjust for a thinner ring
-                                  pointColorMapper: (TimeData data, _) => data.color,
-                                )
-                              ],
+                                        child: Text(
+                                          isEnabled ?'01h:45m' : state.stagingDashboardData!.fulfilmentTime!.toString(),
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: size.height * 0.02,
+                                          ),
+                                        )),
+                                  ),
+                                ],
+                                series: <CircularSeries>[
+                                  DoughnutSeries<TimeData, String>(
+                                    dataSource: avgFulfilmentTimeData,
+                                    xValueMapper: (TimeData data, _) => data.x,
+                                    yValueMapper: (TimeData data, _) => data.y,
+                                    radius: '60%', // Adjust the radius as needed
+                                    innerRadius: '40%', // Optional: adjust for a thinner ring
+                                    pointColorMapper: (TimeData data, _) => data.color,
+                                  )
+                                ],
+                              ),
                             )),
                         Container(
                             margin: EdgeInsets.all(aspectRatio * 8),
@@ -452,13 +474,17 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 SizedBox(
                                   height: size.height * 0.3,
                                   width: size.width * 0.25,
-                                  child: Customs.WMSCartesianChart(
-                                    title: "",
-                                    legendVisibility: false,
-                                    barCount: 1,
-                                    dataSources: [dayWiseOrderSummary],
-                                    yAxisTitle: 'Number of orders',
-                                    barColors: [Colors.blueGrey.shade500],
+                                  child: Skeletonizer(
+                                    enableSwitchAnimation: true,
+                                    enabled: isEnabled,
+                                    child: Customs.WMSCartesianChart(
+                                      title: "",
+                                      legendVisibility: false,
+                                      barCount: 1,
+                                      dataSources: [isEnabled ? dayWiseOrderSummary : state.stagingDashboardData!.daywiseOrderSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                      yAxisTitle: 'Number of orders',
+                                      barColors: [Colors.blueGrey.shade500],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -475,13 +501,17 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                             padding: EdgeInsets.all(size.height * 0.035),
                             alignment: Alignment.bottomCenter,
-                            child: Customs.WMSCartesianChart(
-                              title: "Today Channel Wise Order Summary",
-                              legendVisibility: false,
-                              barCount: 1,
-                              dataSources: [channelWiseOrderSummary],
-                              yAxisTitle: 'Number of orders',
-                              barColors: [const Color.fromRGBO(202, 108, 15, 1)],
+                            child: Skeletonizer(
+                              enableSwitchAnimation: true,
+                              enabled: isEnabled,
+                              child: Customs.WMSCartesianChart(
+                                title: "Today Channel Wise Order Summary",
+                                legendVisibility: false,
+                                barCount: 1,
+                                dataSources: [isEnabled ? channelWiseOrderSummary : state.stagingDashboardData!.todayChannelSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                yAxisTitle: 'Number of orders',
+                                barColors: [const Color.fromRGBO(202, 108, 15, 1)],
+                              ),
                             )),
             
             
@@ -498,13 +528,17 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                               children: [
                                 SizedBox(
                                   width: size.width * 0.36,
-                                  child: Customs.WMSCartesianChart(
-                                      title: 'User Efficiency',
-                                      barCount: 1,
-                                      legendVisibility: false,
-                                      dataSources: [userEfficiencyGraphData],
-                                      yAxisTitle: 'Number of Orders',
-                                      barColors: [Color.fromRGBO(147, 0, 120, 0.5)]),
+                                  child: Skeletonizer(
+                                    enableSwitchAnimation: true,
+                                    enabled: isEnabled,
+                                    child: Customs.WMSCartesianChart(
+                                        title: 'User Efficiency',
+                                        barCount: 1,
+                                        legendVisibility: false,
+                                        dataSources: [isEnabled ? userEfficiencyGraphData : state.stagingDashboardData!.userwiseEfficiency!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                        yAxisTitle: 'Number of Orders',
+                                        barColors: [Color.fromRGBO(147, 0, 120, 0.5)]),
+                                  ),
                                 ),
                                 Gap(size.width * 0.016),
                                 Container(

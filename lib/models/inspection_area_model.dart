@@ -22,13 +22,15 @@ class InspectionDashboard{
   List<StatusCount>? totalQualityStatus;
   String? materialQuality;
   List<StatusCount>? daywiseQualitySummary;
+  double? qualityEfficiency;
 
-  InspectionDashboard({this.totalQualityStatus, this.materialQuality, this.daywiseQualitySummary});
+  InspectionDashboard({this.totalQualityStatus, this.materialQuality, this.daywiseQualitySummary, this.qualityEfficiency});
 
   InspectionDashboard.fromJson(Map<String, dynamic> json){
     totalQualityStatus = (json['total_quality_status'] as List).map((e) => StatusCount.fromJson(e)).toList();
     materialQuality = json['material_quality'];
     daywiseQualitySummary = (json['daywise_quality_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    qualityEfficiency = json['quality_efficiency'];
   }
 }
 

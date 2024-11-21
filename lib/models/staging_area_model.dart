@@ -1,3 +1,5 @@
+import 'package:warehouse_3d/models/inspection_area_model.dart';
+
 class StagingArea {
   int? responseCode;
   String? responseMessage;
@@ -53,7 +55,25 @@ class StagingData {
 }
 
 class StagingDashboard{
+  List<StatusCount>? todayOrderSummary;
+  List<StatusCount>? todayChannelSummary;
+  List<StatusCount>? daywiseOrderSummary;
+  List<StatusCount>? userwiseEfficiency;
+  List<StatusCount>? orderAging;
+  String? shippingEfficiency;
+  int? avgLeadTime;
+  double? fulfilmentTime;
+
+  StagingDashboard({this.todayOrderSummary, this.todayChannelSummary, this.daywiseOrderSummary, this.userwiseEfficiency, this.shippingEfficiency, this.avgLeadTime, this.orderAging, this.fulfilmentTime});
+
   StagingDashboard.fromJson(Map<String, dynamic> json){
-    
+    todayOrderSummary = (json['today_order_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    todayChannelSummary = (json['today_channel_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    daywiseOrderSummary = (json['daywise_order_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    userwiseEfficiency = (json['user_efficiency'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    orderAging = (json['order_aging'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    shippingEfficiency = json['shipping_efficiency'];
+    avgLeadTime = json['avg_lead_time'];
+    fulfilmentTime = json['fulfilment_time'];
   }
 }
