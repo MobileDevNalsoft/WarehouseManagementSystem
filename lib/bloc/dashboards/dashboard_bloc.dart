@@ -35,6 +35,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     on<GetActivityDashboardData>(_onGetActivityDashboardData);
     on<GetStagingDashboardData>(_onGetStagingDashboardData);
     on<GetStorageDashboardData>(_onGetStorageDashboardData);
+    on<ChangeLocType>(_onChangeLocationType);
   }
   final NetworkCalls _customApi;
 
@@ -49,6 +50,10 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
 
   void _onToggleCalendar(ToggleCalendar event, Emitter<DashboardsState> emit){
     emit(state.copyWith(toggleCalendar: event.toggleCalendar));
+  }
+
+  void _onChangeLocationType(ChangeLocType event, Emitter<DashboardsState> emit){
+    emit(state.copyWith(selectedLocType: event.locType, storageDashboardData: state.storageDashboardData));
   }
 
   Future<void> _onGetDockAppointments(GetDockAppointments event, Emitter<DashboardsState> emit) async {
@@ -140,7 +145,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
       await _customApi.get(AppConstants.STORAGE_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<StorageDashboard> storageDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => StorageDashboard.fromJson(json));
-        emit(state.copyWith(storageDashboardData: storageDashboardResponse.data!, getStorageDashboardState:StorageDashboardState.success));
+        emit(state.copyWith(storageDashboardData: storageDashboardResponse.data!, getStorageDashboardState:StorageDashboardState.success, selectedLocType: storageDashboardResponse.data!.locationUtilization![0].locType!.replaceAll('"', '').split('/')[1]));
       });
     } catch(e){
       Log.e(e.toString());

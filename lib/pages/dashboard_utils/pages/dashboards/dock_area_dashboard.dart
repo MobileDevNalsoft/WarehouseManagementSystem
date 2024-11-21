@@ -76,7 +76,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
               ];
               dockINDayWiseDataSource = state.dockDashboardData!.daywiseDockInUtilization!.map((e) => BarData(xLabel: e.date!.substring(8), yValue: e.vehicleCount!, abbreviation: e.date!)).toList();
 
-              dockOUTDayWiseDataSource = state.dockDashboardData!.daywiseDockOutUtilization!.map((e) => BarData(xLabel: e.date!.substring(8), yValue: e.vehicleCount!, abbreviation: e.date!)).toList();;
+              dockOUTDayWiseDataSource = state.dockDashboardData!.daywiseDockOutUtilization!.map((e) => BarData(xLabel: e.date!.substring(8), yValue: e.vehicleCount!, abbreviation: e.date!)).toList();
             }
           }, builder: (context, state) {
             return Column(

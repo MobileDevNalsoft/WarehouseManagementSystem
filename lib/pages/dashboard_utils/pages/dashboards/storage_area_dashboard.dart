@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
@@ -25,8 +27,8 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
   ];
 
   List<PieData> locationUtilizationDataSource = [
-    PieData(xData: "Occupied Bins", yData: 30, color: const Color.fromRGBO(232, 212, 162, 1)),
-    PieData(xData: "Avalable Bins", yData: 6, color: const Color.fromRGBO(139, 182, 162, 1)),
+    PieData(xData: "Occupied Bins", yData: 30, color: const Color.fromRGBO(139, 182, 162, 1)),
+    PieData(xData: "Avalable Bins", yData: 6, color: const Color.fromRGBO(232, 212, 162, 1)),
     PieData(xData: "Full Bins", yData: 16, color: const Color.fromRGBO(255, 116, 106, 1))
   ];
 
@@ -54,182 +56,225 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
 
   late DashboardsBloc _dashboardsBloc;
 
+  SuggestionsController<Object?> suggestionsController = SuggestionsController();
+  late TextEditingController typeAheadController;
+  late FocusNode typeAheadFocusNode;
+
   @override
   void initState() {
     super.initState();
 
     _dashboardsBloc = context.read<DashboardsBloc>();
-    _dashboardsBloc.add(GetStagingDashboardData(facilityID: 243));
+    _dashboardsBloc.add(GetStorageDashboardData(facilityID: 243));
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double aspectRatio = size.width / size.height;
-    return SingleChildScrollView(
-        child: Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.topCenter,
-                      child: SfCircularChart(
-                        title: ChartTitle(
-                          text: 'Location Utilization',
-                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                        ),
-                        legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                        series: <CircularSeries>[
-                          // Renders radial bar chart
-                          RadialBarSeries<PieData, String>(
-                            dataSource: locationUtilizationDataSource,
-                            maximumValue: 36,
-                            cornerStyle: CornerStyle.bothCurve,
-                            innerRadius: "30%",
-                            dataLabelSettings: const DataLabelSettings(
-                                // Renders the data label
-                                isVisible: true,
-                                textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                alignment: ChartAlignment.center),
-                            pointColorMapper: (datum, index) {
-                              return locationUtilizationDataSource[index].color;
-                            },
-                            xValueMapper: (PieData data, _) => data.xData,
-                            yValueMapper: (PieData data, _) => data.yData,
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.topCenter,
-                      child: SfCircularChart(
-                        title: ChartTitle(
-                          text: 'Warehouse Utilization',
-                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                        ),
-                        legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                        series: <CircularSeries>[
-                          // Renders radial bar chart
+    return SingleChildScrollView(child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+      bool isEnabled = state.getStorageDashboardState != StorageDashboardState.success;
 
-                          DoughnutSeries<PieData, String>(
-                            dataSource: warehouseUtilizationDataSource,
-                            dataLabelSettings: const DataLabelSettings(
-                                // Renders the data label
-                                isVisible: true,
-                                textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                alignment: ChartAlignment.center),
-                            pointColorMapper: (datum, index) {
-                              return warehouseUtilizationDataSource[index].color;
-                            },
-                            xValueMapper: (PieData data, _) => data.xData,
-                            yValueMapper: (PieData data, _) => data.yData,
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.topCenter,
-                      child: SfCircularChart(
-                        title: ChartTitle(
-                          text: 'Inventory Summary',
-                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                        ),
-                        legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                        series: <CircularSeries>[
-                          // Renders radial bar chart
-                          PieSeries<PieData, String>(
-                            dataSource: inventorySummaryDataSource,
-                            dataLabelSettings: const DataLabelSettings(
-                                // Renders the data label
-                                isVisible: true,
-                                textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                alignment: ChartAlignment.center),
-                            pointColorMapper: (datum, index) {
-                              return inventorySummaryDataSource[index].color;
-                            },
-                            xValueMapper: (PieData data, _) => data.xData,
-                            yValueMapper: (PieData data, _) => data.yData,
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.topCenter,
-                      child: SfCircularChart(
-                        title: ChartTitle(
-                          text: 'Inventory Aging',
-                          textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                        ),
-                        legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                        series: <CircularSeries>[
-                          // Renders radial bar chart
-                          PieSeries<PieData, String>(
-                            dataSource: inventoryAgingDataSource,
-                            dataLabelSettings: const DataLabelSettings(
-                                // Renders the data label
-                                isVisible: true,
-                                textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                alignment: ChartAlignment.center),
-                            pointColorMapper: (datum, index) {
-                              return inventoryAgingDataSource[index].color;
-                            },
-                            xValueMapper: (PieData data, _) => data.xData,
-                            yValueMapper: (PieData data, _) => data.yData,
-                          )
-                        ],
-                      ),
-                    ),
-                    
-                    Container(
+      return Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
                         height: size.height * 0.45,
                         width: size.width * 0.25,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]
+                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                        padding: EdgeInsets.all(size.height * 0.035),
+                        alignment: Alignment.topCenter,
+                        child: Skeletonizer(
+                          enableSwitchAnimation: true,
+                          enabled: isEnabled,
+                          child: LayoutBuilder(builder: (context, lsize) {
+                            return Stack(
+                              children: [
+                                SfCircularChart(
+                                  title: ChartTitle(
+                                    text: 'Location Utilization',
+                                    textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                                  ),
+                                  legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                                  series: <CircularSeries>[
+                                    // Renders radial bar chart
+                                    RadialBarSeries<PieData, String>(
+                                      dataSource: isEnabled ? locationUtilizationDataSource : state.storageDashboardData!.locationUtilization!.where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!).first.typeUtil!.asMap().entries.map((e) => PieData(xData: e.value.status!, yData: e.value.count!, color: locationUtilizationDataSource[e.key].color)).toList(),
+                                      maximumValue: isEnabled ? 36 : state.storageDashboardData!.locationUtilization!.where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!).first.typeUtil!.map((e) => e.count!).toList().reduce((curr, next) => curr > next? curr: next).toDouble(),
+                                      cornerStyle: CornerStyle.bothCurve,
+                                      innerRadius: "30%",
+                                      dataLabelSettings: const DataLabelSettings(
+                                          // Renders the data label
+                                          isVisible: true,
+                                          textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                          alignment: ChartAlignment.center),
+                                      pointColorMapper: (datum, index) {
+                                        return locationUtilizationDataSource[index].color;
+                                      },
+                                      xValueMapper: (PieData data, _) => data.xData,
+                                      yValueMapper: (PieData data, _) => data.yData,
+                                    )
+                                  ],
+                                ),
+                                Positioned(
+                                  top: lsize.maxHeight * 0.02,
+                                  right: 0,
+                                  child: TypeAheadField(
+                                    suggestionsController: suggestionsController,
+                                    builder: (context, textController, focusNode) {
+                                      typeAheadController = textController;
+                                      typeAheadFocusNode = focusNode;
+                                      focusNode = focusNode;
+                                      focusNode.addListener(() {
+                                        if (focusNode.hasFocus) {
+                                          textController.clear();
+                                        }
+                                      });
+                                      if(state.selectedLocType != null){
+                                        textController.text = state.selectedLocType!;
+                                      }
+                                      return SizedBox(
+                                        height: lsize.maxHeight * 0.08,
+                                        width: lsize.maxWidth * 0.25,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: TextFormField(
+                                            textAlign: TextAlign.center,
+                                            onTap: () {},
+                                            cursorColor: Colors.black,
+                                            cursorHeight: lsize.maxHeight * 0.05,
+                                            style: TextStyle(fontSize: lsize.maxHeight*0.03),
+                                            decoration: InputDecoration(
+                                              hintText: 'Choose',
+                                              contentPadding: EdgeInsets.only(top: lsize.maxHeight * 0.02, left: lsize.maxWidth*0.01, right: lsize.maxWidth*0.015),
+                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+                                              hintStyle: const TextStyle(
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                            controller: textController,
+                                            focusNode: focusNode,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    suggestionsCallback: (pattern) {
+                                      return state.storageDashboardData!.locationUtilization!
+                                          .map((e) => e.locType!.replaceAll('"', '').split('/')[1])
+                                          .where((e) => e.toLowerCase().contains(pattern.toLowerCase()))
+                                          .toList();
+                                    },
+                                    itemBuilder: (context, suggestion) => Container(
+                                      height: lsize.maxHeight * 0.1,
+                                      width: lsize.minWidth * 0.1,
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        suggestion.toString(),
+                                        style: TextStyle(overflow: TextOverflow.ellipsis),
+                                      ),
+                                    ),
+                                    onSelected: (suggestion) {
+                                      typeAheadController.clear();
+                                      typeAheadController.text = suggestion.toString();
+                                      _dashboardsBloc.add(ChangeLocType(locType: suggestion.toString()));
+                                      suggestionsController.close();
+                                      suggestionsController.refresh();
+                                    },
+                                    constraints: BoxConstraints(maxHeight: lsize.maxHeight * 0.7, maxWidth: lsize.maxWidth * 0.3),
+                                  ),
+                                )
+                              ],
+                            );
+                          }),
                         ),
-                        padding: EdgeInsets.all(size.height*0.035),
-                        alignment: Alignment.bottomCenter,
-                        child: Customs.WMSCartesianChart(
-                          title: 'Supplierwise Inventory',
-                                yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource]),
                       ),
-
+                      Container(
+                        margin: EdgeInsets.all(aspectRatio * 8),
+                        height: size.height * 0.45,
+                        width: size.width * 0.25,
+                        decoration: BoxDecoration(
+                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                        padding: EdgeInsets.all(size.height * 0.035),
+                        alignment: Alignment.topCenter,
+                        child: Skeletonizer(
+                          enableSwitchAnimation: true,
+                          enabled: isEnabled,
+                          child: SfCircularChart(
+                            title: ChartTitle(
+                              text: 'Warehouse Utilization',
+                              textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                            ),
+                            legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                            series: <CircularSeries>[
+                              // Renders radial bar chart
+                          
+                              DoughnutSeries<PieData, String>(
+                                dataSource: isEnabled ? warehouseUtilizationDataSource : state.storageDashboardData!.warehouseUtilization!.asMap().entries.map((e) => PieData(xData: e.value.status!, yData: e.value.count!, color: warehouseUtilizationDataSource[e.key].color)).toList(),
+                                dataLabelSettings: const DataLabelSettings(
+                                    // Renders the data label
+                                    isVisible: true,
+                                    textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                    alignment: ChartAlignment.center),
+                                pointColorMapper: (datum, index) {
+                                  return warehouseUtilizationDataSource[index].color;
+                                },
+                                xValueMapper: (PieData data, _) => data.xData,
+                                yValueMapper: (PieData data, _) => data.yData,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(aspectRatio * 8),
+                        height: size.height * 0.45,
+                        width: size.width * 0.25,
+                        decoration: BoxDecoration(
+                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                        padding: EdgeInsets.all(size.height * 0.035),
+                        alignment: Alignment.topCenter,
+                        child: Skeletonizer(
+                          enableSwitchAnimation: true,
+                          enabled: isEnabled,
+                          child: SfCircularChart(
+                            title: ChartTitle(
+                              text: 'Inventory Summary',
+                              textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                            ),
+                            legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                            series: <CircularSeries>[
+                              // Renders radial bar chart
+                              PieSeries<PieData, String>(
+                                dataSource: isEnabled ? inventorySummaryDataSource : state.storageDashboardData!.inventorySummary!.asMap().entries.map((e) => PieData(xData: e.value.status!, yData: e.value.count!, color: inventorySummaryDataSource[e.key].color)).toList(),
+                                dataLabelSettings: const DataLabelSettings(
+                                    // Renders the data label
+                                    isVisible: true,
+                                    textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                    alignment: ChartAlignment.center),
+                                pointColorMapper: (datum, index) {
+                                  return inventorySummaryDataSource[index].color;
+                                },
+                                xValueMapper: (PieData data, _) => data.xData,
+                                yValueMapper: (PieData data, _) => data.yData,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
                       Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
                         height: size.height * 0.45,
@@ -240,116 +285,161 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                         alignment: Alignment.topCenter,
                         child: SfCircularChart(
                           title: ChartTitle(
-                              text: "Avg Storage Time",
-                              textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
-                          annotations: <CircularChartAnnotation>[
-                            CircularChartAnnotation(
-                              verticalAlignment: ChartAlignment.center,
-                              widget: Container(
-                                height: size.height * 0.12,
-                                      alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.blueGrey.shade100,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade900,
-                                      blurRadius: 10, // Adjust to set shadow direction
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  '03h:15m',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: size.height * 0.02,
-                                  ),
-                                )
-                              ),
-                            ),
-                          ],
+                            text: 'Inventory Aging',
+                            textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                          ),
+                          legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
                           series: <CircularSeries>[
-                            DoughnutSeries<TimeData, String>(
-                              dataSource: chartData1,
-                              xValueMapper: (TimeData data, _) => data.x,
-                              yValueMapper: (TimeData data, _) => data.y,
-                              radius: '60%', // Adjust the radius as needed
-                              innerRadius: '40%', // Optional: adjust for a thinner ring
-                              pointColorMapper: (TimeData data, _) => data.color,
+                            // Renders radial bar chart
+                            PieSeries<PieData, String>(
+                              dataSource: inventoryAgingDataSource,
+                              dataLabelSettings: const DataLabelSettings(
+                                  // Renders the data label
+                                  isVisible: true,
+                                  textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                  alignment: ChartAlignment.center),
+                              pointColorMapper: (datum, index) {
+                                return inventoryAgingDataSource[index].color;
+                              },
+                              xValueMapper: (PieData data, _) => data.xData,
+                              yValueMapper: (PieData data, _) => data.yData,
                             )
                           ],
-                        )),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
+                        ),
+                      ),
+                      Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
                         height: size.height * 0.45,
                         width: size.width * 0.25,
                         decoration: BoxDecoration(
                             color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: Gauges.SfRadialGauge(
-                          title: Gauges.GaugeTitle(
-                              text: "Cycle Count Accuracy",
-                              alignment: Gauges.GaugeAlignment.center,
-                              textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
-                          axes: [
-                            Gauges.RadialAxis(
-                              maximum: 100,
-                              minimum: 0,
-                              interval: 25,
-                              canScaleToFit: true,
-                              annotations: [
-                                Gauges.GaugeAnnotation(
-                                    verticalAlignment: Gauges.GaugeAlignment.center,
-                                    widget: Container(
-                                      height: size.height * 0.12,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.blueGrey.shade100,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade900,
-                                            blurRadius: 10, // Adjust to set shadow direction
-                                          ),
-                                        ],
+                        alignment: Alignment.bottomCenter,
+                        child: Customs.WMSCartesianChart(
+                            title: 'Supplierwise Inventory',
+                            yAxisTitle: 'Number of Items',
+                            barCount: 1,
+                            barColors: [Colors.teal],
+                            dataSources: [supplierWiseDataSource]),
+                      ),
+                      Container(
+                          margin: EdgeInsets.all(aspectRatio * 8),
+                          height: size.height * 0.45,
+                          width: size.width * 0.25,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
+                          child: SfCircularChart(
+                            title: ChartTitle(text: "Avg Storage Time", textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                            annotations: <CircularChartAnnotation>[
+                              CircularChartAnnotation(
+                                verticalAlignment: ChartAlignment.center,
+                                widget: Container(
+                                    height: size.height * 0.12,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blueGrey.shade100,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade900,
+                                          blurRadius: 10, // Adjust to set shadow direction
+                                        ),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      '03h:15m',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: size.height * 0.02,
                                       ),
-                                      child: Text(
-                                        "90%",
-                                        style: TextStyle(fontSize: aspectRatio * 10),
-                                      ),
-                                    ))
-                              ],
-                              axisLineStyle: const Gauges.AxisLineStyle(
-                                  thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
-                              showTicks: false,
-                              showLabels: false,
-                              radiusFactor: aspectRatio * 0.3,
-                              pointers: const [
-                                Gauges.MarkerPointer(
-                                  value: 90,
-                                  markerType: Gauges.MarkerType.invertedTriangle,
-                                  markerHeight: 20,
-                                  markerWidth: 20,
-                                  color: Colors.white,
-                                  enableAnimation: true,
-                                  elevation: 10,
-                                )
-                              ],
-                            )
-                          ],
-                        )),
-                  ],
-                )
-              ],
-            ),
-          ],
-        ),
-      ],
-    ));
+                                    )),
+                              ),
+                            ],
+                            series: <CircularSeries>[
+                              DoughnutSeries<TimeData, String>(
+                                dataSource: chartData1,
+                                xValueMapper: (TimeData data, _) => data.x,
+                                yValueMapper: (TimeData data, _) => data.y,
+                                radius: '60%', // Adjust the radius as needed
+                                innerRadius: '40%', // Optional: adjust for a thinner ring
+                                pointColorMapper: (TimeData data, _) => data.color,
+                              )
+                            ],
+                          )),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                          margin: EdgeInsets.all(aspectRatio * 8),
+                          height: size.height * 0.45,
+                          width: size.width * 0.25,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.topCenter,
+                          child: Gauges.SfRadialGauge(
+                            title: Gauges.GaugeTitle(
+                                text: "Cycle Count Accuracy",
+                                alignment: Gauges.GaugeAlignment.center,
+                                textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
+                            axes: [
+                              Gauges.RadialAxis(
+                                maximum: 100,
+                                minimum: 0,
+                                interval: 25,
+                                canScaleToFit: true,
+                                annotations: [
+                                  Gauges.GaugeAnnotation(
+                                      verticalAlignment: Gauges.GaugeAlignment.center,
+                                      widget: Container(
+                                        height: size.height * 0.12,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.blueGrey.shade100,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade900,
+                                              blurRadius: 10, // Adjust to set shadow direction
+                                            ),
+                                          ],
+                                        ),
+                                        child: Text(
+                                          "90%",
+                                          style: TextStyle(fontSize: aspectRatio * 10),
+                                        ),
+                                      ))
+                                ],
+                                axisLineStyle: const Gauges.AxisLineStyle(
+                                    thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                showTicks: false,
+                                showLabels: false,
+                                radiusFactor: aspectRatio * 0.3,
+                                pointers: const [
+                                  Gauges.MarkerPointer(
+                                    value: 90,
+                                    markerType: Gauges.MarkerType.invertedTriangle,
+                                    markerHeight: 20,
+                                    markerWidth: 20,
+                                    color: Colors.white,
+                                    enableAnimation: true,
+                                    elevation: 10,
+                                  )
+                                ],
+                              )
+                            ],
+                          )),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+    }));
   }
 }

@@ -1,3 +1,5 @@
+import 'package:warehouse_3d/models/inspection_area_model.dart';
+
 class StorageAisle {
   int? responseCode;
   String? responseMessage;
@@ -74,7 +76,24 @@ class Data {
 
 
 class StorageDashboard{
+  List<LocationUtilization>? locationUtilization;
+  List<StatusCount>? warehouseUtilization;
+  List<StatusCount>? inventorySummary;
+  StorageDashboard({this.locationUtilization, this.warehouseUtilization, this.inventorySummary});
+
   StorageDashboard.fromJson(Map<String, dynamic> json){
-    
+    locationUtilization = (json['location_utilization'] as List).map((e) => LocationUtilization.fromJson(e)).toList();
+    warehouseUtilization = (json['warehouse_utilization'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    inventorySummary = (json['inventory_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
+  }
+}
+
+class LocationUtilization{
+  String? locType;
+  List<StatusCount>? typeUtil;
+
+  LocationUtilization.fromJson(Map<String, dynamic> json){
+    locType = json.keys.first;
+    typeUtil = (json.values.first as List).map((e) => StatusCount.fromJson(e)).toList();
   }
 }

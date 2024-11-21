@@ -39,6 +39,6 @@ class StatusCount{
 
   StatusCount.fromJson(Map<String, dynamic> json){
     status = json.keys.first;
-    count = json.values.first;
+    count = json.values.first.toInt();
   }
 }

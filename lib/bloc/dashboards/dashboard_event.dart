@@ -94,3 +94,11 @@ class ToggleDaywiseCalendar extends DashboardsEvent{
   @override
   List<Object> get props => [toggleDaywiseCalendar];
 }
+
+class ChangeLocType extends DashboardsEvent{
+  String locType;
+  ChangeLocType({required this.locType});
+
+  @override
+  List<Object> get props => [locType];
+}

@@ -170,6 +170,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
     return SingleChildScrollView(
       child: BlocBuilder<DashboardsBloc, DashboardsState>(
         builder: (context, state) {
+          bool isEnabled = state.getActivityDashboardState != ActivityDashboardState.success;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -186,10 +187,10 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       alignment: Alignment.topCenter,
                       child: Skeletonizer(
                         enableSwitchAnimation: true,
-                        enabled: state.getActivityDashboardState != ActivityDashboardState.success,
+                        enabled: isEnabled,
                         child: Customs.WMSPieChart(
                             title: 'Today Task Summary',
-                            dataSource: state.getActivityDashboardState != ActivityDashboardState.success ? [
+                            dataSource: isEnabled ? [
                               PieData(xData: "Created", yData: 16, text: "16"),
                               PieData(xData: "Completed", yData: 6, text: "6"),
                               PieData(xData: "In Progress", yData: 4, text: "4"),
@@ -216,14 +217,18 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                         color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                     padding: EdgeInsets.all(size.height * 0.035),
                     alignment: Alignment.topCenter,
-                    child: Customs.WMSPieChart(
-                      title: 'Task Type Summary',
-                      dataSource: [
-                        PieData(xData: "Cycle Count", yData: 10, text: "10"),
-                        PieData(xData: "Pick Tasks", yData: 4, text: "4"),
-                        PieData(xData: "Replenishment", yData: 4, text: "4")
-                      ],
-                      legendVisibility: true,
+                    child: Skeletonizer(
+                      enableSwitchAnimation: true,
+                      enabled: isEnabled,
+                      child: Customs.WMSPieChart(
+                        title: 'Task Type Summary',
+                        dataSource: isEnabled ? [
+                          PieData(xData: "Cycle Count", yData: 10, text: "10"),
+                          PieData(xData: "Pick Tasks", yData: 4, text: "4"),
+                          PieData(xData: "Replenishment", yData: 4, text: "4")
+                        ] : state.activityDashboardData!.taskTypeSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
+                        legendVisibility: true,
+                      ),
                     ),
                   ),
                   Container(
@@ -234,23 +239,29 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
-                      child: Customs.WMSPieChart(
-                          title:'Today Work Order Summary',
-                          dataSource: [
-                            PieData(xData: "Created", yData: 16, text: "16"),
-                            PieData(xData: "Work In Progress", yData: 6, text: "6"),
-                            PieData(xData: "Completed", yData: 4, text: "4"),
-                          ],
-                          legendVisibility: true,
-                          pointColorMapper: (datum, index) {
-                            if (datum.xData == 'Created') {
-                              return Colors.lightBlueAccent.shade700;
-                            } else if (datum.xData == 'Work In Progress') {
-                              return Colors.orangeAccent;
-                            } else if (datum.xData == 'Completed') {
-                              return Colors.green;
-                            }
-                          })),
+                      child: Skeletonizer(
+                        enableSwitchAnimation: true,
+                        enabled: isEnabled,
+                        child: Customs.WMSPieChart(
+                            title:'Today Work Order Summary',
+                            dataSource: isEnabled ? [
+                              PieData(xData: "Created", yData: 16, text: "16"),
+                              PieData(xData: "Work In Progress", yData: 6, text: "6"),
+                              PieData(xData: "Completed", yData: 4, text: "4"),
+                            ] : state.activityDashboardData!.todayWorkOrderSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
+                            legendVisibility: true,
+                            pointColorMapper: (datum, index) {
+                              if (index == 0) {
+                                return Colors.lightBlueAccent.shade700;
+                              } else if (index == 1) {
+                                return Colors.orangeAccent;
+                              } else if (index == 2) {
+                                return Colors.green;
+                              }else{
+                                return Colors.amber;
+                              }
+                            }),
+                      )),
                 ],
               ),
               Row(
@@ -269,19 +280,23 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Day Wise Task Summary ',
+                            'Daywise Task Summary ',
                             style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: size.height * 0.3,
                             width: size.width * 0.25,
-                            child: Customs.WMSCartesianChart(
-                              title: "",
-                              legendVisibility: false,
-                              barCount: 1,
-                              dataSources: [taskdata],
-                              yAxisTitle: 'Number of Tasks',
-                              barColors: [Color.fromRGBO(9, 0, 136, 0.692)],
+                            child: Skeletonizer(
+                              enableSwitchAnimation: true,
+                              enabled: isEnabled,
+                              child: Customs.WMSCartesianChart(
+                                title: "",
+                                legendVisibility: false,
+                                barCount: 1,
+                                dataSources: [isEnabled ? taskdata : state.activityDashboardData!.daywiseTaskSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                yAxisTitle: 'Number of Tasks',
+                                barColors: [Color.fromRGBO(9, 0, 136, 0.692)],
+                              ),
                             ),
                           ),
                         ],
@@ -305,13 +320,17 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                         SizedBox(
                             height: size.height * 0.3,
                             width: size.width * 0.25,
-                            child: Customs.WMSCartesianChart(
-                              title: "",
-                              legendVisibility: false,
-                              barCount: 1,
-                              dataSources: [taskdata],
-                              yAxisTitle: 'Number of Tasks',
-                               barColors: [Color.fromRGBO(64, 133, 138, 1)],
+                            child: Skeletonizer(
+                              enableSwitchAnimation: true,
+                              enabled: isEnabled,
+                              child: Customs.WMSCartesianChart(
+                                title: "",
+                                legendVisibility: false,
+                                barCount: 1,
+                                dataSources: [isEnabled ? taskdata : state.activityDashboardData!.empwiseTaskSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                yAxisTitle: 'Number of Tasks',
+                                 barColors: [Color.fromRGBO(64, 133, 138, 1)],
+                              ),
                             ),
                           ),
                       ],
@@ -326,14 +345,18 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all( size.height * 0.035),
                       alignment: Alignment.topCenter,
-                      child: Customs.WMSSfCircularChart(
-                          size: size,
-                          chartData: avgTaskExecutionTime,
-                          title: "Average Task Execution Time",
-                          contentText: "6h 40m",
-                          width: 142,
-                          height: 142,
-                          radius: "70%")),
+                      child: Skeletonizer(
+                        enableSwitchAnimation: true,
+                        enabled: isEnabled,
+                        child: Customs.WMSSfCircularChart(
+                            size: size,
+                            chartData: avgTaskExecutionTime,
+                            title: "Average Task Execution Time",
+                            contentText: isEnabled ? "6h 40m" : state.activityDashboardData!.avgTaskExecTime!,
+                            width: 142,
+                            height: 142,
+                            radius: "70%"),
+                      )),
                 ],
               ),
               Row(
@@ -347,19 +370,19 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.all(size.height * 0.035),
                       alignment: Alignment.topCenter,
-                      child: Customs.WMSSfCircularChart(
-                          size: size,
-                          chartData: avgPickTime,
-                          title: "Avg Pick Time",
-                          contentText: "2h 15m",
-                          textColor: Color.fromRGBO(13, 6, 109, 1),
-                          width: 142,
-                          height: 142,
-                          radius: "70%")),
-          
-          
-          
-          
+                      child: Skeletonizer(
+                        enableSwitchAnimation: true,
+                        enabled: isEnabled,
+                        child: Customs.WMSSfCircularChart(
+                            size: size,
+                            chartData: avgPickTime,
+                            title: "Avg Pick Time",
+                            contentText: isEnabled ? "2h 15m" : state.activityDashboardData!.avgPickTime!,
+                            textColor: Color.fromRGBO(13, 6, 109, 1),
+                            width: 142,
+                            height: 142,
+                            radius: "70%"),
+                      )),
                   LayoutBuilder(
                     builder: (context,constraints) {
                       return Container(
@@ -383,12 +406,16 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                       'Avg Time Taken by Employee ',
                                       style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
                                     ),
-                                    WMSCartesianChart(
-                                        title: '',
-                                        barCount: 1,
-                                        dataSources: [empTaskdata],
-                                        yAxisTitle: 'Number of Tasks',
-                                        primaryColor: Color.fromRGBO(147, 0, 120, 0.5)),
+                                    Skeletonizer(
+                                      enableSwitchAnimation: true,
+                                      enabled: isEnabled,
+                                      child: WMSCartesianChart(
+                                          title: '',
+                                          barCount: 1,
+                                          dataSources: [isEnabled ? empTaskdata : state.activityDashboardData!.avgTimeTakenByEmp!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                          yAxisTitle: 'Number of Tasks',
+                                          primaryColor: Color.fromRGBO(147, 0, 120, 0.5)),
+                                    ),
                                   ],
                                 ),
                               ),
