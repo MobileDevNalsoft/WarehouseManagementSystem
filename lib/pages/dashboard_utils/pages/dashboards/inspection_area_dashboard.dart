@@ -7,7 +7,7 @@ import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
 import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart' as gauge;
+import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 
 class InspectionAreaDashboard extends StatefulWidget {
   InspectionAreaDashboard({super.key});
@@ -101,6 +101,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                 Expanded(
                   child: BlocBuilder<DashboardsBloc, DashboardsState>(
                     builder: (context, state) {
+                      bool isEnabled = state.getInspectionDashboardState != InspectionDashboardState.success;
                       return Column(
                         children: [
                           Row(
@@ -138,7 +139,62 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                   color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
-                                  child: _getRadialGauge()),
+                                  child: Skeletonizer(
+                                    enableSwitchAnimation: true,
+                                    enabled: isEnabled,
+                                    child: Gauges.SfRadialGauge(
+                                                                    title: Gauges.GaugeTitle(
+                                      text: "Quality Efficiency",
+                                      alignment: Gauges.GaugeAlignment.center,
+                                      textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
+                                                                    axes: [
+                                    Gauges.RadialAxis(
+                                      maximum: 100,
+                                      minimum: 0,
+                                      interval: 25,
+                                      canScaleToFit: true,
+                                      annotations: [
+                                        Gauges.GaugeAnnotation(
+                                            verticalAlignment: Gauges.GaugeAlignment.center,
+                                            widget: Container(
+                                              height: size.height * 0.12,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.blueGrey.shade100,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade900,
+                                                    blurRadius: 10, // Adjust to set shadow direction
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Text(
+                                                isEnabled ? "85%" : '${state.inspectionDashboardData!.qualityEfficiency!}%',
+                                                style: TextStyle(fontSize: aspectRatio * 10),
+                                              ),
+                                            ))
+                                      ],
+                                      axisLineStyle: const Gauges.AxisLineStyle(
+                                          thickness: 35, color: Color.fromARGB(255, 189, 187, 64), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                      showTicks: false,
+                                      showLabels: false,
+                                      radiusFactor: aspectRatio * 0.3,
+                                      pointers: [
+                                        Gauges.MarkerPointer(
+                                          value: isEnabled ? 85 : int.parse(state.stagingDashboardData!.shippingEfficiency!.replaceAll('%', '')).toDouble(),
+                                          markerType: Gauges.MarkerType.invertedTriangle,
+                                          markerHeight: 20,
+                                          markerWidth: 20,
+                                          color: Colors.white,
+                                          enableAnimation: true,
+                                          elevation: 10,
+                                        )
+                                      ],
+                                    )
+                                                                    ],
+                                                                  ),
+                                  ),),
                       
                                Container(
                                 margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
@@ -250,28 +306,6 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
         ],
       );
     });
-  }
-
-  Widget _getRadialGauge() {
-    return gauge.SfRadialGauge(
-        animationDuration: 2000,
-        title: const gauge.GaugeTitle(text: 'Quality Efficiency', textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-        axes: <gauge.RadialAxis>[
-          gauge.RadialAxis(labelsPosition: gauge.ElementsPosition.outside, showLastLabel: true, minimum: 0, maximum: 100, ranges: <gauge.GaugeRange>[
-            gauge.GaugeRange(startValue: 0, endValue: 50, color: const Color.fromARGB(255, 4, 112, 122), startWidth: 30, endWidth: 30),
-            gauge.GaugeRange(startValue: 50, endValue: 100, color: const Color.fromARGB(255, 178, 123, 223), startWidth: 30, endWidth: 30),
-          ], pointers: const <gauge.GaugePointer>[
-            gauge.NeedlePointer(
-              value: 20,
-              enableAnimation: true,
-              animationType: gauge.AnimationType.ease,
-              animationDuration: 2000,
-            )
-          ], annotations: <gauge.GaugeAnnotation>[
-            gauge.GaugeAnnotation(
-                widget: Container(child: const Text('20', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold))), angle: 90, positionFactor: 0.5)
-          ])
-        ]);
   }
 }
 

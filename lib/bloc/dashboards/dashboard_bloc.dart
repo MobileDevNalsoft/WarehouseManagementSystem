@@ -53,7 +53,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
   }
 
   void _onChangeLocationType(ChangeLocType event, Emitter<DashboardsState> emit){
-    emit(state.copyWith(selectedLocType: event.locType, storageDashboardData: state.storageDashboardData));
+    emit(state.copyWith(selectedLocType: event.locType, storageDashboardData: state.storageDashboardData, getStorageDashboardState: state.getStorageDashboardState));
   }
 
   Future<void> _onGetDockAppointments(GetDockAppointments event, Emitter<DashboardsState> emit) async {
