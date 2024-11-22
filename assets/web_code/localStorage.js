@@ -43,14 +43,14 @@ export function localStorageSetup(scene, camera, controls) {
           .toString()
           .split(",")[0].replaceAll("{", "").replaceAll("}", "").trim()).material.color;
         
-          console.log("actualBinColor "+actualBinColor);
+          
 
 
           highlightedBins= localStorage
           .getItem("highlightBins")
           .toString().replaceAll("{", "").replaceAll("}", "").replace(" ", "")
           .split(",");
-          console.log(highlightedBins);
+          
 
         localStorage
           .getItem("highlightBins")
@@ -72,14 +72,10 @@ export function localStorageSetup(scene, camera, controls) {
       case "resetBoxColors": 
 
                 
-
-      console.log('inside reset');   
-        console.log(highlightedBins);
+ 
+       
       highlightedBins.forEach((e)=>{
-             console.log("bin  "+e);
-             console.log(e.toString().replaceAll(" ",""));
-
-             scene.getObjectByName("1RB30201").material.color.set(0x614B33); 
+            
             });
             highlightedBins=[];
             localStorage.removeItem("resetBoxColors");

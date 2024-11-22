@@ -6,7 +6,7 @@ export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
 
   for (let i = 0; i < listOfBins; i++) {
-    console.log("got " + listOfBins[i]);
+   
     changeColor({ name: listOfBins[i] });
   }
 }
@@ -72,7 +72,7 @@ export function addInteractions(scene, model, camera, controls) {
         }
       }
     }
-    console.log('moving');
+   
   }
 
   function onMouseDown(e) {
@@ -146,6 +146,7 @@ export function addInteractions(scene, model, camera, controls) {
       }
     } else {
       console.log('{"object":"null"}');
+      resetTrucksAnimation(scene);
     }
   }
 
@@ -209,15 +210,9 @@ export function addInteractions(scene, model, camera, controls) {
 
     prevBinColor = object.material.color.clone();
     let objectName = object.name.toString();
-    console.log("object "+objectName);
-    console.log("material "+object.material.color);
-
-    if (fromSearch) {
-      object.material.color.set(0xadd8e6); // Blue color
-      object.material.opacity = 0.5;
-    } 
     
-    else {
+    
+   
       if (prevBin != object) {
         object.userData.active = true;
         // Set transparent blue color
@@ -254,7 +249,7 @@ export function addInteractions(scene, model, camera, controls) {
           switchCamera(scene, prevNav.split("_")[0], camera, controls);
         }
       }
-    }
+  
     prevBin = object;
   }
 
@@ -281,211 +276,7 @@ export function addInteractions(scene, model, camera, controls) {
     };
   }
 
-  document
-    .getElementById("image-button-container")
-    .addEventListener("click", function (e) {
-      const manButton = document.getElementById("image-button-container");
-      manButton.style.display = "none";
-      const arrows = document.querySelectorAll(".arrow");
-      arrows.forEach((arrow) => {
-        arrow.style.display = "block";
-      });
-      const clickedObject = scene.getObjectByName("storageArea");
-
-      // Calculate the bounding box of the clicked object
-      const boundingBox = new THREE.Box3().setFromObject(clickedObject);
-
-      // Get the minimum and maximum points of the bounding box
-      const max = boundingBox.max;
-
-      // Create a GSAP timeline for smoother transitions
-      const timeline = gsap.timeline();
-
-      controls.enabled = false;
-      controls.enableDamping = false;
-
-      // Animate position and rotation simultaneously
-      timeline
-        .to(camera.position, {
-          duration: 3,
-          x: max.x - 20,
-          y: camera.position.y - 55,
-          z: max.z + 20,
-          ease: "power3.inOut",
-        })
-        .to(
-          controls.target,
-          {
-            duration: 3,
-            x: max.x - 20,
-            y: camera.position.y - 55,
-            z: max.z - 30,
-            ease: "power3.inOut",
-            onUpdate: function () {
-              camera.lookAt(controls.target); // Smoothly look at the target
-            },
-          },
-          "<"
-        );
-
-      // Callbacks after animation completes
-      timeline.call(() => {
-        // controls.enabled = true; // Re-enable controls after animation
-        // controls.enableDamping = true; // Re-enable damping after animation
-      });
-    });
-
-  document.getElementById("arrow-up").addEventListener("click", () => {
-    // Create a GSAP timeline for smoother transitions
-    const timeline = gsap.timeline();
-
-    controls.enabled = false;
-    controls.enableDamping = false;
-
-    // Animate position and rotation simultaneously
-    timeline
-      .to(camera.position, {
-        duration: 1,
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z - 5,
-        ease: "power3.inOut",
-      })
-      .to(
-        controls.target,
-        {
-          duration: 1,
-          x: controls.target.x,
-          y: controls.target.y,
-          z: controls.target.z - 5,
-          ease: "power3.inOut",
-          onUpdate: function () {
-            camera.lookAt(controls.target); // Smoothly look at the target
-          },
-        },
-        "<"
-      );
-
-    // Callbacks after animation completes
-    timeline.call(() => {
-      // controls.enabled = true; // Re-enable controls after animation
-      // controls.enableDamping = true; // Re-enable damping after animation
-    });
-  });
-
-  document.getElementById("arrow-down").addEventListener("click", () => {
-    // Create a GSAP timeline for smoother transitions
-    const timeline = gsap.timeline();
-
-    controls.enabled = false;
-    controls.enableDamping = false;
-
-    // Animate position and rotation simultaneously
-    timeline
-      .to(camera.position, {
-        duration: 1,
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z + 5,
-        ease: "power3.inOut",
-      })
-      .to(
-        controls.target,
-        {
-          duration: 1,
-          x: controls.target.x,
-          y: controls.target.y,
-          z: controls.target.z + 5,
-          ease: "power3.inOut",
-          onUpdate: function () {
-            camera.lookAt(controls.target); // Smoothly look at the target
-          },
-        },
-        "<"
-      );
-
-    // Callbacks after animation completes
-    timeline.call(() => {
-      // controls.enabled = true; // Re-enable controls after animation
-      // controls.enableDamping = true; // Re-enable damping after animation
-    });
-  });
-
-  document.getElementById("arrow-left").addEventListener("click", () => {
-    // Create a GSAP timeline for smoother transitions
-    const timeline = gsap.timeline();
-
-    controls.enabled = false;
-    controls.enableDamping = false;
-
-    // Animate position and rotation simultaneously
-    timeline
-      .to(camera.position, {
-        duration: 1,
-        x: camera.position.x - 5,
-        y: camera.position.y,
-        z: camera.position.z,
-        ease: "power3.inOut",
-      })
-      .to(
-        controls.target,
-        {
-          duration: 1,
-          x: controls.target.x - 5,
-          y: controls.target.y,
-          z: controls.target.z,
-          ease: "power3.inOut",
-          onUpdate: function () {
-            camera.lookAt(controls.target); // Smoothly look at the target
-          },
-        },
-        "<"
-      );
-
-    // Callbacks after animation completes
-    timeline.call(() => {
-      // controls.enabled = true; // Re-enable controls after animation
-      // controls.enableDamping = true; // Re-enable damping after animation
-    });
-  });
-
-  document.getElementById("arrow-right").addEventListener("click", () => {
-    // Create a GSAP timeline for smoother transitions
-    const timeline = gsap.timeline();
-
-    controls.enabled = false;
-    controls.enableDamping = false;
-
-    // Animate position and rotation simultaneously
-    timeline
-      .to(camera.position, {
-        duration: 1,
-        x: camera.position.x + 5,
-        y: camera.position.y,
-        z: camera.position.z,
-        ease: "power3.inOut",
-      })
-      .to(
-        controls.target,
-        {
-          duration: 1,
-          x: controls.target.x + 5,
-          y: controls.target.y,
-          z: controls.target.z,
-          ease: "power3.inOut",
-          onUpdate: function () {
-            camera.lookAt(controls.target); // Smoothly look at the target
-          },
-        },
-        "<"
-      );
-
-    // Callbacks after animation completes
-    timeline.call(() => {
-      // controls.enabled = true; // Re-enable controls after animation
-      // controls.enableDamping = true; // Re-enable damping after animation
-    });
-  });
+  
 
   // JavaScript to handle the panel toggle
   const toggleButton = document.getElementById("togglePanel");
@@ -568,12 +359,7 @@ document.addEventListener("wheel", (event) => {
   // console.log(event.deltaY);
   // console.log(event.movementX);
   // console.log(event.movementY);
-  const arrows = document.querySelectorAll(".arrow");
-  arrows.forEach((arrow) => {
-    arrow.style.display = "none";
-  });
-  const manButton = document.getElementById("image-button-container");
-  manButton.style.display = "none";
+ 
   //console.log('{"object":"null"}');
   localStorage.setItem("resetBoxColors",true);
 });

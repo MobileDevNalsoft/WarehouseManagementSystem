@@ -82,7 +82,7 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                               Row(
                                 children: [
                                   Text(
-                                    isEnabled ? 'Rack XR' : 'Rack ${state.storageAisles!.data![index].aisle!}',
+                                    isEnabled ? 'Rack XR' : 'Rack ${state.storageAisles!.data![index].aisle!??""}',
                                     style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016,fontWeight: FontWeight.bold),
                                     maxLines: 1,
                                   ),
@@ -104,7 +104,7 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                                     ),
                                   ),
                                   Text(
-                                    isEnabled ? '36' : state.storageAisles!.data![index].barcode.toString(),
+                                    isEnabled ? '36' : "${state.storageAisles!.data![index].barcode ?? ""}",
                                     style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016,fontWeight: FontWeight.bold),
                                   )
                                 ],

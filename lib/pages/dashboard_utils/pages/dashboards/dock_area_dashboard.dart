@@ -603,7 +603,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                       child: Text(
                                                         isEnabled ? 'APDEMODEMO' : state.appointments![index].apptNbr!,
                                                         style: TextStyle(
-                                                            color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth * 0.04, fontWeight: FontWeight.bold),
+                                                            color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth * 0.037  , fontWeight: FontWeight.bold),
                                                       )),
                                                   Gap(lsize.maxHeight * 0.008),
                                                   Skeletonizer(

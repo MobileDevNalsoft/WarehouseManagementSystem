@@ -181,12 +181,8 @@ function getPositionAndTarget(scene, name) {
       console.log('{"object":"null"}');
       break;
     case "storageArea":
-      const manButton = document.getElementById("image-button-container");
-      manButton.style.display = "block";
-      const arrows = document.querySelectorAll(".arrow");
-      arrows.forEach((arrow) => {
-        arrow.style.display = "none";
-      });
+      
+      
       position.set(-78, 60, 20);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);

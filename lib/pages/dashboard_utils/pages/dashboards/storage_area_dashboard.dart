@@ -354,7 +354,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                       ],
                                     ),
                                     child: Text(
-                                      isEnabled?'03h:15m':state.storageDashboardData!.averageStorageTime.toString(),
+                                      isEnabled?'03h:15m':"${state.storageDashboardData!.averageStorageTime.toString()}d",
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: size.height * 0.02,

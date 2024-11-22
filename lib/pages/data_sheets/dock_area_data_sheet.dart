@@ -175,7 +175,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                         ),
                                       ),
                                       SizedBox(
-                                          width: containerSize.maxWidth * 0.25,
+                                          width: containerSize.maxWidth * 0.2,
                                           child: Text(
                                             state.dockAreaItems![index].poNum!,
                                             style: TextStyle(

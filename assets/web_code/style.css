@@ -187,6 +187,7 @@ body {
         ". down .";
     gap: 5px;
     z-index: 10;
+    display: none;
     /* Ensure it stays on top of the 3D view */
 }
 
@@ -204,18 +205,22 @@ body {
 
 #arrow-up {
     grid-area: up;
+    display: none;
 }
 
 #arrow-left {
     grid-area: left;
+    display: none;
 }
 
 #arrow-right {
     grid-area: right;
+    display: none;
 }
 
 #arrow-down {
     grid-area: down;
+    display: none;
 }
 
 #image-button-container {
@@ -229,6 +234,7 @@ body {
     /* Set height of the button */
     cursor: pointer;
     z-index: 10;
+    display: none;
     /* Make sure it overlays the 3D view */
 }
 
@@ -237,4 +243,5 @@ body {
     /* Make image fill container */
     height: 100%;
     object-fit: contain;
+    display: none;
 }
