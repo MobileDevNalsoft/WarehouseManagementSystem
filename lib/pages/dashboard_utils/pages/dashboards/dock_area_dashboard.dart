@@ -74,9 +74,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                 PieData(
                     xData: "Avalable Docks", yData: state.dockDashboardData!.dockOutUtilization!.available!, color: const Color.fromARGB(255, 154, 197, 200))
               ];
-              dockINDayWiseDataSource = state.dockDashboardData!.daywiseDockInUtilization!.map((e) => BarData(xLabel: e.date!.substring(8), yValue: e.vehicleCount!, abbreviation: e.date!)).toList();
+              dockINDayWiseDataSource = state.dockDashboardData!.daywiseDockInUtilization!.map((e) => BarData(xLabel: e.date!, yValue: e.vehicleCount!, abbreviation: e.date!)).toList();
 
-              dockOUTDayWiseDataSource = state.dockDashboardData!.daywiseDockOutUtilization!.map((e) => BarData(xLabel: e.date!.substring(8), yValue: e.vehicleCount!, abbreviation: e.date!)).toList();
+              dockOUTDayWiseDataSource = state.dockDashboardData!.daywiseDockOutUtilization!.map((e) => BarData(xLabel: e.date!, yValue: e.vehicleCount!, abbreviation: e.date!)).toList();
             }
           }, builder: (context, state) {
             return Column(
@@ -133,7 +133,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         child: SfCircularChart(
                           title: ChartTitle(
                             text: 'Dock-IN Utilization',
-                            textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                            textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold),
                           ),
                           legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
                           series: <CircularSeries>[
@@ -174,7 +174,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         child: SfCircularChart(
                           title: ChartTitle(
                             text: 'Dock-OUT Utilization',
-                            textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                            textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold),
                           ),
                           legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
                           series: <CircularSeries>[
@@ -209,7 +209,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                           enableSwitchAnimation: true,
                           enabled: state.getDockDashboardState == DockDashboardState.loading,
                           child: SfCircularChart(
-                            title: ChartTitle(text: "Avg Loading Time", textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                            title: ChartTitle(text: "Avg Loading Time", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
                             annotations: <CircularChartAnnotation>[
                               CircularChartAnnotation(
                                 verticalAlignment: ChartAlignment.center,
@@ -263,7 +263,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                           enableSwitchAnimation: true,
                           enabled: state.getDockDashboardState == DockDashboardState.loading,
                           child: SfCircularChart(
-                            title: ChartTitle(text: "Avg Unloading Time", textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                            title: ChartTitle(text: "Avg Unloading Time", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
                             annotations: <CircularChartAnnotation>[
                               CircularChartAnnotation(
                                 verticalAlignment: ChartAlignment.center,
@@ -313,7 +313,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                           enableSwitchAnimation: true,
                           enabled: state.getDockDashboardState == DockDashboardState.loading,
                           child: SfCircularChart(
-                            title: ChartTitle(text: "Avg Dock TAT", textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                            title: ChartTitle(text: "Avg Dock TAT", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
                             annotations: <CircularChartAnnotation>[
                               CircularChartAnnotation(
                                 verticalAlignment: ChartAlignment.center,

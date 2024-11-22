@@ -91,7 +91,6 @@ class Customs {
                 alignment: ChartAlignment.center,
                 textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: constraints.maxHeight*0.045
                 )),
                 
             primaryXAxis: CategoryAxis(
@@ -99,6 +98,7 @@ class Customs {
               majorGridLines: const MajorGridLines(
                 width: 0,
               ),
+              labelRotation: -90,
               majorTickLines: const MajorTickLines(width: 0),
               axisLine: const AxisLine(width: 0),
             ),
@@ -165,7 +165,6 @@ class Customs {
             alignment: ChartAlignment.center,
             textStyle: const TextStyle(
               fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
             )),
         tooltipBehavior: TooltipBehavior(
           enable: true,
@@ -204,7 +203,7 @@ static Widget WMSSfCircularChart(
       String? radius,
       Color? textColor}) {
     return SfCircularChart(
-      title: ChartTitle(text: title ?? "title"),
+      title: ChartTitle(text: title ?? "title", textStyle: TextStyle(fontWeight: FontWeight.bold)),
       annotations: <CircularChartAnnotation>[
         CircularChartAnnotation(
           widget: Container(

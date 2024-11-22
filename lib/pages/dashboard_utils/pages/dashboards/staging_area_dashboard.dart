@@ -195,7 +195,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 title: ChartTitle(
                                     text: "Avg Lead Time",
                                     alignment: ChartAlignment.center,
-                                    textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                                    textStyle: TextStyle(fontSize: aspectRatio * 7, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(
                                     verticalAlignment: ChartAlignment.center,
@@ -267,7 +267,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 title: Gauges.GaugeTitle(
                                     text: "Shipping Efficiency",
                                     alignment: Gauges.GaugeAlignment.center,
-                                    textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
+                                    textStyle: TextStyle(fontSize: aspectRatio * 9, fontWeight: FontWeight.bold)),
                                 axes: [
                                   Gauges.RadialAxis(
                                     maximum: 100,
@@ -303,7 +303,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                     radiusFactor: aspectRatio * 0.3,
                                     pointers: [
                                       Gauges.MarkerPointer(
-                                        value: isEnabled ? 85 : int.parse(state.stagingDashboardData!.shippingEfficiency!.replaceAll('%', '')).toDouble(),
+                                        value: isEnabled ? 85 : int.parse(state.stagingDashboardData!.shippingEfficiency!.replaceAll('%', '')).toDouble()+3,
                                         markerType: Gauges.MarkerType.invertedTriangle,
                                         markerHeight: 20,
                                         markerWidth: 20,
@@ -316,57 +316,6 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 ],
                               ),
                             )),
-            
-                        //  Container(
-                        //     margin: EdgeInsets.all(aspectRatio * 8),
-                        //     height: size.height * 0.45,
-                        //     width: size.width * 0.25,
-                        //     decoration: BoxDecoration(
-                        //       color: Colors.white,
-                        //       borderRadius: BorderRadius.circular(20),
-                        //       boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]
-                        //     ),
-                        //     padding: EdgeInsets.all(size.height*0.035),
-                        //     alignment: Alignment.bottomCenter,
-                        //     child: Customs.WMSCartesianChart(
-                        //       title: 'Supplierwise Inventory',
-                        //             yAxisTitle: 'Number of Items', barCount: 1, barColors: [Colors.teal], dataSources: [supplierWiseDataSource]),
-                        //   ),
-            
-                        //  Container(
-                        //   margin: EdgeInsets.all(aspectRatio * 8),
-                        //   height: size.height * 0.45,
-                        //   width: size.width * 0.25,
-                        //   decoration: BoxDecoration(
-                        //       color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        //   padding: EdgeInsets.all(size.height * 0.035),
-                        //   alignment: Alignment.topCenter,
-                        //   child: SfCircularChart(
-                        //     title: ChartTitle(
-                        //       text: 'Order Lead Time',
-                        //       alignment: ChartAlignment.center,
-                        //       textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                        //     ),
-                        //     legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                        //     series: <CircularSeries>[
-                        //       // Renders radial bar chart
-            
-                        //       DoughnutSeries<PieData, String>(
-                        //         dataSource: warehouseUtilizationDataSource,
-                        //         dataLabelSettings: const DataLabelSettings(
-                        //             // Renders the data label
-                        //             isVisible: true,
-                        //             textStyle: TextStyle(fontWeight: FontWeight.bold),
-                        //             alignment: ChartAlignment.center),
-                        //         pointColorMapper: (datum, index) {
-                        //           return warehouseUtilizationDataSource[index].color;
-                        //         },
-                        //         xValueMapper: (PieData data, _) => data.xData,
-                        //         yValueMapper: (PieData data, _) => data.yData,
-                        //       )
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                     Row(
@@ -383,7 +332,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                               children: [
                                 Text(
                                   'Order Aging',
-                                  style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: aspectRatio * 9, fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(
                                   height: size.height * 0.3,
@@ -417,7 +366,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 title: ChartTitle(
                                     text: "Fulfilment Time",
                                     alignment: ChartAlignment.center,
-                                    textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                                    textStyle: TextStyle(fontSize: aspectRatio * 7.5, fontWeight: FontWeight.bold)),
                                 annotations: <CircularChartAnnotation>[
                                   CircularChartAnnotation(
                                     verticalAlignment: ChartAlignment.center,
@@ -467,10 +416,6 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Day Wise Order Summary',
-                                  style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                                ),
                                 SizedBox(
                                   height: size.height * 0.3,
                                   width: size.width * 0.25,
@@ -478,7 +423,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                     enableSwitchAnimation: true,
                                     enabled: isEnabled,
                                     child: Customs.WMSCartesianChart(
-                                      title: "",
+                                      title: 'Daywise Order Summary',
                                       legendVisibility: false,
                                       barCount: 1,
                                       dataSources: [isEnabled ? dayWiseOrderSummary : state.stagingDashboardData!.daywiseOrderSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],

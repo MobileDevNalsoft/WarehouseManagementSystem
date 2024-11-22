@@ -132,7 +132,7 @@ class _ForHoverState extends State<ForHover> {
       onEnter: (event) {
         // change color on hover
         setState(() {
-          hoverColor = Colors.blue.shade900;
+          hoverColor = Color.fromRGBO(68, 98, 136, 1);
           textColor = Colors.white;
         });
       },
