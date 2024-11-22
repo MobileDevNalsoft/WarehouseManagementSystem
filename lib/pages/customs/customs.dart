@@ -33,7 +33,7 @@ class Customs {
                                   "storageArea"
                               ? "storageArea"
                               : "compoundArea");
-
+                      getIt<JsInteropService>().resetBoxColors();
 
                       context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));       
                               

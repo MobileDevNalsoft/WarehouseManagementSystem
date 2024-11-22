@@ -1,9 +1,10 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:warehouse_3d/constants/app_constants.dart';
+import 'package:warehouse_3d/inits/init.dart';
+import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/models/storage_aisle_list_model.dart';
 import 'package:warehouse_3d/models/storage_aisle_model.dart';
 import 'package:warehouse_3d/models/storage_bin.dart';
@@ -55,6 +56,11 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
         state.storageBinItems!.addAll(storageBinResponse.data!);
         }
         emit(state.copyWith(storageBinItems: state.storageBinItems, storageBinStatus: StorageBinStatus.success));
+       
+          print("called highlightBins from dart");
+           getIt<JsInteropService>().highlightBins(state.storageBinItems!.map((e)=>"${e.locationKey!.replaceAll('-', '').substring(2)}").toSet().toString());
+          
+        
       });
     } catch (e) {
       print("error $e");

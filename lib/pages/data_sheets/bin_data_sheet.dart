@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:warehouse_3d/inits/init.dart';
+import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/pages/customs/customs.dart';
 
 class BinDataSheet extends StatefulWidget {
@@ -70,98 +72,101 @@ else{
                             itemBuilder: (context, index) => index < state.storageBinItems!.length
                                     ? 
                               
-                               GestureDetector(
-                                onTap: (){
-                                  if(_warehouseInteractionBloc.state.dataFromJS['bin']=="" && _warehouseInteractionBloc.state.searchText!=""){
-                                    
-                                  }
-                                },
-                                 child: Container(
-                                                            height: lsize.maxHeight * 0.32,
-                                                             width: lsize.maxWidth * 0.96,
-                                                             decoration: BoxDecoration(
-                                                               color: Color.fromRGBO(112, 144, 185, 1),
-                                                               borderRadius: BorderRadius.circular(15),
-                                                             ),
-                                                             padding: EdgeInsets.all(lsize.maxHeight * 0.01),
-                                                             margin: EdgeInsets.only(top: lsize.maxWidth * 0.01),
-                                                             child: LayoutBuilder(builder: (context, containerSize) {
-                                            return Column(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Row(children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                    child: Image.asset('assets/images/bin.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  ),
-                                                  Text(state.storageBinItems![index].containerNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                                ],),
-                                                Row(children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                    child: Image.asset('assets/images/shipment.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  ),
-                                                  Text(state.storageBinItems![index].rcvdShipmentKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                                  Spacer(),
-                                                 
-                                                ],),
-                                                Row(children: [  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.016, right: containerSize.maxWidth*0.04),
-                                                    child: Image.asset('assets/images/po.png',  height: containerSize.maxHeight*0.08, width: containerSize.maxWidth*0.08,),
-                                                  ),
-                                                   Text(state.storageBinItems![index].refPoNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                                ],),
-                                                 Row(children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.008  , right: containerSize.maxWidth*0.06),
-                                                    child: Image.asset('assets/images/location.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.08,),
-                                                  ),
-                                                  Text(state.storageBinItems![index].currLocationId!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                                  // Padding(
-                                                  //   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                  //   child: Image.asset('assets/images/batch_no.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  // ),
-                                                  // Text(state.storageBinItems![index].batchNbrID!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                                  Spacer(),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                    child: Image.asset('assets/images/serial_no.png',  height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.1,),
-                                                  ),
-                                                   SizedBox(width: containerSize.maxWidth*0.36,child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].serialNbrKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold),))),
-                                                ],),
-                                                Row(children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                    child: Image.asset('assets/images/businessman.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  ),
-                                                  Text(state.storageBinItems![index].vendor!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                                  Spacer(),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                    child: Image.asset('assets/images/location.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  ),
-                                                   SizedBox(width: containerSize.maxWidth*0.36,child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].putawaytypeKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold)),)),
-                                                ],),
-                                                // Gap(size.height*0.015),
-                                                Row(children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                    child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  ),
-                                                   SizedBox(width: containerSize.maxWidth*0.36, child:  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].itemKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold),))),
-                                                  Spacer(),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                    child: Image.asset('assets/images/qty.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  ),
-                                                   Text(state.storageBinItems![index].currQty!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                                ],),
-                                              ],
-                                            );
-                                          }
-                                        ),
+                               Container(
+                                                          height: lsize.maxHeight * 0.32,
+                                                           width: lsize.maxWidth * 0.96,
+                                                           decoration: BoxDecoration(
+                                                             color: Color.fromRGBO(112, 144, 185, 1),
+                                                             borderRadius: BorderRadius.circular(15),
+                                                           ),
+                                                           padding: EdgeInsets.all(lsize.maxHeight * 0.01),
+                                                           margin: EdgeInsets.only(top: lsize.maxWidth * 0.01),
+                                                           child: LayoutBuilder(builder: (context, containerSize) {
+                                          return Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
+                                                  child: Image.asset('assets/images/bin.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                Text(state.storageBinItems![index].containerNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Spacer(),
+                                                Transform.rotate(
+                                                  angle: 3.14159/2,
+                                                  child: IconButton(onPressed: (){
+                                                            if(_warehouseInteractionBloc.state.dataFromJS['bin']=="" && _warehouseInteractionBloc.state.searchText!=""){
+                                                                                              getIt<JsInteropService>().navigateToBin(state.storageBinItems![index].locationKey.toString().replaceAll('-','').substring(2));
+                                                                                            }
+                                                  }, icon: Icon(Icons.bookmark,size: containerSize.maxWidth*0.1,),),
+                                                )
+                                              
+                                              ],),
+                                              Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
+                                                  child: Image.asset('assets/images/shipment.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                Text(state.storageBinItems![index].rcvdShipmentKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Spacer(),
+                                               
+                                              ],),
+                                              Row(children: [  Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.016, right: containerSize.maxWidth*0.04),
+                                                  child: Image.asset('assets/images/po.png',  height: containerSize.maxHeight*0.08, width: containerSize.maxWidth*0.08,),
+                                                ),
+                                                 Text(state.storageBinItems![index].refPoNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                              ],),
+                                               Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.008  , right: containerSize.maxWidth*0.06),
+                                                  child: Image.asset('assets/images/location.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.08,),
+                                                ),
+                                                Text(state.storageBinItems![index].currLocationId!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                // Padding(
+                                                //   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
+                                                //   child: Image.asset('assets/images/batch_no.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
+                                                // ),
+                                                // Text(state.storageBinItems![index].batchNbrID!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Spacer(),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
+                                                  child: Image.asset('assets/images/serial_no.png',  height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                 SizedBox(width: containerSize.maxWidth*0.36,child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].serialNbrKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold),))),
+                                              ],),
+                                              Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
+                                                  child: Image.asset('assets/images/businessman.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                Text(state.storageBinItems![index].vendor!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Spacer(),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
+                                                  child: Image.asset('assets/images/location.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                 SizedBox(width: containerSize.maxWidth*0.36,child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].putawaytypeKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold)),)),
+                                              ],),
+                                              // Gap(size.height*0.015),
+                                              Row(children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
+                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                 SizedBox(width: containerSize.maxWidth*0.36, child:  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].itemKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold),))),
+                                                Spacer(),
+                                                Padding(
+                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
+                                                  child: Image.asset('assets/images/qty.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
+                                                ),
+                                                 Text(state.storageBinItems![index].currQty!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                              ],),
+                                            ],
+                                          );
+                                        }
                                       ),
-                               )
+                                    )
                                 : 
                                 Container(
                                        height: lsize.maxHeight * 0.32,
