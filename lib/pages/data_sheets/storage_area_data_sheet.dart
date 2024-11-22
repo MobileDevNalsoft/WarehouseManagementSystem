@@ -32,10 +32,8 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
   @override
   void initState() {
     super.initState();
-    print('initState');
     _storageBloc = context.read<StorageBloc>();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    print('event triggered');
     _storageBloc.add(AddStorageAislesData(searchText: _warehouseInteractionBloc.state.searchText??""));
      _warehouseInteractionBloc.state.selectedSearchArea = "Storage Area";
     // _controller.addListener(_scrollListener);
@@ -94,7 +92,7 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                               Row(
                                 children: [
                                   Text(
-                                    isEnabled ? 'Type Frozen' : '${state.storageAisles!.data![index].locationCategory!}',
+                                    isEnabled ? 'Type Frozen' : '${state.storageAisles!.data![index].locationCategory??""}',
                                     style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016,fontWeight: FontWeight.bold),
                                   ),
                                   Spacer(),
