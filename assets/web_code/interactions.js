@@ -63,6 +63,7 @@ export function addInteractions(scene, model, camera, controls) {
         }
       }
     }
+    console.log('moving');
   }
 
   function onMouseDown(e) {
@@ -499,5 +500,5 @@ document.addEventListener("wheel", (event) => {
   });
   const manButton = document.getElementById("image-button-container");
   manButton.style.display = "none";
-  console.log('{"object":"null"}');
+  // console.log('{"object":"null"}');
 });
