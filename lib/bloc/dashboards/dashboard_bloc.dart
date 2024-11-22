@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:warehouse_3d/constants/app_constants.dart';
+import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/js_interop_service/js_inter.dart';
 import 'package:warehouse_3d/logger/logger.dart';
 import 'package:warehouse_3d/models/activity_area_model.dart';
@@ -15,6 +16,7 @@ import 'package:warehouse_3d/models/inspection_area_model.dart';
 import 'package:warehouse_3d/models/receiving_area_model.dart';
 import 'package:warehouse_3d/models/staging_area_model.dart';
 import 'package:warehouse_3d/models/storage_aisle_model.dart';
+import 'package:warehouse_3d/models/yard_area_model.dart';
 import '../../local_network_calls.dart';
 
 part 'dashboard_event.dart';
@@ -35,6 +37,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     on<GetActivityDashboardData>(_onGetActivityDashboardData);
     on<GetStagingDashboardData>(_onGetStagingDashboardData);
     on<GetStorageDashboardData>(_onGetStorageDashboardData);
+    on<GetYardDashboardData>(_onGetYardDashboardData);
     on<ChangeLocType>(_onChangeLocationType);
   }
   final NetworkCalls _customApi;
@@ -83,6 +86,23 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     }
   }
 
+  void _onGetYardDashboardData(GetYardDashboardData event, Emitter<DashboardsState> emit) async {
+    try {
+      emit(state.copyWith(getYardDashboardState: YardDashboardState.loading));
+      await _customApi
+          .get(AppConstants.YARD_DASHBOARD,
+              queryParameters: {"facility_id": event.facilityID, "l_date": '2024-10-21'})
+          .then((apiResponse) {
+        print(apiResponse.response!.data);
+        DashboardResponse<YardDashboard> dockAreaResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => YardDashboard.fromJson(json));
+        emit(state.copyWith(yardDashboardData: dockAreaResponse.data, getYardDashboardState: YardDashboardState.success));
+      });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getYardDashboardState: YardDashboardState.failure));
+    }
+  }
+
   Future<void> _onGetReceivingDashboardData(GetReceivingDashboardData event, Emitter<DashboardsState> emit) async {
     try{
       emit(state.copyWith(getReceivingDashboardState: ReceivingDashboardState.loading));
@@ -99,7 +119,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
 
   Future<void> _onGetInspectionDashboardData(GetInspectionDashboardData event, Emitter<DashboardsState> emit) async {
     try{
-      emit(state.copyWith(getInspectionDashboardState: InspectionDashboardState.loading));
+      if(state.getInspectionDashboardState != InspectionDashboardState.success) emit(state.copyWith(getInspectionDashboardState: InspectionDashboardState.loading));
       await _customApi.get(AppConstants.INSPECTION_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<InspectionDashboard> inspectionDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => InspectionDashboard.fromJson(json));
@@ -141,7 +161,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
 
   Future<void> _onGetStorageDashboardData(GetStorageDashboardData event, Emitter<DashboardsState> emit) async {
     try{
-      emit(state.copyWith(getStorageDashboardState: StorageDashboardState.loading));
+      if(state.getStorageDashboardState != StorageDashboardState.success) emit(state.copyWith(getStorageDashboardState: StorageDashboardState.loading));
       await _customApi.get(AppConstants.STORAGE_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<StorageDashboard> storageDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => StorageDashboard.fromJson(json));

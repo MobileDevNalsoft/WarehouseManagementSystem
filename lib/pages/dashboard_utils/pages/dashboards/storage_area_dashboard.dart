@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -74,7 +76,6 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
     double aspectRatio = size.width / size.height;
     return SingleChildScrollView(child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
       bool isEnabled = state.getStorageDashboardState != StorageDashboardState.success;
-
       return Column(
         children: [
           Row(
