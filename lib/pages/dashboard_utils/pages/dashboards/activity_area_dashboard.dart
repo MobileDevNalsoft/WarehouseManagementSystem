@@ -35,7 +35,6 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
         title: ChartTitle(
             text: title,
             textStyle: const TextStyle(
-              decoration: TextDecoration.underline,
               fontWeight: FontWeight.bold,
             )),
         legend: isLegendVisible != null
@@ -51,6 +50,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
           majorGridLines: MajorGridLines(
             width: 0,
           ),
+          labelRotation: -90,
           majorTickLines: MajorTickLines(width: 0),
           axisLine: AxisLine(width: 0),
         ),
@@ -279,10 +279,6 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Daywise Task Summary ',
-                            style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                          ),
                           SizedBox(
                             height: size.height * 0.3,
                             width: size.width * 0.25,
@@ -290,7 +286,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               enableSwitchAnimation: true,
                               enabled: isEnabled,
                               child: Customs.WMSCartesianChart(
-                                title: "",
+                                title: 'Daywise Task Summary',
                                 legendVisibility: false,
                                 barCount: 1,
                                 dataSources: [isEnabled ? taskdata : state.activityDashboardData!.daywiseTaskSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
@@ -313,10 +309,6 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Employee Wise Task Summary',
-                          style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                        ),
                         SizedBox(
                             height: size.height * 0.3,
                             width: size.width * 0.25,
@@ -324,10 +316,10 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               enableSwitchAnimation: true,
                               enabled: isEnabled,
                               child: Customs.WMSCartesianChart(
-                                title: "",
+                                title: "Employee Wise Task Summary",
                                 legendVisibility: false,
                                 barCount: 1,
-                                dataSources: [isEnabled ? taskdata : state.activityDashboardData!.empwiseTaskSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                dataSources: [isEnabled ? taskdata : state.activityDashboardData!.empwiseTaskSummary!.map((e) => BarData(xLabel: e.status!.split('_')[0], yValue: e.count!, abbreviation: e.status!)).toList()],
                                 yAxisTitle: 'Number of Tasks',
                                  barColors: [Color.fromRGBO(64, 133, 138, 1)],
                               ),
@@ -402,17 +394,13 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Avg Time Taken by Employee ',
-                                      style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                                    ),
                                     Skeletonizer(
                                       enableSwitchAnimation: true,
                                       enabled: isEnabled,
                                       child: WMSCartesianChart(
-                                          title: '',
+                                          title: 'Avg Time Taken by Employee',
                                           barCount: 1,
-                                          dataSources: [isEnabled ? empTaskdata : state.activityDashboardData!.avgTimeTakenByEmp!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                          dataSources: [isEnabled ? empTaskdata : state.activityDashboardData!.avgTimeTakenByEmp!.map((e) => BarData(xLabel: e.status!.split('_')[0], yValue: e.count!, abbreviation: e.status!)).toList()],
                                           yAxisTitle: 'Number of Tasks',
                                           primaryColor: Color.fromRGBO(147, 0, 120, 0.5)),
                                     ),

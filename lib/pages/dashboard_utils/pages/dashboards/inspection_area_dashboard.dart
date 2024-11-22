@@ -86,17 +86,6 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
 
       return Column(
         children: [
-          Gap(constraints.maxHeight * 0.03),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Inspection Area Dashboard',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-          Gap(constraints.maxHeight * 0.03),
           Expanded(
             child: ListView(
               children: [
@@ -121,6 +110,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                   enabled: state.getInspectionDashboardState != InspectionDashboardState.success,
                                   child: Customs.WMSPieChart(
                                       title:'Today Quality Status',
+                                      legendVisibility: true,
                                       dataSource: state.getInspectionDashboardState != InspectionDashboardState.success ? [] : state.inspectionDashboardData!.totalQualityStatus!.map((e) => PieData(xData: e.status!, yData: e.count!,text: e.count!.toString())).toList(),
                                       pointColorMapper: (datum, index) {
                                         if (index == 1) {
@@ -147,7 +137,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                                                   title: Gauges.GaugeTitle(
                                     text: "Quality Efficiency",
                                     alignment: Gauges.GaugeAlignment.center,
-                                    textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
+                                    textStyle: TextStyle(fontSize: aspectRatio * 9, fontWeight: FontWeight.bold)),
                                                                   axes: [
                                   Gauges.RadialAxis(
                                     maximum: 100,
@@ -183,7 +173,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                     radiusFactor: aspectRatio * 0.3,
                                     pointers: [
                                       Gauges.MarkerPointer(
-                                        value: isEnabled ? 85 : int.parse(state.stagingDashboardData!.shippingEfficiency!.replaceAll('%', '')).toDouble(),
+                                        value: isEnabled ? 85 : int.parse(state.inspectionDashboardData!.qualityEfficiency!.toString()).toDouble(),
                                         markerType: Gauges.MarkerType.invertedTriangle,
                                         markerHeight: 20,
                                         markerWidth: 20,
@@ -209,7 +199,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                   enableSwitchAnimation: true,
                                   enabled: state.getInspectionDashboardState != InspectionDashboardState.success,
                                   child: SfCircularChart(
-                                    title: const ChartTitle(text: "Material Quality", textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                                    title: const ChartTitle(text: "Material Quality", textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                                     annotations: <CircularChartAnnotation>[
                                       CircularChartAnnotation(
                                         widget: Container(
@@ -233,7 +223,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                       CircularChartAnnotation(
                                         widget: Container(
                                           child: Text(
-                                            state.getInspectionDashboardState != InspectionDashboardState.success ? '68%' : state.inspectionDashboardData!.materialQuality!,
+                                            state.getInspectionDashboardState != InspectionDashboardState.success ? '68%' : '${state.inspectionDashboardData!.materialQuality!}%',
                                             style: TextStyle(
                                               color: Color.fromARGB(255, 101, 10, 10),
                                               fontSize: 25,

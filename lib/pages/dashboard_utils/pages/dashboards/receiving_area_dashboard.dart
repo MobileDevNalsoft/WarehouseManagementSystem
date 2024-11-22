@@ -122,24 +122,11 @@ var weekDays = {
 
       return Column(
         children: [
-          Gap(constraints.maxHeight * 0.03),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Receiving Area Dashboard',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-          Gap(constraints.maxHeight * 0.03),
           Expanded(
             child: ListView(
               children: [
                 BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
                   bool isEnabled = state.getReceivingDashboardState != ReceivingDashboardState.success;
-                  print(state.getReceivingDashboardState);
-                  print(state.receivingDashboardData);
                   return Column(
                     children: [
                       Row(
@@ -196,6 +183,7 @@ var weekDays = {
                                     enabled: state.getReceivingDashboardState != ReceivingDashboardState.success,
                                     child: Customs.WMSPieChart(
                                         title: "Total Inbound Summary",
+                                        legendVisibility: true,
                                         dataSource: state.getReceivingDashboardState != ReceivingDashboardState.success
                                             ? [
                                                 PieData(xData: "Open", yData: 16, text: "16"),
@@ -215,7 +203,6 @@ var weekDays = {
                                           }
                                         }),
                                   ),
-                                  const Text("Inbound orders status wise ")
                                 ],
                               )),
                           Container(
@@ -235,7 +222,7 @@ var weekDays = {
                                   title: Gauges.GaugeTitle(
                                       text: "Putaway Accuracy",
                                       alignment: Gauges.GaugeAlignment.center,
-                                      textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
+                                      textStyle: TextStyle(fontSize: aspectRatio * 9, fontWeight: FontWeight.bold)),
                                   axes: [
                                     Gauges.RadialAxis(
                                       maximum: 100,
@@ -265,13 +252,13 @@ var weekDays = {
                                             ))
                                       ],
                                       axisLineStyle: const Gauges.AxisLineStyle(
-                                          thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothFlat),
+                                          thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
                                       showTicks: false,
                                       showLabels: false,
                                       radiusFactor: aspectRatio * 0.3,
                                       pointers: [
                                         Gauges.MarkerPointer(
-                                          value: isEnabled ? 0 : state.receivingDashboardData!.putawayAccuracy!,
+                                          value: isEnabled ? 0 : state.receivingDashboardData!.putawayAccuracy!+3,
                                           markerType: Gauges.MarkerType.invertedTriangle,
                                           markerHeight: 20,
                                           markerWidth: 20,
@@ -318,7 +305,7 @@ var weekDays = {
                                 child: Customs.WMSCartesianChart(
                                     title: 'Supplier Wise Inbound Summary  ',
                                     barCount: 1,
-                                    dataSources: isEnabled ? [barData1] : [state.receivingDashboardData!.supplierwiseInboundSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                    dataSources: isEnabled ? [barData1] : [state.receivingDashboardData!.supplierwiseInboundSummary!.sublist(0,7).map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
                                     yAxisTitle: 'No of ASNs Received',
                                     barColors: [const Color.fromARGB(255, 248, 112, 15)]),
                               )),
@@ -338,7 +325,7 @@ var weekDays = {
                                 child: Customs.WMSCartesianChart(
                                     title: 'User Receiving Efficiency  ',
                                     barCount: 1,
-                                    dataSources: [isEnabled ? userReceivingEfficiency : state.receivingDashboardData!.userReceivingEfficiency!.map((e) => BarData(xLabel: e.userName!, yValue: e.count!, abbreviation: e.userName!),).toList()],
+                                    dataSources: [isEnabled ? userReceivingEfficiency : state.receivingDashboardData!.userReceivingEfficiency!.map((e) => BarData(xLabel: e.userName!.split('_')[0], yValue: e.count!, abbreviation: e.userName!),).toList()],
                                     yAxisTitle: 'No of LPNs Received',
                                     barColors: [const Color.fromARGB(255, 15, 123, 189)]),
                               ))
@@ -420,44 +407,61 @@ var weekDays = {
                                   boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
-                              child: Stack(
-                                children: [
-                                  SfRadialGauge(
-                                    title: const GaugeTitle(
-                                        text: "Receiving Efficiency",
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.underline,
-                                        )),
-                                    enableLoadingAnimation: true,
-                                    animationDuration: 2000,
-                                    axes: <RadialAxis>[
-                                      RadialAxis(
-                                          centerX: 0.5,
-                                          centerY: 0.6,
-                                          startAngle: 180,
-                                          endAngle: 0,
-                                          labelsPosition: ElementsPosition.outside,
-                                          showLabels: true,
-                                          showAxisLine: false,
-                                          showTicks: false,
-                                          showLastLabel: true,
-                                          minimum: 0,
-                                          maximum: 100,
-                                          ranges: <GaugeRange>[
-                                            GaugeRange(
-                                                startValue: 0, endValue: 50, color: const Color.fromARGB(255, 121, 43, 181), startWidth: 50, endWidth: 50),
-                                            GaugeRange(
-                                                startValue: 50, endValue: 100, color: const Color.fromARGB(255, 189, 200, 210), startWidth: 50, endWidth: 50),
-                                          ])
-                                    ],
-                                  ),
-                                  const Positioned(
-                                    bottom: 100,
-                                    right: 150,
-                                    child: Text("50%"),
-                                  )
-                                ],
+                              child:Skeletonizer(
+                                enableSwitchAnimation: true,
+                                enabled: state.getReceivingDashboardState != ReceivingDashboardState.success,
+                                child: Gauges.SfRadialGauge(
+                                  title: Gauges.GaugeTitle(
+                                      text: "Receiving Efficiency",
+                                      alignment: Gauges.GaugeAlignment.center,
+                                      textStyle: TextStyle(fontSize: aspectRatio * 9, fontWeight: FontWeight.bold)),
+                                  axes: [
+                                    Gauges.RadialAxis(
+                                      maximum: 100,
+                                      minimum: 0,
+                                      interval: 25,
+                                      canScaleToFit: true,
+                                      annotations: [
+                                        Gauges.GaugeAnnotation(
+                                            verticalAlignment: Gauges.GaugeAlignment.center,
+                                            widget: Container(
+                                              height: size.height * 0.12,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.blueGrey.shade100,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade900,
+                                                    blurRadius: 10, // Adjust to set shadow direction
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Text(
+                                                isEnabled ? "90%" : '${state.receivingDashboardData!.receivingEfficiency!}%',
+                                                style: TextStyle(fontSize: aspectRatio * 10),
+                                              ),
+                                            ))
+                                      ],
+                                      axisLineStyle: const Gauges.AxisLineStyle(
+                                          thickness: 35, color: Color.fromARGB(255, 86, 185, 180), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                      showTicks: false,
+                                      showLabels: false,
+                                      radiusFactor: aspectRatio * 0.3,
+                                      pointers: [
+                                        Gauges.MarkerPointer(
+                                          value: isEnabled ? 0 : state.receivingDashboardData!.receivingEfficiency!+3,
+                                          markerType: Gauges.MarkerType.invertedTriangle,
+                                          markerHeight: 20,
+                                          markerWidth: 20,
+                                          color: Colors.white,
+                                          enableAnimation: true,
+                                          elevation: 10,
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
                               )),
                           Container(
                               margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),

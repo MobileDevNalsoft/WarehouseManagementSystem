@@ -25,7 +25,6 @@ class YardAreaDashboard extends StatefulWidget {
         title: ChartTitle(
             text: title,
             textStyle: const TextStyle(
-              decoration: TextDecoration.underline,
               fontWeight: FontWeight.bold,
             )),
         legend: isLegendVisible != null
@@ -266,7 +265,6 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
     Size size = MediaQuery.of(context).size;
     double aspectRatio = size.width / size.height;
     return BlocBuilder<DashboardsBloc, DashboardsState>(
-   
       builder: (context, state) {
         bool isEnabled = state.getYardDashboardState != YardDashboardState.success;
 
@@ -286,17 +284,13 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                       alignment: Alignment.bottomCenter,
                       child: Column(
                         children: [
-                          Text(
-                            'Vehicle Detention',
-                            style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                          ),
                           Skeletonizer(
                             enabled: isEnabled,
                             child: SizedBox(
                               height: size.height * 0.3,
                               width: size.width * 0.25,
                               child: Customs.WMSCartesianChart(
-                                  title: '',
+                                  title: 'Vehicle Detention',
                                   barCount: 1,
                                   dataSources: [
                                     [
@@ -335,11 +329,13 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                           dataSource: [
                             PieData(
                                 xData: "Available Locations",
-                                yData: isEnabled ? 10 : (state.yardDashboardData!.yardUtilization!.totalLocations! -
-                                    state.yardDashboardData!.yardUtilization!.occupied!),
-                                text: isEnabled ? 'String' : (state.yardDashboardData!.yardUtilization!.totalLocations! -
-                                        state.yardDashboardData!.yardUtilization!.occupied!)
-                                    .toString()),
+                                yData: isEnabled
+                                    ? 10
+                                    : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!),
+                                text: isEnabled
+                                    ? 'String'
+                                    : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!)
+                                        .toString()),
                             PieData(
                                 xData: "Occupied",
                                 yData: isEnabled ? 20 : state.yardDashboardData!.yardUtilization!.occupied!,
@@ -367,31 +363,34 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Day Wise Task Summary ',
-                            style: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold),
-                          ),
                           Skeletonizer(
                             enabled: isEnabled,
                             child: SizedBox(
                               height: size.height * 0.3,
                               width: size.width * 0.25,
                               child: YardAreaDashboard.WMSCartesianChart(
-                                  title: '',
+                                  title: 'Daywise Task Summary',
                                   primaryColor: Colors.blueAccent,
                                   secondaryColor: const Color.fromARGB(255, 138, 40, 155),
                                   barCount: 2,
                                   isLegendVisible: true,
                                   legendText: ["Loading", "Unloading"],
-                                  dataSources: [isEnabled ? [] : state.yardDashboardData!.dayWiseYardUtilzation!
-        .map(
-          (e) => BarData(xLabel: e.checkInDate!, yValue: e.loadingCnt!, abbreviation: e.checkInDate!),
-        )
-        .toList(), isEnabled ? [] : state.yardDashboardData!.dayWiseYardUtilzation!
-        .map(
-          (e) => BarData(xLabel: e.checkInDate!, yValue: e.unloadingCnt!, abbreviation: e.checkInDate!),
-        )
-        .toList()],
+                                  dataSources: [
+                                    isEnabled
+                                        ? []
+                                        : state.yardDashboardData!.dayWiseYardUtilzation!
+                                            .map(
+                                              (e) => BarData(xLabel: e.checkInDate!, yValue: e.loadingCnt!, abbreviation: e.checkInDate!),
+                                            )
+                                            .toList(),
+                                    isEnabled
+                                        ? []
+                                        : state.yardDashboardData!.dayWiseYardUtilzation!
+                                            .map(
+                                              (e) => BarData(xLabel: e.checkInDate!, yValue: e.unloadingCnt!, abbreviation: e.checkInDate!),
+                                            )
+                                            .toList()
+                                  ],
                                   yAxisTitle: 'Number of Vehicles'),
                             ),
                           ),
@@ -414,12 +413,15 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                         alignment: Alignment.topCenter,
                         child: Customs.WMSSfCircularChart(
                             size: size,
-                            chartData: isEnabled ? [] : [
-      AnalogChartData('Yard time', state.yardDashboardData!.averageYardTime!.avgYardTime!, const Color.fromRGBO(147, 0, 119, 1)),
-      AnalogChartData('rest', 50 - state.yardDashboardData!.averageYardTime!.avgYardTime!, Colors.transparent),
-    ],
+                            chartData: isEnabled
+                                ? []
+                                : [
+                                    AnalogChartData('Yard time', state.yardDashboardData!.averageYardTime!.avgYardTime!, const Color.fromRGBO(147, 0, 119, 1)),
+                                    AnalogChartData('rest', 50 - state.yardDashboardData!.averageYardTime!.avgYardTime!, Colors.transparent),
+                                  ],
                             title: "Average Yard Time",
-                            contentText: isEnabled ? 'String' : "${_dashboardsBloc.state.yardDashboardData!.averageYardTime!.avgYardTime!.truncate().toString()}H",
+                            contentText:
+                                isEnabled ? 'String' : "${_dashboardsBloc.state.yardDashboardData!.averageYardTime!.avgYardTime!.truncate().toString()}H",
                             width: 150,
                             height: 150,
                             radius: "60%")),
@@ -435,15 +437,17 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                         padding: EdgeInsets.all(size.height * 0.035),
                         alignment: Alignment.topCenter,
                         child: SfCircularChart(
-                            title: ChartTitle(text: "Previous month yard acitvity"),
+                            title: ChartTitle(text: "Previous month yard acitvity", textStyle: TextStyle(fontWeight: FontWeight.bold)),
                             legend: Legend(isResponsive: true, isVisible: true),
                             series: <CircularSeries>[
                               // Renders radial bar chart
                               RadialBarSeries<ChartData, String>(
-                                dataSource: isEnabled ? [] : [
-      ChartData('Loading', state.yardDashboardData!.previousMonthYardUtilization!.loadingCount!.toDouble()),
-      ChartData('Unloading', state.yardDashboardData!.previousMonthYardUtilization!.unloadingCount!.toDouble()),
-    ],
+                                dataSource: isEnabled
+                                    ? []
+                                    : [
+                                        ChartData('Loading', state.yardDashboardData!.previousMonthYardUtilization!.loadingCount!.toDouble()),
+                                        ChartData('Unloading', state.yardDashboardData!.previousMonthYardUtilization!.unloadingCount!.toDouble()),
+                                      ],
                                 cornerStyle: CornerStyle.bothCurve,
                                 innerRadius: "45%",
                                 dataLabelSettings: DataLabelSettings(
