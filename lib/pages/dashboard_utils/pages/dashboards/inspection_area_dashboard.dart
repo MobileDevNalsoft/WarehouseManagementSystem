@@ -102,6 +102,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                   child: BlocBuilder<DashboardsBloc, DashboardsState>(
                     builder: (context, state) {
                       bool isEnabled = state.getInspectionDashboardState != InspectionDashboardState.success;
+                      // print("count ${state.inspectionDashboardData!.supplierQuality!.length}");
                       return Column(
                         children: [
                           Row(
@@ -289,7 +290,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                   child: Customs.WMSCartesianChart(
                                       title: 'Supplier Wise Quality  ',
                                       barCount: 1,
-                                      dataSources: [barData_sup],
+                                      dataSources: state.getInspectionDashboardState != InspectionDashboardState.success?[barData_sup]:[state.inspectionDashboardData!.supplierQuality!.map((e)=> BarData(xLabel: e.supplier!, yValue: e.quality!.toInt(), abbreviation: e.supplier!)).toList()],
                                       yAxisTitle: 'Quality In Percentage',
                                       barColors: const [Color.fromARGB(255, 114, 68, 5)]))
                             ],
