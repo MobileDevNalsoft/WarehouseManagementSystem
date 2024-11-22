@@ -379,7 +379,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                     builder: (context,constraints) {
                       return Container(
                           margin: EdgeInsets.all(aspectRatio * 8),
-                          height: size.height * 0.45,
+                          height: size.height * 0.48,
                           width: size.width * 0.52,
                           decoration: BoxDecoration(
                               color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
