@@ -2,6 +2,15 @@ import * as THREE from "three";
 import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation } from "animations";
 
+export function highlightBinsFromSearch(bins) {
+  let listOfBins = bins.toString().split(",");
+
+  for (let i = 0; i < listOfBins; i++) {
+    console.log("got " + listOfBins[i]);
+    changeColor({ name: listOfBins[i] });
+  }
+}
+
 export function addInteractions(scene, model, camera, controls) {
   const container = document.getElementById("container");
 
@@ -88,13 +97,17 @@ export function addInteractions(scene, model, camera, controls) {
           targetObject.name.toString().includes("Area")
         ) {
           if (name.includes("rack")) {
-            console.log('{"rack":"' + name.substring(name.length-2, name.length).toUpperCase() + '"}');
-            
+            console.log(
+              '{"rack":"' +
+                name.substring(name.length - 2, name.length).toUpperCase() +
+                '"}'
+            );
+
             window.localStorage.setItem("getData", name);
-          } else  {
+          } else {
             console.log('{"area":"' + name + '"}');
             window.localStorage.setItem("rack_cam", "warehouse");
-            window.localStorage.setItem( "getData", name );
+            window.localStorage.setItem("getData", name);
             if (name == "yardArea") {
               for (let i = 1; i <= 20; i++) {
                 scene.getObjectByName("truck_Y" + i).visible = false;
@@ -114,11 +127,10 @@ export function addInteractions(scene, model, camera, controls) {
             window.localStorage.setItem("rack_cam", "warehouse");
           }
         } else if (
-          name.includes("b") &&
-          name.includes("r") &&
+          name.includes("B") &&
+          (name.includes("L") || name.includes("R")) &&
           prevNav.includes("rack")
         ) {
-          
           changeColor(targetObject);
           window.localStorage.setItem("switchToMainCam", "null");
         } else {
@@ -132,7 +144,7 @@ export function addInteractions(scene, model, camera, controls) {
           prevNav = name;
         }
       }
-    }else {
+    } else {
       console.log('{"object":"null"}');
     }
   }
@@ -140,45 +152,107 @@ export function addInteractions(scene, model, camera, controls) {
   window.addEventListener("mousemove", onMouseMove); // triggered when mouse pointer is moved.
   window.addEventListener("mousedown", onMouseDown);
   window.addEventListener("mouseup", onMouseUp); // triggered when mouse pointer is clicked.
+  let actualBinColor;
+  let highlightedBins ;
+  // setInterval(() => {
+    
+  //   if (localStorage.getItem("highlightBins") !== null) {
+     
+  //     actualBinColor = scene.getObjectByName( localStorage
+  //       .getItem("highlightBins")
+  //       .toString()
+  //       .split(",")[0].replaceAll("{", "").replaceAll("}", "").trim()).material.color;
+       
+  //       console.log("actualBinColor "+actualBinColor);
+
+
+  //       highlightedBins= localStorage
+  //       .getItem("highlightBins")
+  //       .toString().replaceAll("{", "").replaceAll("}", "").replace(" ", "")
+  //       .split(",");
+  //       console.log(highlightedBins);
+
+  //     localStorage
+  //       .getItem("highlightBins")
+  //       .toString()
+  //       .split(",")
+  //       .forEach((e) => {
+  //         let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
+  //         scene.getObjectByName(bin).material.color.set(0xadd8e6);
+  //         scene.getObjectByName(bin).material.opacity = 0.5;
+  //       });
+
+  //     localStorage.removeItemItem("highlightBins");
+  //   }
+
+  //   if(localStorage.getItem("resetBoxColors")!==null && localStorage.getItem("resetBoxColors")==true &&  highlightedBins.length!=0){
+
+  //     highlightedBins.forEach((e)=>{
+  //      console.log(e);
+  //      console.log(e.toString().replaceAll(" ",""));
+  //     scene.getObjectByName(e.toString().replaceAll(" ","")).material.color.copy(actualBinColor) ;
+  //     });
+  //     highlightedBins=[];
+  //     localStorage.getItem("resetBoxColors")=false;
+  //   }
+  //   // else{
+  //   //   localStorage.getItem("resetBoxColors")=false;
+  //   // }
+    
+  // }, 1000);
 
   function changeColor(object) {
+   
     if (prevBin != null) {
       prevBin.material.color.copy(prevBinColor);
     }
 
     prevBinColor = object.material.color.clone();
-    let actualName = object.name.toString();
-    let resultBin = ""
-    let bay="";
+    let objectName = object.name.toString();
+    console.log("object "+objectName);
+    console.log("material "+object.material.color);
 
-    resultBin = actualName.substring(1,4);
-    let column = parseInt( actualName.charAt(actualName.length - 1));
-    bay = Math.ceil(parseInt( actualName.charAt(actualName.length - 1))/2);
-    resultBin += bay;
-    resultBin += "0"+actualName.charAt(4);
-    resultBin += "0"+ Math.floor(column/bay);
-
-    if (prevBin != object) {
-      object.userData.active = true;
-      // Set transparent blue color
+    if (fromSearch) {
       object.material.color.set(0xadd8e6); // Blue color
-      object.material.opacity = 0.5; // Adjust opacity for transparency
-      console.log('{"bin":"' + resultBin + '"}');
-      moveToBin(object, camera, controls);
-    } else {
-      if (object.userData.active == false) {
+      object.material.opacity = 0.5;
+    } 
+    
+    else {
+      if (prevBin != object) {
         object.userData.active = true;
-        prevBinColor = object.material.color.clone();
-        prevBin = object;
         // Set transparent blue color
         object.material.color.set(0xadd8e6); // Blue color
         object.material.opacity = 0.5; // Adjust opacity for transparency
-        console.log('{"bin":"' + resultBin + '"}');
+        console.log('{"bin":"' + objectName + '"}');
+
         moveToBin(object, camera, controls);
       } else {
-        object.userData.active = false;
-        console.log('{"rack":"' + prevNav.split("_")[0].substring(prevNav.split("_")[0].length-2, prevNav.split("_")[0].length).toUpperCase() + '"}');
-        switchCamera(scene, prevNav.split("_")[0], camera, controls);
+        if (object.userData.active == false) {
+          object.userData.active = true;
+          prevBinColor = object.material.color.clone();
+          prevBin = object;
+          // Set transparent blue color
+          object.material.color.set(0xadd8e6); // Blue color
+          object.material.opacity = 0.5; // Adjust opacity for transparency
+          console.log('{"bin":"' + objectName + '"}');
+
+          moveToBin(object, camera, controls);
+        } else {
+          object.userData.active = false;
+          console.log(
+            '{"rack":"' +
+              prevNav
+                .split("_")[0]
+                .substring(
+                  prevNav.split("_")[0].length - 2,
+                  prevNav.split("_")[0].length
+                )
+                .toUpperCase() +
+              '"}'
+          );
+
+          switchCamera(scene, prevNav.split("_")[0], camera, controls);
+        }
       }
     }
     prevBin = object;
@@ -500,5 +574,6 @@ document.addEventListener("wheel", (event) => {
   });
   const manButton = document.getElementById("image-button-container");
   manButton.style.display = "none";
-  // console.log('{"object":"null"}');
+  //console.log('{"object":"null"}');
+  localStorage.setItem("resetBoxColors",true);
 });

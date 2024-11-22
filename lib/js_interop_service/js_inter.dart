@@ -19,6 +19,17 @@ external _setNumberOfTrucks(String message);
 external _resetTrucks();
 
 @JS()
+external _highlightBins(String bins);
+
+@JS()
+external _navigateToBin(String message);
+
+@JS()
+external _resetBoxColors();
+
+
+
+@JS()
 external _showAlert(String message);
 
 @JS()
@@ -53,8 +64,22 @@ class JsInteropService {
     _resetTrucks();
   }
 
+ navigateToBin(String message) {
+    _navigateToBin(message);
+  }
+
+ resetBoxColors() {
+    _resetBoxColors();
+  }
+
+
   showAlert(String message) {
     _showAlert(message);
+  }
+
+
+  highlightBins(String bins){
+    _highlightBins(bins);
   }
 
   requestFullScreen() {

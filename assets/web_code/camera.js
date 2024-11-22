@@ -69,8 +69,9 @@ export function moveToBin(object, camera, controls) {
   var aabb = new THREE.Box3().setFromObject(object);
   var center = aabb.getCenter(new THREE.Vector3());
   var size = aabb.getSize(new THREE.Vector3());
-  const regex = /r\d+r/;
+  const regex = /^[0-9][LR]B\d{5}$/;
 
+  // console.log(object);
   // Create a GSAP timeline for smoother transitions
   const timeline = gsap.timeline();
 

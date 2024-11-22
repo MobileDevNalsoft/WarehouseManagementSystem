@@ -483,7 +483,7 @@ document.addEventListener("DOMContentLoaded", function () {
           window.localStorage.setItem("switchToMainCam", "null");
           prevNav = targetObject.name.toString();
         } else if (
-          targetObject.name.toString().includes("b") &&
+          targetObject.name.toString().includes("B") &&
           prevNav.includes("rack")
         ) {
           changeColor(targetObject);
