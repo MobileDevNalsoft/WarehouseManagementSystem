@@ -23,7 +23,7 @@ class InspectionDashboard{
   String? materialQuality;
   List<StatusCount>? daywiseQualitySummary;
   double? qualityEfficiency;
-
+  List<SupplierQuality>? supplierQuality;
   InspectionDashboard({this.totalQualityStatus, this.materialQuality, this.daywiseQualitySummary, this.qualityEfficiency});
 
   InspectionDashboard.fromJson(Map<String, dynamic> json){
@@ -31,6 +31,7 @@ class InspectionDashboard{
     materialQuality = json['material_quality'];
     daywiseQualitySummary = (json['daywise_quality_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     qualityEfficiency = json['quality_efficiency'];
+    supplierQuality = (json['supplier_quality'] as List).map((e) => SupplierQuality.fromJson(e)).toList();
   }
 }
 
@@ -42,5 +43,17 @@ class StatusCount{
   StatusCount.fromJson(Map<String, dynamic> json){
     status = json.keys.first;
     count = json.values.first.toInt();
+  }
+}
+
+
+class SupplierQuality{
+  String? supplier;
+  double? quality;
+  SupplierQuality({this.supplier, this.quality});
+
+  SupplierQuality.fromJson(Map<String, dynamic> json){
+    supplier = json.keys.first;
+    quality = json.values.first;
   }
 }
