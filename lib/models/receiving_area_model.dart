@@ -67,7 +67,7 @@ class ReceivingDashboard{
   List<UserCount>? userReceivingEfficiency;
   List<StatusCount>? supplierwiseInboundSummary;
   double? putawayAccuracy;
-  List<DayWiseInboundSummary>? dayWiseInboundSummary;
+  List<StatusCount>? dayWiseInboundSummary;
   ReceivingDashboard({this.totalInBoundSummary, this.avgPutawayTime, this.avgReceivingTime, this.userReceivingEfficiency, this.supplierwiseInboundSummary, this.putawayAccuracy, this.dayWiseInboundSummary,this.asnStatus,this.receivingEfficiency});
 
   ReceivingDashboard.fromJson(Map<String, dynamic> json){
@@ -76,7 +76,7 @@ class ReceivingDashboard{
     avgReceivingTime = json['avg_receiving_time'];
     asnStatus = AsnStatus.fromJson(json['today_asn_status']);
     receivingEfficiency= json['receiving_efficiency'];
-    dayWiseInboundSummary = (json['day_wise_inbound_summary'] as List).map((e)=> DayWiseInboundSummary.fromJson(e) ).toList();
+    dayWiseInboundSummary = (json['day_wise_inbound_summary'] as List).map((e)=> StatusCount.fromJson(e) ).toList();
     userReceivingEfficiency = (json['user_receiving_efficiency'] as List).map((e) => UserCount.fromJson(e)).toList();
     supplierwiseInboundSummary = (json['supplierwise_inbound_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     putawayAccuracy = json['putaway_accuracy'];

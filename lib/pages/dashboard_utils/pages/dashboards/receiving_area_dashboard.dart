@@ -39,7 +39,15 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
     BarData(xLabel: 'ABC', yValue: 6, abbreviation: 'Wednesday'),
   ];
 
-  List<BarData>? userReceivingEfficiency;
+  List<BarData> userReceivingEfficiency = [
+    BarData(xLabel: 'Mon', yValue: 4, abbreviation: 'Monday'),
+    BarData(xLabel: 'Tue', yValue: 6, abbreviation: 'Tuesday'),
+    BarData(xLabel: 'Wed', yValue: 9, abbreviation: 'Wednesday'),
+    BarData(xLabel: 'Thu', yValue: 5, abbreviation: 'Thursday'),
+    BarData(xLabel: 'Fri', yValue: 18, abbreviation: 'Friday'),
+    BarData(xLabel: 'Sat', yValue: 12, abbreviation: 'Saturday'),
+    BarData(xLabel: 'Sun', yValue: 9, abbreviation: 'Sunday')
+  ];
 
   // Define lists for job card statuses and their corresponding values (replace with actual data)
   List<BarData> inBoundData = [
@@ -128,47 +136,15 @@ var weekDays = {
           Expanded(
             child: ListView(
               children: [
-                BlocConsumer<DashboardsBloc, DashboardsState>(listener: (context, state) {
-                  if (state.getReceivingDashboardState == ReceivingDashboardState.success) {
-                    userReceivingEfficiency = state.receivingDashboardData!.userReceivingEfficiency!
-                        .map((e) => BarData(xLabel: e.userName!, yValue: e.count!, abbreviation: ''))
-                        .toList();
-                  }
-                }, builder: (context, state) {
+                BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
                   bool isEnabled = state.getReceivingDashboardState != ReceivingDashboardState.success;
+                  print(state.getReceivingDashboardState);
+                  print(state.receivingDashboardData);
                   return Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                            height: constraints.maxHeight * 0.48,
-                            width: constraints.maxWidth * 0.3,
-                            decoration: BoxDecoration(
-                                color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                            padding: EdgeInsets.all(size.height * 0.035),
-                            alignment: Alignment.topCenter,
-                            child: Customs.WMSPieChart(
-                                title: "Total ASN Status",
-                                dataSource: [
-                                  PieData(xData: "In-Transit", yData: 8, text: "8"),
-                                  PieData(xData: "In Receiving", yData: 4, text: "4"),
-                                  PieData(xData: "Received", yData: 3, text: "3"),
-                                  PieData(xData: "Cancelled", yData: 1, text: "1")
-                                ],
-                                pointColorMapper: (datum, index) {
-                                  if (datum.text == '8') {
-                                    return const Color.fromARGB(255, 27, 219, 219);
-                                  } else if (datum.text == '4') {
-                                    return const Color.fromARGB(255, 57, 33, 0);
-                                  } else if (datum.text == '3') {
-                                    return const Color.fromARGB(255, 38, 82, 113);
-                                  } else {
-                                    return const Color.fromARGB(255, 241, 114, 41);
-                                  }
-                                }),
-                          ),
                           Container(
                               margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
                               height: constraints.maxHeight * 0.48,
@@ -179,6 +155,7 @@ var weekDays = {
                               alignment: Alignment.topCenter,
                               child: Customs.WMSPieChart(
                                   title: "Total ASN Status",
+                                  legendVisibility: true,
                                   dataSource:
                                   state.getReceivingDashboardState == ReceivingDashboardState.success?
                                   [PieData(xData: "In-Transit", yData: state.receivingDashboardData!.asnStatus!.inTransit!, text:  state.receivingDashboardData!.asnStatus!.inTransit!.toString()),
@@ -193,11 +170,11 @@ var weekDays = {
                                     PieData(xData: "Cancelled", yData: 1, text: "1")
                                   ],
                                   pointColorMapper: (datum, index) {
-                                    if (datum.text == '8') {
+                                    if (index == 0) {
                                       return const Color.fromARGB(255, 27, 219, 219);
-                                    } else if (datum.text == '4') {
+                                    } else if (index == 1) {
                                       return const Color.fromARGB(255, 57, 33, 0);
-                                    } else if (datum.text == '3') {
+                                    } else if (index == 2) {
                                       return const Color.fromARGB(255, 38, 82, 113);
                                     } else {
                                       return const Color.fromARGB(255, 241, 114, 41);
@@ -288,7 +265,7 @@ var weekDays = {
                                             ))
                                       ],
                                       axisLineStyle: const Gauges.AxisLineStyle(
-                                          thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                          thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothFlat),
                                       showTicks: false,
                                       showLabels: false,
                                       radiusFactor: aspectRatio * 0.3,
@@ -318,29 +295,13 @@ var weekDays = {
                               height: constraints.maxHeight * 0.48,
                               width: constraints.maxWidth * 0.3,
                               decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.topCenter,
-                              child: Customs.WMSCartesianChart(
-                                  title: 'Day Wise Inbound Summary  ',
-                                  barCount: 1,
-                                  dataSources: [barData],
-                                  yAxisTitle: 'No of ASNs Received',
-                                  barColors: [const Color.fromARGB(255, 248, 190, 15)])),
-                          Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
                                   color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                               padding: EdgeInsets.all(size.height * 0.035),
                               alignment: Alignment.topCenter,
                                 child: Customs.WMSCartesianChart(
                                     title: 'Day Wise Inbound Summary  ',
                                     barCount: 1,
-                                    dataSources: (state.getReceivingDashboardState == ReceivingDashboardState.success)?  [state.receivingDashboardData!.dayWiseInboundSummary!.map((e)=>BarData(xLabel: weekDays[DateTime.parse(e.verifiedDate!.substring(0,10)).weekday]??"", yValue: e.shipmentCount??0, abbreviation:e.verifiedDate??"")).toList()]:[barData],
+                                    dataSources: (state.getReceivingDashboardState == ReceivingDashboardState.success)?  [state.receivingDashboardData!.dayWiseInboundSummary!.map((e)=>BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()]:[barData],
                                     yAxisTitle: 'No of ASNs Received',
                                     barColors: [const Color.fromARGB(255, 248, 190, 15)])),
                             Container(
@@ -377,7 +338,7 @@ var weekDays = {
                                 child: Customs.WMSCartesianChart(
                                     title: 'User Receiving Efficiency  ',
                                     barCount: 1,
-                                    dataSources: state.getReceivingDashboardState != ReceivingDashboardState.success ? [[]] : [userReceivingEfficiency!],
+                                    dataSources: [isEnabled ? userReceivingEfficiency : state.receivingDashboardData!.userReceivingEfficiency!.map((e) => BarData(xLabel: e.userName!, yValue: e.count!, abbreviation: e.userName!),).toList()],
                                     yAxisTitle: 'No of LPNs Received',
                                     barColors: [const Color.fromARGB(255, 15, 123, 189)]),
                               ))
@@ -449,53 +410,6 @@ var weekDays = {
                                     ],
                                   ),
                                 )),
-                            Container(
-                                margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.topCenter,
-                                child: Stack(
-                                  children: [
-                                    SfRadialGauge(
-                                      title: const GaugeTitle(
-                                          text: "Receiving Efficiency",
-                                          textStyle: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            decoration: TextDecoration.underline,
-                                          )),
-                                      enableLoadingAnimation: true,
-                                      animationDuration: 2000,
-                                      axes: <RadialAxis>[
-                                        RadialAxis(
-                                            centerX: 0.5,
-                                            centerY: 0.6,
-                                            startAngle: 180,
-                                            endAngle: 0,
-                                            labelsPosition: ElementsPosition.outside,
-                                            showLabels: true,
-                                            showAxisLine: false,
-                                            showTicks: false,
-                                            showLastLabel: true,
-                                            minimum: 0,
-                                            maximum: 100,
-                                            ranges: <GaugeRange>[
-                                              GaugeRange(startValue: 0, endValue:(state.getReceivingDashboardState != ReceivingDashboardState.success )? 10: state.receivingDashboardData!.receivingEfficiency!.toDouble(), color: const Color.fromARGB(255, 121, 43, 181), startWidth: 50, endWidth: 50),
-                                              GaugeRange(
-                                                  startValue: (state.getReceivingDashboardState != ReceivingDashboardState.success )? 10: state.receivingDashboardData!.receivingEfficiency!.toDouble(), endValue: 100, color: const Color.fromARGB(255, 189, 200, 210), startWidth: 50, endWidth: 50),
-                                            ])
-                                      ],
-                                    ),
-                                     Positioned(
-                                      bottom: 100,
-                                      right: 150,
-                                      child: Text( (state.getReceivingDashboardState != ReceivingDashboardState.success )? "10": state.receivingDashboardData!.receivingEfficiency!.toDouble().truncate().toString(),),
-                                    )
-                                  ],
-                                ),
-                              ),
                           Container(
                               margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
                               height: constraints.maxHeight * 0.48,

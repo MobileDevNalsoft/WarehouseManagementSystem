@@ -31,6 +31,14 @@ class GetDockDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
+class GetYardDashboardData extends DashboardsEvent{
+  int facilityID;
+  GetYardDashboardData({required this.facilityID});
+
+  @override
+  List<Object> get props => [facilityID];
+}
+
 class GetReceivingDashboardData extends DashboardsEvent{
   int facilityID;
   GetReceivingDashboardData({required this.facilityID});

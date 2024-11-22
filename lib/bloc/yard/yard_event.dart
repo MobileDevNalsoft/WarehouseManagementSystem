@@ -15,7 +15,3 @@ class YardTruckExpanded extends YardEvent{
   int index;
    YardTruckExpanded({required this.index});
 }
-
-class GetYardDashboardData extends YardEvent{
-   GetYardDashboardData();
-}
