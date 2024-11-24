@@ -12,8 +12,7 @@ export function createCamera() {
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   // Set the position of the new camera based on the imported camera's position
-  camera.position.set(0, 350, 600);
-  camera.lookAt(0, 0, 0);
+  camera.position.set(0, 600, 500);
 
   return camera;
 }
@@ -176,13 +175,12 @@ function getPositionAndTarget(scene, name) {
 
   switch (view) {
     case "compoundArea":
-      position.set(0, 500, 200);
-      target.set(0, 0, -50);
+      position.set(0, 550, 200);
+      target.set(0, 0, -60);
+      target.z = target.z+50;
       console.log('{"object":"null"}');
       break;
     case "storageArea":
-      
-      
       position.set(-78, 60, 20);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);

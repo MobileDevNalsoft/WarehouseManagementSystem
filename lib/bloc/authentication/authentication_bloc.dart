@@ -49,7 +49,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         if (token.isNotEmpty) {
           await sharedPreferences.setString("uname", event.username);
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
-          navigator!.pushReplacement('/home');
+          navigator!.pushReplacement('/warehouse');
         } else {
           print('invalid');
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.invalidCredentials));

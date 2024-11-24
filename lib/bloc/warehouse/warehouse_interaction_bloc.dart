@@ -60,8 +60,8 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
         print(value.response!.data);
         CompanyModel companyModel = CompanyModel.fromJson(value.response!.data);
         print(companyModel.results!);
-        emit(state.copyWith(companyModel: companyModel, getState: GetCompanyDataState.success,selectedCompanyVal:companyModel.results![0].name!));
-        add(GetFaclityData(company_id: 1));
+        emit(state.copyWith(companyModel: companyModel, getState: GetCompanyDataState.success,selectedCompanyVal:companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
+        add(GetFaclityData(company_id: companyModel.results!.where((e) => e.name! == 'M10 Company').first.id!));
       });
     } catch (e) {
       print("error $e");

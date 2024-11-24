@@ -16,6 +16,7 @@ import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/models/company_model.dart';
 import 'package:warehouse_3d/models/facility_model.dart';
+import 'package:warehouse_3d/pages/customs/custom_progress_bar.dart';
 import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
 import 'package:warehouse_3d/pages/customs/company_dropdown.dart';
 import 'package:warehouse_3d/pages/customs/facility_dropdown.dart';
@@ -72,7 +73,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
     // Listen for changes in the state
     _warehouseInteractionBloc.stream.listen((state) {
-      if (state.dataFromJS!.keys.first != 'object') {
+      if (state.dataFromJS.keys.first != 'object' && state.dataFromJS.keys.first != 'percentComplete') {
         animationController.forward(); // Start animation when data sheet is visible
       } else {
         animationController.reverse(); // Reverse when not visible
@@ -94,8 +95,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         body: Stack(
       children: [
         BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
-          print("data ${state.companyModel}");
-          print("STATE ${state.getState}");
           return Column(
             children: [
               Container(
@@ -106,7 +105,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   children: [
                     const Spacer(),
                     Image.asset(
-                      'assets/images/nalsoft_logo.png',
+                      'assets/images/nalsoft_logo_white.png',
                       scale: size.height * 0.004,
                       isAntiAlias: true,
                     ),
@@ -129,7 +128,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               child: InkWell(
                                 onTap: () {
                                   focusNode.unfocus();
-                                  print("unfocused");
                                 },
                                 child: InAppWebView(
                                   initialFile: 'assets/web_code/model.html',
@@ -143,6 +141,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
                                         }
                                         _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: true));
+                                        print(_warehouseInteractionBloc.state.dataFromJS);
+                                        if(message.containsKey("percentComplete")){
+                                          print(message['percentComplete']);
+                                        }
                                       }
                                     } catch (e) {
                                       print("error $e");
@@ -194,9 +196,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         );
                       }),
                   if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded)
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: CustomProgressBar(
+                        height: size.height*0.92,
+                        width: size.width,
+                        progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete']??'0')/100)),
                 ],
               ),
             ],
