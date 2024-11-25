@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -18,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
+      alignment: Alignment.center,
       height: size.height * 0.06,
       width: size.width * 0.2,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.white, boxShadow: const [
@@ -37,19 +39,20 @@ class CustomTextFormField extends StatelessWidget {
           textAlign: TextAlign.start,
           textAlignVertical: TextAlignVertical.center,
           controller: controller,
-          style: TextStyle(fontSize: aspectRatio * 2.4),
+          style: TextStyle(fontSize: constraints.maxWidth*0.048,height: constraints.maxHeight*0.01),
           cursorColor: Colors.black,
           cursorHeight: constraints.maxHeight * 0.5,
           onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: EdgeInsets.only(bottom: size.height*0.0),
-            hintStyle: TextStyle(color: Colors.black38, fontSize: aspectRatio * 2.4),
+            contentPadding: EdgeInsets.symmetric(vertical: constraints.maxWidth*0.056,),
+            hintStyle: TextStyle(color: Colors.black26, fontSize: aspectRatio * 2.4),
             hintText: hintText,
             prefixIcon: prefixIcon != null
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: size.height * 0.014), // Center icon vertically
+                    padding: EdgeInsets.symmetric(vertical: constraints.maxHeight*0.06,horizontal:  constraints.maxWidth * 0.04), // Center icon vertically
                     child: prefixIcon,
+                    
                   )
                 : null,
             suffixIcon: suffixIcon,

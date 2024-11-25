@@ -64,7 +64,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child:  (state.stagingStatus== StagingAreaStatus.success &&  state.stagingList!.length==0)?
-                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.044),),Text("Data not found")],)
                        : 
                       ListView.builder(
                             controller: _controller,
@@ -89,7 +89,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/od.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
                                                 ),
-                                                SizedBox(width: containerSize.maxWidth*0.8, child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.stagingList![index].orderNum!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold), maxLines: 1,))),
+                                                SizedBox(width: containerSize.maxWidth*0.8, child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.stagingList![index].orderNum!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold), maxLines: 1,))),
                                                 
                                                ],),
                                                Padding(
@@ -97,22 +97,22 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                                                  child: Row(
                                                   // mainAxisAlignment: MainAxisAlignment.start,
                                                   children: [ Image.asset('assets/images/businessman.png', height:   containerSize.maxHeight*0.18, width: containerSize.maxWidth*0.16,),
-                                                  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.stagingList![index].custName!=""?state.stagingList![index].custName!:"NA", style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
+                                                  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.stagingList![index].custName!=""?state.stagingList![index].custName!:"NA", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
                                                                                                ],),
                                                ),
                                               
                                               Row(children: [
                                                 Padding(
-                                                  padding: EdgeInsets.only( right: containerSize.maxWidth*0.016),
-                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.14,),
+                                                  padding: EdgeInsets.only( right:containerSize.maxWidth*0.046,left: containerSize.maxWidth*0.018),
+                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.125, width: containerSize.maxWidth*0.095,),
                                                 ),
-                                                Text(state.stagingList![index].item!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Text(state.stagingList![index].item!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
                                                 Spacer(),
                                                 Padding(
                                                   padding: EdgeInsets.only(right: containerSize.maxWidth*0.016),
-                                                  child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.08,),
+                                                  child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.12,),
                                                 ),
-                                                SizedBox(width: containerSize.maxWidth*0.2, child: Text(state.stagingList![index].qty!.toString(), style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
+                                                SizedBox(width: containerSize.maxWidth*0.2, child: Text(state.stagingList![index].qty!.toString(), style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
                                               ],)
                                             ],
                                           );
@@ -139,27 +139,27 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/od.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
                                                 ),
-                                                Skeletonizer(enableSwitchAnimation: true,child: Text('ORDER NUM', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold), maxLines: 1,),),
+                                                Skeletonizer(enableSwitchAnimation: true,child: Text('ORDER NUM', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold), maxLines: 1,),),
                                                 
                                                
                                               ],),
                                               Padding(
                                                 padding: const EdgeInsets.all(8.0),
                                                 child: Row(children: [ Image.asset('assets/images/businessman.png', height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  Skeletonizer(enableSwitchAnimation: true,child: Text('CUSTOMER ', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))],),
+                                                  Skeletonizer(enableSwitchAnimation: true,child: Text('CUSTOMER ', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))],),
                                               ),
                                               Row(children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only( right: containerSize.maxWidth*0.016),
-                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.14,),
+                                               Padding(
+                                                  padding: EdgeInsets.only( right:containerSize.maxWidth*0.046,left: containerSize.maxWidth*0.018),
+                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.125, width: containerSize.maxWidth*0.095,),
                                                 ),
-                                                Skeletonizer(enableSwitchAnimation: true,child: Text('ITEM', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
+                                                Skeletonizer(enableSwitchAnimation: true,child: Text('ITEM', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
                                                 Spacer(),
-                                                Padding(
+                                               Padding(
                                                   padding: EdgeInsets.only(right: containerSize.maxWidth*0.016),
-                                                  child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.08,),
+                                                  child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.12,),
                                                 ),
-                                                Skeletonizer(enableSwitchAnimation: true,child: SizedBox(width: containerSize.maxWidth*0.2, child: Text('QTY', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)))
+                                                Skeletonizer(enableSwitchAnimation: true,child: SizedBox(width: containerSize.maxWidth*0.2, child: Text('QTY', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)))
                                               ],)
                                           ],
                                         );
