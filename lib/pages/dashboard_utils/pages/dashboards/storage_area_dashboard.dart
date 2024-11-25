@@ -102,9 +102,9 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                               .toDouble(),
                                         innerRadius: '30%',
                                         pointColorMapper: (datum, index) {
-                                            if (index == 1) {
+                                            if (index == 0) {
                                               return const Color.fromRGBO(139, 182, 162, 1);
-                                            } else if (index == 2){
+                                            } else if (index == 1){
                                               return const Color.fromRGBO(232, 212, 162, 1);
                                             } else {
                                               return const Color.fromRGBO(255, 116, 106, 1);
@@ -323,6 +323,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                 title: 'Supplierwise Inventory',
                                 yAxisTitle: 'Number of Items',
                                 barCount: 1,
+                                legendVisibility: false,
                                 barColors: [Colors.teal],
                                 dataSources: isEnabled
                                     ? [supplierWiseDataSource]
@@ -432,7 +433,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                               ],
                                             ),
                                             child: Text(
-                                              isEnabled ? "90" : state.storageDashboardData!.cycleCountAccuracy!.toStringAsFixed(2),
+                                              '${state.storageDashboardData!.cycleCountAccuracy!.toStringAsFixed(2)}%',
                                               style: TextStyle(fontSize: aspectRatio * 10),
                                             ),
                                           ))

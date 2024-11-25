@@ -56,6 +56,13 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
         ),
         primaryYAxis: NumericAxis(
           title: AxisTitle(text: yAxisTitle),
+          majorGridLines: const MajorGridLines(
+              width: 0,
+            ),
+            majorTickLines: const MajorTickLines(width: 1),
+            axisLine: const AxisLine(
+              width: 1,
+            ),
         ),
         plotAreaBorderWidth: 0,
         borderWidth: 0,
@@ -330,7 +337,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       annotationText: state.activityDashboardData!.avgTaskExecTime!,
                       annotationHeight: lsize.maxHeight*0.3,
                       annotationFontSize: lsize.maxHeight*0.05,
-                      doughnutProps: DoughnutProps(
+                      doughnutProps: DoughnutProps( 
                         dataSource: avgTaskExecutionTime,
                         pointColorMapper: (p0, p1) {
                           if(p1 == 0){
