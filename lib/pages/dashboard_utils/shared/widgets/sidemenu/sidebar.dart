@@ -15,7 +15,7 @@ class Sidebar extends StatefulWidget {
 class _SidebarState extends State<Sidebar> {
 
   late final DashboardsBloc _dashboardsBloc;
-  List<String> dashboardTitles = ['Yard', 'Storage', 'Staging', 'Activity', 'Receiving', 'Inspection', 'Dock'];
+  List<String> dashboardTitles = ['Dock', 'Storage', 'Yard', 'Staging', 'Activity', 'Receiving', 'Inspection'];
 
   @override
   void initState() {

@@ -21,7 +21,7 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
         super(StorageState.initial()) {
     on<AddStorageAreaData>(_onAddStorageAreaData);
     on<GetBinData>(_onGetBinData);
-    on<AddStorageAislesData>(_onAddStorageAislesData);
+    // on<AddStorageAislesData>(_onAddStorageAislesData);
   }
   final NetworkCalls _customApi;
 
@@ -67,17 +67,17 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
     }
   }
 
-  void _onAddStorageAislesData(AddStorageAislesData event, Emitter<StorageState> emit) async {
-    emit(state.copyWith(storageArea: null, storageAreaStatus: StorageAreaStatus.initial));
-    try {
-      await _customApi.get(AppConstants.SEARCH,
-          queryParameters: {"facility_id": "243", "search_area": "STORAGE_AISLE", "search_text": event.searchText, "page_num": 0}).then((value) {
-        ListOfStorageAisles storageAisles = ListOfStorageAisles.fromJson(jsonDecode(value.response!.data));
-        print(storageAisles.data);
-        emit(state.copyWith(storageAisles: storageAisles, storageAreaStatus: StorageAreaStatus.success));
-      });
-    } catch (e) {
-      print("error $e");
-    }
-  }
+  // void _onAddStorageAislesData(AddStorageAislesData event, Emitter<StorageState> emit) async {
+  //   emit(state.copyWith(storageArea: null, storageAreaStatus: StorageAreaStatus.initial));
+  //   try {
+  //     await _customApi.get(AppConstants.SEARCH,
+  //         queryParameters: {"facility_id": "243", "search_area": "STORAGE_AISLE", "search_text": event.searchText, "page_num": 0}).then((value) {
+  //       ListOfStorageAisles storageAisles = ListOfStorageAisles.fromJson(jsonDecode(value.response!.data));
+  //       print(storageAisles.data);
+  //       emit(state.copyWith(storageAisles: storageAisles, storageAreaStatus: StorageAreaStatus.success));
+  //     });
+  //   } catch (e) {
+  //     print("error $e");
+  //   }
+  // }
 }

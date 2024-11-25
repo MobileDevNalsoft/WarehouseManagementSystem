@@ -48,7 +48,7 @@ export function addControls(camera, renderer) {
   clampTarget();
 
   // Make the camera look at a specific point (optional)
-  const center = new THREE.Vector3(0, 0, 0); // Adjust this based on your scene
+  const center = new THREE.Vector3(0, 0, 50); // Adjust this based on your scene
   controls.target.copy(center);
 
   // Update controls to reflect the target position

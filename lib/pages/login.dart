@@ -35,33 +35,37 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    double aspectRatio;
+    if(size.height > size.width){
+      aspectRatio = size.height/size.width;
+    }else{
+      aspectRatio = size.width/size.height;
+    }
+    
     return Scaffold(
       body: Stack(
+        alignment: AlignmentDirectional.centerStart,
         children: [
           Container(
               height: size.height,
               width: size.width,
-              decoration: BoxDecoration(
-                  // gradient: LinearGradient(
-                  //     colors: [Colors.blue.shade200, Colors.blue.shade100], begin: Alignment.centerLeft, end: Alignment.centerRight, stops: [0.8, 1])
-                  color: Colors.blue.shade100),
+              decoration: const BoxDecoration(
+                  color: Color.fromRGBO(173, 190, 214, 1)),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/login_decor.png', scale: 1.16,),
+                  Image.asset('assets/images/login_decor.png', height: size.height*0.95,width: size.width*0.55,alignment: Alignment.centerLeft, fit: BoxFit.fill),
                   Gap(size.width*0.1),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Gap(size.height*0.25),
-                      const Text(
-                        "Login to WMS",
+                      Gap(size.height*0.1),
+                      Text(
+                        "Warehouse Simulator",
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
-                          fontSize: (20), 
+                          fontSize: aspectRatio*16, 
                         ),
                       ),
-                      Gap(size.height*0.05),
+                      Gap(size.height*0.1),
                       // Custom text field for employee ID
                       CustomTextFormField(
                         hintText: 'employee id',
@@ -76,12 +80,15 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       // Custom text field for password
                       BlocConsumer<AuthenticationBloc, AuthenticationState>(
-                        listenWhen: (previous, current) => current.authenticationStatus == AuthenticationStatus.invalidCredentials || current.authenticationStatus == AuthenticationStatus.failure,
+                        listenWhen: (previous, current) => (current.authenticationStatus == AuthenticationStatus.invalidCredentials || current.authenticationStatus == AuthenticationStatus.failure) && previous.authenticationStatus != current.authenticationStatus,
                         listener: (context, state) => Customs.AnimatedDialog(context: context, header: const Icon(Icons.error, size: 35,), content: [Text(state.authenticationStatus == AuthenticationStatus.invalidCredentials ? 'Invalid Credentials' : 'Error', style: const TextStyle(fontSize: 18),)]),
                         builder: (context, state) {
                           return CustomTextFormField(
                             hintText: 'password',
                             controller: _passwordController,
+                            onFieldSubmitted: (p0) {
+                              _loginSubmitted(size, aspectRatio);
+                            },
                             prefixIcon: Icon(
                               Icons.key,
                               size: size.height * 0.03,
@@ -112,35 +119,16 @@ class _LoginPageState extends State<LoginPage> {
                         size.height * 0.05,
                       ),
                       ElevatedButton(onPressed: (){
-                        String? message = (_emailController.text.isEmpty ? "username cannot be empty" : null) ??
-                          // this method validates the password according to regex and gives instructions.
-                          _passwordValidator(_passwordController.text);
-          
-                          // Show a snackbar with relevant message if needed
-                          if (message != null) {
-                            Customs.AnimatedDialog(context: context, header: const Icon(
-                                Icons.error,
-                                color: Colors.black,
-                                size: 35,
-                              ), content: [SizedBox(
-                                height: size.height*0.06,
-                                width: size.width*0.13,
-                                child: Text(message, style: const TextStyle(fontSize: 18),softWrap: true, textAlign: TextAlign.center,))]);
-                          } else {
-                            // unfocuses all the focused fields
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            // triggeres login event and authenticates user info with the info in DB and gets corresponding response
-                            _authBloc.add(LoginButtonPressed(username: _emailController.text.toLowerCase(), password: _passwordController.text));
-                          }
+                        _loginSubmitted(size, aspectRatio);
                       }, 
                       style: ElevatedButton.styleFrom(
                         fixedSize: Size(size.width*0.2, size.height*0.06),
                         overlayColor: Colors.transparent,
-                        backgroundColor: Colors.blue.shade900,
+                        backgroundColor: Color.fromRGBO(68, 98, 136, 1),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
                       ),
-                      child: const Text('Login', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),))
+                      child: Text('Login', style: TextStyle(fontSize: aspectRatio*8, fontWeight: FontWeight.bold),))
                     ],
                   )
                 ],
@@ -155,6 +143,29 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  void _loginSubmitted(Size size,double aspectRatio){
+    String? message = (_emailController.text.isEmpty ? "username cannot be empty" : null) ??
+                          // this method validates the password according to regex and gives instructions.
+                          _passwordValidator(_passwordController.text);
+          
+                          // Show a snackbar with relevant message if needed
+                          if (message != null) {
+                            Customs.AnimatedDialog(context: context, header: const Icon(
+                                Icons.error,
+                                color: Colors.black,
+                                size: 35,
+                              ), content: [SizedBox(
+                                height: size.height*0.1,
+                                width: size.width*0.18,
+                                child: Text(message, style: TextStyle(fontSize: aspectRatio*8),softWrap: true, textAlign: TextAlign.center,))]);
+                          } else {
+                            // unfocuses all the focused fields
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            // triggeres login event and authenticates user info with the info in DB and gets corresponding response
+                            _authBloc.add(LoginButtonPressed(username: _emailController.text.toLowerCase(), password: _passwordController.text));
+                          }
   }
 }
 

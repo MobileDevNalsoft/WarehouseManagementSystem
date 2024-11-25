@@ -54,7 +54,7 @@ else{
     return Customs.DataSheet(
       context: context,
       size: size, 
-      title: 'Storage Bin', children: [
+      title: _warehouseInteractionBloc.state.dataFromJS['bin'].toString()==""?'Storage Area':'Storage Bin', children: [
         BlocBuilder<StorageBloc, StorageState>(
             builder: (context, state) {
               bool isEnabled = state.storageBinStatus != StorageBinStatus.success;
@@ -92,6 +92,7 @@ else{
                                                 ),
                                                 Text(state.storageBinItems![index].containerNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
                                                 Spacer(),
+                                                if(_warehouseInteractionBloc.state.dataFromJS['bin'].toString()=="")
                                                 Transform.rotate(
                                                   angle: 3.14159/2,
                                                   child: IconButton(onPressed: (){

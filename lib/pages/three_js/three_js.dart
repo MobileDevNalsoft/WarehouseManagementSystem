@@ -16,6 +16,7 @@ import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
 import 'package:warehouse_3d/models/company_model.dart';
 import 'package:warehouse_3d/models/facility_model.dart';
+import 'package:warehouse_3d/pages/customs/custom_progress_bar.dart';
 import 'package:warehouse_3d/pages/customs/searchbar_dropdown.dart';
 import 'package:warehouse_3d/pages/customs/company_dropdown.dart';
 import 'package:warehouse_3d/pages/customs/facility_dropdown.dart';
@@ -72,7 +73,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
     // Listen for changes in the state
     _warehouseInteractionBloc.stream.listen((state) {
-      if (state.dataFromJS!.keys.first != 'object') {
+      if (state.dataFromJS.keys.first != 'object' && state.dataFromJS.keys.first != 'percentComplete') {
         animationController.forward(); // Start animation when data sheet is visible
       } else {
         animationController.reverse(); // Reverse when not visible
@@ -94,8 +95,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         body: Stack(
       children: [
         BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
-          print("data ${state.companyModel}");
-          print("STATE ${state.getState}");
           return Column(
             children: [
               Container(
@@ -106,7 +105,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   children: [
                     const Spacer(),
                     Image.asset(
-                      'assets/images/nalsoft_logo.png',
+                      'assets/images/nalsoft_logo_white.png',
                       scale: size.height * 0.004,
                       isAntiAlias: true,
                     ),
@@ -129,7 +128,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                               child: InkWell(
                                 onTap: () {
                                   focusNode.unfocus();
-                                  print("unfocused");
                                 },
                                 child: InAppWebView(
                                   initialFile: 'assets/web_code/model.html',
@@ -138,11 +136,16 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                       if (consoleMessage.messageLevel.toNativeValue() == 1) {
                                         Map<String, dynamic> message = jsonDecode(consoleMessage.message);
                                         if (message.containsKey("area")) {
+                                          print("console ${message["area"]}");
                                           message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
                                         } else if (message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
                                           context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
                                         }
                                         _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: true));
+                                        print(_warehouseInteractionBloc.state.dataFromJS);
+                                        if(message.containsKey("percentComplete")){
+                                          print(message['percentComplete']);
+                                        }
                                       }
                                     } catch (e) {
                                       print("error $e");
@@ -194,63 +197,68 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         );
                       }),
                   if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded)
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: CustomProgressBar(
+                        height: size.height*0.92,
+                        width: size.width,
+                        progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete']??'0')/100)),
                 ],
               ),
             ],
           );
         }),
-        Positioned(
-          left: size.width * 0.01,
-          top: size.height * 0.013,
-          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-            builder: (context, state) {
-              return state.getState != GetCompanyDataState.success
-                  ? SizedBox()
-                  : PointerInterceptor(
-                      child: CompanyDropdown(
-                        buttonHeight: size.height * 0.052,
-                        buttonWidth: size.width * 0.15,
-                        dropDownHeight: size.height * 0.6,
-                        dropDownWidth: size.width * 0.15,
-                        dropDownItems: state.companyModel!.results!,
-                        onChanged: (CompanyResults? value) {
-                          context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
-                          context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
-                        },
-                        selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
-                      ),
-                    );
-            },
-          ),
-        ),
-        Positioned(
-          left: size.width * 0.18,
-          top: size.height * 0.013,
-          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-            builder: (context, state) {
-              return state.getState == GetCompanyDataState.success
-                  ? state.facilityDataState != GetFacilityDataState.success
-                      ? SizedBox()
-                      : PointerInterceptor(
-                          child: FacilityDropdown(
-                            buttonHeight: size.height * 0.052,
-                            buttonWidth: size.width * 0.15,
-                            dropDownHeight: size.height * 0.4,
-                            dropDownWidth: size.width * 0.15,
-                            dropDownItems: state.facilityModel!.results!,
-                            onChanged: (FacilityResults? value) {
-                              context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!.name.toString()));
-                            },
-                            selectedValue: state.selectedFacilityVal,
-                          ),
-                        )
-                  : SizedBox();
-            },
-          ),
-        ),
+        // Positioned(
+        //   left: size.width * 0.01,
+        //   top: size.height * 0.013,
+        //   child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+        //     builder: (context, state) {
+        //       return state.getState != GetCompanyDataState.success
+        //           ? SizedBox()
+        //           : PointerInterceptor(
+        //               child: CompanyDropdown(
+        //                 buttonHeight: size.height * 0.052,
+        //                 buttonWidth: size.width * 0.15,
+        //                 dropDownHeight: size.height * 0.6,
+        //                 dropDownWidth: size.width * 0.15,
+        //                 dropDownItems: state.companyModel!.results!,
+        //                 onChanged: (CompanyResults? value) {
+        //                   context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
+        //                   context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
+        //                 },
+        //                 selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
+        //               ),
+        //             );
+        //     },
+        //   ),
+        // ),
+       
+        // Positioned(
+        //   left: size.width * 0.18,
+        //   top: size.height * 0.013,
+        //   child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+        //     builder: (context, state) {
+        //       return state.getState == GetCompanyDataState.success
+        //           ? state.facilityDataState != GetFacilityDataState.success
+        //               ? SizedBox()
+        //               : PointerInterceptor(
+        //                   child: FacilityDropdown(
+        //                     buttonHeight: size.height * 0.052,
+        //                     buttonWidth: size.width * 0.15,
+        //                     dropDownHeight: size.height * 0.4,
+        //                     dropDownWidth: size.width * 0.15,
+        //                     dropDownItems: state.facilityModel!.results!,
+        //                     onChanged: (FacilityResults? value) {
+        //                       context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!.name.toString()));
+        //                     },
+        //                     selectedValue: state.selectedFacilityVal,
+        //                   ),
+        //                 )
+        //           : SizedBox();
+        //     },
+        //   ),
+        // ),
+        
         Positioned(right: size.width * 0.25, top: size.height * 0.013, child: PointerInterceptor(child: SearchBarDropdown(size: size))),
         Positioned(
           right: 0,
@@ -274,7 +282,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         return RackDataSheet(
           objectNames: objectNames,
         );
-      case 'bin':
+      case 'bin' || 'storagearea':
         return BinDataSheet();
       case 'area':
         switch (objectValue.toLowerCase().replaceAll("-", "")) {
@@ -292,8 +300,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             return DockAreaDataSheet();
           case 'yardarea':
             return YardAreaDataSheet();
-          case 'storagearea':
-            return StorageAreaDataSheet();
+          // case 'storagearea':
+          //   return BinD();
           default:
             return null;
         }

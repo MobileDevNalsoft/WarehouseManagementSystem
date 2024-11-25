@@ -291,9 +291,6 @@ static Widget WMSSfCircularChart(
                   child: IntrinsicHeight(
                     child: Container(
                       margin: EdgeInsets.only(top: size.height * 0.035),
-                      padding: EdgeInsets.only(
-                        bottom: size.height * 0.02,
-                      ),
                       width: size.width * 0.16,
                       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
                       child: Column(
@@ -322,10 +319,13 @@ static Widget WMSSfCircularChart(
                     ),
                   ),
                 ),
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 35,
-                  child: header,
+                ClipPath(
+                  clipper: DialogTopClipper(),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 35,
+                    child: Transform.translate(offset: Offset(0,-size.height*0.01),child: header),
+                  ),
                 )
               ],
             ),
@@ -429,4 +429,28 @@ class TimeData {
   final String x;
   final double y;
   final Color color;
+}
+
+class DialogTopClipper extends CustomClipper<Path> {
+  @override
+  getClip(Size size) {
+    double x1 = 0;
+    double y1 = 0;
+    double x = size.width;
+    double y = size.height;
+
+    Path path = Path();
+    path.moveTo(x1, y1);
+    path.lineTo(x1, y/1.4);
+    path.lineTo(x, y/1.4);
+    path.lineTo(x, y1);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper oldClipper) {
+    // TODO: implement shouldReclip
+    return true;
+  }
 }

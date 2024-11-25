@@ -70,6 +70,7 @@ dependencies:
   fl_chart: ^0.69.0
   syncfusion_flutter_calendar: ^27.1.58
   syncfusion_flutter_gauges: ^27.1.58
+  percent_indicator: ^4.2.4
 
 dev_dependencies:
   flutter_test:

@@ -49,8 +49,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
     super.initState();
 
     _dashboardsBloc = context.read<DashboardsBloc>();
-
-    _dashboardsBloc.add(GetDockAppointments(date: DateFormat('yyyy-MM-dd').format(now)));
+    _dashboardsBloc.state.appointmentsDate =DateTime.parse('2024-09-13');
+    _dashboardsBloc.add(GetDockAppointments(date: DateFormat('yyyy-MM-dd').format(DateTime.parse('2024-09-13'))));
     _dashboardsBloc.add(GetDockDashboardData(facilityID: 243));
   }
 
@@ -637,6 +637,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: SfDateRangePicker(
+                            initialDisplayDate: state.appointmentsDate,
+                            initialSelectedDate: state.appointmentsDate,
                             selectionMode: DateRangePickerSelectionMode.single,
                             backgroundColor: Color.fromRGBO(174, 204, 240, 1),
                             headerStyle: DateRangePickerHeaderStyle(

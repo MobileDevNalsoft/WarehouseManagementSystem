@@ -25,7 +25,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<ModelLoaded>(_onModelLoaded);
     on<GetCompanyData>(_onGetCompanyData);
     on<SelectedCompanyValue> (_onSelectCompany);
-      on<GetFaclityData>(_onGetFacilityData);
+    on<GetFaclityData>(_onGetFacilityData);
     on<SelectedFacilityValue> (_onSelectFacility);
 
   }
@@ -41,9 +41,12 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
       searchArea = event.dataFromJS["area"].toString()[0].toUpperCase()+event.dataFromJS["area"].toString().substring(1); 
     }
     else if(event.dataFromJS.containsKey("bin")){
-      searchArea = "Bin";
+      searchArea = "Storage";
     }
-    emit(state.copyWith(dataFromJS: event.dataFromJS,selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));
+    if(!event.dataFromJS["area"].toString().contains("storage")){
+    emit(state.copyWith(dataFromJS: event.dataFromJS,selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));}
+    else{
+      emit(state.copyWith(selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));}
   }
   
   void _onModelLoaded(ModelLoaded event, Emitter<WarehouseInteractionState> emit) {
@@ -60,8 +63,8 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
         print(value.response!.data);
         CompanyModel companyModel = CompanyModel.fromJson(value.response!.data);
         print(companyModel.results!);
-        emit(state.copyWith(companyModel: companyModel, getState: GetCompanyDataState.success,selectedCompanyVal:companyModel.results![0].name!));
-        add(GetFaclityData(company_id: 1));
+        emit(state.copyWith(companyModel: companyModel, getState: GetCompanyDataState.success,selectedCompanyVal:companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
+        add(GetFaclityData(company_id: companyModel.results!.where((e) => e.name! == 'M10 Company').first.id!));
       });
     } catch (e) {
       print("error $e");

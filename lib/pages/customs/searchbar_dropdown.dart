@@ -27,7 +27,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
 
   final List<String> dropdownItems = [
     'Storage Area',
-    'Storage Bin',
+    // 'Storage Bin',
     'Inspection Area',
     'Staging Area',
     'Activity Area',
@@ -141,9 +141,9 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               null;
                         }
                         // getIt<JsInteropService>().switchToMainCam(item.replaceAll(" ", ""));
-                        if (item.toLowerCase().contains("bin")) {
-                          _warehouseInteractionBloc.state.selectedSearchArea = "Bin";
-                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"object": "bin"}));
+                        if (item.toLowerCase().contains("storage") ) {
+                          _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
+                          _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"object": "bin"}));
                         } else {
                           // _warehouseInteractionBloc.state.selectedSearchArea = ;
                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${item.toLowerCase().replaceAll(" ", '')}"}));
@@ -246,12 +246,15 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                             onSubmitted: (value) {
                               print("selected area ${_warehouseInteractionBloc.state.selectedSearchArea}");
                               print("dataFromJS ${_warehouseInteractionBloc.state.dataFromJS} ");
+
                               if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") &&
                                   !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
-                                if (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase() == "bin") {
-                                  _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": ""}));
+                                if (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().contains("storage")) {
+                                  _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": ""},clearSearchText: false));
+                                  getIt<JsInteropService>().switchToMainCam("storageArea");
                                 } else {
-                                  _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll(' ', '').replaceAll('-', '')}));
+                                  _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll(' ', '').replaceAll('-', '')},clearSearchText: false));
+                                    
                                 }
                               } else {
                                 print("else part ${_warehouseInteractionBloc.state.selectedSearchArea}");
@@ -293,13 +296,15 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                   case 'yardarea':
                                     context.read<YardBloc>().state.pageNum = 0;
                                     context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-                                  case 'storagearea':
+                                  case 'storagearea' || 'storage':
                                     if (context.read<WarehouseInteractionBloc>().state.searchText != null &&
                                         context.read<WarehouseInteractionBloc>().state.searchText != "") {
+                                          getIt<JsInteropService>().switchToMainCam("storageArea");
                                       context.read<StorageBloc>().state.pageNum = 0;
-                                      context
-                                          .read<StorageBloc>()
-                                          .add(AddStorageAislesData(searchText: context.read<WarehouseInteractionBloc>().state.searchText ?? ""));
+                                      // context
+                                      //     .read<StorageBloc>()
+                                      //     .add(AddStorageAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText ?? ""));
+                                       context.read<StorageBloc>().add(GetBinData(searchText: context.read<WarehouseInteractionBloc>().state.searchText ?? ""));
                                     }
                                     break;
                                   case 'bin':

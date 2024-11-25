@@ -9,6 +9,13 @@ export function loadModel() {
             function (gltf) {
                 resolve(gltf); // Resolve with the loaded glTF model
             },
+            (xhr) => {
+                if(xhr.lengthComputable){
+                    let percentComplete = (xhr.loaded/xhr.total)*100;
+
+                    console.log('{"percentComplete":"' + Math.round(percentComplete) + '"}')
+                }
+            },
             undefined,
             function (error) {
                 console.error('{"Error":"' + error.toString() + '"}');  

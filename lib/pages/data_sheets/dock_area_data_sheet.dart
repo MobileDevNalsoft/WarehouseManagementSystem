@@ -147,8 +147,9 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                       ),
                                       Text(
                                         state.dockAreaItems![index].truckNum!,
+                                        maxLines: 1,
                                         style: TextStyle(
-                                            fontSize: containerSize.maxWidth * 0.048, height: containerSize.maxHeight * 0.0016, fontWeight: FontWeight.bold),
+                                            fontSize: containerSize.maxWidth * 0.048, height: containerSize.maxHeight * 0.0016, fontWeight: FontWeight.bold, ),
                                       ),
                                       Spacer(),
                                       Image.asset(
@@ -175,13 +176,14 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                         ),
                                       ),
                                       SizedBox(
-                                          width: containerSize.maxWidth * 0.2,
-                                          child: Text(
-                                            state.dockAreaItems![index].poNum!,
-                                            style: TextStyle(
-                                                fontSize: containerSize.maxWidth * 0.048,
-                                                height: containerSize.maxHeight * 0.0016,
-                                                fontWeight: FontWeight.bold),
+                                          width: containerSize.maxWidth * 0.35,
+                                          child: SingleChildScrollView(
+                                            child: Text(
+                                              state.dockAreaItems![index].poNum!,
+                                              style: TextStyle(
+                                                  fontSize: containerSize.maxWidth * 0.048,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           )),
                                       Spacer(),
                                      
@@ -323,7 +325,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                       Skeletonizer(
                                           enableSwitchAnimation: true,
                                           child: Text(
-                                            '',
+                                            'Time',
                                             style: TextStyle(
                                                 fontSize: containerSize.maxWidth * 0.048,
                                                 height: containerSize.maxHeight * 0.0016,

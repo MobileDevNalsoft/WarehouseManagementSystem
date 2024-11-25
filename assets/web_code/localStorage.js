@@ -65,20 +65,17 @@ export function localStorageSetup(scene, camera, controls) {
        catch(e){
 
        }
-          localStorage.removeItem("highlightBins");
+          // localStorage.removeItem("highlightBins");
        break;
 
 
       case "resetBoxColors": 
-
-                
- 
-       
+      
+      localStorage.setItem("resetBoxColors",false);       
       highlightedBins.forEach((e)=>{
-            
+        scene.getObjectByName(e.trim()).material.color.set(0x65543e);           
             });
             highlightedBins=[];
-            localStorage.removeItem("resetBoxColors");
           break;
 
       case "navigateToBin":
