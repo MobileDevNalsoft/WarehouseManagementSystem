@@ -208,56 +208,56 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             ],
           );
         }),
-        // Positioned(
-        //   left: size.width * 0.01,
-        //   top: size.height * 0.013,
-        //   child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-        //     builder: (context, state) {
-        //       return state.getState != GetCompanyDataState.success
-        //           ? SizedBox()
-        //           : PointerInterceptor(
-        //               child: CompanyDropdown(
-        //                 buttonHeight: size.height * 0.052,
-        //                 buttonWidth: size.width * 0.15,
-        //                 dropDownHeight: size.height * 0.6,
-        //                 dropDownWidth: size.width * 0.15,
-        //                 dropDownItems: state.companyModel!.results!,
-        //                 onChanged: (CompanyResults? value) {
-        //                   context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
-        //                   context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
-        //                 },
-        //                 selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
-        //               ),
-        //             );
-        //     },
-        //   ),
-        // ),
+        Positioned(
+          left: size.width * 0.01,
+          top: size.height * 0.013,
+          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+            builder: (context, state) {
+              return state.getState != GetCompanyDataState.success
+                  ? SizedBox()
+                  : PointerInterceptor(
+                      child: CompanyDropdown(
+                        buttonHeight: size.height * 0.052,
+                        buttonWidth: size.width * 0.15,
+                        dropDownHeight: size.height * 0.6,
+                        dropDownWidth: size.width * 0.15,
+                        dropDownItems: state.companyModel!.results!,
+                        onChanged: (CompanyResults? value) {
+                          context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
+                          context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
+                        },
+                        selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
+                      ),
+                    );
+            },
+          ),
+        ),
        
-        // Positioned(
-        //   left: size.width * 0.18,
-        //   top: size.height * 0.013,
-        //   child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-        //     builder: (context, state) {
-        //       return state.getState == GetCompanyDataState.success
-        //           ? state.facilityDataState != GetFacilityDataState.success
-        //               ? SizedBox()
-        //               : PointerInterceptor(
-        //                   child: FacilityDropdown(
-        //                     buttonHeight: size.height * 0.052,
-        //                     buttonWidth: size.width * 0.15,
-        //                     dropDownHeight: size.height * 0.4,
-        //                     dropDownWidth: size.width * 0.15,
-        //                     dropDownItems: state.facilityModel!.results!,
-        //                     onChanged: (FacilityResults? value) {
-        //                       context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!.name.toString()));
-        //                     },
-        //                     selectedValue: state.selectedFacilityVal,
-        //                   ),
-        //                 )
-        //           : SizedBox();
-        //     },
-        //   ),
-        // ),
+        Positioned(
+          left: size.width * 0.18,
+          top: size.height * 0.013,
+          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+            builder: (context, state) {
+              return state.getState == GetCompanyDataState.success
+                  ? state.facilityDataState != GetFacilityDataState.success
+                      ? SizedBox()
+                      : PointerInterceptor(
+                          child: FacilityDropdown(
+                            buttonHeight: size.height * 0.052,
+                            buttonWidth: size.width * 0.15,
+                            dropDownHeight: size.height * 0.4,
+                            dropDownWidth: size.width * 0.15,
+                            dropDownItems: state.facilityModel!.results!,
+                            onChanged: (FacilityResults? value) {
+                              context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!.name.toString()));
+                            },
+                            selectedValue: state.selectedFacilityVal,
+                          ),
+                        )
+                  : SizedBox();
+            },
+          ),
+        ),
         
         Positioned(right: size.width * 0.25, top: size.height * 0.013, child: PointerInterceptor(child: SearchBarDropdown(size: size))),
         Positioned(
