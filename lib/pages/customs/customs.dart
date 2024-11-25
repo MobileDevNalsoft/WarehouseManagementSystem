@@ -31,21 +31,20 @@ class Customs {
               Spacer(),
               InkWell(
                   onTap: () async {
-                        getIt<JsInteropService>().switchToMainCam(
-                            await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
-                                    "storageArea"
-                                ? "storageArea"
-                                : "compoundArea");
-                        getIt<JsInteropService>().resetBoxColors();
-          
-                        context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));       
-                                
-                        getIt<JsInteropService>().resetTrucks();
-                      },
-                  child: Icon(Icons.cancel_rounded, color: Colors.white)
-                )
-                  ],
-                ),
+                    getIt<JsInteropService>().switchToMainCam(
+                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
+                                "storageArea"
+                            ? "storageArea"
+                            : "compoundArea");
+                    getIt<JsInteropService>().resetBoxColors();
+
+                    context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));
+
+                    getIt<JsInteropService>().resetTrucks();
+                  },
+                  child: Icon(Icons.cancel_rounded, color: Colors.white))
+            ],
+          ),
         ),
         Container(
           height: size.height * 0.86,
@@ -71,7 +70,7 @@ class Customs {
       width: size.width * 0.25,
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
       padding: EdgeInsets.all(size.height * 0.035),
-      alignment: Alignment.topCenter,
+      alignment: Alignment.center,
       child: LayoutBuilder(builder: (context, lsize) {
         return loaderEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(lsize);
       }),
@@ -206,7 +205,7 @@ class Customs {
         ),
         legend: Legend(
           isVisible: legendVisibility,
-          alignment: ChartAlignment.center,
+          alignment: ChartAlignment.far,
         ),
         margin: EdgeInsets.zero,
         series: <PieSeries<PieData, String>>[
@@ -228,64 +227,68 @@ class Customs {
         ]);
   }
 
-  static Widget WMSSfCircularChart(
-      {required List<AnalogChartData> chartData,
-      String title = 'Title',
-      String? contentText,
-      required Size size,
-      double? height,
-      double? width,
-      String? radius,
-      Color? textColor}) {
+  static Widget WMSSfCircularChart({
+    double height = 100,
+    double width = 100,
+    String title = 'Title',
+    SeriesName series = SeriesName.doughnut,
+    DoughnutProps? doughnutProps,
+    RadialBarProps? radialBarProps,
+    bool enableAnnotation = false,
+    String? contentText,
+    double annotationHeight = 50,
+    String annotationText = 'AText',
+    double annotationFontSize = 16
+  }) {
     return SfCircularChart(
       title: ChartTitle(text: title, textStyle: const TextStyle(fontWeight: FontWeight.bold)),
-      annotations: <CircularChartAnnotation>[
-        CircularChartAnnotation(
+      legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+      annotations: enableAnnotation ? <CircularChartAnnotation>[
+         CircularChartAnnotation(
           widget: Container(
-            width: size.height * 0.12,
-            height: size.height * 0.12,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color.fromARGB(255, 232, 229, 229),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: Offset(0, 4), // Adjust to set shadow direction
+              height: annotationHeight,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blueGrey.shade100,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade900,
+                    blurRadius: 10, // Adjust to set shadow direction
+                  ),
+                ],
+              ),
+              child: Text(
+                annotationText,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: annotationFontSize,
                 ),
-              ],
-            ),
-          ),
+              )),
         ),
-        CircularChartAnnotation(
-          widget: Container(
-            height: size.height * 0.12,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blueGrey.shade100, boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade900,
-                blurRadius: 10, // Adjust to set shadow direction
-              ),
-            ]),
-            child: Text(
-              contentText ?? "chart",
-              style: TextStyle(
-                color: textColor ?? Color.fromARGB(255, 101, 10, 10),
-                fontSize: 25,
-              ),
-            ),
-          ),
-        ),
-      ],
+      ] : [],
       series: <CircularSeries>[
-        DoughnutSeries<AnalogChartData, String>(
-          dataSource: chartData,
-          xValueMapper: (AnalogChartData data, _) => data.x,
-          yValueMapper: (AnalogChartData data, _) => data.y,
-          radius: radius ?? '50%', // Adjust the radius as needed
-          innerRadius: '20%', // Optional: adjust for a thinner ring
-          pointColorMapper: (AnalogChartData data, _) => data.color,
-        )
+         series == SeriesName.doughnut ? DoughnutSeries<PieData, String>(
+          dataSource: doughnutProps!.dataSource,
+          xValueMapper: (PieData data, _) => data.xData,
+          yValueMapper: (PieData data, _) => data.yData,
+          radius: doughnutProps.radius, // Adjust the radius as needed
+          innerRadius: doughnutProps.innerRadius, // Optional: adjust for a thinner ring
+          pointColorMapper: doughnutProps.pointColorMapper,
+        ) : RadialBarSeries<PieData, String>(
+                                          dataSource: radialBarProps!.dataSource,
+                                          maximumValue: radialBarProps.maximumValue,
+                                          cornerStyle: CornerStyle.bothCurve,
+                                          innerRadius: radialBarProps.innerRadius,
+                                          dataLabelSettings: const DataLabelSettings(
+                                              // Renders the data label
+                                              isVisible: true,
+                                              textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                              alignment: ChartAlignment.center),
+                                          pointColorMapper: radialBarProps.pointColorMapper,
+                                          xValueMapper: (PieData data, _) => data.xData,
+                                          yValueMapper: (PieData data, _) => data.yData,
+                                        )
       ],
     );
   }
@@ -502,4 +505,26 @@ class DialogTopClipper extends CustomClipper<Path> {
     // TODO: implement shouldReclip
     return true;
   }
+}
+
+
+enum SeriesName {
+  doughnut,
+  radialBar
+}
+
+class RadialBarProps {
+  List<PieData>? dataSource;
+  double? maximumValue;
+  String innerRadius;
+  Color? Function(PieData, int)? pointColorMapper;
+  RadialBarProps({this.dataSource, this.maximumValue, this.innerRadius = '50%', this.pointColorMapper});
+}
+
+class DoughnutProps {
+  List<PieData>? dataSource;
+  String radius;
+  String innerRadius;
+  Color? Function(PieData, int)? pointColorMapper;
+  DoughnutProps({this.dataSource, this.radius = '80%', this.innerRadius = '50%', this.pointColorMapper});
 }

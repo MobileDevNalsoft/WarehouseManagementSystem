@@ -119,7 +119,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
 
   Future<void> _onGetInspectionDashboardData(GetInspectionDashboardData event, Emitter<DashboardsState> emit) async {
     try{
-      if(state.getInspectionDashboardState != InspectionDashboardState.success) emit(state.copyWith(getInspectionDashboardState: InspectionDashboardState.loading));
+      emit(state.copyWith(getInspectionDashboardState: InspectionDashboardState.loading));
       await _customApi.get(AppConstants.INSPECTION_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<InspectionDashboard> inspectionDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => InspectionDashboard.fromJson(json));
