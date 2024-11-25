@@ -50,7 +50,7 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
   }
   
   void _onModelLoaded(ModelLoaded event, Emitter<WarehouseInteractionState> emit) {
-    print('event ${event.isLoaded}');
+    print('event loading ${event.isLoaded}');
     emit(state.copyWith(isModelLoaded: event.isLoaded));
   }
 

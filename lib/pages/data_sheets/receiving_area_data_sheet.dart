@@ -57,7 +57,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child:(state.receivingStatus== ReceivingAreaStatus.success &&  state.receiveList!.length==0)?
-                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.044),),Text("Data not found")],)
                        : ListView.builder(
                             controller: _controller,
                             itemBuilder: (context, index) => index < state.receiveList!.length
@@ -81,7 +81,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/asn.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
                                                 ),
-                                                Text(state.receiveList![index].asn!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Text(state.receiveList![index].asn!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
                                                 
                                               ],),
                                               // Gap(size.height*0.01),
@@ -90,25 +90,25 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/po.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
                                                 ),
-                                                Text(state.receiveList![index].poNum!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Text(state.receiveList![index].poNum!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
                                                 Spacer(),
                                                 Image.asset('assets/images/businessman.png', height: containerSize.maxHeight*0.14, width: containerSize.maxWidth*0.14,),
-                                                SizedBox(width: lsize.maxWidth*0.2, child: Text(state.receiveList![index].vendor!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
+                                                SizedBox(width: lsize.maxWidth*0.2, child: Text(state.receiveList![index].vendor!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
                                               ],),
                                               // Gap(size.height*0.01),
                                               Row(
                                                 children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.0323),
-                                                    child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
-                                                  ),
-                                                  Text(state.receiveList![index].item!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                 Padding(
+                                                  padding: EdgeInsets.only( right:containerSize.maxWidth*0.046,left: containerSize.maxWidth*0.018),
+                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.125, width: containerSize.maxWidth*0.095,),
+                                                ),
+                                                  Text(state.receiveList![index].item!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
                                                   Spacer(),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.009),
-                                                    child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
-                                                  ),
-                                                  SizedBox(width: lsize.maxWidth*0.15,child: Text(state.receiveList![index].qty!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
+                                                 Padding(
+                                                  padding: EdgeInsets.only(right: containerSize.maxWidth*0.016),
+                                                  child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.12,),
+                                                ),
+                                                  SizedBox(width: lsize.maxWidth*0.15,child: Text(state.receiveList![index].qty!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
                                                 ],
                                               )
                                             ],
@@ -135,7 +135,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/asn.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
                                                 ),
-                                                Skeletonizer(enableSwitchAnimation: true, child: Text('ASN NUM', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
+                                                Skeletonizer(enableSwitchAnimation: true, child: Text('ASN NUM', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
                                                 
                                               ],),
                                               Gap(size.height*0.01),
@@ -144,25 +144,25 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/po.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
                                                 ),
-                                                Skeletonizer(enableSwitchAnimation: true, child: Text('PO NUM', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
+                                                Skeletonizer(enableSwitchAnimation: true, child: Text('PO NUM', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
                                                 Spacer(),
                                                 Image.asset('assets/images/businessman.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
-                                                Skeletonizer(enableSwitchAnimation: true, child: Text('VENDOR', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
+                                                Skeletonizer(enableSwitchAnimation: true, child: Text('VENDOR', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
                                               ],),
                                               Gap(size.height*0.01),
                                               Row(
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.0323),
-                                                    child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.08, width: containerSize.maxWidth*0.08,),
-                                                  ),
-                                                  Skeletonizer(enableSwitchAnimation: true, child: Text('ITEM', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
+                                                  padding: EdgeInsets.only( right:containerSize.maxWidth*0.046,left: containerSize.maxWidth*0.018),
+                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.125, width: containerSize.maxWidth*0.095,),
+                                                ),
+                                                  Skeletonizer(enableSwitchAnimation: true, child: Text('ITEM', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
                                                   Spacer(),
                                                   Padding(
-                                                    padding: EdgeInsets.only(left:size.width*0.006, right: size.width*0.009),
-                                                    child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
-                                                  ),
-                                                  Skeletonizer(enableSwitchAnimation: true, child: Text('QuanT', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
+                                                  padding: EdgeInsets.only(right: containerSize.maxWidth*0.016),
+                                                  child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.12,),
+                                                ),
+                                                  Skeletonizer(enableSwitchAnimation: true, child: Text('QuanT', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
                                                 ],
                                               )
                                           ],

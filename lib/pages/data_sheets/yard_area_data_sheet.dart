@@ -48,7 +48,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
               return ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: (state.yardAreaStatus== YardAreaStatus.success &&  state.yardAreaItems!.length==0)?
-                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.044),),Text("Data not found")],)
                        :ListView.builder(
                     controller: _controller,
                     itemBuilder: (context, index) => index < state.yardAreaItems!.length
@@ -75,7 +75,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                       ),
                                       Text(
                                         state.yardAreaItems![index].truckNbr!,
-                                        style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
@@ -90,7 +90,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                       ),
                                       Text(
                                         state.yardAreaItems![index].vehicleLocation!,
-                                        style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                       ),
                                       Spacer(),
                                       Padding(
@@ -103,7 +103,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                             
                                             state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5),
                                             textAlign: TextAlign.start,
-                                            style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                            style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                           ))
                                     ],
                                   ),
@@ -138,7 +138,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                             enableSwitchAnimation: true,
                                             child: Text(
                                               'TRUCK NUMBER',
-                                              style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                              style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                             )),
                                       ],
                                     ),
@@ -155,7 +155,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                             enableSwitchAnimation: true,
                                             child: Text(
                                               'LOCATION',
-                                              style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
+                                              style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                             )),
                                         Spacer(),
                                           Padding(
@@ -164,7 +164,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                       ),
                                         Skeletonizer(
                                           enableSwitchAnimation: true,
-                                          child: Text('TIME', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold)),
+                                          child: Text('TIME', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold)),
                                         )
                                       ],
                                     ),
