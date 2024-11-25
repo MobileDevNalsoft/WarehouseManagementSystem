@@ -43,12 +43,12 @@ class CustomTextFormField extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: EdgeInsets.only(bottom: size.height*0.018),
-            hintStyle: TextStyle(color: Colors.black26, fontSize: aspectRatio * 2.4),
+            contentPadding: EdgeInsets.only(bottom: size.height*0.0),
+            hintStyle: TextStyle(color: Colors.black38, fontSize: aspectRatio * 2.4),
             hintText: hintText,
             prefixIcon: prefixIcon != null
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: size.height * 0.01), // Center icon vertically
+                    padding: EdgeInsets.symmetric(vertical: size.height * 0.014), // Center icon vertically
                     child: prefixIcon,
                   )
                 : null,
