@@ -68,7 +68,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                   height: lsize.maxHeight*0.18,
                                   width: lsize.maxWidth*0.96,
                                       decoration: BoxDecoration(
-                                        color: Color.fromRGBO(112, 144, 185, 1),
+                                        color: Colors.white,
                                         borderRadius: BorderRadius.circular(15),
                                       ),
                                       padding: EdgeInsets.all( lsize.maxHeight*0.01),
@@ -131,7 +131,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                    height: lsize.maxHeight*0.2,
                                   width: lsize.maxWidth*0.96,
                                     decoration: BoxDecoration(
-                                      color: Color.fromRGBO(112, 144, 185, 1),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(15)
                                     ),
                                     padding: EdgeInsets.all(size.height*0.01),

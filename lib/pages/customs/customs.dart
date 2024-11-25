@@ -31,20 +31,21 @@ class Customs {
               Spacer(),
               InkWell(
                   onTap: () async {
-                    getIt<JsInteropService>().switchToMainCam(
-                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
-                                "storageArea"
-                            ? "storageArea"
-                            : "compoundArea");
-                    getIt<JsInteropService>().resetBoxColors();
-
-                    context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));
-
-                    getIt<JsInteropService>().resetTrucks();
-                  },
-                  child: Icon(Icons.cancel_rounded, color: Colors.white70))
-            ],
-          ),
+                        getIt<JsInteropService>().switchToMainCam(
+                            await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
+                                    "storageArea"
+                                ? "storageArea"
+                                : "compoundArea");
+                        getIt<JsInteropService>().resetBoxColors();
+          
+                        context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));       
+                                
+                        getIt<JsInteropService>().resetTrucks();
+                      },
+                  child: Icon(Icons.cancel_rounded, color: Colors.white)
+                )
+                  ],
+                ),
         ),
         Container(
           height: size.height * 0.86,
