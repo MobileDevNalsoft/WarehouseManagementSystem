@@ -369,7 +369,7 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                               height: size.height * 0.3,
                               width: size.width * 0.25,
                               child: YardAreaDashboard.WMSCartesianChart(
-                                  title: 'Daywise Task Summary',
+                                  title: 'Daywise Yard Utilization',
                                   primaryColor: Colors.blueAccent,
                                   secondaryColor: const Color.fromARGB(255, 138, 40, 155),
                                   barCount: 2,

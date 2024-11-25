@@ -166,7 +166,7 @@ export function addInteractions(scene, model, camera, controls) {
         .split(",")
         .forEach((e) => {
           let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
-          scene.getObjectByName(bin).material.color.set(0x65543e);
+          scene.getObjectByName(bin).material.color.set(0xcbbbab);
           scene.getObjectByName(bin).material.opacity = 0.5;
         });
 
@@ -197,7 +197,7 @@ export function addInteractions(scene, model, camera, controls) {
   //       .split(",")
   //       .forEach((e) => {
   //         let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
-  //         scene.getObjectByName(bin).material.color.set(0xadd8e6);
+  //         scene.getObjectByName(bin).material.color.set(0x65543e);
   //         scene.getObjectByName(bin).material.opacity = 0.5;
   //       });
 
@@ -231,7 +231,7 @@ export function addInteractions(scene, model, camera, controls) {
     if (prevBin != object) {
       object.userData.active = true;
       // Set transparent blue color
-      object.material.color.set(0xadd8e6); // Blue color
+      object.material.color.set(0x65543e); // Blue color
       object.material.opacity = 0.5; // Adjust opacity for transparency
       console.log('{"bin":"' + objectName + '"}');
 
@@ -242,7 +242,7 @@ export function addInteractions(scene, model, camera, controls) {
         prevBinColor = object.material.color.clone();
         prevBin = object;
         // Set transparent blue color
-        object.material.color.set(0xadd8e6); // Blue color
+        object.material.color.set(0x65543e); // Blue color
         object.material.opacity = 0.5; // Adjust opacity for transparency
         console.log('{"bin":"' + objectName + '"}');
 

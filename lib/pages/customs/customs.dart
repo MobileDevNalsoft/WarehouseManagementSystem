@@ -10,43 +10,66 @@ import 'package:another_flushbar/flushbar.dart';
 
 class Customs {
   static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
-    return Container(
-      height: size.height * 0.92,
-      width: size.width * 0.22,
-      decoration: const BoxDecoration(color: Color.fromRGBO(206, 218, 233, 1), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]),
-      padding: EdgeInsets.all(size.height * 0.02),
-      child: LayoutBuilder(builder: (context, layout) {
-        return Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(color: Color.fromRGBO(68, 98, 136, 1), fontSize: layout.maxWidth * 0.1, fontWeight: FontWeight.bold),
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        
+        Container(
+          alignment: Alignment.center,
+            decoration:  BoxDecoration(
+              color: Color.fromRGBO(12, 46, 87, 1),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
+              ),  
+              padding: EdgeInsets.symmetric(vertical: size.height*0.01,horizontal: size.height*0.02),
+              margin: EdgeInsets.only(top:size.height*0.02,bottom: size.height*0.004,right: size.height*0.01),
+           height: size.height * 0.06,
+          width: size.width * 0.22,
+          child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                Text(title, style: TextStyle(color: Colors.white, fontSize: size.width*0.012,  letterSpacing: 1.6,fontWeight: FontWeight.bold),),
                 Spacer(),
                 InkWell(
-                    onTap: () async {
-                      getIt<JsInteropService>().switchToMainCam(
-                          await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
-                                  "storageArea"
-                              ? "storageArea"
-                              : "compoundArea");
-                      getIt<JsInteropService>().resetBoxColors();
-
-                      context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));
-
-                      getIt<JsInteropService>().resetTrucks();
-                    },
-                    child: Icon(Icons.cancel_rounded, color: Color.fromRGBO(68, 98, 136, 1)))
-              ],
-            ),
-            Gap(size.height * 0.01),
-            ...children
-          ],
-        );
-      }),
+                  onTap: () async {
+                        getIt<JsInteropService>().switchToMainCam(
+                            await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
+                                    "storageArea"
+                                ? "storageArea"
+                                : "compoundArea");
+                        getIt<JsInteropService>().resetBoxColors();
+          
+                        context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));       
+                                
+                        getIt<JsInteropService>().resetTrucks();
+                      },
+                  child: Icon(Icons.cancel_rounded, color: Colors.white70)
+                )
+                  ],
+                ),
+        ),
+        Container(
+          height: size.height * 0.86,
+          width: size.width * 0.22,
+          decoration:  BoxDecoration(
+              color: Color.fromRGBO(12, 46, 87, 1),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
+              ),
+          padding: EdgeInsets.all(size.height*0.012),
+          child: LayoutBuilder(
+            builder: (context, layout) {
+              return Column(
+                children: [
+                  
+                  Gap(size.height * 0.01),
+                  ...children
+                ],
+              );
+            }
+          ),
+        ),
+      ],
     );
   }
 

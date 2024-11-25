@@ -129,7 +129,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                 onTap: () {
                                   focusNode.unfocus();
                                 },
-                                child: InAppWebView(
+                                child:
+                                 InAppWebView(
                                   initialFile: 'assets/web_code/model.html',
                                   onConsoleMessage: (controller, consoleMessage) {
                                     try {
@@ -172,15 +173,17 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
 
                                         bool? isLoaded =
                                             await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                        if (isLoaded != null) {
+                                        if (isLoaded != null ) {
                                           _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
                                           _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                                timer.cancel();
                                         }
                                       },
                                     );
                                   },
                                   onLoadStop: (controller, url) async {},
                                 ),
+                              
                               ),
                             ),
                           );
@@ -191,7 +194,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                       builder: (context, child) {
                         return Positioned(
                           right: positionAnimation.value,
-                          child: getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
+                          child: 
+                          getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS!.keys.first,
                                   context.watch<WarehouseInteractionBloc>().state.dataFromJS!.values.first.toString()) ??
                               const SizedBox(),
                         );
