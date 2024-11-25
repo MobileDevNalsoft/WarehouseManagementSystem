@@ -7,12 +7,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:warehouse_3d/constants/app_constants.dart';
-import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/js_interop_service/js_inter.dart';
-import 'package:warehouse_3d/local_network_calls.dart';
-import 'package:warehouse_3d/models/company_model.dart';
-import 'package:warehouse_3d/models/facility_model.dart';
+import 'package:wmssimulator/constants/app_constants.dart';
+import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/js_interop_service/js_inter.dart';
+import 'package:wmssimulator/local_network_calls.dart';
+import 'package:wmssimulator/models/company_model.dart';
+import 'package:wmssimulator/models/facility_model.dart';
 
 
 part 'warehouse_interaction_event.dart';

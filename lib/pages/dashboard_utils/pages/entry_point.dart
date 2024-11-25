@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/activity_area_dashboard.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/dock_area_dashboard.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/inspection_area_dashboard.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/receiving_area_dashboard.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/staging_area_dashboard.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/dashboards/storage_area_dashboard.dart';
+import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/activity_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/dock_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/inspection_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/receiving_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/staging_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/storage_area_dashboard.dart';
 
 import '../responsive.dart';
 import '../shared/constants/defaults.dart';

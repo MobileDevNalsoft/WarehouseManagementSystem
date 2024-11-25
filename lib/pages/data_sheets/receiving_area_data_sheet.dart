@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_event.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_state.dart';
-import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
+import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
+import 'package:wmssimulator/bloc/receiving/receiving_event.dart';
+import 'package:wmssimulator/bloc/receiving/receiving_state.dart';
+import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 
 class ReceivingAreaDataSheet extends StatefulWidget {
   const ReceivingAreaDataSheet({super.key});
@@ -66,7 +66,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                   height: lsize.maxHeight*0.16,
                                   width: lsize.maxWidth*0.96,
                                       decoration: BoxDecoration(
-                                        color: Color.fromRGBO(112, 144, 185, 1),
+                                        color: Colors.white,
                                         borderRadius: BorderRadius.circular(15),
                                       ),
                                       padding: EdgeInsets.all( lsize.maxHeight*0.01),
@@ -121,7 +121,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                     height: lsize.maxHeight*0.16,
                                   width: lsize.maxWidth*0.96,
                                     decoration: BoxDecoration(
-                                      color: Color.fromRGBO(112, 144, 185, 1),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(15)
                                     ),
                                     padding: EdgeInsets.all(size.height*0.01),

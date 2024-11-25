@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
-import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/js_interop_service/js_inter.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
+import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
+import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/js_interop_service/js_inter.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 
 class BinDataSheet extends StatefulWidget {
    const BinDataSheet({super.key});
@@ -66,7 +66,7 @@ else{
                       child:
 
                        (state.storageBinStatus== StorageBinStatus.success &&  state.storageBinItems!.length==0)?
-                        Column(children: [Text(_warehouseInteractionBloc.state.dataFromJS['bin']!=""?_warehouseInteractionBloc.state.dataFromJS['bin']:_warehouseInteractionBloc.state.searchText,style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.044),),Text("Data not found")],)
+                        Column(children: [Text(_warehouseInteractionBloc.state.dataFromJS['bin']!=""?_warehouseInteractionBloc.state.dataFromJS['bin']:_warehouseInteractionBloc.state.searchText,style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.044,color: Colors.white),),Text("Data not found",style: TextStyle(color: Colors.white),)],)
                        : ListView.builder(
                             controller: _controller,
                             itemBuilder: (context, index) => index < state.storageBinItems!.length
@@ -90,7 +90,7 @@ else{
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/bin.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                                 ),
-                                                Text(state.storageBinItems![index].containerNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Text(state.storageBinItems![index].containerNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                                 Spacer(),
                                                 if(_warehouseInteractionBloc.state.dataFromJS['bin'].toString()=="")
                                                 Transform.rotate(
@@ -108,7 +108,7 @@ else{
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/shipment.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                                 ),
-                                                Text(state.storageBinItems![index].rcvdShipmentKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Text(state.storageBinItems![index].rcvdShipmentKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                                 Spacer(),
                                                
                                               ],),
@@ -141,7 +141,7 @@ else{
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/businessman.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                                 ),
-                                                Text(state.storageBinItems![index].vendor!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Text(state.storageBinItems![index].vendor!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                                 Spacer(),
                                                 Padding(
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
@@ -162,7 +162,7 @@ else{
                                                     child: 
                                                     Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.09, width: containerSize.maxWidth*0.09,),
                                                   ),
-                                                 Text(state.storageBinItems![index].currQty!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                 Text(state.storageBinItems![index].currQty!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                               ],),
                                             ],
                                           );

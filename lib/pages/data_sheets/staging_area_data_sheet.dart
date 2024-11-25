@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:warehouse_3d/bloc/staging/staging_bloc.dart';
-import 'package:warehouse_3d/bloc/staging/staging_event.dart';
-import 'package:warehouse_3d/bloc/staging/staging_state.dart';
-import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
+import 'package:wmssimulator/bloc/staging/staging_bloc.dart';
+import 'package:wmssimulator/bloc/staging/staging_event.dart';
+import 'package:wmssimulator/bloc/staging/staging_state.dart';
+import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 
 class StagingAreaDataSheet extends StatefulWidget {
   const StagingAreaDataSheet({super.key});

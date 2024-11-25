@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:touchable/touchable.dart';
-// import 'package:warehouse_3d/models/rack_model.dart';
+// import 'package:wmssimulator/models/rack_model.dart';
 // import 'package:svg_path_parser/svg_path_parser.dart';
 
 // class RackPainter extends CustomPainter{

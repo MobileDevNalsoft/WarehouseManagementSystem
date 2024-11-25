@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_event.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_state.dart';
-import 'package:warehouse_3d/constants/app_constants.dart';
-import 'package:warehouse_3d/models/receiving_area_model.dart';
+import 'package:wmssimulator/bloc/receiving/receiving_event.dart';
+import 'package:wmssimulator/bloc/receiving/receiving_state.dart';
+import 'package:wmssimulator/constants/app_constants.dart';
+import 'package:wmssimulator/models/receiving_area_model.dart';
 
 import '../../local_network_calls.dart';
 

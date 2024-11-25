@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:warehouse_3d/bloc/authentication/authentication_bloc.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
+import 'package:wmssimulator/bloc/authentication/authentication_bloc.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';

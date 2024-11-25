@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
-import 'package:warehouse_3d/js_interop_service/js_inter.dart';
+import 'package:wmssimulator/js_interop_service/js_inter.dart';
 
 import '../constants/app_constants.dart';
 import '../local_network_calls.dart';

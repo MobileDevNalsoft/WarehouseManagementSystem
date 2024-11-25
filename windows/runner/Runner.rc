@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "warehouse_3d" "\0"
+            VALUE "FileDescription", "wmssimulator" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "warehouse_3d" "\0"
+            VALUE "InternalName", "wmssimulator" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "warehouse_3d.exe" "\0"
-            VALUE "ProductName", "warehouse_3d" "\0"
+            VALUE "OriginalFilename", "wmssimulator.exe" "\0"
+            VALUE "ProductName", "wmssimulator" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

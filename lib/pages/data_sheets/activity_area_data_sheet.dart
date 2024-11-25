@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:warehouse_3d/bloc/activity_area/activity_area_bloc.dart';
-import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/js_interop_service/js_inter.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/ghaps.dart';
+import 'package:wmssimulator/bloc/activity_area/activity_area_bloc.dart';
+import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/js_interop_service/js_inter.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
+import 'package:wmssimulator/pages/dashboard_utils/shared/constants/ghaps.dart';
 
 class ActivityAreaDataSheet extends StatefulWidget {
   const ActivityAreaDataSheet({super.key});

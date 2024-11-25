@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:warehouse_3d/local_network_calls.dart';
+import 'package:wmssimulator/local_network_calls.dart';
 
 import '../../constants/app_constants.dart';
 import '../../inits/init.dart';

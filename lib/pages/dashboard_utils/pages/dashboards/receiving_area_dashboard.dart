@@ -8,9 +8,9 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
+import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
+import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class ReceivingAreaDashboard extends StatefulWidget {
   ReceivingAreaDashboard({super.key});

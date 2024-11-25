@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
+import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 
 
 class Sidebar extends StatefulWidget {

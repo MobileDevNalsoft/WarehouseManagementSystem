@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
-import 'package:warehouse_3d/network_util.dart';
+import 'package:wmssimulator/network_util.dart';
 
 
 class NetworkCalls extends HttpOverrides {

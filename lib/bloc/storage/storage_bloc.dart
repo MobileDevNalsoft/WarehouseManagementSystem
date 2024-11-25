@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:warehouse_3d/constants/app_constants.dart';
-import 'package:warehouse_3d/inits/init.dart';
-import 'package:warehouse_3d/js_interop_service/js_inter.dart';
-import 'package:warehouse_3d/models/storage_aisle_list_model.dart';
-import 'package:warehouse_3d/models/storage_aisle_model.dart';
-import 'package:warehouse_3d/models/storage_bin.dart';
+import 'package:wmssimulator/constants/app_constants.dart';
+import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/js_interop_service/js_inter.dart';
+import 'package:wmssimulator/models/storage_aisle_list_model.dart';
+import 'package:wmssimulator/models/storage_aisle_model.dart';
+import 'package:wmssimulator/models/storage_bin.dart';
 
 import '../../local_network_calls.dart';
 import '../../models/area_response.dart';

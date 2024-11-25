@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/shared/constants/defaults.dart';
+import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
+import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
+import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 
 class InspectionAreaDashboard extends StatefulWidget {

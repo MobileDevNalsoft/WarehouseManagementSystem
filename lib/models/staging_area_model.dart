@@ -1,4 +1,4 @@
-import 'package:warehouse_3d/models/inspection_area_model.dart';
+import 'package:wmssimulator/models/inspection_area_model.dart';
 
 class StagingArea {
   int? responseCode;

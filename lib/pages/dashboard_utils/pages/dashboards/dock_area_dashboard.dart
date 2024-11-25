@@ -4,10 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
-import 'package:warehouse_3d/bloc/receiving/receiving_bloc.dart';
+import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
+import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:intl/intl.dart';
 
 class DockAreaDashboard extends StatefulWidget {
@@ -370,29 +370,29 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                          height: size.height * 0.125,
+                          height: lsize.maxHeight * 0.125,
                           width: lsize.maxWidth,
                           decoration: BoxDecoration(
                             color: Color.fromRGBO(12, 46, 87, 1),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           margin: EdgeInsets.only(top: lsize.maxHeight * 0.018),
-                          padding: EdgeInsets.all(size.width * 0.01),
+                          padding: EdgeInsets.all(lsize.maxWidth * 0.04),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'Appointments',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: size.height * 0.02),
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.03),
                               ),
-                              Gap(lsize.maxHeight * 0.02),
+                              Gap(lsize.maxHeight * 0.01),
                               Row(
                                 children: [
                                   SizedBox(
                                       width: lsize.maxWidth * 0.32,
                                       child: Text(
                                           '${DateFormat('E').format(state.appointmentsDate!)}, ${DateFormat('MMM').format(state.appointmentsDate!)} ${state.appointmentsDate!.day}',
-                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: size.height * 0.02))),
+                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.02))),
                                   Gap(lsize.maxWidth * 0.04),
                                   Container(
                                     alignment: Alignment.center,

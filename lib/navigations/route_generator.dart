@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/entry_point.dart';
-import 'package:warehouse_3d/pages/home.dart';
-import 'package:warehouse_3d/pages/select_warehouse.dart';
-import 'package:warehouse_3d/pages/three_js/three_js.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/entry_point.dart';
+import 'package:wmssimulator/pages/home.dart';
+import 'package:wmssimulator/pages/select_warehouse.dart';
+import 'package:wmssimulator/pages/three_js/three_js.dart';
 
 import '../pages/login.dart';
 

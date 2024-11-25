@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:warehouse_3d/pages/dashboard_utils/pages/entry_point.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/entry_point.dart';
  import 'dart:html' as html;
 
 class HoverDropdown extends StatefulWidget {

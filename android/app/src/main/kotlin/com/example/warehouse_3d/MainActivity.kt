@@ -1,4 +1,4 @@
-package com.example.warehouse_3d
+package com.example.wmssimulator
 
 import io.flutter.embedding.android.FlutterActivity
 

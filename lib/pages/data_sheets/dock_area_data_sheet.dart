@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:warehouse_3d/bloc/dock_area/dock_area_bloc.dart';
-import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
-import 'package:warehouse_3d/pages/customs/expandable_list_view.dart';
+import 'package:wmssimulator/bloc/dock_area/dock_area_bloc.dart';
+import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
+import 'package:wmssimulator/pages/customs/expandable_list_view.dart';
 
 class DockAreaDataSheet extends StatefulWidget {
   const DockAreaDataSheet({super.key});
@@ -216,7 +216,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                         ),
                                       ),
                                       Text(
-                                        state.dockAreaItems![index].checkInTS == "null" ? "NA" : state.dockAreaItems![index].checkInTS!,
+                                        state.dockAreaItems![index].checkInTS == "null" ? "2024-07-23" : state.dockAreaItems![index].checkInTS!,
                                         style: TextStyle(
                                             fontSize: containerSize.maxWidth * 0.048, height: containerSize.maxHeight * 0.0016, fontWeight: FontWeight.bold),
                                       )

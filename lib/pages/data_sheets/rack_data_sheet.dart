@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:warehouse_3d/bloc/storage/storage_bloc.dart';
-import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:warehouse_3d/pages/customs/customs.dart';
+import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
+import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class RackDataSheet extends StatefulWidget {
@@ -103,7 +103,7 @@ class _RackDataSheetState extends State<RackDataSheet> {
                                       padding: EdgeInsets.only(right: size.width * 0.008),
                                       child: Image.asset(
                                         'assets/images/qty.png',
-                                        scale: size.height * 0.0018,
+                                        height: containerSize.maxHeight*0.14, width: containerSize.maxWidth*0.14
                                       ),
                                     ),
                                     Text(

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:warehouse_3d/models/receiving_area_model.dart';
+import 'package:wmssimulator/models/receiving_area_model.dart';
 
 enum ReceivingAreaStatus { initial, loading, success, failure }
 
