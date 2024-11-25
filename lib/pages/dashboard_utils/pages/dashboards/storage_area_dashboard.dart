@@ -28,11 +28,6 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
     BarData(xLabel: 'S7', yValue: 2, abbreviation: 'Supplier7')
   ];
 
-  List<PieData> warehouseUtilizationDataSource = [
-    PieData(xData: "Occupied Bins", yData: 300, color: const Color.fromARGB(255, 102, 82, 156)),
-    PieData(xData: "Avalable Bins", yData: 60, color: const Color.fromARGB(255, 178, 166, 209)),
-  ];
-
   List<PieData> inventorySummaryDataSource = [
     PieData(xData: "In Stock", yData: 456, color: const Color.fromARGB(255, 148, 224, 214)),
     PieData(xData: "Running Out of Stock", yData: 68, color: const Color.fromARGB(255, 184, 172, 149)),
@@ -80,18 +75,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.center,
-                        child: LayoutBuilder(builder: (context, lsize) {
-                          return isEnabled
-                              ? Customs.DashboardLoader(lsize: lsize)
-                              : Stack(
+                      Customs.DashboardWidget(size: size, loaderEnabled: isEnabled, chartBuilder: (lsize) => Stack(
                                   children: [
                                     SfCircularChart(
                                       title: ChartTitle(
@@ -210,9 +194,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                       ),
                                     )
                                   ],
-                                );
-                        }),
-                      ),
+                                ),),
                       Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
                         height: size.height * 0.45,
@@ -220,7 +202,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                         decoration: BoxDecoration(
                             color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
+                        alignment: Alignment.center,
                         child: LayoutBuilder(
                           builder: (context, lsize) {
                             return isEnabled
@@ -246,11 +228,9 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                       alignment: ChartAlignment.center),
                                   pointColorMapper: (datum, index) {
                                     if (index == 1) {
-                                              return const Color.fromRGBO(139, 182, 162, 1);
-                                            } else if (index == 2){
-                                              return const Color.fromRGBO(232, 212, 162, 1);
-                                            } else {
-                                              return const Color.fromRGBO(255, 116, 106, 1);
+                                              return const Color.fromARGB(255, 102, 82, 156);
+                                            }else {
+                                              return const Color.fromARGB(255, 178, 166, 209);
                                             }
                                   },
                                   xValueMapper: (PieData data, _) => data.xData,
@@ -269,38 +249,38 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                             color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
                         alignment: Alignment.topCenter,
-                        child: Skeletonizer(
-                          enableSwitchAnimation: true,
-                          enabled: isEnabled,
-                          child: SfCircularChart(
-                            title: ChartTitle(
-                              text: 'Inventory Summary',
-                              textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                            ),
-                            legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                            series: <CircularSeries>[
-                              // Renders radial bar chart
-                              PieSeries<PieData, String>(
-                                dataSource: isEnabled
-                                    ? inventorySummaryDataSource
-                                    : state.storageDashboardData!.inventorySummary!
-                                        .asMap()
-                                        .entries
-                                        .map((e) => PieData(xData: e.value.status!, yData: e.value.count!, color: inventorySummaryDataSource[e.key].color))
-                                        .toList(),
-                                dataLabelSettings: const DataLabelSettings(
-                                    // Renders the data label
-                                    isVisible: true,
-                                    textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                    alignment: ChartAlignment.center),
-                                pointColorMapper: (datum, index) {
-                                  return inventorySummaryDataSource[index].color;
-                                },
-                                xValueMapper: (PieData data, _) => data.xData,
-                                yValueMapper: (PieData data, _) => data.yData,
-                              )
-                            ],
-                          ),
+                        child: LayoutBuilder(
+                          builder: (context, lsize) {
+                            return SfCircularChart(
+                              title: ChartTitle(
+                                text: 'Inventory Summary',
+                                textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                              ),
+                              legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                              series: <CircularSeries>[
+                                // Renders radial bar chart
+                                PieSeries<PieData, String>(
+                                  dataSource: isEnabled
+                                      ? inventorySummaryDataSource
+                                      : state.storageDashboardData!.inventorySummary!
+                                          .asMap()
+                                          .entries
+                                          .map((e) => PieData(xData: e.value.status!, yData: e.value.count!, color: inventorySummaryDataSource[e.key].color))
+                                          .toList(),
+                                  dataLabelSettings: const DataLabelSettings(
+                                      // Renders the data label
+                                      isVisible: true,
+                                      textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                      alignment: ChartAlignment.center),
+                                  pointColorMapper: (datum, index) {
+                                    return inventorySummaryDataSource[index].color;
+                                  },
+                                  xValueMapper: (PieData data, _) => data.xData,
+                                  yValueMapper: (PieData data, _) => data.yData,
+                                )
+                              ],
+                            );
+                          }
                         ),
                       ),
                     ],

@@ -13,63 +13,67 @@ class Customs {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
         Container(
           alignment: Alignment.center,
-            decoration:  BoxDecoration(
-              color: Color.fromRGBO(12, 46, 87, 1),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
-              ),  
-              padding: EdgeInsets.symmetric(vertical: size.height*0.01,horizontal: size.height*0.02),
-              margin: EdgeInsets.only(top:size.height*0.02,bottom: size.height*0.004,right: size.height*0.01),
-           height: size.height * 0.06,
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.02),
+          margin: EdgeInsets.only(top: size.height * 0.02, bottom: size.height * 0.004, right: size.height * 0.01),
+          height: size.height * 0.06,
           width: size.width * 0.22,
           child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                Text(title, style: TextStyle(color: Colors.white, fontSize: size.width*0.012,  letterSpacing: 1.6,fontWeight: FontWeight.bold),),
-                Spacer(),
-                InkWell(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(color: Colors.white, fontSize: size.width * 0.012, letterSpacing: 1.6, fontWeight: FontWeight.bold),
+              ),
+              Spacer(),
+              InkWell(
                   onTap: () async {
-                        getIt<JsInteropService>().switchToMainCam(
-                            await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
-                                    "storageArea"
-                                ? "storageArea"
-                                : "compoundArea");
-                        getIt<JsInteropService>().resetBoxColors();
-          
-                        context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));       
-                                
-                        getIt<JsInteropService>().resetTrucks();
-                      },
-                  child: Icon(Icons.cancel_rounded, color: Colors.white70)
-                )
-                  ],
-                ),
+                    getIt<JsInteropService>().switchToMainCam(
+                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
+                                "storageArea"
+                            ? "storageArea"
+                            : "compoundArea");
+                    getIt<JsInteropService>().resetBoxColors();
+
+                    context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));
+
+                    getIt<JsInteropService>().resetTrucks();
+                  },
+                  child: Icon(Icons.cancel_rounded, color: Colors.white70))
+            ],
+          ),
         ),
         Container(
           height: size.height * 0.86,
           width: size.width * 0.22,
-          decoration:  BoxDecoration(
-              color: Color.fromRGBO(12, 46, 87, 1),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
-              ),
-          padding: EdgeInsets.all(size.height*0.012),
-          child: LayoutBuilder(
-            builder: (context, layout) {
-              return Column(
-                children: [
-                  
-                  Gap(size.height * 0.01),
-                  ...children
-                ],
-              );
-            }
-          ),
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          padding: EdgeInsets.all(size.height * 0.012),
+          child: LayoutBuilder(builder: (context, layout) {
+            return Column(
+              children: [Gap(size.height * 0.01), ...children],
+            );
+          }),
         ),
       ],
+    );
+  }
+
+  static Widget DashboardWidget({Size size = const Size(100, 100), bool loaderEnabled = true, required Widget Function(BoxConstraints lsize) chartBuilder}) {
+    double aspectRatio = size.width / size.height;
+    return Container(
+      margin: EdgeInsets.all(aspectRatio * 8),
+      height: size.height * 0.45,
+      width: size.width * 0.25,
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+      padding: EdgeInsets.all(size.height * 0.035),
+      alignment: Alignment.topCenter,
+      child: LayoutBuilder(builder: (context, lsize) {
+        return loaderEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(lsize);
+      }),
     );
   }
 
@@ -225,7 +229,7 @@ class Customs {
 
   static Widget WMSSfCircularChart(
       {required List<AnalogChartData> chartData,
-      String? title,
+      String title = 'Title',
       String? contentText,
       required Size size,
       double? height,
@@ -233,7 +237,7 @@ class Customs {
       String? radius,
       Color? textColor}) {
     return SfCircularChart(
-      title: ChartTitle(text: title ?? "title", textStyle: TextStyle(fontWeight: FontWeight.bold)),
+      title: ChartTitle(text: title, textStyle: const TextStyle(fontWeight: FontWeight.bold)),
       annotations: <CircularChartAnnotation>[
         CircularChartAnnotation(
           widget: Container(
