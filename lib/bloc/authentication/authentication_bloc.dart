@@ -50,9 +50,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           await sharedPreferences.setString("uname", event.username);
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
           navigator!.pushReplacement('/warehouse');
+          getIt<SharedPreferences>().setBool('isLogged', true);
         } else {
           print('invalid');
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.invalidCredentials));
+          getIt<SharedPreferences>().setBool('isLogged', false);
         }
       },
     ).onError(

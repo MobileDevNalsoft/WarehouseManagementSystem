@@ -39,7 +39,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
 
   String? placeholderText;
   String? dropdownValue;
-  
+
   double? height;
   double? bottomHeight;
   double turns = 1;
@@ -51,8 +51,72 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     bottomHeight = widget.size.height * 0.06;
     placeholderText = 'Search';
     dropdownValue = "Area";
-    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    
+    _warehouseInteractionBloc =  context.read<WarehouseInteractionBloc>();
+  }
+
+  void searchData() {
+    print("selected area ${_warehouseInteractionBloc.state.selectedSearchArea}");
+    print("dataFromJS ${_warehouseInteractionBloc.state.dataFromJS} ");
+
+    if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") && !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
+      if (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().contains("storage")) {
+        _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": ""}, clearSearchText: false));
+        getIt<JsInteropService>().switchToMainCam("storageArea");
+      } else {
+        _warehouseInteractionBloc.add(SelectedObject(
+            dataFromJS: {"area": _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll(' ', '').replaceAll('-', '')},
+            clearSearchText: false));
+      }
+    } else {
+      print("else part ${_warehouseInteractionBloc.state.selectedSearchArea}");
+      switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll(' ', '').replaceAll('-', '')) {
+        case 'stagingarea':
+          context.read<StagingBloc>().state.pageNum = 0;
+          context.read<StagingBloc>().add(GetStagingData(searchText: _warehouseInteractionBloc.state.searchText));
+          break;
+        case 'activityarea':
+          context.read<ActivityAreaBloc>().state.pageNum = 0;
+          context.read<ActivityAreaBloc>().add(GetActivityAreaData(searchText: _warehouseInteractionBloc.state.searchText));
+          break;
+        case 'receivingarea':
+          context.read<ReceivingBloc>().state.pageNum = 0;
+          context.read<ReceivingBloc>().add(GetReceivingData(searchText: _warehouseInteractionBloc.state.searchText));
+          break;
+        case 'inspectionarea':
+          context.read<InspectionAreaBloc>().state.pageNum = 0;
+          context.read<InspectionAreaBloc>().add(GetInspectionAreaData(searchText: _warehouseInteractionBloc.state.searchText));
+          break;
+        case 'dockareain':
+          context.read<DockAreaBloc>().state.pageNum = 0;
+
+          context.read<DockAreaBloc>().add(GetDockAreaData(searchText: _warehouseInteractionBloc.state.searchText, searchArea: "DOCK_IN"));
+          break;
+        case 'dockareaout':
+          context.read<DockAreaBloc>().state.pageNum = 0;
+
+          context.read<DockAreaBloc>().add(GetDockAreaData(searchText: _warehouseInteractionBloc.state.searchText, searchArea: "DOCK_OUT"));
+          break;
+        case 'yardarea':
+          context.read<YardBloc>().state.pageNum = 0;
+          context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
+        case 'storagearea' || 'storage':
+          if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
+            getIt<JsInteropService>().switchToMainCam("storageArea");
+            context.read<StorageBloc>().state.pageNum = 0;
+            // context
+            //     .read<StorageBloc>()
+            //     .add(AddStorageAreaData(searchText: _warehouseInteractionBloc.state.searchText ?? ""));
+            context.read<StorageBloc>().add(GetBinData(searchText: _warehouseInteractionBloc.state.searchText ?? ""));
+          }
+          break;
+        case 'bin':
+          context.read<StorageBloc>().state.pageNum = 0;
+          context.read<StorageBloc>().add(GetBinData(searchText: _warehouseInteractionBloc.state.searchText ?? ""));
+
+        default:
+          return null;
+      }
+    }
   }
 
   @override
@@ -84,74 +148,70 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                     return GestureDetector(
                       onTap: () {
                         print("item selected $item");
-                        try{
-                        context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "rack_cam");
+                        try {
+                          _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "rack_cam");
+                        } catch (e) {
+                          print(e);
                         }
-                        catch(e){
-                            print(e);
-                        }
-                      switch(item.replaceAll(" ","").toLowerCase()){
+                        switch (item.replaceAll(" ", "").toLowerCase()) {
                           case "storagearea":
-                                  getIt<JsInteropService>().switchToMainCam("storageArea");
-                                   _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
-                                  break;
+                            getIt<JsInteropService>().switchToMainCam("storageArea");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
+                            break;
                           case "storagebin":
-                                  getIt<JsInteropService>().switchToMainCam("storageArea");
-                                  _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
-                                  break;
+                            getIt<JsInteropService>().switchToMainCam("storageArea");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
+                            break;
                           case "inspectionarea":
-                                    getIt<JsInteropService>().switchToMainCam("inspectionArea");
-                                     _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
-                                  break;
-                            case "stagingarea":
-                                  getIt<JsInteropService>().switchToMainCam("stagingArea");
-                                   _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
-                                  break;
-                            case "activityarea":
-                                  getIt<JsInteropService>().switchToMainCam("activityArea");
-                                   _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
-                                  break;
-                            case "receivingarea":
-                                  getIt<JsInteropService>().switchToMainCam("receivingArea");
-                                   _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
-                                  break;
-                            case "yardarea":
-                                  getIt<JsInteropService>().switchToMainCam("yardArea");
-                                   _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
+                            getIt<JsInteropService>().switchToMainCam("inspectionArea");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
+                            break;
+                          case "stagingarea":
+                            getIt<JsInteropService>().switchToMainCam("stagingArea");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
+                            break;
+                          case "activityarea":
+                            getIt<JsInteropService>().switchToMainCam("activityArea");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
+                            break;
+                          case "receivingarea":
+                            getIt<JsInteropService>().switchToMainCam("receivingArea");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
+                            break;
+                          case "yardarea":
+                            getIt<JsInteropService>().switchToMainCam("yardArea");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
 
-                                  break;
-                            case "dockareain":
-                                  getIt<JsInteropService>().switchToMainCam("dockArea-IN");
-                                   _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
-                                  break;
-                            case "dockareaout":
-                                  getIt<JsInteropService>().switchToMainCam("dockArea-OUT");
-                                   _warehouseInteractionBloc.state.searchText="";
-                                  _warehouseInteractionBloc.state.searchController.text="";
-                                  break;
-                            default:
-                              null;
+                            break;
+                          case "dockareain":
+                            getIt<JsInteropService>().switchToMainCam("dockArea-IN");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
+                            break;
+                          case "dockareaout":
+                            getIt<JsInteropService>().switchToMainCam("dockArea-OUT");
+                            _warehouseInteractionBloc.state.searchText = "";
+                            _warehouseInteractionBloc.state.searchController.text = "";
+                            break;
+                          default:
+                            null;
                         }
                         // getIt<JsInteropService>().switchToMainCam(item.replaceAll(" ", ""));
-                        if (item.toLowerCase().contains("storage") ) {
+                        if (item.toLowerCase().contains("storage")) {
                           _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"object": "bin"}));
                         } else {
                           // _warehouseInteractionBloc.state.selectedSearchArea = ;
                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${item.toLowerCase().replaceAll(" ", '')}"}));
                         }
-                         
-                         
-                            
-                          
+
                         setState(() {
                           // dropdownValue = item;
                           placeholderText = 'Search...';
@@ -196,7 +256,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                   onTap: () {
                     print("dropdown");
                     // _warehouseInteractionBloc.state.selectedSearchArea = _warehouseInteractionBloc.state.selectedSearchArea.split("Area")[0].trim();
-                    
+
                     setState(() {
                       height = height == size.height * 0.08
                           ? size.height * 0.3
@@ -243,79 +303,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           offset: Offset(0, -size.height * 0.005),
                           child: TextField(
                             controller: _warehouseInteractionBloc.state.searchController,
-                            onSubmitted: (value) {
-                              print("selected area ${_warehouseInteractionBloc.state.selectedSearchArea}");
-                              print("dataFromJS ${_warehouseInteractionBloc.state.dataFromJS} ");
-
-                              if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") &&
-                                  !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
-                                if (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().contains("storage")) {
-                                  _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": ""},clearSearchText: false));
-                                  getIt<JsInteropService>().switchToMainCam("storageArea");
-                                } else {
-                                  _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll(' ', '').replaceAll('-', '')},clearSearchText: false));
-                                    
-                                }
-                              } else {
-                                print("else part ${_warehouseInteractionBloc.state.selectedSearchArea}");
-                                switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll(' ', '').replaceAll('-', '')) {
-                                  case 'stagingarea':
-                                    context.read<StagingBloc>().state.pageNum = 0;
-                                    context.read<StagingBloc>().add(GetStagingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-                                    break;
-                                  case 'activityarea':
-                                    context.read<ActivityAreaBloc>().state.pageNum = 0;
-                                    context
-                                        .read<ActivityAreaBloc>()
-                                        .add(GetActivityAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-                                    break;
-                                  case 'receivingarea':
-                                    context.read<ReceivingBloc>().state.pageNum = 0;
-                                    context.read<ReceivingBloc>().add(GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-                                    break;
-                                  case 'inspectionarea':
-                                    context.read<InspectionAreaBloc>().state.pageNum = 0;
-                                    context
-                                        .read<InspectionAreaBloc>()
-                                        .add(GetInspectionAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-                                    break;
-                                  case 'dockareain':
-                                    context.read<DockAreaBloc>().state.pageNum = 0;
-
-                                    context
-                                        .read<DockAreaBloc>()
-                                        .add(GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText, searchArea: "DOCK_IN"));
-                                    break;
-                                  case 'dockareaout':
-                                    context.read<DockAreaBloc>().state.pageNum = 0;
-
-                                    context
-                                        .read<DockAreaBloc>()
-                                        .add(GetDockAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText, searchArea: "DOCK_OUT"));
-                                    break;
-                                  case 'yardarea':
-                                    context.read<YardBloc>().state.pageNum = 0;
-                                    context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-                                  case 'storagearea' || 'storage':
-                                    if (context.read<WarehouseInteractionBloc>().state.searchText != null &&
-                                        context.read<WarehouseInteractionBloc>().state.searchText != "") {
-                                          getIt<JsInteropService>().switchToMainCam("storageArea");
-                                      context.read<StorageBloc>().state.pageNum = 0;
-                                      // context
-                                      //     .read<StorageBloc>()
-                                      //     .add(AddStorageAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText ?? ""));
-                                       context.read<StorageBloc>().add(GetBinData(searchText: context.read<WarehouseInteractionBloc>().state.searchText ?? ""));
-                                    }
-                                    break;
-                                  case 'bin':
-                                    context.read<StorageBloc>().state.pageNum = 0;
-                                    context.read<StorageBloc>().add(GetBinData(searchText: context.read<WarehouseInteractionBloc>().state.searchText ?? ""));
-
-                                  default:
-                                    return null;
-                                }
-                              }
-                            },
+                            onSubmitted: (value) { searchData();},
                             onChanged: (value) {
                               if (value.trim() == "") {
                                 _warehouseInteractionBloc.state.searchText = null;
@@ -347,7 +335,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                     context.read<DockAreaBloc>().add(GetDockAreaData());
                                   case 'yardarea':
                                     context.read<YardBloc>().state.pageNum = 0;
-                                    context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+                                    context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
                                     break;
                                   default:
                                     return null;
@@ -377,11 +365,15 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           ),
                         ),
                       ),
-                      Icon(
-                        Icons.search,
-                        color: Color.fromRGBO(68, 98, 136, 1),
-                        size: size.height * 0.035,
-                      ),
+                      IconButton(
+                          onPressed: () {
+                            searchData();
+                          },
+                          icon: Icon(
+                            Icons.search,
+                            color: Color.fromRGBO(68, 98, 136, 1),
+                            size: size.height * 0.035,
+                          )),
                     ],
                   ),
                 ),
