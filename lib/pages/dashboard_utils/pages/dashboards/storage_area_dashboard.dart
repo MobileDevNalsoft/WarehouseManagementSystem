@@ -77,16 +77,13 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                     children: [
                       Customs.DashboardWidget(size: size, loaderEnabled: isEnabled, chartBuilder: (lsize) => Stack(
                                   children: [
-                                    SfCircularChart(
-                                      title: ChartTitle(
-                                        text: 'Location Utilization',
-                                        textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                                      ),
-                                      legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                                      series: <CircularSeries>[
-                                        // Renders radial bar chart
-                                        RadialBarSeries<PieData, String>(
-                                          dataSource: state.storageDashboardData!.locationUtilization!
+                                    Customs.WMSSfCircularChart(
+                                      height: lsize.maxHeight,
+                                      width: lsize.maxWidth,
+                                      title: 'Location Utilization',
+                                      series: SeriesName.radialBar,
+                                      radialBarProps: RadialBarProps(
+                                        dataSource: state.storageDashboardData!.locationUtilization!
                                               .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
                                               .first
                                               .typeUtil!
@@ -95,7 +92,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                               .map((e) =>
                                                   PieData(xData: e.value.status!, yData: e.value.count!))
                                               .toList(),
-                                          maximumValue: state.storageDashboardData!.locationUtilization!
+                                        maximumValue: state.storageDashboardData!.locationUtilization!
                                               .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
                                               .first
                                               .typeUtil!
@@ -103,14 +100,8 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                               .toList()
                                               .reduce((curr, next) => curr > next ? curr : next)
                                               .toDouble(),
-                                          cornerStyle: CornerStyle.bothCurve,
-                                          innerRadius: "30%",
-                                          dataLabelSettings: const DataLabelSettings(
-                                              // Renders the data label
-                                              isVisible: true,
-                                              textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                              alignment: ChartAlignment.center),
-                                          pointColorMapper: (datum, index) {
+                                        innerRadius: '30%',
+                                        pointColorMapper: (datum, index) {
                                             if (index == 1) {
                                               return const Color.fromRGBO(139, 182, 162, 1);
                                             } else if (index == 2){
@@ -118,11 +109,8 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                             } else {
                                               return const Color.fromRGBO(255, 116, 106, 1);
                                             }
-                                          },
-                                          xValueMapper: (PieData data, _) => data.xData,
-                                          yValueMapper: (PieData data, _) => data.yData,
-                                        )
-                                      ],
+                                          }
+                                      )
                                     ),
                                     Positioned(
                                       top: lsize.maxHeight * 0.02,
@@ -195,6 +183,29 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                     )
                                   ],
                                 ),),
+                      Customs.DashboardWidget(
+                        size: size,
+                        loaderEnabled: isEnabled,
+                        chartBuilder: (lsize) => Customs.WMSSfCircularChart(
+                          height: lsize.maxHeight,
+                          width: lsize.maxWidth,
+                          title: 'Warehouse Utilization',
+                          doughnutProps: DoughnutProps(
+                            dataSource: state.storageDashboardData!.warehouseUtilization!
+                                    .asMap()
+                                    .entries
+                                    .map((e) => PieData(xData: e.value.status!, yData: e.value.count!))
+                                    .toList(),
+                            pointColorMapper: (datum, index) {
+                              if (index == 1) {
+                                        return const Color.fromARGB(255, 102, 82, 156);
+                                      }else {
+                                        return const Color.fromARGB(255, 178, 166, 209);
+                                      }
+                            },
+                          )
+                        ),
+                      ),
                       Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
                         height: size.height * 0.45,
@@ -208,50 +219,6 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                             return isEnabled
                             ? Customs.DashboardLoader(lsize: lsize)
                             : SfCircularChart(
-                              title: ChartTitle(
-                                text: 'Warehouse Utilization',
-                                textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                              ),
-                              legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                              series: <CircularSeries>[
-                                // Renders radial bar chart
-                                DoughnutSeries<PieData, String>(
-                                  dataSource: state.storageDashboardData!.warehouseUtilization!
-                                          .asMap()
-                                          .entries
-                                          .map((e) => PieData(xData: e.value.status!, yData: e.value.count!))
-                                          .toList(),
-                                  dataLabelSettings: const DataLabelSettings(
-                                      // Renders the data label
-                                      isVisible: true,
-                                      textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                      alignment: ChartAlignment.center),
-                                  pointColorMapper: (datum, index) {
-                                    if (index == 1) {
-                                              return const Color.fromARGB(255, 102, 82, 156);
-                                            }else {
-                                              return const Color.fromARGB(255, 178, 166, 209);
-                                            }
-                                  },
-                                  xValueMapper: (PieData data, _) => data.xData,
-                                  yValueMapper: (PieData data, _) => data.yData,
-                                )
-                              ],
-                            );
-                          }
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.25,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: LayoutBuilder(
-                          builder: (context, lsize) {
-                            return SfCircularChart(
                               title: ChartTitle(
                                 text: 'Inventory Summary',
                                 textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
@@ -294,44 +261,50 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                         decoration: BoxDecoration(
                             color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: SfCircularChart(
-                          title: ChartTitle(
-                            text: 'Inventory Aging',
-                            textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
-                          ),
-                          legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                          series: <CircularSeries>[
-                            // Renders radial bar chart
-                            PieSeries<PieData, String>(
-                              dataSource: isEnabled
-                                  ? inventoryAgingDataSource
-                                  : [
-                                      PieData(
-                                          xData: "< 30 Days",
-                                          yData: state.storageDashboardData!.inventoryAging!.count30Days!.toDouble(),
-                                          color: const Color.fromARGB(255, 148, 215, 224)),
-                                      PieData(
-                                          xData: "30 - 90 Days",
-                                          yData: state.storageDashboardData!.inventoryAging!.count30To90Days!.toDouble(),
-                                          color: const Color.fromARGB(255, 159, 196, 161)),
-                                      PieData(
-                                          xData: "> 90 Days",
-                                          yData: state.storageDashboardData!.inventoryAging!.countGreaterThan90Days!.toDouble(),
-                                          color: const Color.fromARGB(255, 180, 140, 164))
-                                    ],
-                              dataLabelSettings: const DataLabelSettings(
-                                  // Renders the data label
-                                  isVisible: true,
-                                  textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                  alignment: ChartAlignment.center),
-                              pointColorMapper: (datum, index) {
-                                return inventoryAgingDataSource[index].color;
-                              },
-                              xValueMapper: (PieData data, _) => data.xData,
-                              yValueMapper: (PieData data, _) => data.yData,
-                            )
-                          ],
+                        alignment: Alignment.center,
+                        child: LayoutBuilder(
+                          builder: (context, lsize) {
+                            return isEnabled
+                                ? Customs.DashboardLoader(lsize: lsize)
+                                :  SfCircularChart(
+                              title: ChartTitle(
+                                text: 'Inventory Aging',
+                                textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold),
+                              ),
+                              legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                              series: <CircularSeries>[
+                                // Renders radial bar chart
+                                PieSeries<PieData, String>(
+                                  dataSource: isEnabled
+                                      ? inventoryAgingDataSource
+                                      : [
+                                          PieData(
+                                              xData: "< 30 Days",
+                                              yData: state.storageDashboardData!.inventoryAging!.count30Days!.toDouble(),
+                                              color: const Color.fromARGB(255, 148, 215, 224)),
+                                          PieData(
+                                              xData: "30 - 90 Days",
+                                              yData: state.storageDashboardData!.inventoryAging!.count30To90Days!.toDouble(),
+                                              color: const Color.fromARGB(255, 159, 196, 161)),
+                                          PieData(
+                                              xData: "> 90 Days",
+                                              yData: state.storageDashboardData!.inventoryAging!.countGreaterThan90Days!.toDouble(),
+                                              color: const Color.fromARGB(255, 180, 140, 164))
+                                        ],
+                                  dataLabelSettings: const DataLabelSettings(
+                                      // Renders the data label
+                                      isVisible: true,
+                                      textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                      alignment: ChartAlignment.center),
+                                  pointColorMapper: (datum, index) {
+                                    return inventoryAgingDataSource[index].color;
+                                  },
+                                  xValueMapper: (PieData data, _) => data.xData,
+                                  yValueMapper: (PieData data, _) => data.yData,
+                                )
+                              ],
+                            );
+                          }
                         ),
                       ),
                       Container(
@@ -341,21 +314,27 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                         decoration: BoxDecoration(
                             color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.bottomCenter,
-                        child: Customs.WMSCartesianChart(
-                            title: 'Supplierwise Inventory',
-                            yAxisTitle: 'Number of Items',
-                            barCount: 1,
-                            barColors: [Colors.teal],
-                            dataSources: isEnabled
-                                ? [supplierWiseDataSource]
-                                : [
-                                    state.storageDashboardData!.supplierWiseInventory!
-                                        .map(
-                                          (e) => BarData(xLabel: e.supplier.toString(), yValue: e.origQty!, abbreviation: e.supplier!),
-                                        )
-                                        .toList()
-                                  ]),
+                        alignment: Alignment.center,
+                        child: LayoutBuilder(
+                          builder: (context, lsize) {
+                            return isEnabled
+                                ? Customs.DashboardLoader(lsize: lsize)
+                                : Customs.WMSCartesianChart(
+                                title: 'Supplierwise Inventory',
+                                yAxisTitle: 'Number of Items',
+                                barCount: 1,
+                                barColors: [Colors.teal],
+                                dataSources: isEnabled
+                                    ? [supplierWiseDataSource]
+                                    : [
+                                        state.storageDashboardData!.supplierWiseInventory!
+                                            .map(
+                                              (e) => BarData(xLabel: e.supplier.toString(), yValue: e.origQty!, abbreviation: e.supplier!),
+                                            )
+                                            .toList()
+                                      ]);
+                          }
+                        ),
                       ),
                       Container(
                           margin: EdgeInsets.all(aspectRatio * 8),
@@ -364,72 +343,17 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                           decoration: BoxDecoration(
                               color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                           padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                          child: SfCircularChart(
-                            title: ChartTitle(text: "Avg Storage Time", textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
-                            annotations: <CircularChartAnnotation>[
-                              CircularChartAnnotation(
-                                verticalAlignment: ChartAlignment.center,
-                                widget: Container(
-                                    height: size.height * 0.12,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blueGrey.shade100,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade900,
-                                          blurRadius: 10, // Adjust to set shadow direction
-                                        ),
-                                      ],
-                                    ),
-                                    child: Text(
-                                      isEnabled ? '03h:15m' : "${state.storageDashboardData!.averageStorageTime.toString()}d",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: size.height * 0.02,
-                                      ),
-                                    )),
-                              ),
-                            ],
-                            series: <CircularSeries>[
-                              DoughnutSeries<TimeData, String>(
-                                dataSource: chartData1,
-                                xValueMapper: (TimeData data, _) => data.x,
-                                yValueMapper: (TimeData data, _) => data.y,
-                                radius: '60%', // Adjust the radius as needed
-                                innerRadius: '40%', // Optional: adjust for a thinner ring
-                                pointColorMapper: (TimeData data, _) => data.color,
-                              )
-                            ],
-                          )),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                          margin: EdgeInsets.all(aspectRatio * 8),
-                          height: size.height * 0.45,
-                          width: size.width * 0.25,
-                          decoration: BoxDecoration(
-                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                          padding: EdgeInsets.all(size.height * 0.035),
-                          alignment: Alignment.topCenter,
-                          child: Gauges.SfRadialGauge(
-                            title: Gauges.GaugeTitle(
-                                text: "Cycle Count Accuracy",
-                                alignment: Gauges.GaugeAlignment.center,
-                                textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
-                            axes: [
-                              Gauges.RadialAxis(
-                                maximum: 100,
-                                minimum: 0,
-                                interval: 25,
-                                canScaleToFit: true,
-                                annotations: [
-                                  Gauges.GaugeAnnotation(
-                                      verticalAlignment: Gauges.GaugeAlignment.center,
-                                      widget: Container(
+                          alignment: Alignment.center,
+                          child: LayoutBuilder(
+                            builder: (context, lsize) {
+                              return isEnabled
+                            ? Customs.DashboardLoader(lsize: lsize)
+                            : SfCircularChart(
+                                title: ChartTitle(text: "Avg Storage Time", textStyle: TextStyle(fontSize: aspectRatio * 8, fontWeight: FontWeight.bold)),
+                                annotations: <CircularChartAnnotation>[
+                                  CircularChartAnnotation(
+                                    verticalAlignment: ChartAlignment.center,
+                                    widget: Container(
                                         height: size.height * 0.12,
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
@@ -443,29 +367,96 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                           ],
                                         ),
                                         child: Text(
-                                          isEnabled ? "90" : state.storageDashboardData!.cycleCountAccuracy!.toStringAsFixed(2),
-                                          style: TextStyle(fontSize: aspectRatio * 10),
-                                        ),
-                                      ))
+                                          isEnabled ? '03h:15m' : "${state.storageDashboardData!.averageStorageTime.toString()}d",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: size.height * 0.02,
+                                          ),
+                                        )),
+                                  ),
                                 ],
-                                axisLineStyle: const Gauges.AxisLineStyle(
-                                    thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
-                                showTicks: false,
-                                showLabels: false,
-                                radiusFactor: aspectRatio * 0.3,
-                                pointers: [
-                                  Gauges.MarkerPointer(
-                                    value: isEnabled ? 90 : state.storageDashboardData!.cycleCountAccuracy ?? 0,
-                                    markerType: Gauges.MarkerType.invertedTriangle,
-                                    markerHeight: 20,
-                                    markerWidth: 20,
-                                    color: Colors.white,
-                                    enableAnimation: true,
-                                    elevation: 10,
+                                series: <CircularSeries>[
+                                  DoughnutSeries<TimeData, String>(
+                                    dataSource: chartData1,
+                                    xValueMapper: (TimeData data, _) => data.x,
+                                    yValueMapper: (TimeData data, _) => data.y,
+                                    radius: '60%', // Adjust the radius as needed
+                                    innerRadius: '40%', // Optional: adjust for a thinner ring
+                                    pointColorMapper: (TimeData data, _) => data.color,
                                   )
                                 ],
-                              )
-                            ],
+                              );
+                            }
+                          )),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                          margin: EdgeInsets.all(aspectRatio * 8),
+                          height: size.height * 0.45,
+                          width: size.width * 0.25,
+                          decoration: BoxDecoration(
+                              color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                          padding: EdgeInsets.all(size.height * 0.035),
+                          alignment: Alignment.center,
+                          child: LayoutBuilder(
+                            builder: (context, lsize) {
+                              return isEnabled
+                            ? Customs.DashboardLoader(lsize: lsize)
+                            : Gauges.SfRadialGauge(
+                                title: Gauges.GaugeTitle(
+                                    text: "Cycle Count Accuracy",
+                                    alignment: Gauges.GaugeAlignment.center,
+                                    textStyle: TextStyle(fontSize: aspectRatio * 10, fontWeight: FontWeight.bold)),
+                                axes: [
+                                  Gauges.RadialAxis(
+                                    maximum: 100,
+                                    minimum: 0,
+                                    interval: 25,
+                                    canScaleToFit: true,
+                                    annotations: [
+                                      Gauges.GaugeAnnotation(
+                                          verticalAlignment: Gauges.GaugeAlignment.center,
+                                          widget: Container(
+                                            height: size.height * 0.12,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.blueGrey.shade100,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade900,
+                                                  blurRadius: 10, // Adjust to set shadow direction
+                                                ),
+                                              ],
+                                            ),
+                                            child: Text(
+                                              isEnabled ? "90" : state.storageDashboardData!.cycleCountAccuracy!.toStringAsFixed(2),
+                                              style: TextStyle(fontSize: aspectRatio * 10),
+                                            ),
+                                          ))
+                                    ],
+                                    axisLineStyle: const Gauges.AxisLineStyle(
+                                        thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                    showTicks: false,
+                                    showLabels: false,
+                                    radiusFactor: aspectRatio * 0.3,
+                                    pointers: [
+                                      Gauges.MarkerPointer(
+                                        value: isEnabled ? 90 : state.storageDashboardData!.cycleCountAccuracy ?? 0,
+                                        markerType: Gauges.MarkerType.invertedTriangle,
+                                        markerHeight: 20,
+                                        markerWidth: 20,
+                                        color: Colors.white,
+                                        enableAnimation: true,
+                                        elevation: 10,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              );
+                            }
                           )),
                     ],
                   )
