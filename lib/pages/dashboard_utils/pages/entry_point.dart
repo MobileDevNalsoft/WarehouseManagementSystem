@@ -22,13 +22,13 @@ class EntryPoint extends StatelessWidget {
   EntryPoint({super.key});
 
   List<Widget> dashboards = [
-    YardAreaDashboard(),
+    DockAreaDashboard(),
     StorageAreaDashboard(),
+    YardAreaDashboard(),
     StagingAreaDashboard(),
     const ActivityAreaDashboard(),
     ReceivingAreaDashboard(),
     InspectionAreaDashboard(),
-    DockAreaDashboard()
   ];
 
   @override

@@ -18,9 +18,9 @@ export async function initScene(renderer) {
 
   setupLights(scene);
 
-  const gltf = await loadModel();
+  const gltf = await loadModel(renderer, scene);
 
-   addSkyDome(scene);
+  addSkyDome(scene);
 
   const model = gltf.scene;
 

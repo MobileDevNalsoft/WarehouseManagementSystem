@@ -11,7 +11,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // Step 4: Render loop
   function animate() {
-    requestAnimationFrame(() => animate(renderer, scene, camera));
+    requestAnimationFrame(() => {
+      animate(renderer, scene, camera);
+      window.localStorage.setItem("isLoaded", true);
+    });
     const delta = clock.getDelta(); // seconds.
     mixer.update(delta); // Update the animation mixer
     controls.update();
@@ -24,7 +27,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 function initAfterModelLoaded(){
-  window.localStorage.setItem("isLoaded", true);
 
   const toggleButton = document.getElementById('togglePanel');
   toggleButton.style.display = "block";

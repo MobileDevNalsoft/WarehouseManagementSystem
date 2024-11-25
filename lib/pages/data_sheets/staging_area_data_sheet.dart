@@ -87,7 +87,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                                               Row(children: [
                                                 Padding(
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                  child: Image.asset('assets/images/po.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
+                                                  child: Image.asset('assets/images/od.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
                                                 ),
                                                 SizedBox(width: containerSize.maxWidth*0.8, child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.stagingList![index].orderNum!, style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold), maxLines: 1,))),
                                                 
@@ -137,7 +137,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                                             Row(children: [
                                                Padding(
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                  child: Image.asset('assets/images/po.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
+                                                  child: Image.asset('assets/images/od.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
                                                 ),
                                                 Skeletonizer(enableSwitchAnimation: true,child: Text('ORDER NUM', style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold), maxLines: 1,),),
                                                 
