@@ -56,6 +56,13 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
         ),
         primaryYAxis: NumericAxis(
           title: AxisTitle(text: yAxisTitle),
+          majorGridLines: const MajorGridLines(
+              width: 0,
+            ),
+            majorTickLines: const MajorTickLines(width: 1),
+            axisLine: const AxisLine(
+              width: 1,
+            ),
         ),
         plotAreaBorderWidth: 0,
         borderWidth: 0,
@@ -128,7 +135,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    rangeSelection = true;
+    rangeSelection = false;
     employeeSuggestionRange = {
       "101-110": [
         "101",
@@ -168,6 +175,10 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
       child: BlocBuilder<DashboardsBloc, DashboardsState>(
         builder: (context, state) {
           bool isEnabled = state.getActivityDashboardState != ActivityDashboardState.success;
+          if(state.getActivityDashboardState == ActivityDashboardState.success){
+            employeeSuggestions = state.activityDashboardData!.empwiseTaskSummary!.map((e)=>e.status!).toList();
+            // selectedEmployees = employeeSuggestions;
+          }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -326,7 +337,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       annotationText: state.activityDashboardData!.avgTaskExecTime!,
                       annotationHeight: lsize.maxHeight*0.3,
                       annotationFontSize: lsize.maxHeight*0.05,
-                      doughnutProps: DoughnutProps(
+                      doughnutProps: DoughnutProps( 
                         dataSource: avgTaskExecutionTime,
                         pointColorMapper: (p0, p1) {
                           if(p1 == 0){
@@ -387,7 +398,10 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                         : WMSCartesianChart(
                                     title: 'Avg Time Taken by Employee',
                                     barCount: 1,
-                                    dataSources: [isEnabled ? empTaskdata : state.activityDashboardData!.avgTimeTakenByEmp!.map((e) => BarData(xLabel: e.status!.split('_')[0], yValue: e.count!, abbreviation: e.status!)).toList()],
+                                    dataSources: [isEnabled ? empTaskdata : selectedEmployees.map((e) { 
+                                      
+                                      // print("$e ${state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test)=>test.status!=e).status}");
+                                      return BarData(xLabel: e.replaceAll('_', ' '), yValue: state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test)=>test.status==e).count!, abbreviation: e);}).toList()],
                                     yAxisTitle: 'Number of Tasks',
                                     primaryColor: Color.fromRGBO(147, 0, 120, 0.5));
                               }
@@ -418,7 +432,8 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                             onTap: () {},
                                             cursorColor: Colors.black,
                                             decoration: InputDecoration(
-                                                hintText: rangeSelection ? 'Choose' : "Compare",
+                                                hintText:  "Compare",
+                                                // rangeSelection ? 'Choose' : "Compare",
                                                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
                                                 hintStyle: const TextStyle(
                                                   color: Colors.black54,
@@ -434,9 +449,9 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                           if (rangeSelection) {
                                             employeeSuggestions = employeeSuggestionRange.keys.toList();
                                           } else {
-                                            for (var empList in employeeSuggestionRange.values) {
+                                            for (var empList in state.activityDashboardData!.empwiseTaskSummary!) {
                                               print(empList);
-                                              employeeSuggestions.addAll(empList);
+                                              employeeSuggestions.add(empList.status.toString());
                                             }
                                             print("emp suggestios $employeeSuggestions");
                                           }
@@ -479,7 +494,8 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                           });
                                                         }),
                                                     Text(
-                                                      suggestion.toString(),
+                                                      suggestion.toString().replaceAll('_', ' '),
+                                                      // style: TextStyle(fontSize: ),
                                                       textAlign: TextAlign.justify,
                                                       overflow: TextOverflow.ellipsis,
                                                     ),
@@ -524,22 +540,22 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                       ),
                                     ),
                                     // Gap(size.width * 0.01),
-                                    Transform.scale(
-                                      scale: 0.7,
-                                      child: Switch(
-                                        value: rangeSelection,
-                                        onChanged: (value) {
-                                          print(rangeSelection);
-                                          setState(() {
-                                            rangeSelection = value;
-                                            suggestionsController.refresh();
-                                            selectedEmployeeRange = "";
-                                            selectedEmployees = [];
-                                            empTaskdata = [];
-                                          });
-                                        },
-                                      ),
-                                    )
+                                    // Transform.scale(
+                                    //   scale: 0.7,
+                                    //   child: Switch(
+                                    //     value: rangeSelection,
+                                    //     onChanged: (value) {
+                                    //       print(rangeSelection);
+                                    //       setState(() {
+                                    //         rangeSelection = value;
+                                    //         suggestionsController.refresh();
+                                    //         selectedEmployeeRange = "";
+                                    //         selectedEmployees = [];
+                                    //         empTaskdata = [];
+                                    //       });
+                                    //     },
+                                    //   ),
+                                    // )
                                   ],
                                 ),
                                 Gap(size.height * 0.012),
@@ -564,8 +580,8 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                     Gap(size.width * 0.01),
                                                     Expanded(
                                                         child: Text(
-                                                      emp,
-                                                      style: TextStyle(fontSize: 22),
+                                                      emp.replaceAll("_", " "),
+                                                      style: TextStyle(fontSize: size.height*0.02),
                                                     )),
                                                     IconButton(
                                                       onPressed: () {

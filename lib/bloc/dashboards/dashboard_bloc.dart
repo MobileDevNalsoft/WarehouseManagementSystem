@@ -161,7 +161,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
 
   Future<void> _onGetStorageDashboardData(GetStorageDashboardData event, Emitter<DashboardsState> emit) async {
     try{
-      if(state.getStorageDashboardState != StorageDashboardState.success) emit(state.copyWith(getStorageDashboardState: StorageDashboardState.loading));
+      emit(state.copyWith(getStorageDashboardState: StorageDashboardState.loading));
       await _customApi.get(AppConstants.STORAGE_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<StorageDashboard> storageDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => StorageDashboard.fromJson(json));

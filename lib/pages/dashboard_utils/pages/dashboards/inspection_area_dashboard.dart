@@ -49,7 +49,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
   ];
 
   final List<ChartData> chartData = [
-    ChartData('David', 68, Color.fromRGBO(3, 109, 97, 1)),
+    ChartData('David', 68, Color.fromRGBO(30, 184, 166, 1)),
     ChartData('sd', 32, Colors.transparent),
   ];
 
@@ -115,11 +115,11 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                         dataSource: state.getInspectionDashboardState != InspectionDashboardState.success ? [] : state.inspectionDashboardData!.totalQualityStatus!.map((e) => PieData(xData: e.status!, yData: e.count!,text: e.count!.toString())).toList(),
                                         pointColorMapper: (datum, index) {
                                           if (index == 1) {
-                                            return const Color.fromARGB(255, 7, 72, 100);
+                                            return const Color.fromARGB(255, 45, 134, 172);
                                           } else if (index == 2) {
-                                            return const Color.fromARGB(255, 84, 9, 4);
+                                            return const Color.fromARGB(255, 155, 46, 38);
                                           } else {
-                                            return const Color.fromARGB(255, 17, 208, 119);
+                                            return const Color.fromARGB(255, 54, 228, 147);
                                           }
                                         });
                                   }
@@ -278,7 +278,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                         barCount: 1,
                                         dataSources: state.getInspectionDashboardState != InspectionDashboardState.success ? [barData] : [state.inspectionDashboardData!.daywiseQualitySummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
                                         yAxisTitle: 'Quality Enabled LPNs',
-                                        barColors: const [Color.fromARGB(255, 114, 68, 5)]);
+                                        barColors: const [Color.fromARGB(255, 158, 103, 27)]);
                                   }
                                 )),
                                     Container(
@@ -298,7 +298,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                         barCount: 1,
                                         dataSources: [barData_sup],
                                         yAxisTitle: 'Quality In Percentage',
-                                        barColors: const [Color.fromARGB(255, 114, 68, 5)]);
+                                        barColors: const [Color.fromARGB(255, 89, 163, 206)]);
                                   }
                                 ))
                           ],
