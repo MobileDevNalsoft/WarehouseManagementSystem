@@ -229,7 +229,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                         : Container(
                             height: lsize.maxHeight * 0.16,
                             width: lsize.maxWidth * 0.96,
-                            decoration: BoxDecoration(color: Color.fromRGBO(112, 144, 185, 1), borderRadius: BorderRadius.circular(15)),
+                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
                             padding: EdgeInsets.all(size.height * 0.01),
                             margin: EdgeInsets.only(top: size.height * 0.01),
                             child: LayoutBuilder(builder: (context, containerSize) {

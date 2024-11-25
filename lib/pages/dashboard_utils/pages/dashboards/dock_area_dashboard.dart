@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/bloc/dashboards/dashboard_bloc.dart';
@@ -49,7 +50,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
     super.initState();
 
     _dashboardsBloc = context.read<DashboardsBloc>();
-    _dashboardsBloc.state.appointmentsDate =DateTime.parse('2024-09-13');
+    _dashboardsBloc.state.appointmentsDate = DateTime.parse('2024-09-13');
     _dashboardsBloc.add(GetDockAppointments(date: DateFormat('yyyy-MM-dd').format(DateTime.parse('2024-09-13'))));
     _dashboardsBloc.add(GetDockDashboardData(facilityID: 243));
   }
@@ -63,22 +64,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
         ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
           child: SingleChildScrollView(
-              child: BlocConsumer<DashboardsBloc, DashboardsState>(listener: (context, state) {
-            if (state.getDockDashboardState == DockDashboardState.success) {
-              dockINDataSource = [
-                PieData(xData: "Utilized Docks", yData: state.dockDashboardData!.dockInUtilization!.utilized!, color: const Color.fromARGB(255, 102, 82, 156)),
-                PieData(xData: "Avalable Docks", yData: state.dockDashboardData!.dockInUtilization!.available!, color: const Color.fromARGB(255, 178, 166, 209))
-              ];
-              dockOUTDataSource = [
-                PieData(xData: "Utilized Docks", yData: state.dockDashboardData!.dockOutUtilization!.utilized!, color: const Color.fromARGB(255, 52, 132, 136)),
-                PieData(
-                    xData: "Avalable Docks", yData: state.dockDashboardData!.dockOutUtilization!.available!, color: const Color.fromARGB(255, 154, 197, 200))
-              ];
-              dockINDayWiseDataSource = state.dockDashboardData!.daywiseDockInUtilization!.map((e) => BarData(xLabel: e.date!, yValue: e.vehicleCount!, abbreviation: e.date!)).toList();
-
-              dockOUTDayWiseDataSource = state.dockDashboardData!.daywiseDockOutUtilization!.map((e) => BarData(xLabel: e.date!, yValue: e.vehicleCount!, abbreviation: e.date!)).toList();
-            }
-          }, builder: (context, state) {
+              child: BlocBuilder<DashboardsBloc, DashboardsState>( builder: (context, state) {
+            bool isEnabled = state.getDockDashboardState != DockDashboardState.success;
             return Column(
               children: [
                 Row(
@@ -90,29 +77,116 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                       decoration: BoxDecoration(
                           color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                       padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
-                      alignment: Alignment.bottomCenter,
+                      alignment: Alignment.center,
+                      child: LayoutBuilder(builder: (context, lsize) {
+                        return isEnabled
+                            ? Customs.DashboardLoader(lsize: lsize)
+                            : Stack(
+                                children: [
+                                  Customs.WMSCartesianChart(
+                                    title: "Daywise Utilization",
+                                    yAxisTitle: 'Number of Vehicles',
+                                    barCount: 2,
+                                    barColors: [Colors.teal, Colors.greenAccent],
+                                    dataSources: [
+                                      state.dockDashboardData!.daywiseDockInUtilization!
+                                          .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+                                          .toList(),
+                                      state.dockDashboardData!.daywiseDockOutUtilization!
+                                          .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+                                          .toList()
+                                    ],
+                                  ),
+                                  Positioned(
+                                    right: lsize.maxWidth * 0.08,
+                                    child: InkWell(onTap: () {}, child: Icon(Icons.calendar_month_rounded)),
+                                  )
+                                ],
+                              );
+                      }),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(aspectRatio * 8),
+                      height: size.height * 0.45,
+                      width: size.width * 0.3,
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                      padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
+                      alignment: Alignment.center,
                       child: LayoutBuilder(
                         builder: (context, lsize) {
-                          return Stack(
-                            children: [
-                              Skeletonizer(
-                                enableSwitchAnimation: true,
-                                enabled: state.getDockDashboardState == DockDashboardState.loading,
-                                child: Customs.WMSCartesianChart(
-                                  title: "Daywise Utilization",
-                                  yAxisTitle: 'Number of Vehicles',
-                                  barCount: 2,
-                                  barColors: [Colors.teal, Colors.greenAccent],
-                                  dataSources: [dockINDayWiseDataSource ?? [], dockOUTDayWiseDataSource ?? []],
-                                ),
-                              ),
-                              Positioned(
-                                right: lsize.maxWidth*0.08,
-                                child: InkWell(
-                                  onTap: () {
-                                    
-                                  },
-                                  child: Icon(Icons.calendar_month_rounded)),
+                          return isEnabled
+                                ? Customs.DashboardLoader(lsize: lsize)
+                                : SfCircularChart(
+                            title: ChartTitle(
+                              text: 'Dock-IN Utilization',
+                              textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold),
+                            ),
+                            legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                            series: <CircularSeries>[
+                              // Renders radial bar chart
+                              DoughnutSeries<PieData, String>(
+                                dataSource: state.dockDashboardData!.dockInUtilization!.map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156))).toList(),
+                                dataLabelSettings: const DataLabelSettings(
+                                    // Renders the data label
+                                    isVisible: true,
+                                    textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                    alignment: ChartAlignment.center),
+                                pointColorMapper: (datum, index) {
+                                  if(index == 1){
+                                    return const Color.fromARGB(255, 102, 82, 156);
+                                  }else{
+                                    return Color.fromARGB(255, 178, 166, 209);
+                                  }
+                                },
+                                xValueMapper: (PieData data, _) => data.xData,
+                                yValueMapper: (PieData data, _) => data.yData,
+                              )
+                            ],
+                          );
+                        }
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.all(aspectRatio * 8),
+                      height: size.height * 0.45,
+                      width: size.width * 0.3,
+                      decoration: BoxDecoration(
+                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+                      padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
+                      alignment: Alignment.center,
+                      child: LayoutBuilder(
+                        builder: (context, lsize) {
+                          return isEnabled
+                            ? Customs.DashboardLoader(lsize: lsize)
+                            : SfCircularChart(
+                            title: ChartTitle(
+                              text: 'Dock-OUT Utilization',
+                              textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold),
+                            ),
+                            legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+                            series: <CircularSeries>[
+                              // Renders radial bar chart
+                              DoughnutSeries<PieData, String>(
+                                dataSource: state.dockDashboardData!.dockOutUtilization!.map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156))).toList(),
+                                dataLabelSettings: const DataLabelSettings(
+                                    // Renders the data label
+                                    isVisible: true,
+                                    textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                    alignment: ChartAlignment.center),
+                                pointColorMapper: (datum, index) {
+                                  if(index == 1){
+                                    return const Color.fromARGB(255, 52, 132, 136);
+                                  }else{
+                                    return const Color.fromARGB(255, 154, 197, 200);
+                                  }
+                                },
+                                xValueMapper: (PieData data, _) => data.xData,
+                                yValueMapper: (PieData data, _) => data.yData,
                               )
                             ],
                           );
@@ -120,132 +194,56 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.3,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
-                      alignment: Alignment.topCenter,
-                      child: Skeletonizer(
-                        enableSwitchAnimation: true,
-                        enabled: state.getDockDashboardState == DockDashboardState.loading,
-                        child: SfCircularChart(
-                          title: ChartTitle(
-                            text: 'Dock-IN Utilization',
-                            textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold),
-                          ),
-                          legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                          series: <CircularSeries>[
-                            // Renders radial bar chart
-
-                            DoughnutSeries<PieData, String>(
-                              dataSource: dockINDataSource ?? [],
-                              dataLabelSettings: const DataLabelSettings(
-                                  // Renders the data label
-                                  isVisible: true,
-                                  textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                  alignment: ChartAlignment.center),
-                              pointColorMapper: (datum, index) {
-                                return state.getDockDashboardState == DockDashboardState.loading ? Colors.white : dockINDataSource![index].color;
-                              },
-                              xValueMapper: (PieData data, _) => data.xData,
-                              yValueMapper: (PieData data, _) => data.yData,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.3,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
-                      alignment: Alignment.topCenter,
-                      child: Skeletonizer(
-                        enableSwitchAnimation: true,
-                        enabled: state.getDockDashboardState == DockDashboardState.loading,
-                        child: SfCircularChart(
-                          title: ChartTitle(
-                            text: 'Dock-OUT Utilization',
-                            textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold),
-                          ),
-                          legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                          series: <CircularSeries>[
-                            // Renders radial bar chart
-
-                            DoughnutSeries<PieData, String>(
-                              dataSource: dockOUTDataSource ?? [],
-                              dataLabelSettings: const DataLabelSettings(
-                                  // Renders the data label
-                                  isVisible: true,
-                                  textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                  alignment: ChartAlignment.center),
-                              pointColorMapper: (datum, index) {
-                                return state.getDockDashboardState == DockDashboardState.loading ? Colors.white : dockOUTDataSource![index].color;
-                              },
-                              xValueMapper: (PieData data, _) => data.xData,
-                              yValueMapper: (PieData data, _) => data.yData,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
                         height: size.height * 0.45,
                         width: size.width * 0.3,
                         decoration: BoxDecoration(
                             color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: Skeletonizer(
-                          enableSwitchAnimation: true,
-                          enabled: state.getDockDashboardState == DockDashboardState.loading,
-                          child: SfCircularChart(
-                            title: ChartTitle(text: "Avg Loading Time", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
-                            annotations: <CircularChartAnnotation>[
-                              CircularChartAnnotation(
-                                verticalAlignment: ChartAlignment.center,
-                                widget: Container(
-                                    height: size.height * 0.12,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blueGrey.shade100,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade900,
-                                          blurRadius: 10, // Adjust to set shadow direction
-                                        ),
-                                      ],
-                                    ),
-                                    child: Text(
-                                      state.getDockDashboardState == DockDashboardState.success ? state.dockDashboardData!.avgLoadingTime! : '03h:15m',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: size.height * 0.02,
+                        alignment: Alignment.center,
+                        child: LayoutBuilder(
+                          builder: (context, lsize) {
+                            return isEnabled
+                                ? Customs.DashboardLoader(lsize: lsize)
+                                : SfCircularChart(
+                              title: ChartTitle(text: "Avg Loading Time", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
+                              annotations: <CircularChartAnnotation>[
+                                CircularChartAnnotation(
+                                  verticalAlignment: ChartAlignment.center,
+                                  widget: Container(
+                                      height: size.height * 0.12,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blueGrey.shade100,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade900,
+                                            blurRadius: 10, // Adjust to set shadow direction
+                                          ),
+                                        ],
                                       ),
-                                    )),
-                              ),
-                            ],
-                            series: <CircularSeries>[
-                              DoughnutSeries<TimeData, String>(
-                                dataSource: chartData1,
-                                xValueMapper: (TimeData data, _) => data.x,
-                                yValueMapper: (TimeData data, _) => data.y,
-                                radius: '60%', // Adjust the radius as needed
-                                innerRadius: '40%', // Optional: adjust for a thinner ring
-                                pointColorMapper: (TimeData data, _) => data.color,
-                              )
-                            ],
-                          ),
+                                      child: Text(
+                                        state.dockDashboardData!.avgLoadingTime!,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.02,
+                                        ),
+                                      )),
+                                ),
+                              ],
+                              series: <CircularSeries>[
+                                DoughnutSeries<TimeData, String>(
+                                  dataSource: chartData1,
+                                  xValueMapper: (TimeData data, _) => data.x,
+                                  yValueMapper: (TimeData data, _) => data.y,
+                                  radius: '60%', // Adjust the radius as needed
+                                  innerRadius: '40%', // Optional: adjust for a thinner ring
+                                  pointColorMapper: (TimeData data, _) => data.color,
+                                )
+                              ],
+                            );
+                          }
                         )),
                   ],
                 ),
@@ -258,48 +256,50 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         decoration: BoxDecoration(
                             color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: Skeletonizer(
-                          enableSwitchAnimation: true,
-                          enabled: state.getDockDashboardState == DockDashboardState.loading,
-                          child: SfCircularChart(
-                            title: ChartTitle(text: "Avg Unloading Time", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
-                            annotations: <CircularChartAnnotation>[
-                              CircularChartAnnotation(
-                                verticalAlignment: ChartAlignment.center,
-                                widget: Container(
-                                    height: size.height * 0.12,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blueGrey.shade100,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade900,
-                                          blurRadius: 10, // Adjust to set shadow direction
-                                        ),
-                                      ],
-                                    ),
-                                    child: Text(
-                                      state.getDockDashboardState == DockDashboardState.success ? state.dockDashboardData!.avgUnloadingTime! : '03h:15m',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: size.height * 0.02,
+                        alignment: Alignment.center,
+                        child: LayoutBuilder(
+                          builder: (context, lsize) {
+                            return isEnabled
+                            ? Customs.DashboardLoader(lsize: lsize)
+                            : SfCircularChart(
+                              title: ChartTitle(text: "Avg Unloading Time", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
+                              annotations: <CircularChartAnnotation>[
+                                CircularChartAnnotation(
+                                  verticalAlignment: ChartAlignment.center,
+                                  widget: Container(
+                                      height: size.height * 0.12,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blueGrey.shade100,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade900,
+                                            blurRadius: 10, // Adjust to set shadow direction
+                                          ),
+                                        ],
                                       ),
-                                    )),
-                              ),
-                            ],
-                            series: <CircularSeries>[
-                              DoughnutSeries<TimeData, String>(
-                                dataSource: chartData2,
-                                xValueMapper: (TimeData data, _) => data.x,
-                                yValueMapper: (TimeData data, _) => data.y,
-                                radius: '60%', // Adjust the radius as needed
-                                innerRadius: '40%', // Optional: adjust for a thinner ring
-                                pointColorMapper: (TimeData data, _) => data.color,
-                              )
-                            ],
-                          ),
+                                      child: Text(
+                                        state.dockDashboardData!.avgUnloadingTime!,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.02,
+                                        ),
+                                      )),
+                                ),
+                              ],
+                              series: <CircularSeries>[
+                                DoughnutSeries<TimeData, String>(
+                                  dataSource: chartData2,
+                                  xValueMapper: (TimeData data, _) => data.x,
+                                  yValueMapper: (TimeData data, _) => data.y,
+                                  radius: '60%', // Adjust the radius as needed
+                                  innerRadius: '40%', // Optional: adjust for a thinner ring
+                                  pointColorMapper: (TimeData data, _) => data.color,
+                                )
+                              ],
+                            );
+                          }
                         )),
                     Container(
                         margin: EdgeInsets.all(aspectRatio * 8),
@@ -308,48 +308,50 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         decoration: BoxDecoration(
                             color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
                         padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.topCenter,
-                        child: Skeletonizer(
-                          enableSwitchAnimation: true,
-                          enabled: state.getDockDashboardState == DockDashboardState.loading,
-                          child: SfCircularChart(
-                            title: ChartTitle(text: "Avg Dock TAT", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
-                            annotations: <CircularChartAnnotation>[
-                              CircularChartAnnotation(
-                                verticalAlignment: ChartAlignment.center,
-                                widget: Container(
-                                    height: size.height * 0.12,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blueGrey.shade100,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade900,
-                                          blurRadius: 10, // Adjust to set shadow direction
-                                        ),
-                                      ],
-                                    ),
-                                    child: Text(
-                                      state.getDockDashboardState == DockDashboardState.success ? state.dockDashboardData!.avgDockTAT! : '03h:15m',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: size.height * 0.02,
+                        alignment: Alignment.center,
+                        child: LayoutBuilder(
+                          builder: (context, lsize) {
+                            return isEnabled
+                            ? Customs.DashboardLoader(lsize: lsize)
+                            : SfCircularChart(
+                              title: ChartTitle(text: "Avg Dock TAT", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
+                              annotations: <CircularChartAnnotation>[
+                                CircularChartAnnotation(
+                                  verticalAlignment: ChartAlignment.center,
+                                  widget: Container(
+                                      height: size.height * 0.12,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blueGrey.shade100,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade900,
+                                            blurRadius: 10, // Adjust to set shadow direction
+                                          ),
+                                        ],
                                       ),
-                                    )),
-                              ),
-                            ],
-                            series: <CircularSeries>[
-                              DoughnutSeries<TimeData, String>(
-                                dataSource: chartData3,
-                                xValueMapper: (TimeData data, _) => data.x,
-                                yValueMapper: (TimeData data, _) => data.y,
-                                radius: '60%', // Adjust the radius as needed
-                                innerRadius: '40%', // Optional: adjust for a thinner ring
-                                pointColorMapper: (TimeData data, _) => data.color,
-                              )
-                            ],
-                          ),
+                                      child: Text(
+                                        state.dockDashboardData!.avgDockTAT!,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: size.height * 0.02,
+                                        ),
+                                      )),
+                                ),
+                              ],
+                              series: <CircularSeries>[
+                                DoughnutSeries<TimeData, String>(
+                                  dataSource: chartData3,
+                                  xValueMapper: (TimeData data, _) => data.x,
+                                  yValueMapper: (TimeData data, _) => data.y,
+                                  radius: '60%', // Adjust the radius as needed
+                                  innerRadius: '40%', // Optional: adjust for a thinner ring
+                                  pointColorMapper: (TimeData data, _) => data.color,
+                                )
+                              ],
+                            );
+                          }
                         )),
                   ],
                 )
@@ -603,7 +605,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                       child: Text(
                                                         isEnabled ? 'APDEMODEMO' : state.appointments![index].apptNbr!,
                                                         style: TextStyle(
-                                                            color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth * 0.037  , fontWeight: FontWeight.bold),
+                                                            color: Color.fromRGBO(12, 46, 87, 1),
+                                                            fontSize: lsize.maxWidth * 0.037,
+                                                            fontWeight: FontWeight.bold),
                                                       )),
                                                   Gap(lsize.maxHeight * 0.008),
                                                   Skeletonizer(
@@ -664,9 +668,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                             cellBuilder: (BuildContext context, DateRangePickerCellDetails details) {
                               Color circleColor;
 
-                              circleColor = details.date.toString().substring(0, 10) == now.toString().substring(0, 10)
-                                  ? Color.fromRGBO(12, 46, 87, 1)
-                                  : Colors.white;
+                              circleColor =
+                                  details.date.toString().substring(0, 10) == now.toString().substring(0, 10) ? Color.fromRGBO(12, 46, 87, 1) : Colors.white;
 
                               return Padding(
                                 padding: const EdgeInsets.all(4),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:warehouse_3d/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:warehouse_3d/inits/init.dart';
@@ -12,24 +13,23 @@ class Customs {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
         Container(
           alignment: Alignment.center,
-            decoration:  BoxDecoration(
-              color: Color.fromRGBO(12, 46, 87, 1),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
-              ),  
-              padding: EdgeInsets.symmetric(vertical: size.height*0.01,horizontal: size.height*0.02),
-              margin: EdgeInsets.only(top:size.height*0.02,bottom: size.height*0.004,right: size.height*0.01),
-           height: size.height * 0.06,
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.02),
+          margin: EdgeInsets.only(top: size.height * 0.02, bottom: size.height * 0.004, right: size.height * 0.01),
+          height: size.height * 0.06,
           width: size.width * 0.22,
           child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                Text(title, style: TextStyle(color: Colors.white, fontSize: size.width*0.012,  letterSpacing: 1.6,fontWeight: FontWeight.bold),),
-                Spacer(),
-                InkWell(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(color: Colors.white, fontSize: size.width * 0.012, letterSpacing: 1.6, fontWeight: FontWeight.bold),
+              ),
+              Spacer(),
+              InkWell(
                   onTap: () async {
                         getIt<JsInteropService>().switchToMainCam(
                             await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
@@ -42,7 +42,7 @@ class Customs {
                                 
                         getIt<JsInteropService>().resetTrucks();
                       },
-                  child: Icon(Icons.cancel_rounded, color: Colors.white70)
+                  child: Icon(Icons.cancel_rounded, color: Colors.white)
                 )
                   ],
                 ),
@@ -50,25 +50,31 @@ class Customs {
         Container(
           height: size.height * 0.86,
           width: size.width * 0.22,
-          decoration:  BoxDecoration(
-              color: Color.fromRGBO(12, 46, 87, 1),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]
-              ),
-          padding: EdgeInsets.all(size.height*0.012),
-          child: LayoutBuilder(
-            builder: (context, layout) {
-              return Column(
-                children: [
-                  
-                  Gap(size.height * 0.01),
-                  ...children
-                ],
-              );
-            }
-          ),
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          padding: EdgeInsets.all(size.height * 0.012),
+          child: LayoutBuilder(builder: (context, layout) {
+            return Column(
+              children: [Gap(size.height * 0.01), ...children],
+            );
+          }),
         ),
       ],
+    );
+  }
+
+  static Widget DashboardWidget({Size size = const Size(100, 100), bool loaderEnabled = true, required Widget Function(BoxConstraints lsize) chartBuilder}) {
+    double aspectRatio = size.width / size.height;
+    return Container(
+      margin: EdgeInsets.all(aspectRatio * 8),
+      height: size.height * 0.45,
+      width: size.width * 0.25,
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+      padding: EdgeInsets.all(size.height * 0.035),
+      alignment: Alignment.topCenter,
+      child: LayoutBuilder(builder: (context, lsize) {
+        return loaderEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(lsize);
+      }),
     );
   }
 
@@ -101,84 +107,93 @@ class Customs {
     );
   }
 
-  static Widget WMSCartesianChart({String title = "title", int barCount = 1, List<List<BarData>>? dataSources, String yAxisTitle = "title", List<Color> barColors = const [Colors.blue],bool? legendVisibility}) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SfCartesianChart(
+  static Widget WMSCartesianChart(
+      {String title = "title",
+      int barCount = 1,
+      List<List<BarData>>? dataSources,
+      String yAxisTitle = "title",
+      List<Color> barColors = const [Colors.blue],
+      bool? legendVisibility}) {
+    return LayoutBuilder(builder: (context, constraints) {
+      return SfCartesianChart(
           margin: EdgeInsets.zero,
-            title: ChartTitle(
-                text: title,
-                alignment: ChartAlignment.center,
-                textStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                )),
-                
-            primaryXAxis: CategoryAxis(
-              labelStyle: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.04),
-              majorGridLines: const MajorGridLines(
-                width: 0,
-              ),
-              labelRotation: -90,
-              majorTickLines: const MajorTickLines(width: 0),
-              axisLine: const AxisLine(width: 0),
+          title: ChartTitle(
+              text: title,
+              alignment: ChartAlignment.center,
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+              )),
+          primaryXAxis: CategoryAxis(
+            labelStyle: TextStyle(color: Colors.black, fontSize: constraints.maxHeight * 0.04),
+            majorGridLines: const MajorGridLines(
+              width: 0,
             ),
-            legend: Legend(isVisible: legendVisibility??true, alignment: ChartAlignment.near, legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
-              height: constraints.maxHeight*0.1,
-              width: constraints.maxWidth*0.2,
+            labelRotation: -90,
+            majorTickLines: const MajorTickLines(width: 0),
+            axisLine: const AxisLine(width: 0),
+          ),
+          legend: Legend(
+            isVisible: legendVisibility ?? true,
+            alignment: ChartAlignment.near,
+            legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
+              height: constraints.maxHeight * 0.1,
+              width: constraints.maxWidth * 0.2,
               child: Row(
-              children: <Widget>[
-                Container(
-                  width: constraints.maxHeight*0.05,
-                  height: constraints.maxWidth*0.05,
-                  decoration: BoxDecoration(color: barColors[seriesIndex], shape: BoxShape.circle), // Use series color for icon
-                ),
-                const SizedBox(width: 8), // Space between icon and text
-                Text(seriesIndex == 0 ? 'IN' : 'OUT'), // Custom legend text
-              ],
-                        ),
-            ),),
-            primaryYAxis: NumericAxis(
-              title: AxisTitle(text: yAxisTitle, textStyle: TextStyle(fontSize: constraints.maxHeight*0.05)),
-              // axisLabelFormatter: (axisLabelRenderArgs) => ChartAxisLabel('', TextStyle()),
-              majorGridLines: const MajorGridLines(
-                width: 0,
-              ),
-              majorTickLines: const MajorTickLines(width: 1),
-              axisLine: const AxisLine(width: 1,),
-        
-            ),
-            plotAreaBorderWidth: 0,
-            
-            borderWidth: 0,
-            enableAxisAnimation: true,
-
-            series: List.generate(
-              barCount,
-              (index) => ColumnSeries<BarData, String>(
-                spacing: 0.15,
-                dataSource: dataSources![index],
-                xValueMapper: (BarData data, _) => data.xLabel,
-                yValueMapper: (BarData data, _) => data.yValue,
-                borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(colors: [barColors[index], Colors.black54    ], stops: const [0.8,1],),
-                dataLabelMapper: (datum, index) => datum.yValue.toString(),
-                dataLabelSettings: DataLabelSettings(
-                  isVisible: true,
-                  useSeriesColor: true,
-                  builder: (data, point, series, pointIndex, seriesIndex) => Text(
-                    (data as BarData).yValue.toString(),
-                    style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight*0.06),
+                children: <Widget>[
+                  Container(
+                    width: constraints.maxHeight * 0.05,
+                    height: constraints.maxWidth * 0.05,
+                    decoration: BoxDecoration(color: barColors[seriesIndex], shape: BoxShape.circle), // Use series color for icon
                   ),
-                ),
-                width: 0.6,
+                  const SizedBox(width: 8), // Space between icon and text
+                  Text(seriesIndex == 0 ? 'IN' : 'OUT'), // Custom legend text
+                ],
               ),
-            ));
-      }
-    );
+            ),
+          ),
+          primaryYAxis: NumericAxis(
+            title: AxisTitle(text: yAxisTitle, textStyle: TextStyle(fontSize: constraints.maxHeight * 0.05)),
+            // axisLabelFormatter: (axisLabelRenderArgs) => ChartAxisLabel('', TextStyle()),
+            majorGridLines: const MajorGridLines(
+              width: 0,
+            ),
+            majorTickLines: const MajorTickLines(width: 1),
+            axisLine: const AxisLine(
+              width: 1,
+            ),
+          ),
+          plotAreaBorderWidth: 0,
+          borderWidth: 0,
+          enableAxisAnimation: true,
+          series: List.generate(
+            barCount,
+            (index) => ColumnSeries<BarData, String>(
+              spacing: 0.15,
+              dataSource: dataSources![index],
+              xValueMapper: (BarData data, _) => data.xLabel,
+              yValueMapper: (BarData data, _) => data.yValue,
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                colors: [barColors[index], Colors.black54],
+                stops: const [0.8, 1],
+              ),
+              dataLabelMapper: (datum, index) => datum.yValue.toString(),
+              dataLabelSettings: DataLabelSettings(
+                isVisible: true,
+                useSeriesColor: true,
+                builder: (data, point, series, pointIndex, seriesIndex) => Text(
+                  (data as BarData).yValue.toString(),
+                  style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight * 0.06),
+                ),
+              ),
+              width: 0.6,
+            ),
+          ));
+    });
   }
 
   static Widget WMSPieChart(
-      {required String title , List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
+      {required String title, List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
     return SfCircularChart(
         title: ChartTitle(
             text: title,
@@ -206,16 +221,16 @@ class Customs {
               dataLabelMapper: (PieData data, _) => data.text,
               enableTooltip: true,
               dataLabelSettings: const DataLabelSettings(
-                  isVisible: true,
+                  isVisible: false,
                   labelPosition: ChartDataLabelPosition.outside,
                   textStyle: TextStyle(fontSize: 24),
                   labelAlignment: ChartDataLabelAlignment.top)),
         ]);
   }
 
-static Widget WMSSfCircularChart(
+  static Widget WMSSfCircularChart(
       {required List<AnalogChartData> chartData,
-      String? title,
+      String title = 'Title',
       String? contentText,
       required Size size,
       double? height,
@@ -223,7 +238,7 @@ static Widget WMSSfCircularChart(
       String? radius,
       Color? textColor}) {
     return SfCircularChart(
-      title: ChartTitle(text: title ?? "title", textStyle: TextStyle(fontWeight: FontWeight.bold)),
+      title: ChartTitle(text: title, textStyle: const TextStyle(fontWeight: FontWeight.bold)),
       annotations: <CircularChartAnnotation>[
         CircularChartAnnotation(
           widget: Container(
@@ -274,7 +289,6 @@ static Widget WMSSfCircularChart(
       ],
     );
   }
-
 
   static void AnimatedDialog({
     required BuildContext context,
@@ -344,7 +358,7 @@ static Widget WMSSfCircularChart(
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 35,
-                    child: Transform.translate(offset: Offset(0,-size.height*0.01),child: header),
+                    child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
                   ),
                 )
               ],
@@ -352,6 +366,21 @@ static Widget WMSSfCircularChart(
           ),
         );
       },
+    );
+  }
+
+  static Widget DashboardLoader({BoxConstraints? lsize}) {
+    return ColorFiltered(
+      colorFilter: const ColorFilter.mode(
+        Color.fromRGBO(68, 98, 136, 1),
+        BlendMode.srcATop,
+      ),
+      child: LottieBuilder.asset(
+        'assets/jsons/dashboard_loader.json',
+        height: lsize!.maxHeight * 0.4,
+        width: lsize.maxWidth * 0.4,
+        alignment: Alignment.center,
+      ),
     );
   }
 
@@ -423,7 +452,7 @@ class _ClipShadowShadowPainter extends CustomPainter {
 
 // models for charts
 class PieData {
-  PieData({required this.xData,required this.yData, this.text, this.color});
+  PieData({required this.xData, required this.yData, this.text, this.color});
   final String xData;
   final num yData;
   String? text;
@@ -436,6 +465,7 @@ class BarData {
   String abbreviation;
   BarData({required this.xLabel, required this.yValue, required this.abbreviation});
 }
+
 class TimeData {
   TimeData(this.x, this.y, this.color);
   final String x;
@@ -443,8 +473,7 @@ class TimeData {
   final Color color;
 }
 
-  
-  class AnalogChartData {
+class AnalogChartData {
   AnalogChartData(this.x, this.y, this.color);
   final String x;
   final double y;
@@ -461,8 +490,8 @@ class DialogTopClipper extends CustomClipper<Path> {
 
     Path path = Path();
     path.moveTo(x1, y1);
-    path.lineTo(x1, y/1.4);
-    path.lineTo(x, y/1.4);
+    path.lineTo(x1, y / 1.4);
+    path.lineTo(x, y / 1.4);
     path.lineTo(x, y1);
     path.close();
     return path;

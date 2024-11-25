@@ -1,3 +1,5 @@
+import 'package:warehouse_3d/models/inspection_area_model.dart';
+
 class DockAreaItem {
   String? dockType;
   String? truckNum;
@@ -20,10 +22,10 @@ class DockAreaItem {
 }
 
 class DockDashboard{
-  DockUtilization? dockInUtilization;
-  DockUtilization? dockOutUtilization;
-  List<DaywiseDockUtilization>? daywiseDockInUtilization;
-  List<DaywiseDockUtilization>? daywiseDockOutUtilization;
+  List<StatusCount>? dockInUtilization;
+  List<StatusCount>? dockOutUtilization;
+  List<StatusCount>? daywiseDockInUtilization;
+  List<StatusCount>? daywiseDockOutUtilization;
   String? avgLoadingTime;
   String? avgUnloadingTime;
   String? avgDockTAT;
@@ -31,35 +33,13 @@ class DockDashboard{
   DockDashboard({this.dockInUtilization, this.dockOutUtilization, this.avgLoadingTime, this.avgUnloadingTime, this.avgDockTAT});
 
   DockDashboard.fromJson(Map<String, dynamic> json){
-    dockInUtilization = DockUtilization.fromJson(json['dock_in_utilization']);
-    dockOutUtilization = DockUtilization.fromJson(json['dock_out_utilization']);
-    daywiseDockInUtilization = (json['daywise_dock_in'] as List).map((e) => DaywiseDockUtilization.fromJson(e)).toList();
-    daywiseDockOutUtilization = (json['daywise_dock_out'] as List).map((e) => DaywiseDockUtilization.fromJson(e)).toList();
+    dockInUtilization = (json['dock_in_utilization'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    dockOutUtilization = (json['dock_out_utilization'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    daywiseDockInUtilization = (json['daywise_dock_in'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    daywiseDockOutUtilization = (json['daywise_dock_out'] as List).map((e) => StatusCount.fromJson(e)).toList();
     avgLoadingTime = json['avg_loading_time'];
     avgUnloadingTime = json['avg_unloading_time'];
     avgDockTAT = json['avg_dock_tat'];
-  }
-}
-
-class DockUtilization{
-  int? available;
-  int? utilized;
-  DockUtilization({this.available, this.utilized});
-
-  DockUtilization.fromJson(Map<String, dynamic> json){
-    available = json['available'];
-    utilized = json['utilized'];
-  }
-}
-
-class DaywiseDockUtilization{
-  String? date;
-  int? vehicleCount;
-  DaywiseDockUtilization({this.date, this.vehicleCount});
-
-  DaywiseDockUtilization.fromJson(Map<String, dynamic> json){
-    date = json.keys.first;
-    vehicleCount = json.values.first;
   }
 }
 
