@@ -381,7 +381,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                             ],
                                           ),
                                           child: Text(
-                                            isEnabled ?'01h:45m' : state.stagingDashboardData!.fulfilmentTime!.toString(),
+                                            '${state.stagingDashboardData!.fulfilmentTime!.toString()}m',
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: size.height * 0.02,

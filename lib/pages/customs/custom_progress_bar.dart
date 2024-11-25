@@ -36,14 +36,14 @@ class _CustomProgressBarState extends State<CustomProgressBar>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Building Your Warehouse...', style: TextStyle(
+                  Text('Loading Your Warehouse Experience...', style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: aspectRatio*16
                   ),),
                   LinearPercentIndicator(
                     padding: EdgeInsets.only(left: lsize.maxWidth*0.12),
                     width: lsize.maxWidth - lsize.maxWidth*0.2,
-                    lineHeight: lsize.maxHeight*0.03,
+                    lineHeight: lsize.maxHeight*0.02,
                     barRadius: Radius.circular(15),
                     progressBorderColor: Colors.white,
                     trailing:  Padding(

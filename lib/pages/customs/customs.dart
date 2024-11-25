@@ -123,7 +123,7 @@ class Customs {
                 fontWeight: FontWeight.bold,
               )),
           primaryXAxis: CategoryAxis(
-            labelStyle: TextStyle(color: Colors.black, fontSize: constraints.maxHeight * 0.04),
+            labelStyle: TextStyle(color: Colors.black, fontSize: constraints.maxHeight * 0.036),
             majorGridLines: const MajorGridLines(
               width: 0,
             ),
@@ -182,7 +182,7 @@ class Customs {
                 useSeriesColor: true,
                 builder: (data, point, series, pointIndex, seriesIndex) => Text(
                   (data as BarData).yValue.toString(),
-                  style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight * 0.06),
+                  style: TextStyle(color: Colors.black, fontSize: constraints.maxHeight * 0.04),
                 ),
               ),
               width: 0.6,
@@ -220,9 +220,8 @@ class Customs {
               dataLabelMapper: (PieData data, _) => data.text,
               enableTooltip: true,
               dataLabelSettings: const DataLabelSettings(
-                  isVisible: false,
-                  labelPosition: ChartDataLabelPosition.outside,
-                  textStyle: TextStyle(fontSize: 24),
+                  isVisible: true,
+                  textStyle: TextStyle(fontSize: 16),
                   labelAlignment: ChartDataLabelAlignment.top)),
         ]);
   }
@@ -272,6 +271,9 @@ class Customs {
           dataSource: doughnutProps!.dataSource,
           xValueMapper: (PieData data, _) => data.xData,
           yValueMapper: (PieData data, _) => data.yData,
+          dataLabelSettings: DataLabelSettings(
+            isVisible: enableAnnotation ? false : true
+          ),
           radius: doughnutProps.radius, // Adjust the radius as needed
           innerRadius: doughnutProps.innerRadius, // Optional: adjust for a thinner ring
           pointColorMapper: doughnutProps.pointColorMapper,
