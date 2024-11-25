@@ -58,7 +58,7 @@ export function localStorageSetup(scene, camera, controls) {
           .split(",")
           .forEach((e) => {
             let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
-            scene.getObjectByName(bin).material.color.set(0xadd8e6);
+            scene.getObjectByName(bin).material.color.set(0x65543e);
             scene.getObjectByName(bin).material.opacity = 0.5;
           });
        }
@@ -73,7 +73,7 @@ export function localStorageSetup(scene, camera, controls) {
       
       localStorage.setItem("resetBoxColors",false);       
       highlightedBins.forEach((e)=>{
-        scene.getObjectByName(e.trim()).material.color.set(0x65543e);           
+        scene.getObjectByName(e.trim()).material.color.set(0xcbbbab);           
             });
             highlightedBins=[];
           break;
@@ -81,7 +81,7 @@ export function localStorageSetup(scene, camera, controls) {
       case "navigateToBin":
         try{
           moveToBin(scene.getObjectByName(event.newValue),camera,controls);
-          scene.getObjectByName(bin).material.color.set(0xadd8e6);
+          scene.getObjectByName(bin).material.color.set(0x65543e);
         }
         catch(e){
           

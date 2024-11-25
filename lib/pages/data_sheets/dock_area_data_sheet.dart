@@ -120,13 +120,14 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                 child:(state.getDataState== GetDataState.success &&  state.dockAreaItems!.length==0)?
                         Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
                        : ListView.builder(
+                        
                     controller: _controller,
                     itemBuilder: (context, index) => index < state.dockAreaItems!.length
                         ? Container(
                             height: lsize.maxHeight * 0.16,
                             width: lsize.maxWidth * 0.96,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(112, 144, 185, 1),
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             padding: EdgeInsets.all(lsize.maxHeight * 0.01),
