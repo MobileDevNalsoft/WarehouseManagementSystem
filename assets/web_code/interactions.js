@@ -6,7 +6,6 @@ export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
 
   for (let i = 0; i < listOfBins; i++) {
-   
     changeColor({ name: listOfBins[i] });
   }
 }
@@ -72,7 +71,6 @@ export function addInteractions(scene, model, camera, controls) {
         }
       }
     }
-   
   }
 
   function onMouseDown(e) {
@@ -153,19 +151,39 @@ export function addInteractions(scene, model, camera, controls) {
   window.addEventListener("mousemove", onMouseMove); // triggered when mouse pointer is moved.
   window.addEventListener("mousedown", onMouseDown);
   window.addEventListener("mouseup", onMouseUp); // triggered when mouse pointer is clicked.
-  let actualBinColor;
-  let highlightedBins ;
+
+  document.addEventListener("wheel", (event) => {
+    // console.log(event.deltaY);
+    // console.log(event.movementX);
+    // console.log(event.movementY);
+
+    //console.log('{"object":"null"}');
+    localStorage.removeItem("resetBoxColors");
+    if (localStorage.getItem("highlightBins")) {
+      localStorage
+        .getItem("highlightBins")
+        .toString()
+        .split(",")
+        .forEach((e) => {
+          let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
+          scene.getObjectByName(bin).material.color.set(0x65543e);
+          scene.getObjectByName(bin).material.opacity = 0.5;
+        });
+
+      localStorage.removeItem("highlightBins");
+    }
+  });
+
   // setInterval(() => {
-    
+
   //   if (localStorage.getItem("highlightBins") !== null) {
-     
+
   //     actualBinColor = scene.getObjectByName( localStorage
   //       .getItem("highlightBins")
   //       .toString()
   //       .split(",")[0].replaceAll("{", "").replaceAll("}", "").trim()).material.color;
-       
-  //       console.log("actualBinColor "+actualBinColor);
 
+  //       console.log("actualBinColor "+actualBinColor);
 
   //       highlightedBins= localStorage
   //       .getItem("highlightBins")
@@ -199,22 +217,30 @@ export function addInteractions(scene, model, camera, controls) {
   //   // else{
   //   //   localStorage.getItem("resetBoxColors")=false;
   //   // }
-    
+
   // }, 1000);
 
   function changeColor(object) {
-   
     if (prevBin != null) {
       prevBin.material.color.copy(prevBinColor);
     }
 
     prevBinColor = object.material.color.clone();
     let objectName = object.name.toString();
-    
-    
-   
-      if (prevBin != object) {
+
+    if (prevBin != object) {
+      object.userData.active = true;
+      // Set transparent blue color
+      object.material.color.set(0xadd8e6); // Blue color
+      object.material.opacity = 0.5; // Adjust opacity for transparency
+      console.log('{"bin":"' + objectName + '"}');
+
+      moveToBin(object, camera, controls);
+    } else {
+      if (object.userData.active == false) {
         object.userData.active = true;
+        prevBinColor = object.material.color.clone();
+        prevBin = object;
         // Set transparent blue color
         object.material.color.set(0xadd8e6); // Blue color
         object.material.opacity = 0.5; // Adjust opacity for transparency
@@ -222,34 +248,23 @@ export function addInteractions(scene, model, camera, controls) {
 
         moveToBin(object, camera, controls);
       } else {
-        if (object.userData.active == false) {
-          object.userData.active = true;
-          prevBinColor = object.material.color.clone();
-          prevBin = object;
-          // Set transparent blue color
-          object.material.color.set(0xadd8e6); // Blue color
-          object.material.opacity = 0.5; // Adjust opacity for transparency
-          console.log('{"bin":"' + objectName + '"}');
+        object.userData.active = false;
+        console.log(
+          '{"rack":"' +
+            prevNav
+              .split("_")[0]
+              .substring(
+                prevNav.split("_")[0].length - 2,
+                prevNav.split("_")[0].length
+              )
+              .toUpperCase() +
+            '"}'
+        );
 
-          moveToBin(object, camera, controls);
-        } else {
-          object.userData.active = false;
-          console.log(
-            '{"rack":"' +
-              prevNav
-                .split("_")[0]
-                .substring(
-                  prevNav.split("_")[0].length - 2,
-                  prevNav.split("_")[0].length
-                )
-                .toUpperCase() +
-              '"}'
-          );
-
-          switchCamera(scene, prevNav.split("_")[0], camera, controls);
-        }
+        switchCamera(scene, prevNav.split("_")[0], camera, controls);
       }
-  
+    }
+
     prevBin = object;
   }
 
@@ -275,8 +290,6 @@ export function addInteractions(scene, model, camera, controls) {
       }
     };
   }
-
-  
 
   // JavaScript to handle the panel toggle
   const toggleButton = document.getElementById("togglePanel");
@@ -354,12 +367,3 @@ export function addInteractions(scene, model, camera, controls) {
     }
   });
 }
-
-document.addEventListener("wheel", (event) => {
-  // console.log(event.deltaY);
-  // console.log(event.movementX);
-  // console.log(event.movementY);
- 
-  //console.log('{"object":"null"}');
-  localStorage.setItem("resetBoxColors",true);
-});

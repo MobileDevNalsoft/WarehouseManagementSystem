@@ -25,7 +25,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<ModelLoaded>(_onModelLoaded);
     on<GetCompanyData>(_onGetCompanyData);
     on<SelectedCompanyValue> (_onSelectCompany);
-      on<GetFaclityData>(_onGetFacilityData);
+    on<GetFaclityData>(_onGetFacilityData);
     on<SelectedFacilityValue> (_onSelectFacility);
 
   }
@@ -41,9 +41,12 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
       searchArea = event.dataFromJS["area"].toString()[0].toUpperCase()+event.dataFromJS["area"].toString().substring(1); 
     }
     else if(event.dataFromJS.containsKey("bin")){
-      searchArea = "Bin";
+      searchArea = "Storage";
     }
-    emit(state.copyWith(dataFromJS: event.dataFromJS,selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));
+    if(!event.dataFromJS["area"].toString().contains("storage")){
+    emit(state.copyWith(dataFromJS: event.dataFromJS,selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));}
+    else{
+      emit(state.copyWith(selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));}
   }
   
   void _onModelLoaded(ModelLoaded event, Emitter<WarehouseInteractionState> emit) {

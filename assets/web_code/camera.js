@@ -20,7 +20,7 @@ export function createCamera() {
 
 export function switchCamera(scene, name, camera, controls) {
   if(name == 'storageArea'){
-    console.log('{"area":"' + name + '"}');
+    // console.log('{"area":"' + name + '"}');
     window.localStorage.setItem("rack_cam", "null");
   }
   const { position, target } = getPositionAndTarget(

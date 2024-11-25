@@ -34,7 +34,8 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
     super.initState();
     _storageBloc = context.read<StorageBloc>();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    _storageBloc.add(AddStorageAislesData(searchText: _warehouseInteractionBloc.state.searchText??""));
+    // _storageBloc.add(AddStorageAislesData(searchText: _warehouseInteractionBloc.state.searchText??""));
+    _storageBloc.add(GetBinData(searchText: _warehouseInteractionBloc.state.searchText??""));
      _warehouseInteractionBloc.state.selectedSearchArea = "Storage Area";
     // _controller.addListener(_scrollListener);
   }
