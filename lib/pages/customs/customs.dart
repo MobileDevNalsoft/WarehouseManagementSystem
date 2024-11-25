@@ -42,7 +42,7 @@ class Customs {
                                 
                         getIt<JsInteropService>().resetTrucks();
                       },
-                  child: Icon(Icons.cancel_rounded, color: Colors.white70)
+                  child: Icon(Icons.cancel_rounded, color: Colors.white)
                 )
                   ],
                 ),

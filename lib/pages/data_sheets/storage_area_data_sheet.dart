@@ -71,7 +71,7 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                       height: lsize.maxHeight * 0.1,
                             width: lsize.maxWidth * 0.96,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(112, 144, 185, 1),
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(15),
                             ),
                             padding: EdgeInsets.all(lsize.maxHeight * 0.02),

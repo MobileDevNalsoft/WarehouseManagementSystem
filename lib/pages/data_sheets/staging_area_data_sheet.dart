@@ -74,7 +74,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                                 height: lsize.maxHeight*0.16,
                                   width: lsize.maxWidth*0.96,
                                       decoration: BoxDecoration(
-                                        color: Color.fromRGBO(112, 144, 185, 1),
+                                        color: Colors.white,
                                         borderRadius: BorderRadius.circular(15),
                                       ),
                                       padding: EdgeInsets.all(size.height*0.01),
@@ -124,7 +124,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                                    height: lsize.maxHeight*0.16,
                                   width: lsize.maxWidth*0.96,
                                     decoration: BoxDecoration(
-                                      color: Color.fromRGBO(112, 144, 185, 1),
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(15)
                                     ),
                                     padding: EdgeInsets.all(size.height*0.01),
