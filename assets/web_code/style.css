@@ -53,7 +53,7 @@ body {
     /* Button initially visible at screen edge */
     top: 38vh;
     transform: translateY(-50%);
-    background-color: #37567e;
+    background-color: rgb(68, 98, 136);
     color: white;
     border: none;
     border-radius: 50px;
