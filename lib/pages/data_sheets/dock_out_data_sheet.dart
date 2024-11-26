@@ -7,19 +7,81 @@ import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/customs/expandable_list_view.dart';
 
-class DockAreaDataSheet extends StatefulWidget {
-  const DockAreaDataSheet({super.key});
+class DockOutDataSheet extends StatefulWidget {
+  const DockOutDataSheet({super.key});
 
   @override
-  State<DockAreaDataSheet> createState() => _DockAreaDataSheetState();
+  State<DockOutDataSheet> createState() => _DockOutDataSheetState();
 }
 
-class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
+class _DockOutDataSheetState extends State<DockOutDataSheet> {
   final ScrollController _controller = ScrollController();
   late DockAreaBloc _dockAreaBloc;
 
-  
+  final Map<String, dynamic> response1 = {
+    "Truck-01": [
+      {"name": "Vendor-101"},
+      {"name": "Vendor-102"},
+      {"name": "Vendor-103"}
+    ],
+    "Truck-02": [
+      {"name": "Vendor-201"},
+      {"name": "Vendor-202"},
+      {"name": "Vendor-203"}
+    ],
+    "Truck-03": [
+      {"name": "Vendor-301"},
+      {"name": "Vendor-302"},
+      {"name": "Vendor-303"}
+    ],
+    "Truck-04": [
+      {"name": "Vendor-401"},
+      {"name": "Vendor-402"},
+      {"name": "Vendor-403"}
+    ],
+    "Truck-05": [
+      {"name": "Vendor-501"},
+      {"name": "Vendor-502"},
+      {"name": "Vendor-503"}
+    ]
+  };
 
+  final Map<String, dynamic> response2 = {
+    "Vendor-101": [
+      {
+        "po_num": "PO-101-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      },
+      {
+        "po_num": "PO-101-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      },
+      {
+        "po_num": "PO-101-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      }
+    ],
+    "Vendor-102": [
+      {
+        "po_num": "PO-102-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      },
+      {
+        "po_num": "PO-102-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      },
+      {
+        "po_num": "PO-102-1",
+        "create_ts": "3:00pm",
+        "qty": 5,
+      }
+    ]
+  };
 late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   @override
   void initState() {
@@ -109,7 +171,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                       Padding(
                                         padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.016),
                                         child: Image.asset(
-                                          'assets/images/po.png',
+                                          'assets/images/od.png',
                                           height: containerSize.maxHeight * 0.12,
                                           width: containerSize.maxWidth * 0.12,
                                         ),

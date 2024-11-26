@@ -22,6 +22,7 @@ import 'package:wmssimulator/pages/customs/company_dropdown.dart';
 import 'package:wmssimulator/pages/customs/facility_dropdown.dart';
 import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/bin_data_sheet.dart';
+import 'package:wmssimulator/pages/data_sheets/dock_out_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/rack_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/receiving_area_data_sheet.dart';
@@ -158,11 +159,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                     Timer.periodic(
                                       const Duration(milliseconds: 500),
                                       (timer) async {
-                                        // _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItems().then((value) {
-                                        //   value.forEach((e) {
-                                        //     print(e);
-                                        //   });
-                                        // });
 
                                         // ignore: prefer_conditional_assignment
                                         if (objectNames.isEmpty) {
@@ -301,7 +297,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           case 'dockareain':
             return DockAreaDataSheet();
           case 'dockareaout':
-            return DockAreaDataSheet();
+            return DockOutDataSheet();
           case 'yardarea':
             return YardAreaDataSheet();
           // case 'storagearea':
@@ -313,3 +309,4 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     return null;
   }
 }
+
