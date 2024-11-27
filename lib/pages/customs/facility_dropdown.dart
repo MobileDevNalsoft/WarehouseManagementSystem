@@ -6,7 +6,7 @@ import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
 
 class FacilityDropdown extends StatefulWidget {
-  FacilityDropdown({super.key, required this.buttonHeight, required this.buttonWidth, required this.dropDownHeight, required this.dropDownWidth, required this.dropDownItems, required this.onChanged, this.selectedValue, this.listItemTextColor});
+    FacilityDropdown({super.key, required this.buttonHeight, required this.buttonWidth, required this.dropDownHeight, required this.dropDownWidth, required this.dropDownItems, required this.onChanged, this.selectedValue, this.listItemTextColor});
   double buttonHeight;
   double buttonWidth;
   double dropDownHeight;
@@ -92,6 +92,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
             ),
           ),
           Container(
+            alignment: Alignment.center,
             height: widget.buttonHeight,
             width: widget.buttonWidth,
             decoration: BoxDecoration(
@@ -109,37 +110,59 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                   turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                 });
               },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(68, 98, 136, 1), // Purple background
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: widget.buttonWidth*0.72,
-                      child: Text(
-                        widget.selectedValue!,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.018, overflow: TextOverflow.ellipsis),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+          
+                   Container(
+                   padding: EdgeInsets.symmetric(horizontal: size.width * 0.008, vertical: size.height * 0.01),
+                  decoration:  BoxDecoration(
+                    color: Color.fromRGBO(68, 98, 136, 1), // Purple background
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  //  padding:  EdgeInsets.only(left:widget.buttonWidth*0.02,),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Facility",style: TextStyle(fontSize:widget.buttonWidth*0.064,color: Colors.white,),),
+                        AnimatedRotation(
+                        turns: turns,
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: size.height * 0.025 ,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Gap(size.width * 0.005),
-                    AnimatedRotation(
-                      turns: turns,
-                      duration: const Duration(milliseconds: 200),
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        size: size.height * 0.025,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                
+                  Gap(widget.buttonWidth*0.04),
+                  Container(
+                    // padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
+                    // decoration: BoxDecoration(
+                    //   color: Color.fromRGBO(68, 98, 136, 1), // Purple background
+                    //   borderRadius: BorderRadius.circular(50),
+                    // ),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: widget.buttonWidth*0.5,
+                          child: Text(
+                            widget.selectedValue!,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: size.height * 0.018, overflow: TextOverflow.ellipsis),
+                          ),
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           )

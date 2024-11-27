@@ -14,7 +14,8 @@ enum  GetCompanyDataState {initial, loading, success, failure }
 enum GetFacilityDataState{initial, loading, success, failure}
 // ignore: must_be_immutable
 final class WarehouseInteractionState{
-  WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "Storagearea", this.searchText,this.getState = GetCompanyDataState.initial,this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal});
+  WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "Storagearea", this.searchText,this.getState = GetCompanyDataState.initial,
+  this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal});
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -29,7 +30,9 @@ final class WarehouseInteractionState{
   String? selectedFacilityVal;
   TextEditingController searchController = TextEditingController();
   factory WarehouseInteractionState.initial() {
-    return WarehouseInteractionState(dataFromJS: {"object": "null"}, isModelLoaded: false,getState: GetCompanyDataState.initial,facilityDataState: GetFacilityDataState.initial);
+    return WarehouseInteractionState(dataFromJS: {"object": "null"}, isModelLoaded: false,getState: GetCompanyDataState.initial,facilityDataState: GetFacilityDataState.initial,companyModel: CompanyModel(results: [CompanyResults(name: "M10 Company"),CompanyResults(name: "Demo"),CompanyResults(name: "Demo Customer1"),CompanyResults(name: "Demo Customer2"),CompanyResults(name: "SUM Compnay"),CompanyResults(name: "VIM Company")],),selectedCompanyVal: "M10 Company"
+    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse"),FacilityResults(name: "Duty-Free Warehouse"),]),selectedFacilityVal: "Duty-Paid Warehouse"
+    );
   }
 
   WarehouseInteractionState copyWith({Map<String, dynamic>? dataFromJS, bool? isModelLoaded, String? selectedSearchArea, String? searchText,GetCompanyDataState? getState,CompanyModel? companyModel,String? selectedCompanyVal,FacilityModel? facilityModel,GetFacilityDataState? facilityDataState,String? selectedFacilityVal}) {
