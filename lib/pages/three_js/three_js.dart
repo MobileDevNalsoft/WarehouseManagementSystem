@@ -86,7 +86,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
 
     _warehouseInteractionBloc.add(GetCompanyData());
     // just for debugging
-    // animationController.forward();
+    animationController.forward();
   }
 
   @override
@@ -297,7 +297,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           case 'dockareain':
             return DockAreaDataSheet();
           case 'dockareaout':
-            return DockOutDataSheet();
+            return DockAreaDataSheet();
           case 'yardarea':
             return YardAreaDataSheet();
           // case 'storagearea':
