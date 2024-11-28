@@ -18,7 +18,6 @@ import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
 import 'package:wmssimulator/pages/customs/custom_progress_bar.dart';
 import 'package:wmssimulator/pages/customs/searchbar_dropdown.dart';
-import 'package:wmssimulator/pages/customs/company_dropdown.dart';
 import 'package:wmssimulator/pages/customs/facility_dropdown.dart';
 import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/bin_data_sheet.dart';
@@ -218,7 +217,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
               //     ? SizedBox()
               //     :
                    PointerInterceptor(
-                      child: CompanyDropdown(
+                      child: FacilityDropdown<CompanyResults>(
+                        dropDownType: 'Company',
                         buttonHeight: size.height * 0.052,
                         buttonWidth: size.width * 0.15,
                         dropDownHeight: size.height * 0.4,
@@ -246,7 +246,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
               //         ? SizedBox()
               //         : 
                       PointerInterceptor(
-                          child: FacilityDropdown(
+                          child: FacilityDropdown<FacilityResults>(
+                            dropDownType: 'Facility',
                             buttonHeight: size.height * 0.052,
                             buttonWidth: size.width * 0.15,
                             dropDownHeight: size.height * 0.2,
