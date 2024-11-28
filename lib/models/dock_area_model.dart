@@ -1,23 +1,41 @@
 import 'package:wmssimulator/models/inspection_area_model.dart';
 
 class DockAreaItem {
-  String? dockType;
   String? truckNum;
-  String? asn;
-  String? poNum;
-  String? vendor;
-  String? checkInTS;
-  int? qty;
-  DockAreaItem({this.dockType, this.truckNum, this.asn, this.poNum, this.vendor, this.checkInTS, this.qty});
+  List<Vendor>? vendors;
+  DockAreaItem({this.truckNum, this.vendors});
 
   DockAreaItem.fromJson(Map<String, dynamic> json) {
-    dockType = json['dock_type'];
-    truckNum = json['truck_number'];
+    truckNum = json.keys.first;
+    vendors = (json.values.first as List).map((e) => Vendor.fromJson(e)).toList();
+  }
+}
+
+class Vendor{
+  String? vendorName;
+  List<DockItem>? items;
+  Vendor({this.vendorName, this.items});
+
+  Vendor.fromJson(Map<String, dynamic> json){
+    vendorName = json.keys.first;
+    items = (json.values.first as List).map((e) => DockItem.fromJson(e)).toList();
+  }
+}
+
+class DockItem{
+  String? dockNbr;
+  String? asn;
+  String? poNbr;
+  String? checkinTS;
+  int? qty;
+  DockItem({this.dockNbr, this.asn, this.poNbr, this.checkinTS, this.qty});
+
+  DockItem.fromJson(Map<String, dynamic> json){
+    dockNbr = json['actual_dock_nbr'];
     asn = json['asn'];
-    poNum = json['po_nbr'];
-    vendor = json['vendor'];
-    checkInTS = json['checkin_ts'];
-    qty = int.parse(json['qty']);
+    poNbr = json['po_nbr'];
+    checkinTS = json['checkin_ts'];
+    qty = json['qty'];
   }
 }
 

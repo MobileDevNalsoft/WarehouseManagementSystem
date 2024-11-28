@@ -207,15 +207,15 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               ] : state.activityDashboardData!.todayTaskSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
                               legendVisibility: true,
                               pointColorMapper: (datum, index) {
-                                if (index == 0) {
-                                  return Colors.lightBlueAccent.shade700;
-                                } else if (index == 1) {
-                                  return Colors.orangeAccent;
-                                } else if (index == 2) {
-                                  return Colors.green;
-                                } else if (index == 3) {
-                                  return Colors.red;
-                                }
+                                if(index == 0){
+                                      return const Color.fromARGB(255, 80, 175, 230);
+                                    }else if(index == 1){
+                                      return const Color.fromARGB(255, 115, 102, 189);
+                                    }else if(index == 2){
+                                      return const Color.fromARGB(255, 110, 196, 163);
+                                    }else if(index == 3){
+                                      return const Color.fromARGB(255, 159, 177, 80);
+                                    }
                               });
                         }
                       )),
@@ -233,12 +233,19 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                             ? Customs.DashboardLoader(lsize: lsize)
                             : Customs.WMSPieChart(
                           title: 'Task Type Summary',
-                          dataSource: isEnabled ? [
-                            PieData(xData: "Cycle Count", yData: 10, text: "10"),
-                            PieData(xData: "Pick Tasks", yData: 4, text: "4"),
-                            PieData(xData: "Replenishment", yData: 4, text: "4")
-                          ] : state.activityDashboardData!.taskTypeSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
+                          dataSource: state.activityDashboardData!.taskTypeSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
                           legendVisibility: true,
+                          pointColorMapper: (p0, p1) {
+                            if(p1 == 0){
+                              return const Color.fromARGB(255, 80, 175, 230);
+                            }else if(p1 == 1){
+                              return const Color.fromARGB(255, 115, 102, 189);
+                            }else if(p1 == 2){
+                              return const Color.fromARGB(255, 110, 196, 163);
+                            }else if(p1 == 3){
+                              return const Color.fromARGB(255, 159, 177, 80);
+                            }
+                          },
                         );
                       }
                     ),
@@ -265,13 +272,13 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               legendVisibility: true,
                               pointColorMapper: (datum, index) {
                                 if (index == 0) {
-                                  return Colors.lightBlueAccent.shade700;
+                                  return const Color.fromARGB(255, 176, 113, 187);
                                 } else if (index == 1) {
-                                  return Colors.orangeAccent;
+                                  return const Color.fromARGB(255, 175, 147, 70);
                                 } else if (index == 2) {
-                                  return Colors.green;
+                                  return const Color.fromARGB(255, 68, 158, 76);
                                 }else{
-                                  return Colors.amber;
+                                  return const Color.fromARGB(255, 165, 180, 79);
                                 }
                               });
                         }
@@ -341,7 +348,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                         dataSource: avgTaskExecutionTime,
                         pointColorMapper: (p0, p1) {
                           if(p1 == 0){
-                            return const Color.fromRGBO(147, 0, 119, 1);
+                            return const Color.fromARGB(255, 148, 74, 134);
                           }else{
                             return Colors.transparent;
                           }
@@ -370,7 +377,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                         dataSource: avgPickTime,
                         pointColorMapper: (p0, p1) {
                           if(p1 == 0){
-                            return const Color.fromRGBO(9, 0, 136, 1);
+                            return const Color.fromARGB(255, 97, 92, 170);
                           }else{
                             return Colors.transparent;
                           }
@@ -539,23 +546,6 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                         hideOnSelect: false,
                                       ),
                                     ),
-                                    // Gap(size.width * 0.01),
-                                    // Transform.scale(
-                                    //   scale: 0.7,
-                                    //   child: Switch(
-                                    //     value: rangeSelection,
-                                    //     onChanged: (value) {
-                                    //       print(rangeSelection);
-                                    //       setState(() {
-                                    //         rangeSelection = value;
-                                    //         suggestionsController.refresh();
-                                    //         selectedEmployeeRange = "";
-                                    //         selectedEmployees = [];
-                                    //         empTaskdata = [];
-                                    //       });
-                                    //     },
-                                    //   ),
-                                    // )
                                   ],
                                 ),
                                 Gap(size.height * 0.012),

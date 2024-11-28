@@ -1,167 +1,309 @@
-// import 'package:flutter/material.dart';
-// import 'package:gap/gap.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/models/dock_area_model.dart';
 
-// class ExpandableListView extends StatefulWidget {
-//   ExpandableListView({super.key, this.height = 100, this.width = 300, required this.data, this.controller});
-  
-//   final double height;
-//   final double width;
-//   final List<Map<String, dynamic>> data;
-//   final ScrollController? controller;
+class ExpandableListView extends StatefulWidget {
+  ExpandableListView({super.key, required this.data, required this.l1StyleData, required this.l2StyleData, required this.l3StyleData});
+  List<DockAreaItem> data;
+  L1StyleData l1StyleData;
+  L2StyleData l2StyleData;
+  L3StyleData l3StyleData;
 
-//   @override
-//   _ExpandableListViewState createState() => _ExpandableListViewState();
-// }
+  @override
+  _ExpandableListViewState createState() => _ExpandableListViewState();
+}
 
-// class _ExpandableListViewState extends State<ExpandableListView> {
-//   final List<String> dropdownItems = [
-//     'Storage Area',
-//     'Inspection Area',
-//     'Staging Area',
-//     'Activity Area',
-//     'Receiving Area',
-//     'Dock Area IN',
-//     'Dock Area OUT'
-//   ];
+class _ExpandableListViewState extends State<ExpandableListView> {
+  List<double> heights = [];
+  List<double> bottomHeights = [];
+  List<double> turns = [];
+  List<List<double>> innerHeights = [];
+  List<List<double>> innerBottomHeights = [];
+  List<List<double>> innerTurns = [];
+  int? openDropdownIndex; // Track which dropdown is currently open
+  int? outerOpenDropdownIndex;
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
 
-//   List<double> heights = [];
-//   List<double> bottomHeights = [];
-//   List<double> turns = []; // List to track rotation state for each item
-//   String? placeholderText;
-//   String? dropdownValue;
+  @override
+  void initState() {
+    super.initState();
+    heights = List.filled(widget.data.length, widget.l1StyleData.height);
+    bottomHeights = List.filled(widget.data.length, widget.l1StyleData.height);
+    turns = List.filled(widget.data.length, 1);
+    innerHeights = List.filled(widget.data.length, []);
+    innerBottomHeights = List.filled(widget.data.length, []);
+    innerTurns = List.filled(widget.data.length, []);
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+  }
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     // Initialize heights and turns for each item
-//     heights = List<double>.filled(widget.data[0].length, widget.height);
-//     bottomHeights = List<double>.filled(widget.data[0].length, widget.height * 0.06);
-//     turns = List<double>.filled(widget.data[0].length, 1); // Initialize rotation states
-//     placeholderText = 'Search in ${dropdownItems[0]}...';
-//     dropdownValue = dropdownItems[0];
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25),
+      child: ListView.builder(
+          itemCount: widget.data.length,
+          itemBuilder: (context, oindex) {
+            if (innerHeights[oindex].isEmpty) {
+              innerHeights[oindex] = List.filled(widget.data[oindex].vendors!.length, widget.l2StyleData.height);
+              innerBottomHeights[oindex] = List.filled(widget.data[oindex].vendors!.length, widget.l2StyleData.height);
+              innerTurns[oindex] = List.filled(widget.data[oindex].vendors!.length, 1);
+            }
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: heights[oindex],
+              width: widget.l1StyleData.width,
+              child: Stack(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: bottomHeights[oindex],
+                    width: widget.l1StyleData.width,
+                    color: Colors.transparent,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 65, bottom: 5),
+                      decoration: BoxDecoration(
+                        color: widget.l1StyleData.dropDownColor,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(25),
+                        child: ListView.builder(
+                            itemCount: widget.data[oindex].vendors!.length,
+                            itemBuilder: (context, index) {
+                              return AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                height: innerHeights[oindex][index],
+                                child: Stack(
+                                  children: [
+                                    AnimatedContainer(
+                                      duration: const Duration(milliseconds: 200),
+                                      height: innerBottomHeights[oindex][index],
+                                      child: Container(
+                                        margin: EdgeInsets.only(top: 65, bottom: 5),
+                                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: widget.l2StyleData.dropDownColor,
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(25),
+                                          child: ListView.builder(
+                                            itemCount: widget.data[oindex].vendors![index].items!.length,
+                                            itemBuilder: (context, inindex) => Container(
+                                                padding: EdgeInsets.all(10),
+                                                height: widget.l3StyleData.height,
+                                                margin: EdgeInsets.only(bottom: 5),
+                                                decoration: BoxDecoration(
+                                                  color: widget.l3StyleData.color,
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                child: LayoutBuilder(
+                                                  builder: (context, lsize) {
+                                                    return Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [SizedBox(width: lsize.maxWidth*0.2, child: Text('DNO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].dockNbr!, style: TextStyle(fontSize: lsize.maxWidth*0.042),)],
+                                                        ),
+                                                        Row(
+                                                          children: [SizedBox(width: lsize.maxWidth*0.2, child: Text('ASN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].asn!, style: TextStyle(fontSize: lsize.maxWidth*0.042),)],
+                                                        ),
+                                                        Row(
+                                                          children: [SizedBox(width: lsize.maxWidth*0.2, child: Text('PO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].poNbr!, style: TextStyle(fontSize: lsize.maxWidth*0.042),)],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Row(
+                                                              children: [SizedBox(width: lsize.maxWidth*0.2, child: Text('QTY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].qty!.toString(), style: TextStyle(fontSize: lsize.maxWidth*0.042),)],
+                                                            ),
+                                                            Spacer(),
+                                                            Text(widget.data[oindex].vendors![index].items![inindex].checkinTS!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.04),)
+                                                          ],
+                                                        )
+                                                      ],
+                                                    );
+                                                  }
+                                                )),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          // Close other opened dropdowns
+                                          if (openDropdownIndex == index) {
+                                            // If the same dropdown is tapped, close it
+                                            innerHeights[oindex][index] = innerHeights[oindex][index] == widget.l2StyleData.height
+                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) + 85
+                                                : widget.l2StyleData.height;
+                                            innerBottomHeights[oindex][index] = innerBottomHeights[oindex][index] == widget.l2StyleData.height
+                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) + 85
+                                                : widget.l2StyleData.height;
+                                            innerTurns[oindex][index] = innerTurns[oindex][index] == 0.5 ? 1 : 0.5; // Rotate icon
+                                            openDropdownIndex = null; // Reset opened index
+                                            heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85;
+                                            bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85;
+                                          } else {
+                                            // Close previously opened dropdown and open the new one
+                                            if (openDropdownIndex != null) {
+                                              innerHeights[oindex][openDropdownIndex!] = widget.l2StyleData.height; // Reset previous dropdown
+                                              innerBottomHeights[oindex][openDropdownIndex!] = widget.l2StyleData.height; // Reset previous bottom height
+                                              innerTurns[oindex][openDropdownIndex!] = 1;
+                                            }
+                                            openDropdownIndex = index; // Set current index as opened
+                                            heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85;
+                                            bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85;
+                                            innerHeights[oindex][index] =
+                                                (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                    85; // Expand current dropdown
+                                            innerBottomHeights[oindex][index] =
+                                                (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                    85; // Expand current bottom height
+                                            innerTurns[oindex][index] = 0.5;
+                                          }
+                                        });
+                                      },
+                                      child: Container(
+                                        height: widget.l2StyleData.height,
+                                        margin: EdgeInsets.only(bottom: 5),
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: widget.l2StyleData.color,
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                        child: LayoutBuilder(builder: (context, lsize) {
+                                          return Row(
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/businessman.png',
+                                                scale: lsize.maxHeight * 0.05,
+                                                color: Colors.white,
+                                              ),
+                                              Gap(lsize.maxWidth * 0.01),
+                                              Text('${widget.data[oindex].vendors![index].vendorName} (${widget.data[oindex].vendors![index].items!.length})', style: TextStyle(color: Colors.white),),
+                                              Spacer(),
+                                              AnimatedRotation(
+                                                turns: innerTurns[oindex][index],
+                                                duration: const Duration(milliseconds: 200),
+                                                child: Icon(
+                                                  Icons.keyboard_arrow_down_rounded,
+                                                  size: 20,
+                                                  // color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (heights[oindex] == widget.l1StyleData.height) {
+                          // If outer dropdown is expanding, close all inner dropdowns first
+                          for (int i = 0; i < innerHeights[oindex].length; i++) {
+                            innerHeights[oindex][i] = widget.l2StyleData.height; // Reset all inner heights to closed state
+                            innerBottomHeights[oindex][i] = widget.l2StyleData.height; // Reset all bottom heights to closed state
+                          }
+                          openDropdownIndex = null; // Reset opened index for inner dropdowns
+                        }
+                        // Close other opened dropdowns
+                        if (outerOpenDropdownIndex == oindex) {
+                          // If the same dropdown is tapped, close it
+                          heights[oindex] = heights[oindex] == widget.l1StyleData.height
+                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85
+                              : widget.l1StyleData.height;
+                          bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
+                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85
+                              : widget.l1StyleData.height;
+                          turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
+                          outerOpenDropdownIndex = null; // Reset opened index
+                        } else {
+                          // Close previously opened dropdown and open the new one
+                          if (outerOpenDropdownIndex != null) {
+                            heights[outerOpenDropdownIndex!] = widget.l1StyleData.height; // Reset previous dropdown
+                            bottomHeights[outerOpenDropdownIndex!] = widget.l1StyleData.height; // Reset previous bottom height
+                            turns[outerOpenDropdownIndex!] = 1;
+                          }
+                          outerOpenDropdownIndex = oindex; // Set current index as opened
+                          heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85; // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85; // Expand current bottom height
+                          turns[oindex] = 0.5;
+                        }
+                      });
+                    },
+                    child: Container(
+                      height: widget.l1StyleData.height,
+                      width: widget.l1StyleData.width,
+                      padding: EdgeInsets.all(5),
+                      margin: EdgeInsets.only(bottom: 5),
+                      decoration: BoxDecoration(
+                        color: widget.l1StyleData.color, // Purple background
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: LayoutBuilder(builder: (context, lsize) {
+                        return Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/truck.png',
+                              scale: lsize.maxHeight * 0.05,
+                            ),
+                            Gap(lsize.maxWidth * 0.01),
+                            Text(
+                              widget.data[oindex].truckNum!,
+                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                            ),
+                            Spacer(),
+                            AnimatedRotation(
+                              turns: turns[oindex],
+                              duration: const Duration(milliseconds: 200),
+                              child: Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: 20,
+                                // color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  )
+                ],
+              ),
+            );
+          }),
+    );
+  }
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size;
+class L1StyleData {
+  double height;
+  double width;
+  Color? color;
+  Color? dropDownColor;
+  L1StyleData({required this.height, required this.width, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(163, 183, 209, 1)});
+}
 
-//     return ClipRRect(
-//       borderRadius: BorderRadius.circular(20),
-//       child: ListView.builder(
-//         controller: widget.controller,
-//         itemCount: widget.data[0].length,
-//         itemBuilder: (context, index) {
-//           return AnimatedContainer(
-//             duration: const Duration(milliseconds: 200),
-//             height: heights[index],
-//             width: size.width * 0.26,
-//             child: LayoutBuilder(
-//               builder: (context, layout) {
-//                 return Stack(
-//                   children: [
-//                     AnimatedContainer(
-//                       duration: const Duration(milliseconds: 200),
-//                       height: bottomHeights[index],
-//                       width: size.width * 0.26,
-//                       color: Colors.transparent,
-//                       child: Container(
-//                         margin: EdgeInsets.only(top: layout.maxHeight*0.4),
-//                         padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
-//                         decoration: BoxDecoration(
-//                           color: Color.fromRGBO(191, 209, 231, 1),
-//                           borderRadius: BorderRadius.circular(15),
-//                         ),
-//                         child: ScrollConfiguration(
-//                           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-//                           child: ListView(
-//                             shrinkWrap: true,
-//                             children: dropdownItems.map((item) {
-//                               return GestureDetector(
-//                                 onTap: () {
-//                                   setState(() {
-//                                     dropdownValue = item;
-//                                     placeholderText = 'Search in $item...';
-//                                     // // Toggle height for the specific index
-//                                     // heights[index] = heights[index] == size.height * 0.3
-//                                     //     ? widget.height
-//                                     //     : size.height * 0.3;
-//                                     // bottomHeights[index] = bottomHeights[index] == size.height * 0.3
-//                                     //     ? widget.height*0.06
-//                                     //     : size.height * 0.3;
-//                                     // turns[index] = turns[index] == 0.5 ? 1 : 0.5; // Adjust rotation if needed
-//                                   });
-//                                 },
-//                                 child: Container(
-//                                   padding:
-//                                       EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width * 0.01),
-//                                   decoration: BoxDecoration(
-//                                     borderRadius: BorderRadius.circular(15),
-//                                   ),
-//                                   child: Text(
-//                                     widget.data.where((e) => e.entries.first.key == widget.data[index].keys.toList()[index]).first.values.first,
-//                                     style: TextStyle(
-//                                       color:
-//                                           item == dropdownValue ? Color.fromRGBO(68, 98, 136, 1) : Colors.black,
-//                                       fontWeight: FontWeight.w500,
-//                                       fontSize: size.height * 0.022,
-//                                     ),
-//                                   ),
-//                                 ),
-//                               );
-//                             }).toList(),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                     GestureDetector(
-//                       onTap: () {
-//                         setState(() {
-//                           // Toggle height for the specific index when header is tapped
-//                           heights[index] = heights[index] == widget.height ? size.height * 0.3 : widget.height;
-//                           bottomHeights[index] = bottomHeights[index] == (widget.height * 0.06)
-//                               ? size.height * 0.3
-//                               : widget.height * 0.06;
-                    
-//                           // Toggle rotation for the specific index
-//                           turns[index] = turns[index] == 1 ? 0.5 : 1; // Adjust rotation if needed
-//                         });
-//                       },
-//                       child: Container(
-//                         height: widget.height,
-//                         padding:
-//                             EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
-//                             margin: EdgeInsets.only(top: size.height*0.01),
-//                         decoration: BoxDecoration(
-//                           color: Color.fromRGBO(68, 98, 136, 1), // Background color
-//                           borderRadius: BorderRadius.circular(20),
-//                         ),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.start,
-//                           children: [
-//                             Image.asset('assets/images/truck.png', scale: size.height * 0.0015, color: Colors.black,),
-//                             Text(
-//                               widget.data[0].keys.toList()[index],
-//                               style:
-//                                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
-//                             ),
-//                             MaxGap(size.width),
-//                             AnimatedRotation(
-//                               turns: turns[index], // Use individual turn values for each index
-//                               duration: const Duration(milliseconds: 200),
-//                               child:
-//                                   Icon(Icons.keyboard_arrow_down_rounded, size: size.height * 0.025, color: Colors.white),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     )
-//                   ],
-//                 );
-//               }
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
+class L2StyleData {
+  double height;
+  Color? color;
+  Color? dropDownColor;
+  L2StyleData({required this.height, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(194, 213, 238, 1)});
+}
+
+class L3StyleData {
+  double height;
+  Color? color;
+  L3StyleData({required this.height, this.color = Colors.white});
+}

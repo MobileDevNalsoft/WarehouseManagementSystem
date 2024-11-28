@@ -90,7 +90,7 @@ else{
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/bin.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                                 ),
-                                                Text(state.storageBinItems![index].containerNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
+                                                Text(state.storageBinItems![index].containerNbr??"cnbr", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                                 Spacer(),
                                                 if(_warehouseInteractionBloc.state.dataFromJS['bin'].toString()=="")
                                                 Transform.rotate(
@@ -108,7 +108,7 @@ else{
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/shipment.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                                 ),
-                                                Text(state.storageBinItems![index].rcvdShipmentKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
+                                                Text(state.storageBinItems![index].rcvdShipmentKey??"asn1", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                                 Spacer(),
                                                
                                               ],),
@@ -116,14 +116,14 @@ else{
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.016, right: containerSize.maxWidth*0.04),
                                                   child: Image.asset('assets/images/po.png',  height: containerSize.maxHeight*0.08, width: containerSize.maxWidth*0.08,),
                                                 ),
-                                                 Text(state.storageBinItems![index].refPoNbr!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                 Text(state.storageBinItems![index].refPoNbr??"po1", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
                                               ],),
                                                Row(children: [
                                                 Padding(
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.008  , right: containerSize.maxWidth*0.06),
                                                   child: Image.asset('assets/images/location.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.08,),
                                                 ),
-                                                Text(state.storageBinItems![index].currLocationId!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
+                                                Text(state.storageBinItems![index].currLocationId??"loc1", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
                                                 // Padding(
                                                 //   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                 //   child: Image.asset('assets/images/batch_no.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
@@ -141,13 +141,13 @@ else{
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/businessman.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                                 ),
-                                                Text(state.storageBinItems![index].vendor!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
+                                                Text(state.storageBinItems![index].vendor??"oracle", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                                 Spacer(),
                                                 Padding(
                                                   padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
                                                   child: Image.asset('assets/images/location.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                                 ),
-                                                 SizedBox(width: containerSize.maxWidth*0.36,child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].putawaytypeKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold)),)),
+                                                 SizedBox(width: containerSize.maxWidth*0.36,child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].putawaytypeKey??"001", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold)),)),
                                               ],),
                                               // Gap(size.height*0.015),
                                               Row(children: [
@@ -155,14 +155,14 @@ else{
                                                     padding: EdgeInsets.only( right:containerSize.maxWidth*0.042),
                                                     child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.14, width: containerSize.maxWidth*0.1,),
                                                   ),
-                                                 SizedBox(width: containerSize.maxWidth*0.36, child:  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].itemKey!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold),))),
+                                                 SizedBox(width: containerSize.maxWidth*0.36, child:  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.storageBinItems![index].itemKey??"item", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.004, fontWeight: FontWeight.bold),))),
                                                 Spacer(),
                                                 Padding(
                                                     padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right:containerSize.maxWidth*0.032),
                                                     child: 
                                                     Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.09, width: containerSize.maxWidth*0.09,),
                                                   ),
-                                                 Text(state.storageBinItems![index].currQty!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
+                                                 Text(state.storageBinItems![index].currQty??"1", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                               ],),
                                             ],
                                           );

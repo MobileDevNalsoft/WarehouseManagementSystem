@@ -56,8 +56,8 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
         state.storageBinItems!.addAll(storageBinResponse.data!);
         }
         emit(state.copyWith(storageBinItems: state.storageBinItems, storageBinStatus: StorageBinStatus.success));
-       
-          print("called highlightBins from dart");
+
+          print("called highlightBins from dart ${state.storageBinItems}");
            getIt<JsInteropService>().highlightBins(state.storageBinItems!.map((e)=>"${e.locationKey!.replaceAll('-', '').substring(2)}").toSet().toString());
           
         

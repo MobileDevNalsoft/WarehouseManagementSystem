@@ -91,7 +91,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
       emit(state.copyWith(getYardDashboardState: YardDashboardState.loading));
       await _customApi
           .get(AppConstants.YARD_DASHBOARD,
-              queryParameters: {"facility_id": event.facilityID, "l_date": '2024-10-21'})
+              queryParameters: {"facility_id": event.facilityID})
           .then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<YardDashboard> dockAreaResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => YardDashboard.fromJson(json));
@@ -106,7 +106,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
   Future<void> _onGetReceivingDashboardData(GetReceivingDashboardData event, Emitter<DashboardsState> emit) async {
     try{
       emit(state.copyWith(getReceivingDashboardState: ReceivingDashboardState.loading));
-      await _customApi.get(AppConstants.RECEIVING_DASHBOARD,  queryParameters:{"facility_id": event.facilityID, "date": '2024-10-24'}).then((apiResponse) {
+      await _customApi.get(AppConstants.RECEIVING_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<ReceivingDashboard> receivingDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ReceivingDashboard.fromJson(json));
         emit(state.copyWith(receivingDashboardData: receivingDashboardResponse.data!, getReceivingDashboardState:ReceivingDashboardState.success));
@@ -134,7 +134,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
   Future<void> _onGetActivityDashboardData(GetActivityDashboardData event, Emitter<DashboardsState> emit) async {
     try{
       emit(state.copyWith(getActivityDashboardState: ActivityDashboardState.loading));
-      await _customApi.get(AppConstants.ACTIVITY_DASHBOARD,  queryParameters:{"facility_id": event.facilityID, "date": '2024-10-24'}).then((apiResponse) {
+      await _customApi.get(AppConstants.ACTIVITY_DASHBOARD,  queryParameters:{"facility_id": event.facilityID}).then((apiResponse) {
         print(apiResponse.response!.data);
         DashboardResponse<ActivityDashboard> activityDashboardResponse = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityDashboard.fromJson(json));
         emit(state.copyWith(activityDashboardData: activityDashboardResponse.data!, getActivityDashboardState:ActivityDashboardState.success));

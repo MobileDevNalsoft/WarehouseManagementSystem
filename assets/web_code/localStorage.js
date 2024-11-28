@@ -76,7 +76,7 @@ export function localStorageSetup(scene, camera, controls) {
       
       localStorage.setItem("resetBoxColors",false);       
       highlightedBins.forEach((e)=>{
-        scene.getObjectByName(e.trim()).material.color.set(0xcbbbab);           
+        scene.getObjectByName(e.trim()).material.color.set(0xFAF3E2);           
             });
             highlightedBins=[];
           break;
