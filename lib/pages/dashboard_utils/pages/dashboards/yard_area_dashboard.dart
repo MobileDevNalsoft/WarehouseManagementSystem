@@ -228,6 +228,7 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                       : Customs.WMSCartesianChart(
                               title: 'Vehicle Detention',
                               barCount: 1,
+                              barColors: [Color.fromRGBO(132, 142, 230, 1)],
                               dataSources: [
                                 [
                                   BarData(
@@ -280,9 +281,9 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                             legendVisibility: true,
                             pointColorMapper: (piedata, index) {
                               if (index == 0) {
-                                return Color.fromRGBO(255, 182, 24, 1);
+                                return Color.fromRGBO(136, 241, 245, 1);
                               } else if (index == 1) {
-                                return Color.fromRGBO(161, 40, 40, 0.8);
+                                return Color.fromRGBO(100, 178, 180, 1);
                               }
                             },
                           );
@@ -302,8 +303,8 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                             ? Customs.DashboardLoader(lsize: lsize)
                             : YardAreaDashboard.WMSCartesianChart(
                               title: 'Daywise Yard Utilization',
-                              primaryColor: Colors.blueAccent,
-                              secondaryColor: const Color.fromARGB(255, 138, 40, 155),
+                              primaryColor: const Color.fromARGB(255, 231, 142, 247),
+                              secondaryColor: const Color.fromARGB(255, 194, 162, 103),
                               barCount: 2,
                               isLegendVisible: true,
                               legendText: ["Loading", "Unloading"],
@@ -365,9 +366,9 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                                   name: "Loading and Unloading Count",
                                   pointColorMapper: (datum, index) {
                                     if (datum.x == "Loading") {
-                                      return Color.fromRGBO(187, 44, 42, 1);
+                                      return Color.fromRGBO(132, 211, 86, 1);
                                     } else {
-                                      return const Color.fromRGBO(255, 166, 0, 1);
+                                      return const Color.fromARGB(255, 215, 221, 124);
                                     }
                                   },
                                   xValueMapper: (ChartData data, _) => data.x,

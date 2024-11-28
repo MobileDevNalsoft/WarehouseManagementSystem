@@ -112,7 +112,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                             : Customs.WMSPieChart(
                                         title:'Today Quality Status',
                                         legendVisibility: true,
-                                        dataSource: state.getInspectionDashboardState != InspectionDashboardState.success ? [] : state.inspectionDashboardData!.totalQualityStatus!.map((e) => PieData(xData: e.status!, yData: e.count!,text: e.count!.toString())).toList(),
+                                        dataSource: state.getInspectionDashboardState != InspectionDashboardState.success ? [] : state.inspectionDashboardData!.todayQualityStatus!.map((e) => PieData(xData: e.status!, yData: e.count!,text: e.count!.toString())).toList(),
                                         pointColorMapper: (datum, index) {
                                           if (index == 1) {
                                             return const Color.fromARGB(255, 45, 134, 172);

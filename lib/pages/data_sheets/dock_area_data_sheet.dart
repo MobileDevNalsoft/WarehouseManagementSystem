@@ -55,7 +55,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
             child: LayoutBuilder(builder: (context, lsize) {
               return (state.getDataState== GetDataState.success &&  state.dockAreaItems!.length==0)?
                       Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
-                     : isEnabled ? Center(child: CircularProgressIndicator(),) : ExpandableListView(data: state.dockAreaItems!, l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white), l2StyleData: L2StyleData(height: 60, color: Color.fromRGBO(127, 161, 202, 1), dropDownColor: Color.fromRGBO(127, 161, 202, 1)), l3StyleData: L3StyleData(height: lsize.maxHeight*0.145, color: Color.fromRGBO(88, 120, 160, 1)),);
+                     : isEnabled ? Center(child: CircularProgressIndicator(),) : ExpandableListView(data: state.dockAreaItems!, l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white), l2StyleData: L2StyleData(height: 60, color: Color.fromRGBO(43, 79, 122, 1), dropDownColor: Color.fromRGBO(43, 79, 122, 1)), l3StyleData: L3StyleData(height: lsize.maxHeight*0.145, color: Color.fromRGBO(127, 161, 202, 1)),);
             }),
           );
         },

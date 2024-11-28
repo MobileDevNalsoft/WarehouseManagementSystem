@@ -181,9 +181,10 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                               Image.asset(
                                                 'assets/images/businessman.png',
                                                 scale: lsize.maxHeight * 0.05,
+                                                color: Colors.white,
                                               ),
                                               Gap(lsize.maxWidth * 0.01),
-                                              Text('${widget.data[oindex].vendors![index].vendorName} (${widget.data[oindex].vendors![index].items!.length})'),
+                                              Text('${widget.data[oindex].vendors![index].vendorName} (${widget.data[oindex].vendors![index].items!.length})', style: TextStyle(color: Colors.white),),
                                               Spacer(),
                                               AnimatedRotation(
                                                 turns: innerTurns[oindex][index],

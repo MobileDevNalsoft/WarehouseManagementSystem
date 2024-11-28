@@ -24,7 +24,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
   void initState() {
     super.initState();
     height = widget.size.height*0.08;
-    bottomHeight = widget.size.height*0.07;
+    bottomHeight = widget.size.height*0.08;
   }
 
   @override
@@ -50,7 +50,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                           onTap: () {
                             setState(() {
                               height = height == size.height*0.2 ? size.height*0.08 : size.height*0.2; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.07 : size.height*0.2;
+                              bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.08 : size.height*0.2;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
                             
@@ -62,7 +62,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                           onTap: () {
                             setState(() {
                               height = height == size.height*0.2 ? size.height*0.08 : size.height*0.2; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.07 : size.height*0.2;
+                              bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.08 : size.height*0.2;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
                              urlNavigator.launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
@@ -79,16 +79,19 @@ class _HoverDropdownState extends State<HoverDropdown> {
               onTap: () {
                 setState(() {
                   height = height == size.height*0.08 ? size.height*0.2 : size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                  bottomHeight = bottomHeight == size.height*0.07 ? size.height*0.2 : size.height*0.07;
+                  bottomHeight = bottomHeight == size.height*0.08 ? size.height*0.2 : size.height*0.08;
                   turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                 });
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Image.asset(
-                    'assets/images/profile.png',
-                    scale: widget.size.height*0.005,
+                  SizedBox(
+                    height: widget.size.height*0.05,
+                    child: Image.asset(
+                      'assets/images/profile.png',
+                      fit: BoxFit.fitHeight
+                    ),
                   ),
                   Gap(size.width * 0.003),
                   AnimatedRotation(

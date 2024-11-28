@@ -84,12 +84,12 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
   ];
 
   final List<TimeData> avgLeadTimeData = [
-    TimeData('resukt', 81, const Color.fromARGB(255, 83, 202, 166)),
+    TimeData('resukt', 81, const Color.fromARGB(255, 116, 204, 178)),
     TimeData('rest', 19, Colors.transparent),
   ];
 
   final List<TimeData> avgFulfilmentTimeData = [
-    TimeData('resukt', 45, Color.fromRGBO(165, 26, 139, 1)),
+    TimeData('resukt', 45, Color.fromRGBO(189, 125, 177, 1)),
     TimeData('rest', 55, Colors.transparent),
   ];
 
@@ -250,8 +250,21 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                             ? Customs.DashboardLoader(lsize: lsize)
                             : Customs.WMSPieChart(
                                   title: 'Today Order Summary',
-                                  dataSource: isEnabled ? orderSummaryDataSource : state.stagingDashboardData!.todayOrderSummary!.asMap().entries.map((e) => PieData(xData: e.value.status!, yData: e.value.count!, color: orderSummaryDataSource[e.key].color, text: e.value.count!.toString())).toList(),
+                                  dataSource: state.stagingDashboardData!.todayOrderSummary!.map((e) => PieData(xData: e.status!, yData: e.count!,text: e.count!.toString())).toList(),
                                   legendVisibility: true,
+                                  pointColorMapper: (p0, p1) {
+                                    if(p1 == 0){
+                                      return const Color.fromARGB(255, 80, 175, 230);
+                                    }else if(p1 == 1){
+                                      return const Color.fromARGB(255, 115, 102, 189);
+                                    }else if(p1 == 2){
+                                      return const Color.fromARGB(255, 110, 196, 163);
+                                    }else if(p1 == 3){
+                                      return const Color.fromARGB(255, 159, 177, 80);
+                                    }else if(p1 == 4){
+                                      return const Color.fromARGB(255, 175, 83, 140);
+                                    }
+                                  },
                                 );
                               }
                             )),
@@ -381,7 +394,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                             ],
                                           ),
                                           child: Text(
-                                            '${state.stagingDashboardData!.fulfilmentTime!.toString()}m',
+                                            '${state.stagingDashboardData!.fulfilmentTime!.toString()}h',
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: size.height * 0.02,
@@ -446,7 +459,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                   barCount: 1,
                                   dataSources: [isEnabled ? channelWiseOrderSummary : state.stagingDashboardData!.todayChannelSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
                                   yAxisTitle: 'Number of orders',
-                                  barColors: [const Color.fromRGBO(202, 108, 15, 1)],
+                                  barColors: [const Color.fromARGB(255, 182, 143, 103)],
                                 );
                               }
                             )),

@@ -94,11 +94,11 @@ var weekDays = {
   @override
   Widget build(BuildContext context) {
     final List<ChartData> chartData = [
-      ChartData('David', 69, const Color.fromRGBO(9, 0, 136, 1)),
+      ChartData('David', 69, const Color.fromARGB(255, 94, 90, 158)),
       ChartData('sd', 31, Colors.transparent),
     ];
     final List<ChartData> chartData1 = [
-      ChartData('David', 81, const Color.fromRGBO(91, 9, 9, 1)),
+      ChartData('David', 81, const Color.fromARGB(255, 160, 90, 90)),
       ChartData('sd', 19, Colors.transparent),
     ];
 
@@ -147,19 +147,7 @@ var weekDays = {
                             : Customs.WMSPieChart(
                                       title: "Total ASN Status",
                                       legendVisibility: true,
-                                      dataSource:
-                                      state.getReceivingDashboardState == ReceivingDashboardState.success?
-                                      [PieData(xData: "In-Transit", yData: state.receivingDashboardData!.asnStatus!.inTransit!, text:  state.receivingDashboardData!.asnStatus!.inTransit!.toString()),
-                                        PieData(xData: "In Receiving", yData: state.receivingDashboardData!.asnStatus!.inReceiving!, text:  state.receivingDashboardData!.asnStatus!.inReceiving!.toString()),
-                                        PieData(xData: "Received", yData: state.receivingDashboardData!.asnStatus!.receivied!, text:  state.receivingDashboardData!.asnStatus!.receivied!.toString()),
-                                        PieData(xData: "Cancelled", yData: state.receivingDashboardData!.asnStatus!.cancelled!, text:  state.receivingDashboardData!.asnStatus!.cancelled.toString())] 
-                                        :
-                                        [
-                                        PieData(xData: "In-Transit", yData: 8, text: "8"),
-                                        PieData(xData: "In Receiving", yData: 4, text: "4"),
-                                        PieData(xData: "Received", yData: 3, text: "3"),
-                                        PieData(xData: "Cancelled", yData: 1, text: "1")
-                                      ],
+                                      dataSource: state.receivingDashboardData!.todayAsnStatus!.map((e) => PieData(xData: e.status!, yData: e.count!, text:  e.count!.toString())).toList(),
                                       pointColorMapper: (datum, index) {
                                         if (index == 0) {
                                           return const Color.fromARGB(255, 27, 219, 219);
@@ -187,7 +175,7 @@ var weekDays = {
                                   return isEnabled
                             ? Customs.DashboardLoader(lsize: lsize)
                             : Customs.WMSPieChart(
-                                      title: "Total Inbound Summary",
+                                      title: "Today Inbound Summary",
                                       legendVisibility: true,
                                       dataSource: state.getReceivingDashboardState != ReceivingDashboardState.success
                                           ? [
@@ -392,9 +380,7 @@ var weekDays = {
                                       CircularChartAnnotation(
                                         widget: Container(
                                           child: Text(
-                                            state.getReceivingDashboardState != ReceivingDashboardState.success
-                                                ? '05h:32m'
-                                                : state.receivingDashboardData!.avgReceivingTime!,
+                                            state.receivingDashboardData!.avgReceivingTime!,
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 25,
@@ -469,7 +455,7 @@ var weekDays = {
                                         radiusFactor: aspectRatio * 0.3,
                                         pointers: [
                                           Gauges.MarkerPointer(
-                                            value: isEnabled ? 0 : state.receivingDashboardData!.receivingEfficiency!+3,
+                                            value: state.receivingDashboardData!.receivingEfficiency!+3,
                                             markerType: Gauges.MarkerType.invertedTriangle,
                                             markerHeight: 20,
                                             markerWidth: 20,
@@ -524,9 +510,7 @@ var weekDays = {
                                       CircularChartAnnotation(
                                         widget: Container(
                                           child: Text(
-                                            state.getReceivingDashboardState != ReceivingDashboardState.success
-                                                ? '03h:15m'
-                                                : state.receivingDashboardData!.avgPutawayTime!,
+                                            state.receivingDashboardData!.avgPutawayTime!,
                                             style: TextStyle(
                                               color: Color.fromARGB(255, 20, 21, 22),
                                               fontSize: 25,
