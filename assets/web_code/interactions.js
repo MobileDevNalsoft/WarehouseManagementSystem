@@ -166,7 +166,7 @@ export function addInteractions(scene, model, camera, controls) {
         .split(",")
         .forEach((e) => {
           let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
-          scene.getObjectByName(bin).material.color.set(0xcbbbab);
+          scene.getObjectByName(bin).material.color.set(0xFAF3E2);
           scene.getObjectByName(bin).material.opacity = 0.5;
         });
 

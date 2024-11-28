@@ -12,14 +12,15 @@ export function createCamera() {
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   // Set the position of the new camera based on the imported camera's position
-  camera.position.set(0, 600, 500);
+  camera.position.set(0, 350, 600);
+  camera.lookAt(0, 0, 0);
 
   return camera;
 }
 
 export function switchCamera(scene, name, camera, controls) {
   if(name == 'storageArea'){
-    // console.log('{"area":"' + name + '"}');
+    console.log('{"area":"' + name + '"}');
     window.localStorage.setItem("rack_cam", "null");
   }
   const { position, target } = getPositionAndTarget(
@@ -68,7 +69,7 @@ export function moveToBin(object, camera, controls) {
   var aabb = new THREE.Box3().setFromObject(object);
   var center = aabb.getCenter(new THREE.Vector3());
   var size = aabb.getSize(new THREE.Vector3());
-  const regex = /^[0-9][LR]B\d{5}$/;
+  const regex = /^[0-9][R]B\d{5}$/;
 
   // console.log(object);
   // Create a GSAP timeline for smoother transitions
@@ -175,12 +176,13 @@ function getPositionAndTarget(scene, name) {
 
   switch (view) {
     case "compoundArea":
-      position.set(0, 550, 200);
-      target.set(0, 0, -60);
-      target.z = target.z+50;
+      position.set(0, 500, 200);
+      target.set(0, 0, -50);
       console.log('{"object":"null"}');
       break;
     case "storageArea":
+      
+      
       position.set(-78, 60, 20);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
