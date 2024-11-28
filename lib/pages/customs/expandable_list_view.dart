@@ -106,18 +106,18 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                                     return Column(
                                                       children: [
                                                         Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.2, child: Text('DNO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].dockNbr!, style: TextStyle(fontSize: lsize.maxWidth*0.042),)],
+                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('DNO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].dockNbr!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
                                                         ),
                                                         Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.2, child: Text('ASN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].asn!, style: TextStyle(fontSize: lsize.maxWidth*0.042),)],
+                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('ASN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].asn!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
                                                         ),
                                                         Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.2, child: Text('PO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].poNbr!, style: TextStyle(fontSize: lsize.maxWidth*0.042),)],
+                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('PO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].poNbr!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
                                                         ),
                                                         Row(
                                                           children: [
                                                             Row(
-                                                              children: [SizedBox(width: lsize.maxWidth*0.2, child: Text('QTY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].qty!.toString(), style: TextStyle(fontSize: lsize.maxWidth*0.042),)],
+                                                              children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('QTY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].qty!.toString(), style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
                                                             ),
                                                             Spacer(),
                                                             Text(widget.data[oindex].vendors![index].items![inindex].checkinTS!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.04),)

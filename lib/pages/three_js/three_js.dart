@@ -84,9 +84,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
       print("messageFromJS");
     };
  
-    _warehouseInteractionBloc.add(GetCompanyData());
+    // _warehouseInteractionBloc.add(GetCompanyData());
     // just for debugging
-    animationController.forward();
+    // animationController.forward();
   }
  
   @override
@@ -213,18 +213,20 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           top: size.height * 0.013,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
-              return state.getState != GetCompanyDataState.success
-                  ? SizedBox()
-                  : PointerInterceptor(
+              return 
+              // state.getState != GetCompanyDataState.success
+              //     ? SizedBox()
+              //     :
+                   PointerInterceptor(
                       child: CompanyDropdown(
                         buttonHeight: size.height * 0.052,
                         buttonWidth: size.width * 0.15,
-                        dropDownHeight: size.height * 0.6,
+                        dropDownHeight: size.height * 0.4,
                         dropDownWidth: size.width * 0.15,
                         dropDownItems: state.companyModel!.results!,
                         onChanged: (CompanyResults? value) {
                           context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
-                          context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
+                          // context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
                         },
                         selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
                       ),
@@ -238,14 +240,16 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           top: size.height * 0.013,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
-              return state.getState == GetCompanyDataState.success
-                  ? state.facilityDataState != GetFacilityDataState.success
-                      ? SizedBox()
-                      : PointerInterceptor(
+              return 
+              // state.getState == GetCompanyDataState.success
+              //     ? state.facilityDataState != GetFacilityDataState.success
+              //         ? SizedBox()
+              //         : 
+                      PointerInterceptor(
                           child: FacilityDropdown(
                             buttonHeight: size.height * 0.052,
                             buttonWidth: size.width * 0.15,
-                            dropDownHeight: size.height * 0.4,
+                            dropDownHeight: size.height * 0.2,
                             dropDownWidth: size.width * 0.15,
                             dropDownItems: state.facilityModel!.results!,
                             onChanged: (FacilityResults? value) {
@@ -253,8 +257,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                             },
                             selectedValue: state.selectedFacilityVal,
                           ),
-                        )
-                  : SizedBox();
+                        );
+                  // : SizedBox();
             },
           ),
         ),

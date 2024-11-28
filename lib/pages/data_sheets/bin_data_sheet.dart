@@ -96,7 +96,7 @@ else{
                                                 Transform.rotate(
                                                   angle: 3.14159/2,
                                                   child: IconButton(onPressed: (){
-                                                            if(_warehouseInteractionBloc.state.dataFromJS['bin']=="" && _warehouseInteractionBloc.state.searchText!=""){
+                                                            if(_warehouseInteractionBloc.state.dataFromJS['bin']=="" ){
                                                                                               getIt<JsInteropService>().navigateToBin(state.storageBinItems![index].locationKey.toString().replaceAll('-','').substring(2));
                                                                                             }
                                                   }, icon: Icon(Icons.bookmark,size: containerSize.maxWidth*0.1,),),
