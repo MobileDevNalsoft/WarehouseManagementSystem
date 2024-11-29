@@ -159,6 +159,7 @@ export function addInteractions(scene, model, camera, controls) {
 
     //console.log('{"object":"null"}');
     localStorage.removeItem("resetBoxColors");
+    try{
     if (localStorage.getItem("highlightBins")) {
       localStorage
         .getItem("highlightBins")
@@ -172,6 +173,19 @@ export function addInteractions(scene, model, camera, controls) {
 
       localStorage.removeItem("highlightBins");
     }
+    }
+    catch(e){
+      
+    }
+    try{
+    if(localStorage.getItem("prevBin")){
+      let bin =  localStorage.getItem("prevBin").trim();
+      scene.getObjectByName(bin).material.color.set(0xFAF3E2);
+      scene.getObjectByName(bin).material.opacity = 0.5;
+      localStorage.removeItem("prevBin");
+    }
+  }
+  catch(e){}
   });
 
   // setInterval(() => {
@@ -222,11 +236,12 @@ export function addInteractions(scene, model, camera, controls) {
 
   function changeColor(object) {
     if (prevBin != null) {
-      prevBin.material.color.copy(prevBinColor);
+      prevBin.material.color.set(0xFAF3E2);
     }
 
-    prevBinColor = object.material.color.clone();
+    // prevBinColor = object.material.color.clone();
     let objectName = object.name.toString();
+    localStorage.setItem("prevBin",objectName);
 
     if (prevBin != object) {
       object.userData.active = true;
@@ -234,18 +249,18 @@ export function addInteractions(scene, model, camera, controls) {
       object.material.color.set(0x65543e); // Blue color
       object.material.opacity = 0.5; // Adjust opacity for transparency
       console.log('{"bin":"' + objectName + '"}');
-
       moveToBin(object, camera, controls);
     } else {
+      
       if (object.userData.active == false) {
         object.userData.active = true;
-        prevBinColor = object.material.color.clone();
+        // prevBinColor = object.material.color.clone();
         prevBin = object;
         // Set transparent blue color
         object.material.color.set(0x65543e); // Blue color
         object.material.opacity = 0.5; // Adjust opacity for transparency
         console.log('{"bin":"' + objectName + '"}');
-
+        
         moveToBin(object, camera, controls);
       } else {
         object.userData.active = false;

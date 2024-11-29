@@ -92,13 +92,14 @@ else{
                                                 ),
                                                 Text(state.storageBinItems![index].containerNbr??"cnbr", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
                                                 Spacer(),
-                                                if(_warehouseInteractionBloc.state.dataFromJS['bin'].toString()=="")
+                                                if(_warehouseInteractionBloc.state.dataFromJS.containsKey('bin') && _warehouseInteractionBloc.state.searchText!="")
                                                 Transform.rotate(
                                                   angle: 3.14159/2,
                                                   child: IconButton(onPressed: (){
-                                                            if(_warehouseInteractionBloc.state.dataFromJS['bin']=="" ){
+                                                            // if(_warehouseInteractionBloc.state.dataFromJS.containsKey('bin')=="" ){
                                                                                               getIt<JsInteropService>().navigateToBin(state.storageBinItems![index].locationKey.toString().replaceAll('-','').substring(2));
-                                                                                            }
+                                                                                              _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.setItem(key: "rack_cam", value: "storageArea"); 
+                                                                                            // }
                                                   }, icon: Icon(Icons.bookmark,size: containerSize.maxWidth*0.1,),),
                                                 )
                                               

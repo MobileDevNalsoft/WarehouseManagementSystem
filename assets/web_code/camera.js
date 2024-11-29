@@ -19,7 +19,7 @@ export function createCamera() {
 
 export function switchCamera(scene, name, camera, controls) {
   if(name == 'storageArea'){
-    console.log('{"area":"' + name + '"}');
+    // console.log('{"area":"' + name + '"}');
     window.localStorage.setItem("rack_cam", "null");
   }
   const { position, target } = getPositionAndTarget(
@@ -158,7 +158,7 @@ function findCameraByName(cameraList, name) {
   }
 }
 
-function getPositionAndTarget(scene, name) {
+export function getPositionAndTarget(scene, name) {
   let position = new THREE.Vector3();
   let target = new THREE.Vector3(0, 0, 0);
   let object = new THREE.Object3D();
@@ -187,7 +187,7 @@ function getPositionAndTarget(scene, name) {
       box.getCenter(target);
       target.y = target.y + 25;
       target.x = target.x + 5;
-      // console.log('{"object":"null"}');
+      // console.log('{"area":"storage"}');
       break;
     case "inspectionArea":
       position.set(18, 50, -50);
