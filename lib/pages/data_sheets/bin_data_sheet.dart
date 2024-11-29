@@ -41,7 +41,7 @@ else{
   }
 
   void _scrollListener() async {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent && _storageBloc.state.storageBinItems!.length + 1 > (_storageBloc.state.pageNum! + 1) * 100) {
       _storageBloc.state.pageNum = _storageBloc.state.pageNum! + 1;
       _storageBloc.add(GetBinData(selectedBin: "RC${_warehouseInteractionBloc.state.dataFromJS['bin']}"));
     }

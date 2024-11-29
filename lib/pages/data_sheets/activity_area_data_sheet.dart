@@ -33,7 +33,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   }
 
   void _scrollListener() async {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent && _activityBloc.state.activityAreaItems!.length + 1 > (_activityBloc.state.pageNum! + 1) * 100) {
       _activityBloc.state.pageNum = _activityBloc.state.pageNum! + 1;
       _activityBloc.add( GetActivityAreaData( searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     }

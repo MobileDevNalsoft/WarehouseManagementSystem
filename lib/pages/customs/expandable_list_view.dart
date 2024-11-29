@@ -138,15 +138,15 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                           if (openDropdownIndex == index) {
                                             // If the same dropdown is tapped, close it
                                             innerHeights[oindex][index] = innerHeights[oindex][index] == widget.l2StyleData.height
-                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) + 85
+                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) + (widget.l2StyleData.height+25)
                                                 : widget.l2StyleData.height;
                                             innerBottomHeights[oindex][index] = innerBottomHeights[oindex][index] == widget.l2StyleData.height
-                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) + 85
+                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) + (widget.l2StyleData.height+25)
                                                 : widget.l2StyleData.height;
                                             innerTurns[oindex][index] = innerTurns[oindex][index] == 0.5 ? 1 : 0.5; // Rotate icon
                                             openDropdownIndex = null; // Reset opened index
-                                            heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85;
-                                            bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85;
+                                            heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
+                                            bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
                                           } else {
                                             // Close previously opened dropdown and open the new one
                                             if (openDropdownIndex != null) {
@@ -155,14 +155,14 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                               innerTurns[oindex][openDropdownIndex!] = 1;
                                             }
                                             openDropdownIndex = index; // Set current index as opened
-                                            heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85;
-                                            bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85;
+                                            heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
+                                            bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
                                             innerHeights[oindex][index] =
                                                 (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
-                                                    85; // Expand current dropdown
+                                                    (widget.l2StyleData.height+25); // Expand current dropdown
                                             innerBottomHeights[oindex][index] =
                                                 (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
-                                                    85; // Expand current bottom height
+                                                    (widget.l2StyleData.height+25); // Expand current bottom height
                                             innerTurns[oindex][index] = 0.5;
                                           }
                                         });
@@ -222,10 +222,10 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                         if (outerOpenDropdownIndex == oindex) {
                           // If the same dropdown is tapped, close it
                           heights[oindex] = heights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85
+                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
                               : widget.l1StyleData.height;
                           bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85
+                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
                               : widget.l1StyleData.height;
                           turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
                           outerOpenDropdownIndex = null; // Reset opened index
@@ -237,8 +237,8 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                             turns[outerOpenDropdownIndex!] = 1;
                           }
                           outerOpenDropdownIndex = oindex; // Set current index as opened
-                          heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85; // Expand current dropdown
-                          bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + 85; // Expand current bottom height
+                          heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current bottom height
                           turns[oindex] = 0.5;
                         }
                       });

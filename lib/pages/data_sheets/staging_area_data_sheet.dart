@@ -32,7 +32,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
 
 
   void _scrollListener() async {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent && _stagingBloc!.state.stagingList!.length + 1 > (_stagingBloc!.state.pageNum! + 1) * 100) {
       print("reached end of the screen");
 
         _stagingBloc!.state.pageNum = _stagingBloc!.state.pageNum! + 1;

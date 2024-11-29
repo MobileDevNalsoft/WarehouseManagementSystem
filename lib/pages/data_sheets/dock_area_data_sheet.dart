@@ -35,7 +35,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   }
 
   void _scrollListener() async {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent && _dockAreaBloc.state.dockAreaItems!.length + 1 > (_dockAreaBloc.state.pageNum! + 1) * 100) {
       _dockAreaBloc.state.pageNum = _dockAreaBloc.state.pageNum! + 1;
       _dockAreaBloc.add(GetDockAreaData(
           searchText: context.read<WarehouseInteractionBloc>().state.searchText,
