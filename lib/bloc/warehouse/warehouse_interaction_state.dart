@@ -15,7 +15,7 @@ enum GetFacilityDataState{initial, loading, success, failure}
 // ignore: must_be_immutable
 final class WarehouseInteractionState{
   WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "Storagearea", this.searchText,this.getState = GetCompanyDataState.initial,
-  this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal});
+  this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal,});
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -28,10 +28,10 @@ final class WarehouseInteractionState{
   GetFacilityDataState? facilityDataState;
   String? selectedCompanyVal;
   String? selectedFacilityVal;
-  TextEditingController searchController = TextEditingController();
+  // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(dataFromJS: {"object": "null"}, isModelLoaded: false,getState: GetCompanyDataState.initial,facilityDataState: GetFacilityDataState.initial,companyModel: CompanyModel(results: [CompanyResults(name: "M10 Company"),CompanyResults(name: "Demo"),CompanyResults(name: "Demo Customer1"),CompanyResults(name: "Demo Customer2"),CompanyResults(name: "SUM Compnay"),CompanyResults(name: "VIM Company")],),selectedCompanyVal: "M10 Company"
-    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse"),FacilityResults(name: "Duty-Free Warehouse"),]),selectedFacilityVal: "Duty-Paid Warehouse"
+    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse"),FacilityResults(name: "Duty-Free Warehouse"),]),selectedFacilityVal: "Duty-Paid Warehouse",
     );
   }
 
@@ -42,6 +42,7 @@ final class WarehouseInteractionState{
         inAppWebViewController: inAppWebViewController,
         selectedSearchArea: selectedSearchArea ?? this.selectedSearchArea,
         searchText: searchText ?? this.searchText,
+        // searchController: searchController,
         getState: getState?? this.getState,
         companyModel: companyModel??this.companyModel,
         selectedCompanyVal : selectedCompanyVal?? this.selectedCompanyVal,

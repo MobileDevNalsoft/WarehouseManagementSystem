@@ -60,7 +60,9 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
 
     if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") && !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
       if (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().contains("storage")) {
+        print("search text ${_warehouseInteractionBloc.state.searchText}");
         _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": ""}, clearSearchText: false));
+        getIt<JsInteropService>().switchToMainCam("");
         getIt<JsInteropService>().switchToMainCam("storageArea");
       } else {
         _warehouseInteractionBloc.add(SelectedObject(
@@ -101,12 +103,13 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
           context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
         case 'storagearea' || 'storage':
           if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
+            getIt<JsInteropService>().switchToMainCam("");
             getIt<JsInteropService>().switchToMainCam("storageArea");
             context.read<StorageBloc>().state.pageNum = 0;
             // context
             //     .read<StorageBloc>()
             //     .add(AddStorageAreaData(searchText: _warehouseInteractionBloc.state.searchText ?? ""));
-            context.read<StorageBloc>().add(GetBinData(searchText: _warehouseInteractionBloc.state.searchText ?? ""));
+            context.read<StorageBloc>().add(GetBinData(searchText: _warehouseInteractionBloc.state.searchText));
           }
           break;
         case 'bin':
@@ -157,63 +160,52 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           case "storagearea":
                             getIt<JsInteropService>().switchToMainCam("storageArea");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
                             break;
                           case "storagebin":
                             getIt<JsInteropService>().switchToMainCam("storageArea");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
                             break;
                           case "inspectionarea":
                             getIt<JsInteropService>().switchToMainCam("inspectionArea");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
+                            
                             break;
                           case "stagingarea":
                             getIt<JsInteropService>().switchToMainCam("stagingArea");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
                             break;
                           case "activityarea":
                             getIt<JsInteropService>().switchToMainCam("activityArea");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
                             break;
                           case "receivingarea":
                             getIt<JsInteropService>().switchToMainCam("receivingArea");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
                             break;
                           case "yardarea":
                             getIt<JsInteropService>().switchToMainCam("yardArea");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
 
                             break;
                           case "dockareain":
                             getIt<JsInteropService>().switchToMainCam("dockArea-IN");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
                             break;
                           case "dockareaout":
                             getIt<JsInteropService>().switchToMainCam("dockArea-OUT");
                             _warehouseInteractionBloc.state.searchText = "";
-                            _warehouseInteractionBloc.state.searchController.text = "";
                             break;
                           default:
                             null;
                         }
-                        // getIt<JsInteropService>().switchToMainCam(item.replaceAll(" ", ""));
                         if (item.toLowerCase().contains("storage")) {
                           _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"object": "bin"}));
                         } else {
-                          // _warehouseInteractionBloc.state.selectedSearchArea = ;
                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${item.toLowerCase().replaceAll(" ", '')}"}));
                         }
 
                         setState(() {
-                          // dropdownValue = item;
                           placeholderText = 'Search...';
                           height = height == size.height * 0.3
                               ? size.height * 0.08
@@ -275,8 +267,8 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("area").join(" "),
-                          // context.watch<WarehouseInteractionBloc>().state.selectedSearchArea,
+                            context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("area").join(" "),
+                            // context.watch<WarehouseInteractionBloc>().state.selectedSearchArea,
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
                         ),
                         Gap(size.width * 0.005),
@@ -302,7 +294,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                         child: Transform.translate(
                           offset: Offset(0, -size.height * 0.005),
                           child: TextField(
-                            controller: _warehouseInteractionBloc.state.searchController,
+                            controller: TextEditingController(text: _warehouseInteractionBloc.state.searchText),
                             onSubmitted: (value) { searchData();},
                             onChanged: (value) {
                               if (value.trim() == "") {

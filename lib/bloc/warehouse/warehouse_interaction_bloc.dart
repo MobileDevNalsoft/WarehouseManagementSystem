@@ -43,10 +43,27 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
     else if(event.dataFromJS.containsKey("bin")){
       searchArea = "Storage";
     }
-    if(!event.dataFromJS["area"].toString().contains("storage")){
-    emit(state.copyWith(dataFromJS: event.dataFromJS,selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));}
-    else{
-      emit(state.copyWith(selectedSearchArea: searchArea??state.selectedSearchArea,searchText: event.clearSearchText==true?"":state.searchText));}
+     
+    final areaContainsStorage = event.dataFromJS["area"].toString().contains("storage");
+    final selectedAreaContainsStorage = state.selectedSearchArea.toLowerCase().contains("storage");
+
+    if (areaContainsStorage && !selectedAreaContainsStorage) {
+      emit(state.copyWith(
+        dataFromJS: {"object": "storagearea"},
+        selectedSearchArea: searchArea ?? state.selectedSearchArea,
+        searchText: event.clearSearchText == false ? state.searchText : "",
+      ));
+    } else if (areaContainsStorage) {
+      emit(state.copyWith(
+        selectedSearchArea: searchArea ?? state.selectedSearchArea,
+      ));
+    } else {
+      emit(state.copyWith(
+        dataFromJS: event.dataFromJS,
+        selectedSearchArea: searchArea ?? state.selectedSearchArea,
+        searchText: event.clearSearchText == false ? state.searchText : "",
+      ));
+    }
   }
   
   void _onModelLoaded(ModelLoaded event, Emitter<WarehouseInteractionState> emit) {

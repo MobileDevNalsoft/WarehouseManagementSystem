@@ -136,14 +136,16 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                     try {
                                       if (consoleMessage.messageLevel.toNativeValue() == 1) {
                                         Map<String, dynamic> message = jsonDecode(consoleMessage.message);
+                                        bool clearSearchText =true;
                                         if (message.containsKey("area")) {
                                           print("console ${message["area"]}");
                                           message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
+                                          clearSearchText=_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll('-', '')!=message["area"];
                                         } else if (message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
                                           context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
                                         }
-                                        _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: true));
-                                        print(_warehouseInteractionBloc.state.dataFromJS);
+                                        _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message,  clearSearchText: clearSearchText));
+                                        
                                         if(message.containsKey("percentComplete")){
                                           print(message['percentComplete']);
                                         }
@@ -282,34 +284,35 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     String objectName,
     String objectValue,
   ) {
+    print("getDataSheetFor ${objectName} ${objectValue}");
     switch (objectName.toLowerCase()) {
       case 'rack':
         return RackDataSheet(
           objectNames: objectNames,
         );
-      case 'bin' || 'storagearea':
+      case 'bin' :
         return BinDataSheet();
-      case 'area':
-        switch (objectValue.toLowerCase().replaceAll("-", "")) {
-          case 'stagingarea':
-            return StagingAreaDataSheet();
-          case 'activityarea':
-            return ActivityAreaDataSheet();
-          case 'receivingarea':
-            return ReceivingAreaDataSheet();
-          case 'inspectionarea':
-            return InspectionAreaDataSheet();
-          case 'dockareain':
-            return DockAreaDataSheet();
-          case 'dockareaout':
-            return DockAreaDataSheet();
-          case 'yardarea':
-            return YardAreaDataSheet();
-          // case 'storagearea':
-          //   return BinD();
-          default:
-            return null;
-        }
+        case 'area':
+          switch (objectValue.toLowerCase().replaceAll("-", "")) {
+            case 'stagingarea':
+              return StagingAreaDataSheet();
+            case 'activityarea':
+              return ActivityAreaDataSheet();
+            case 'receivingarea':
+              return ReceivingAreaDataSheet();
+            case 'inspectionarea':
+              return InspectionAreaDataSheet();
+            case 'dockareain':
+              return DockAreaDataSheet();
+            case 'dockareaout':
+              return DockAreaDataSheet();
+            case 'yardarea':
+              return YardAreaDataSheet();
+            // case 'storagearea':
+            //   return BinD();
+            default:
+              return null;
+          }
     }
     return null;
   }

@@ -31,6 +31,7 @@ class Customs {
               Spacer(),
               InkWell(
                   onTap: () async {
+                    getIt<JsInteropService>().switchToMainCam("");
                     getIt<JsInteropService>().switchToMainCam(
                         await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
                                 "storageArea"
