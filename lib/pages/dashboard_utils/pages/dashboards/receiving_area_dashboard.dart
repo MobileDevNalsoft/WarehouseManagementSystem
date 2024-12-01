@@ -288,7 +288,7 @@ var weekDays = {
                                         barCount: 1,
                                         dataSources: (state.getReceivingDashboardState == ReceivingDashboardState.success)?  [state.receivingDashboardData!.dayWiseInboundSummary!.map((e)=>BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()]:[barData],
                                         yAxisTitle: 'No of ASNs Received',
-                                        barColors: [const Color.fromARGB(255, 248, 190, 15)]);
+                                        barColors: [const Color.fromARGB(255, 187, 157, 68)]);
                                   }
                                 )),
                             Container(
@@ -308,7 +308,7 @@ var weekDays = {
                                       barCount: 1,
                                       dataSources: isEnabled ? [barData1] : [state.receivingDashboardData!.supplierwiseInboundSummary!.sublist(0,7).map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
                                       yAxisTitle: 'No of ASNs Received',
-                                      barColors: [const Color.fromARGB(255, 248, 112, 15)]);
+                                      barColors: [const Color.fromARGB(255, 196, 124, 72)]);
                                 }
                               )),
                           Container(
@@ -330,7 +330,7 @@ var weekDays = {
                                       barCount: 1,
                                       dataSources: [isEnabled ? userReceivingEfficiency : state.receivingDashboardData!.userReceivingEfficiency!.map((e) => BarData(xLabel: e.userName!.split('_')[0], yValue: e.count!, abbreviation: e.userName!),).toList()],
                                       yAxisTitle: 'No of LPNs Received',
-                                      barColors: [const Color.fromARGB(255, 15, 123, 189)]);
+                                      barColors: [const Color.fromARGB(255, 55, 126, 170)]);
                                 }
                               ))
                         ],

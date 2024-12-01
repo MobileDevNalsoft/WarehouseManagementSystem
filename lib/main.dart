@@ -47,7 +47,7 @@ main() async {
       ),
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: getIt<SharedPreferences>().getBool("isLogged")==null||getIt<SharedPreferences>().getBool("isLogged")==false? '/login':'/warehouse',
+        initialRoute: getIt<SharedPreferences>().getBool("isLogged")==null||getIt<SharedPreferences>().getBool("isLogged")==false? '/dashboards':'/warehouse',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
         ),

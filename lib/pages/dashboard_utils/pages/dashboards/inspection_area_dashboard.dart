@@ -274,7 +274,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                     return isEnabled
                             ? Customs.DashboardLoader(lsize: lsize)
                             : Customs.WMSCartesianChart(
-                                        title: 'Day Wise Quality Summary  ',
+                                        title: 'Daywise Quality Summary  ',
                                         barCount: 1,
                                         dataSources: state.getInspectionDashboardState != InspectionDashboardState.success ? [barData] : [state.inspectionDashboardData!.daywiseQualitySummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
                                         yAxisTitle: 'Quality Enabled LPNs',

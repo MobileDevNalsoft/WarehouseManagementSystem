@@ -22,19 +22,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
 
   List<BarData>? dockOUTDayWiseDataSource;
 
-  final List<TimeData> chartData1 = [
-    TimeData('David', 81, const Color.fromARGB(255, 151, 174, 206)),
-    TimeData('sd', 19, Colors.transparent),
-  ];
-
-  final List<TimeData> chartData2 = [
-    TimeData('David', 81, const Color.fromARGB(255, 176, 211, 141)),
-    TimeData('sd', 19, Colors.transparent),
-  ];
-
-  final List<TimeData> chartData3 = [
-    TimeData('David', 81, const Color.fromARGB(255, 196, 141, 204)),
-    TimeData('sd', 19, Colors.transparent),
+  final List<PieData> chartData1 = [
+    PieData(xData: 'David',yData:  81),
+    PieData(xData: 'sd',yData:  19),
   ];
 
   List<PieData>? dockINDataSource;
@@ -87,6 +77,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                     title: "Daywise Utilization",
                                     yAxisTitle: 'Number of Vehicles',
                                     barCount: 2,
+                                    legendVisibility: true,
                                     barColors: [Colors.teal, Colors.greenAccent],
                                     dataSources: [
                                       state.dockDashboardData!.daywiseDockInUtilization!
@@ -117,33 +108,21 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         builder: (context, lsize) {
                           return isEnabled
                                 ? Customs.DashboardLoader(lsize: lsize)
-                                : SfCircularChart(
-                            title: ChartTitle(
-                              text: 'Dock-IN Utilization',
-                              textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold),
-                            ),
-                            legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                            series: <CircularSeries>[
-                              // Renders radial bar chart
-                              DoughnutSeries<PieData, String>(
-                                dataSource: state.dockDashboardData!.dockInUtilization!.map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156))).toList(),
-                                dataLabelSettings: const DataLabelSettings(
-                                    // Renders the data label
-                                    isVisible: true,
-                                    textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                    alignment: ChartAlignment.center),
-                                pointColorMapper: (datum, index) {
-                                  if(index == 1){
-                                    return const Color.fromARGB(255, 102, 82, 156);
-                                  }else{
-                                    return Color.fromARGB(255, 178, 166, 209);
-                                  }
-                                },
-                                xValueMapper: (PieData data, _) => data.xData,
-                                yValueMapper: (PieData data, _) => data.yData,
-                              )
-                            ],
-                          );
+                                : Customs.WMSSfCircularChart(
+                                  title: 'Dock-IN Utilization',
+                                  legendVisibility: true,
+                                  props: Props(
+                                    dataSource: state.dockDashboardData!.dockInUtilization!.map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156))).toList(),
+                                    radius: '${lsize.maxHeight*0.3}%',
+                                    pointColorMapper: (p0, p1) {
+                                      if(p1 == 0){
+                                        return const Color.fromARGB(255, 102, 82, 156);
+                                      }else{
+                                        return Color.fromARGB(255, 178, 166, 209);
+                                      }
+                                    },
+                                  )
+                                );
                         }
                       ),
                     ),
@@ -163,33 +142,21 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         builder: (context, lsize) {
                           return isEnabled
                             ? Customs.DashboardLoader(lsize: lsize)
-                            : SfCircularChart(
-                            title: ChartTitle(
-                              text: 'Dock-OUT Utilization',
-                              textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold),
-                            ),
-                            legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
-                            series: <CircularSeries>[
-                              // Renders radial bar chart
-                              DoughnutSeries<PieData, String>(
-                                dataSource: state.dockDashboardData!.dockOutUtilization!.map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156))).toList(),
-                                dataLabelSettings: const DataLabelSettings(
-                                    // Renders the data label
-                                    isVisible: true,
-                                    textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                    alignment: ChartAlignment.center),
-                                pointColorMapper: (datum, index) {
-                                  if(index == 1){
-                                    return const Color.fromARGB(255, 52, 132, 136);
-                                  }else{
-                                    return const Color.fromARGB(255, 154, 197, 200);
-                                  }
-                                },
-                                xValueMapper: (PieData data, _) => data.xData,
-                                yValueMapper: (PieData data, _) => data.yData,
-                              )
-                            ],
-                          );
+                            : Customs.WMSSfCircularChart(
+                                  title: 'Dock-OUT Utilization',
+                                  legendVisibility: true,
+                                  props: Props(
+                                    dataSource: state.dockDashboardData!.dockOutUtilization!.map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156))).toList(),
+                                    radius: '${lsize.maxHeight*0.3}%',
+                                    pointColorMapper: (p0, p1) {
+                                      if(p1 == 0){
+                                         return const Color.fromARGB(255, 52, 132, 136);
+                                      }else{
+                                        return const Color.fromARGB(255, 154, 197, 200);
+                                      }
+                                    },
+                                  )
+                                );
                         }
                       ),
                     ),
@@ -205,44 +172,25 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                           builder: (context, lsize) {
                             return isEnabled
                                 ? Customs.DashboardLoader(lsize: lsize)
-                                : SfCircularChart(
-                              title: ChartTitle(text: "Avg Loading Time", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
-                              annotations: <CircularChartAnnotation>[
-                                CircularChartAnnotation(
-                                  verticalAlignment: ChartAlignment.center,
-                                  widget: Container(
-                                      height: size.height * 0.12,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.blueGrey.shade100,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade900,
-                                            blurRadius: 10, // Adjust to set shadow direction
-                                          ),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        state.dockDashboardData!.avgLoadingTime!,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: size.height * 0.02,
-                                        ),
-                                      )),
-                                ),
-                              ],
-                              series: <CircularSeries>[
-                                DoughnutSeries<TimeData, String>(
-                                  dataSource: chartData1,
-                                  xValueMapper: (TimeData data, _) => data.x,
-                                  yValueMapper: (TimeData data, _) => data.y,
-                                  radius: '60%', // Adjust the radius as needed
-                                  innerRadius: '40%', // Optional: adjust for a thinner ring
-                                  pointColorMapper: (TimeData data, _) => data.color,
-                                )
-                              ],
-                            );
+                                : Customs.WMSSfCircularChart(
+                                  title: "Avg Loading Time",
+                                  enableAnnotation: true,
+                                  annotationText: state.dockDashboardData!.avgLoadingTime!,
+                                  annotationHeight: lsize.maxHeight*0.3,
+                                  annotationFontSize: lsize.maxHeight*0.055,
+                                  props: Props(
+                                    dataSource: chartData1,
+                                    innerRadius: '${lsize.maxHeight*0.15}%',
+                                    radius: '${lsize.maxHeight*0.3}%',
+                                    pointColorMapper: (p0, p1) {
+                                        if(p1 == 0){
+                                          return const Color.fromARGB(255, 151, 174, 206);
+                                        }else{
+                                          return Colors.white;
+                                        }
+                                    },
+                                  )
+                                );
                           }
                         )),
                   ],
@@ -261,44 +209,25 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                           builder: (context, lsize) {
                             return isEnabled
                             ? Customs.DashboardLoader(lsize: lsize)
-                            : SfCircularChart(
-                              title: ChartTitle(text: "Avg Unloading Time", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
-                              annotations: <CircularChartAnnotation>[
-                                CircularChartAnnotation(
-                                  verticalAlignment: ChartAlignment.center,
-                                  widget: Container(
-                                      height: size.height * 0.12,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.blueGrey.shade100,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade900,
-                                            blurRadius: 10, // Adjust to set shadow direction
-                                          ),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        state.dockDashboardData!.avgUnloadingTime!,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: size.height * 0.02,
-                                        ),
-                                      )),
-                                ),
-                              ],
-                              series: <CircularSeries>[
-                                DoughnutSeries<TimeData, String>(
-                                  dataSource: chartData2,
-                                  xValueMapper: (TimeData data, _) => data.x,
-                                  yValueMapper: (TimeData data, _) => data.y,
-                                  radius: '60%', // Adjust the radius as needed
-                                  innerRadius: '40%', // Optional: adjust for a thinner ring
-                                  pointColorMapper: (TimeData data, _) => data.color,
-                                )
-                              ],
-                            );
+                            : Customs.WMSSfCircularChart(
+                                  title: "Avg Unloading Time",
+                                  enableAnnotation: true,
+                                  annotationText: state.dockDashboardData!.avgUnloadingTime!,
+                                  annotationHeight: lsize.maxHeight*0.3,
+                                  annotationFontSize: lsize.maxHeight*0.055,
+                                  props: Props(
+                                    dataSource: chartData1,
+                                    innerRadius: '${lsize.maxHeight*0.15}%',
+                                    radius: '${lsize.maxHeight*0.3}%',
+                                    pointColorMapper: (p0, p1) {
+                                        if(p1 == 0){
+                                          return const Color.fromARGB(255, 176, 211, 141);
+                                        }else{
+                                          return Colors.white;
+                                        }
+                                    },
+                                  )
+                                );
                           }
                         )),
                     Container(
@@ -313,44 +242,25 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                           builder: (context, lsize) {
                             return isEnabled
                             ? Customs.DashboardLoader(lsize: lsize)
-                            : SfCircularChart(
-                              title: ChartTitle(text: "Avg Dock TAT", textStyle: TextStyle(fontSize: aspectRatio * 6.8, fontWeight: FontWeight.bold)),
-                              annotations: <CircularChartAnnotation>[
-                                CircularChartAnnotation(
-                                  verticalAlignment: ChartAlignment.center,
-                                  widget: Container(
-                                      height: size.height * 0.12,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.blueGrey.shade100,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade900,
-                                            blurRadius: 10, // Adjust to set shadow direction
-                                          ),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        state.dockDashboardData!.avgDockTAT!,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: size.height * 0.02,
-                                        ),
-                                      )),
-                                ),
-                              ],
-                              series: <CircularSeries>[
-                                DoughnutSeries<TimeData, String>(
-                                  dataSource: chartData3,
-                                  xValueMapper: (TimeData data, _) => data.x,
-                                  yValueMapper: (TimeData data, _) => data.y,
-                                  radius: '60%', // Adjust the radius as needed
-                                  innerRadius: '40%', // Optional: adjust for a thinner ring
-                                  pointColorMapper: (TimeData data, _) => data.color,
-                                )
-                              ],
-                            );
+                            : Customs.WMSSfCircularChart(
+                                  title: "Avg Dock TAT",
+                                  enableAnnotation: true,
+                                  annotationText: state.dockDashboardData!.avgDockTAT!,
+                                  annotationHeight: lsize.maxHeight*0.3,
+                                  annotationFontSize: lsize.maxHeight*0.055,
+                                  props: Props(
+                                    dataSource: chartData1,
+                                    innerRadius: '${lsize.maxHeight*0.15}%',
+                                    radius: '${lsize.maxHeight*0.3}%',
+                                    pointColorMapper: (p0, p1) {
+                                        if(p1 == 0){
+                                          return const Color.fromARGB(255, 196, 141, 204);
+                                        }else{
+                                          return Colors.white;
+                                        }
+                                    },
+                                  )
+                                );
                           }
                         )),
                   ],

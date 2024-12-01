@@ -354,7 +354,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                             : Customs.WMSCartesianChart(
                                     title: 'Order Aging',
                                     barCount: 1,
-                                    dataSources: [isEnabled ? orderAgingData : state.stagingDashboardData!.orderAging!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
+                                    dataSources: [state.stagingDashboardData!.orderAging!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
                                     yAxisTitle: 'Aging time',
                                     legendVisibility: false,
                                     barColors: [Colors.deepPurple.shade200]);

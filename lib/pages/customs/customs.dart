@@ -7,6 +7,7 @@ import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:another_flushbar/flushbar.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 
 class Customs {
   static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
@@ -133,8 +134,11 @@ class Customs {
             axisLine: const AxisLine(width: 0),
           ),
           legend: Legend(
-            isVisible: legendVisibility ?? true,
-            alignment: ChartAlignment.near,
+            isVisible: legendVisibility ?? false,
+            alignment: ChartAlignment.center,
+            itemPadding: 0,
+            padding: 0,
+            position: LegendPosition.top,
             legendItemBuilder: (legendText, series, point, seriesIndex) => SizedBox(
               height: constraints.maxHeight * 0.1,
               width: constraints.maxWidth * 0.2,
@@ -227,13 +231,75 @@ class Customs {
         ]);
   }
 
+  static Widget WMSRadialGuage({
+    String title = 'Title',
+    double annotationHeight = 50,
+    String annotationText = 'AText',
+    double annotationFontSize = 16,
+    double radiusFactor = 0.95,
+    double markerValue = 0
+  }){
+    return Gauges.SfRadialGauge(
+                                    title: Gauges.GaugeTitle(
+                                        text: title,
+                                        alignment: Gauges.GaugeAlignment.center,
+                                        textStyle: TextStyle(fontWeight: FontWeight.bold)),
+                                    axes: [
+                                      Gauges.RadialAxis(
+                                        maximum: 100,
+                                        minimum: 0,
+                                        interval: 25,
+                                        canScaleToFit: true,
+                                        annotations: [
+                                          Gauges.GaugeAnnotation(
+                                              verticalAlignment: Gauges.GaugeAlignment.center,
+                                              widget: Container(
+                                                height: annotationHeight,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Colors.blueGrey.shade100,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey.shade900,
+                                                      blurRadius: 10, // Adjust to set shadow direction
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Text(
+                                                  annotationText,
+                                                  style: TextStyle(fontSize: annotationFontSize),
+                                                ),
+                                              ))
+                                        ],
+                                        axisLineStyle: const Gauges.AxisLineStyle(
+                                            thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
+                                        showTicks: false,
+                                        showLabels: false,
+                                        radiusFactor: radiusFactor,
+                                        pointers: [
+                                          Gauges.MarkerPointer(
+                                            value: markerValue,
+                                            markerType: Gauges.MarkerType.invertedTriangle,
+                                            markerHeight: 20,
+                                            markerWidth: 20,
+                                            color: Colors.white,
+                                            enableAnimation: true,
+                                            elevation: 10,
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  );
+  }
+
   static Widget WMSSfCircularChart({
     double height = 100,
     double width = 100,
     String title = 'Title',
     SeriesName series = SeriesName.doughnut,
-    DoughnutProps? doughnutProps,
-    RadialBarProps? radialBarProps,
+    Props? props,
+    bool legendVisibility = false,
     bool enableAnnotation = false,
     String? contentText,
     double annotationHeight = 50,
@@ -242,7 +308,7 @@ class Customs {
   }) {
     return SfCircularChart(
       title: ChartTitle(text: title, textStyle: const TextStyle(fontWeight: FontWeight.bold)),
-      legend: const Legend(isVisible: true, alignment: ChartAlignment.far),
+      legend: Legend(isVisible: legendVisibility, alignment: ChartAlignment.far),
       annotations: enableAnnotation ? <CircularChartAnnotation>[
          CircularChartAnnotation(
           widget: Container(
@@ -269,29 +335,40 @@ class Customs {
       ] : [],
       series: <CircularSeries>[
          series == SeriesName.doughnut ? DoughnutSeries<PieData, String>(
-          dataSource: doughnutProps!.dataSource,
+          dataSource: props!.dataSource,
           xValueMapper: (PieData data, _) => data.xData,
           yValueMapper: (PieData data, _) => data.yData,
           dataLabelSettings: DataLabelSettings(
-            isVisible: enableAnnotation ? false : true
+            isVisible: enableAnnotation ? false : true,
+            textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)
           ),
-          radius: doughnutProps.radius, // Adjust the radius as needed
-          innerRadius: doughnutProps.innerRadius, // Optional: adjust for a thinner ring
-          pointColorMapper: doughnutProps.pointColorMapper,
-        ) : RadialBarSeries<PieData, String>(
-                                          dataSource: radialBarProps!.dataSource,
-                                          maximumValue: radialBarProps.maximumValue,
+          radius: props.radius!, // Adjust the radius as needed
+          innerRadius: props.innerRadius, // Optional: adjust for a thinner ring
+          pointColorMapper: props.pointColorMapper,
+        ) : series == SeriesName.radialBar ? RadialBarSeries<PieData, String>(
+                                          dataSource: props!.dataSource,
+                                          maximumValue: props.maximumValue,
                                           cornerStyle: CornerStyle.bothCurve,
-                                          innerRadius: radialBarProps.innerRadius,
-                                          dataLabelSettings: const DataLabelSettings(
+                                          innerRadius: props.innerRadius,
+                                          dataLabelSettings: DataLabelSettings(
                                               // Renders the data label
                                               isVisible: true,
-                                              textStyle: TextStyle(fontWeight: FontWeight.bold),
+                                              textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: props.labelFontSize),
                                               alignment: ChartAlignment.center),
-                                          pointColorMapper: radialBarProps.pointColorMapper,
+                                          pointColorMapper: props.pointColorMapper,
                                           xValueMapper: (PieData data, _) => data.xData,
                                           yValueMapper: (PieData data, _) => data.yData,
-                                        )
+                                        ) : PieSeries<PieData, String>(
+                                  dataSource: props!.dataSource ,
+                                  dataLabelSettings: DataLabelSettings(
+                                      // Renders the data label
+                                      isVisible: true,
+                                      textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: props.labelFontSize),
+                                      alignment: ChartAlignment.center),
+                                  pointColorMapper: props.pointColorMapper,
+                                  xValueMapper: (PieData data, _) => data.xData,
+                                  yValueMapper: (PieData data, _) => data.yData,
+                                )
       ],
     );
   }
@@ -513,21 +590,16 @@ class DialogTopClipper extends CustomClipper<Path> {
 
 enum SeriesName {
   doughnut,
-  radialBar
+  radialBar,
+  pieSeries
 }
 
-class RadialBarProps {
+class Props {
   List<PieData>? dataSource;
   double? maximumValue;
+  String? radius;
   String innerRadius;
+  double labelFontSize ;
   Color? Function(PieData, int)? pointColorMapper;
-  RadialBarProps({this.dataSource, this.maximumValue, this.innerRadius = '50%', this.pointColorMapper});
-}
-
-class DoughnutProps {
-  List<PieData>? dataSource;
-  String radius;
-  String innerRadius;
-  Color? Function(PieData, int)? pointColorMapper;
-  DoughnutProps({this.dataSource, this.radius = '80%', this.innerRadius = '50%', this.pointColorMapper});
+  Props({this.dataSource, this.maximumValue, this.innerRadius = '50%', this.pointColorMapper, this.radius, this.labelFontSize = 16});
 }

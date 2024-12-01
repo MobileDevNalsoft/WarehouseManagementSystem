@@ -306,7 +306,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                             barCount: 1,
                             dataSources: [isEnabled ? taskdata : state.activityDashboardData!.daywiseTaskSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
                             yAxisTitle: 'Number of Tasks',
-                            barColors: [Color.fromRGBO(9, 0, 136, 0.692)],
+                            barColors: [Color.fromRGBO(78, 72, 161, 0.69)],
                           );
                         }
                       )),
@@ -344,7 +344,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       annotationText: state.activityDashboardData!.avgTaskExecTime!,
                       annotationHeight: lsize.maxHeight*0.3,
                       annotationFontSize: lsize.maxHeight*0.05,
-                      doughnutProps: DoughnutProps( 
+                      props: Props( 
                         dataSource: avgTaskExecutionTime,
                         pointColorMapper: (p0, p1) {
                           if(p1 == 0){
@@ -373,7 +373,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       annotationText: state.activityDashboardData!.avgPickTime!,
                       annotationHeight: lsize.maxHeight*0.3,
                       annotationFontSize: lsize.maxHeight*0.05,
-                      doughnutProps: DoughnutProps(
+                      props: Props(
                         dataSource: avgPickTime,
                         pointColorMapper: (p0, p1) {
                           if(p1 == 0){
@@ -402,15 +402,13 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               builder: (context, lsize) {
                                 return isEnabled
                         ? Customs.DashboardLoader(lsize: lsize)
-                        : WMSCartesianChart(
-                                    title: 'Avg Time Taken by Employee',
-                                    barCount: 1,
-                                    dataSources: [isEnabled ? empTaskdata : selectedEmployees.map((e) { 
-                                      
-                                      // print("$e ${state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test)=>test.status!=e).status}");
-                                      return BarData(xLabel: e.replaceAll('_', ' '), yValue: state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test)=>test.status==e).count!, abbreviation: e);}).toList()],
-                                    yAxisTitle: 'Number of Tasks',
-                                    primaryColor: Color.fromRGBO(147, 0, 120, 0.5));
+                        : Customs.WMSCartesianChart(
+                          title: 'Avg Time Taken by Employee',
+                          barCount: 1,
+                          barColors: [Color.fromRGBO(147, 0, 120, 0.5)],
+                          yAxisTitle: 'Number of Tasks',
+                          dataSources: [selectedEmployees.map((e) => BarData(xLabel: e.replaceAll('_', ' '), yValue: state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test)=>test.status==e).count!, abbreviation: e)).toList()]
+                        );
                               }
                             ),
                           ),

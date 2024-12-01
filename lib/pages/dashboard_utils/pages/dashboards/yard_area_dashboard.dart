@@ -11,160 +11,6 @@ import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dar
 class YardAreaDashboard extends StatefulWidget {
   YardAreaDashboard({super.key});
 
-  static Widget WMSCartesianChart(
-      {String title = "title",
-      int barCount = 1,
-      List<List<BarData>>? dataSources,
-      String yAxisTitle = "title",
-      Color? primaryColor,
-      Color? secondaryColor,
-      List<String>? legendText,
-      bool? isLegendVisible,
-      int? spacing}) {
-    return SfCartesianChart(
-        title: ChartTitle(
-            text: title,
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-            )),
-        legend: isLegendVisible != null
-            ? Legend(alignment: ChartAlignment.near, isVisible: isLegendVisible ?? false, isResponsive: true, position: LegendPosition.bottom)
-            : const Legend(),
-        onLegendItemRender: (legendRenderArgs) {
-          if (legendText != null) {
-            legendRenderArgs.text = legendText[legendRenderArgs.seriesIndex!];
-          }
-        },
-        primaryXAxis: const CategoryAxis(
-          labelStyle: TextStyle(color: Colors.black, fontSize: 16),
-          majorGridLines: MajorGridLines(
-            width: 0,
-          ),
-          majorTickLines: MajorTickLines(width: 0),
-          axisLine: AxisLine(width: 0),
-        ),
-        primaryYAxis: NumericAxis(
-          title: AxisTitle(text: yAxisTitle),
-        ),
-        plotAreaBorderWidth: 0,
-        borderWidth: 0,
-        series: List.generate(
-          barCount,
-          (index) => ColumnSeries<BarData, String>(
-            dataSource: dataSources![index],
-            xValueMapper: (BarData data, _) => data.xLabel,
-            yValueMapper: (BarData data, _) => data.yValue,
-            borderRadius: BorderRadius.circular(10),
-            spacing: 0.1,
-            color: (primaryColor == null && secondaryColor == null)
-                ? Colors.blueAccent
-                : (secondaryColor == null)
-                    ? primaryColor
-                    : index == 0
-                        ? primaryColor
-                        : secondaryColor,
-            dataLabelMapper: (datum, index) => datum.yValue.toString(),
-            dataLabelSettings: DataLabelSettings(
-                isVisible: true,
-                useSeriesColor: true,
-                builder: (data, point, series, pointIndex, seriesIndex) {
-                  return Text(
-                    (data as BarData).yValue.toString(),
-                    style: const TextStyle(color: Colors.black, fontSize: 14),
-                  );
-                }),
-            width: 0.6,
-          ),
-        ));
-  }
-
-  static Widget WMSPieChart({String title = "title", List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper}) {
-    return SfCircularChart(
-        title: ChartTitle(
-            text: title,
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-            )),
-        tooltipBehavior: TooltipBehavior(
-          enable: true,
-        ),
-        legend: const Legend(
-          isVisible: true,
-          alignment: ChartAlignment.near,
-        ),
-        series: <PieSeries<PieData, String>>[
-          PieSeries<PieData, String>(
-            explode: true,
-            explodeIndex: 0,
-            dataSource: dataSource,
-            pointColorMapper: pointColorMapper,
-            xValueMapper: (PieData data, _) => data.xData,
-            yValueMapper: (PieData data, _) => data.yData,
-            dataLabelMapper: (PieData data, _) => data.text,
-            enableTooltip: true,
-            dataLabelSettings: const DataLabelSettings(
-                isVisible: true,
-                labelPosition: ChartDataLabelPosition.outside,
-                textStyle: TextStyle(fontSize: 24),
-                labelAlignment: ChartDataLabelAlignment.top),
-          ),
-        ]);
-  }
-
-  static Widget WMSSfCircularChart(
-      {required List<AnalogChartData> chartData,
-      String? title,
-      String? contentText,
-      required Size size,
-      double? height,
-      double? width,
-      String? radius,
-      Color? textColor}) {
-    return SfCircularChart(
-      title: ChartTitle(text: title ?? "title"),
-      annotations: <CircularChartAnnotation>[
-        CircularChartAnnotation(
-          widget: Container(
-            width: width ?? 100,
-            height: height ?? 160,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: const Color.fromARGB(255, 232, 229, 229),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4), // Adjust to set shadow direction
-                ),
-              ],
-            ),
-          ),
-        ),
-        CircularChartAnnotation(
-          widget: Container(
-            child: Text(
-              contentText ?? "chart",
-              style: TextStyle(
-                color: textColor ?? const Color.fromARGB(255, 101, 10, 10),
-                fontSize: 25,
-              ),
-            ),
-          ),
-        ),
-      ],
-      series: <CircularSeries>[
-        DoughnutSeries<AnalogChartData, String>(
-          dataSource: chartData,
-          xValueMapper: (AnalogChartData data, _) => data.x,
-          yValueMapper: (AnalogChartData data, _) => data.y,
-          radius: radius ?? '50%', // Adjust the radius as needed
-          innerRadius: '20%', // Optional: adjust for a thinner ring
-          pointColorMapper: (AnalogChartData data, _) => data.color,
-        )
-      ],
-    );
-  }
-
   @override
   State<YardAreaDashboard> createState() => _YardAreaDashboardState();
 }
@@ -301,30 +147,22 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                         builder: (context, lsize) {
                           return isEnabled
                             ? Customs.DashboardLoader(lsize: lsize)
-                            : YardAreaDashboard.WMSCartesianChart(
+                            : Customs.WMSCartesianChart(
                               title: 'Daywise Yard Utilization',
-                              primaryColor: const Color.fromARGB(255, 231, 142, 247),
-                              secondaryColor: const Color.fromARGB(255, 194, 162, 103),
                               barCount: 2,
-                              isLegendVisible: true,
-                              legendText: ["Loading", "Unloading"],
-                              dataSources: [
-                                isEnabled
-                                    ? []
-                                    : state.yardDashboardData!.dayWiseYardUtilzation!
+                              barColors: [const Color.fromARGB(255, 231, 142, 247), const Color.fromARGB(255, 194, 162, 103)],
+                              legendVisibility: true,
+                              yAxisTitle: 'Number of Vehicles',
+                              dataSources: [state.yardDashboardData!.dayWiseYardUtilzation!
                                         .map(
                                           (e) => BarData(xLabel: e.checkInDate!, yValue: e.loadingCnt!, abbreviation: e.checkInDate!),
                                         )
-                                        .toList(),
-                                isEnabled
-                                    ? []
-                                    : state.yardDashboardData!.dayWiseYardUtilzation!
+                                        .toList(), state.yardDashboardData!.dayWiseYardUtilzation!
                                         .map(
                                           (e) => BarData(xLabel: e.checkInDate!, yValue: e.unloadingCnt!, abbreviation: e.checkInDate!),
                                         )
-                                        .toList()
-                              ],
-                              yAxisTitle: 'Number of Vehicles');
+                                        .toList()]
+                            );
                         }
                       )),
                 ],
@@ -343,38 +181,25 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                         builder: (context, lsize) {
                           return isEnabled
                             ? Customs.DashboardLoader(lsize: lsize)
-                            : SfCircularChart(
-                              title: ChartTitle(text: "Previous month yard acitvity", textStyle: TextStyle(fontWeight: FontWeight.bold)),
-                              legend: Legend(isResponsive: true, isVisible: true),
-                              series: <CircularSeries>[
-                                // Renders radial bar chart
-                                RadialBarSeries<ChartData, String>(
-                                  dataSource: isEnabled
-                                      ? []
-                                      : [
-                                          ChartData('Loading', state.yardDashboardData!.previousMonthYardUtilization!.loadingCount!.toDouble()),
-                                          ChartData('Unloading', state.yardDashboardData!.previousMonthYardUtilization!.unloadingCount!.toDouble()),
+                            : Customs.WMSSfCircularChart(
+                              title: "Previous month yard acitvity",
+                              series: SeriesName.radialBar,
+                              props: Props(
+                                dataSource: [
+                                          PieData(xData: 'Loading',yData: state.yardDashboardData!.previousMonthYardUtilization!.loadingCount!.toDouble()),
+                                          PieData(xData: 'Unloading',yData: state.yardDashboardData!.previousMonthYardUtilization!.unloadingCount!.toDouble()),
                                         ],
-                                  cornerStyle: CornerStyle.bothCurve,
-                                  innerRadius: "45%",
-                                  dataLabelSettings: DataLabelSettings(
-                                      // Renders the data label
-                                            
-                                      isVisible: true,
-                                      textStyle: TextStyle(fontWeight: FontWeight.bold),
-                                      alignment: ChartAlignment.near),
-                                  name: "Loading and Unloading Count",
-                                  pointColorMapper: (datum, index) {
-                                    if (datum.x == "Loading") {
+                                innerRadius: '30%',
+                                labelFontSize: lsize.maxHeight*0.04,
+                                pointColorMapper: (p0, p1) {
+                                  if (p1 == 0) {
                                       return Color.fromRGBO(132, 211, 86, 1);
                                     } else {
                                       return const Color.fromARGB(255, 215, 221, 124);
                                     }
-                                  },
-                                  xValueMapper: (ChartData data, _) => data.x,
-                                  yValueMapper: (ChartData data, _) => data.y,
-                                )
-                              ]);
+                                },
+                              )
+                            );
                         }
                       ))
                 ],
