@@ -26,6 +26,12 @@ class _SidebarState extends State<Sidebar> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    double aspectRatio;
+    if(size.height > size.width){
+      aspectRatio = size.height/size.width;
+    }else{
+      aspectRatio = size.width/size.height;
+    }
     return SafeArea(
       child: Container(
         width: size.width*0.2,
@@ -61,7 +67,7 @@ class _SidebarState extends State<Sidebar> {
                           color: index == state.index ? Colors.white : Color.fromRGBO(12, 46, 87, 1),
                           borderRadius: const BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
                         ),
-                        child: Text(dashboardTitles[index], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: index == state.index ? Colors.black : Colors.white),),
+                        child: Text(dashboardTitles[index], style: TextStyle(fontSize: aspectRatio*9, fontWeight: FontWeight.w500, color: index == state.index ? Colors.black : Colors.white),),
                       ),
                     ),)
                   );

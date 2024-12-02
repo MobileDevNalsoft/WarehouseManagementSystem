@@ -20,66 +20,6 @@ class ReceivingAreaDashboard extends StatefulWidget {
 }
 
 class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
-  // Define lists for job card statuses and their corresponding values (replace with actual data)
-
-  
-  List<BarData> barData = [
-    BarData(xLabel: 'Mon', yValue: 10, abbreviation: 'Monday'),
-    BarData(xLabel: 'Tue', yValue: 4, abbreviation: 'Tuesday'),
-    BarData(xLabel: 'Wed', yValue: 6, abbreviation: 'Wednesday'),
-    BarData(xLabel: 'Thu', yValue: 3, abbreviation: 'Thursday'),
-    BarData(xLabel: 'Fri', yValue: 20, abbreviation: 'Friday'),
-    BarData(xLabel: 'Sat', yValue: 2, abbreviation: 'Saturday'),
-    BarData(xLabel: 'Sun', yValue: 2, abbreviation: 'Sunday')
-  ];
-
-  List<BarData> barData1 = [
-    BarData(xLabel: 'Oracle', yValue: 10, abbreviation: 'Monday'),
-    BarData(xLabel: 'Nalsoft', yValue: 4, abbreviation: 'Tuesday'),
-    BarData(xLabel: 'ABC', yValue: 6, abbreviation: 'Wednesday'),
-  ];
-
-  List<BarData> userReceivingEfficiency = [
-    BarData(xLabel: 'Mon', yValue: 4, abbreviation: 'Monday'),
-    BarData(xLabel: 'Tue', yValue: 6, abbreviation: 'Tuesday'),
-    BarData(xLabel: 'Wed', yValue: 9, abbreviation: 'Wednesday'),
-    BarData(xLabel: 'Thu', yValue: 5, abbreviation: 'Thursday'),
-    BarData(xLabel: 'Fri', yValue: 18, abbreviation: 'Friday'),
-    BarData(xLabel: 'Sat', yValue: 12, abbreviation: 'Saturday'),
-    BarData(xLabel: 'Sun', yValue: 9, abbreviation: 'Sunday')
-  ];
-
-  // Define lists for job card statuses and their corresponding values (replace with actual data)
-  List<BarData> inBoundData = [
-    BarData(xLabel: 'Mon', yValue: 4, abbreviation: 'Monday'),
-    BarData(xLabel: 'Tue', yValue: 6, abbreviation: 'Tuesday'),
-    BarData(xLabel: 'Wed', yValue: 9, abbreviation: 'Wednesday'),
-    BarData(xLabel: 'Thu', yValue: 5, abbreviation: 'Thursday'),
-    BarData(xLabel: 'Fri', yValue: 18, abbreviation: 'Friday'),
-    BarData(xLabel: 'Sat', yValue: 12, abbreviation: 'Saturday'),
-    BarData(xLabel: 'Sun', yValue: 9, abbreviation: 'Sunday')
-  ];
-
-  // Define lists for job card statuses and their corresponding values (replace with actual data)
-  List<BarData> outBoundData = [
-    BarData(xLabel: 'Mon', yValue: 6, abbreviation: 'Monday'),
-    BarData(xLabel: 'Tue', yValue: 8, abbreviation: 'Tuesday'),
-    BarData(xLabel: 'Wed', yValue: 15, abbreviation: 'Wednesday'),
-    BarData(xLabel: 'Thu', yValue: 7, abbreviation: 'Thursday'),
-    BarData(xLabel: 'Fri', yValue: 20, abbreviation: 'Friday'),
-    BarData(xLabel: 'Sat', yValue: 10, abbreviation: 'Saturday'),
-    BarData(xLabel: 'Sun', yValue: 2, abbreviation: 'Sunday')
-  ];
-
-var weekDays = {
-1:'Mon',
-2:'Tue',
-3:'Wed',
-4:'Thu',
-5:'Fri',
-6:'Sat',
-7:'Sun',
-};
   late DashboardsBloc _dashboardsBloc;
 
   @override
@@ -93,13 +33,9 @@ var weekDays = {
 
   @override
   Widget build(BuildContext context) {
-    final List<ChartData> chartData = [
-      ChartData('David', 69, const Color.fromARGB(255, 94, 90, 158)),
-      ChartData('sd', 31, Colors.transparent),
-    ];
-    final List<ChartData> chartData1 = [
-      ChartData('David', 81, const Color.fromARGB(255, 160, 90, 90)),
-      ChartData('sd', 19, Colors.transparent),
+    final List<PieData> chartData = [
+      PieData(xData: 'David', yData: 69),
+      PieData(xData: 'sd', yData: 31),
     ];
 
     Size size = MediaQuery.of(context).size;
@@ -132,406 +68,210 @@ var weekDays = {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                              child: LayoutBuilder(
-                                builder: (context, lsize) {
-                                  return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSPieChart(
-                                      title: "Total ASN Status",
-                                      legendVisibility: true,
-                                      dataSource: state.receivingDashboardData!.todayAsnStatus!.map((e) => PieData(xData: e.status!, yData: e.count!, text:  e.count!.toString())).toList(),
-                                      pointColorMapper: (datum, index) {
-                                        if (index == 0) {
+                          Customs.DashboardWidget(
+                              size: Size(size.width * 0.25, size.height * 0.45),
+                              margin: aspectRatio * 10,
+                              loaderEnabled: isEnabled,
+                              chartBuilder: (ratio) {
+                                return Customs.WMSSfCircularChart(
+                                    ratio: ratio,
+                                    title: "Total ASN Status",
+                                    titleFontSize: ratio*13,
+                                    legendVisibility: true,
+                                    series: SeriesName.pieSeries,
+                                    props: Props(
+                                      dataSource: state.receivingDashboardData!.todayAsnStatus!
+                                          .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
+                                          .toList(),
+                                      radius: '${ratio * 55}%',
+                                      pointColorMapper: (p0, p1) {
+                                        if (p1 == 0) {
                                           return const Color.fromARGB(255, 27, 219, 219);
-                                        } else if (index == 1) {
+                                        } else if (p1 == 1) {
                                           return const Color.fromARGB(255, 57, 33, 0);
-                                        } else if (index == 2) {
+                                        } else if (p1 == 2) {
                                           return const Color.fromARGB(255, 38, 82, 113);
                                         } else {
                                           return const Color.fromARGB(255, 241, 114, 41);
                                         }
-                                      });
-                                }
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                              child: LayoutBuilder(
-                                builder: (context, lsize) {
-                                  return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSPieChart(
-                                      title: "Today Inbound Summary",
-                                      legendVisibility: true,
-                                      dataSource: state.getReceivingDashboardState != ReceivingDashboardState.success
-                                          ? [
-                                              PieData(xData: "Open", yData: 16, text: "16"),
-                                              PieData(xData: "In Receiving", yData: 4, text: "4"),
-                                              PieData(xData: "Received", yData: 5, text: "5")
-                                            ]
-                                          : state.receivingDashboardData!.totalInBoundSummary!
-                                              .map((e) => PieData(xData: e.status!, yData: e.total!, text: e.total!.toString()))
-                                              .toList(),
-                                      pointColorMapper: (datum, index) {
-                                        if (index == 0) {
+                                      },
+                                    ));
+                              }),
+                          Customs.DashboardWidget(
+                              size: Size(size.width * 0.25, size.height * 0.45),
+                              margin: aspectRatio * 10,
+                              loaderEnabled: isEnabled,
+                              chartBuilder: (ratio) {
+                                return Customs.WMSSfCircularChart(
+                                    ratio: ratio,
+                                    title: "Today Inbound Summary",
+                                    titleFontSize: ratio*13,
+                                    legendVisibility: true,
+                                    series: SeriesName.pieSeries,
+                                    props: Props(
+                                      dataSource: state.receivingDashboardData!.totalInBoundSummary!
+                                          .map((e) => PieData(xData: e.status!, yData: e.total!, text: e.total!.toString()))
+                                          .toList(),
+                                      radius: '${ratio * 55}%',
+                                      pointColorMapper: (p0, p1) {
+                                        if (p1 == 0) {
                                           return const Color.fromARGB(255, 219, 165, 27);
-                                        } else if (index == 1) {
+                                        } else if (p1 == 1) {
                                           return const Color.fromARGB(255, 163, 96, 2);
                                         } else {
                                           return const Color.fromARGB(255, 52, 129, 228);
                                         }
-                                      });
-                                }
-                              )),
-                          Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                              child: LayoutBuilder(
-                                builder: (context, lsize) {
-                                  return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Gauges.SfRadialGauge(
-                                    title: Gauges.GaugeTitle(
-                                        text: "Putaway Accuracy",
-                                        alignment: Gauges.GaugeAlignment.center,
-                                        textStyle: TextStyle(fontSize: aspectRatio * 9, fontWeight: FontWeight.bold)),
-                                    axes: [
-                                      Gauges.RadialAxis(
-                                        maximum: 100,
-                                        minimum: 0,
-                                        interval: 25,
-                                        canScaleToFit: true,
-                                        annotations: [
-                                          Gauges.GaugeAnnotation(
-                                              verticalAlignment: Gauges.GaugeAlignment.center,
-                                              widget: Container(
-                                                height: size.height * 0.12,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.blueGrey.shade100,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey.shade900,
-                                                      blurRadius: 10, // Adjust to set shadow direction
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Text(
-                                                  isEnabled ? "90%" : '${state.receivingDashboardData!.putawayAccuracy!}%',
-                                                  style: TextStyle(fontSize: aspectRatio * 10),
-                                                ),
-                                              ))
-                                        ],
-                                        axisLineStyle: const Gauges.AxisLineStyle(
-                                            thickness: 35, color: Color.fromARGB(255, 86, 185, 152), cornerStyle: Gauges.CornerStyle.bothCurve),
-                                        showTicks: false,
-                                        showLabels: false,
-                                        radiusFactor: aspectRatio * 0.3,
-                                        pointers: [
-                                          Gauges.MarkerPointer(
-                                            value: isEnabled ? 0 : state.receivingDashboardData!.putawayAccuracy!+3,
-                                            markerType: Gauges.MarkerType.invertedTriangle,
-                                            markerHeight: 20,
-                                            markerWidth: 20,
-                                            color: Colors.white,
-                                            enableAnimation: true,
-                                            elevation: 10,
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  );
-                                }
-                              )),
+                                      },
+                                    ));
+                              }),
+                          Customs.DashboardWidget(
+                              size: Size(size.width * 0.25, size.height * 0.45),
+                              margin: aspectRatio * 12,
+                              loaderEnabled: isEnabled,
+                              chartBuilder: (ratio) {
+                                return Customs.WMSRadialGuage(
+                                    title: "Putaway Accuracy",
+                                    titleFontSize: ratio*16,
+                                    annotationHeight: ratio * 120,
+                                    axisLineColor: Color.fromARGB(255, 86, 185, 152),
+                                    annotationText: '${state.receivingDashboardData!.putawayAccuracy!}%',
+                                    annotationFontSize: ratio * 12,
+                                    radiusFactor: ratio * 0.55,
+                                    markerValue: state.receivingDashboardData!.putawayAccuracy!);
+                              }),
                         ],
                       ),
-                      Gap(constraints.maxHeight * 0.05),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                                child: LayoutBuilder(
-                                  builder: (context, lsize) {
-                                    return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSCartesianChart(
-                                        title: 'Day Wise Inbound Summary  ',
-                                        barCount: 1,
-                                        dataSources: (state.getReceivingDashboardState == ReceivingDashboardState.success)?  [state.receivingDashboardData!.dayWiseInboundSummary!.map((e)=>BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()]:[barData],
-                                        yAxisTitle: 'No of ASNs Received',
-                                        barColors: [const Color.fromARGB(255, 187, 157, 68)]);
-                                  }
+                          Customs.DashboardWidget(
+                              size: Size(size.width * 0.25, size.height * 0.45),
+                              margin: aspectRatio * 10,
+                              loaderEnabled: isEnabled,
+                              chartBuilder: (ratio) {
+                                return Customs.WMSCartesianChart(
+                                    title: 'Daywise Inbound Summary',
+                                    titleFontSize: ratio*13,
+                                    xlabelFontSize: ratio * 10,
+                                    ylabelFontSize: ratio * 10,
+                                    ytitleFontSize: ratio * 12,
+                                    barCount: 1,
+                                    dataSources: [
+                                      state.receivingDashboardData!.dayWiseInboundSummary!
+                                          .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+                                          .toList()
+                                    ],
+                                    yAxisTitle: 'No of ASNs Received',
+                                    legendVisibility: false,
+                                    barColors: [const Color.fromARGB(255, 187, 157, 68)]);
+                              }),
+                          Customs.DashboardWidget(
+                              size: Size(size.width * 0.25, size.height * 0.45),
+                              margin: aspectRatio * 10,
+                              loaderEnabled: isEnabled,
+                              chartBuilder: (ratio) {
+                                return Customs.WMSCartesianChart(
+                                    title: 'Supplier Wise Inbound Summary',
+                                    titleFontSize: ratio*13,
+                                    xlabelFontSize: ratio * 10,
+                                    ylabelFontSize: ratio * 10,
+                                    ytitleFontSize: ratio * 12,
+                                    barCount: 1,
+                                    dataSources: [
+                                      state.receivingDashboardData!.supplierwiseInboundSummary!
+                                          .sublist(0, 7)
+                                          .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+                                          .toList()
+                                    ],
+                                    yAxisTitle: 'No of ASNs Received',
+                                    legendVisibility: false,
+                                    barColors: [const Color.fromARGB(255, 196, 124, 72)]);
+                              }),
+                          Customs.DashboardWidget(
+                              size: Size(size.width * 0.25, size.height * 0.45),
+                              margin: aspectRatio * 10,
+                              loaderEnabled: isEnabled,
+                              chartBuilder: (ratio) {
+                                return Customs.WMSCartesianChart(
+                                    title: 'User Receiving Efficiency',
+                                    titleFontSize: ratio*13,
+                                    xlabelFontSize: ratio * 10,
+                                    ylabelFontSize: ratio * 10,
+                                    ytitleFontSize: ratio * 12,
+                                    barCount: 1,
+                                    dataSources: [
+                                      state.receivingDashboardData!.userReceivingEfficiency!
+                                          .map(
+                                            (e) => BarData(xLabel: e.userName!.split('_')[0], yValue: e.count!, abbreviation: e.userName!),
+                                          )
+                                          .toList()
+                                    ],
+                                    yAxisTitle: 'No of LPNs Received',
+                                    legendVisibility: false,
+                                    barColors: [const Color.fromARGB(255, 55, 126, 170)]);
+                              }),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Customs.DashboardWidget(
+                            size: Size(size.width * 0.25, size.height * 0.45),
+                            margin: aspectRatio * 10,
+                            loaderEnabled: isEnabled,
+                            chartBuilder: (ratio) => Customs.WMSSfCircularChart(
+                                ratio: ratio,
+                                title: "Avg Receiving Time",
+                                titleFontSize: ratio*13,
+                                enableAnnotation: true,
+                                annotationText: state.receivingDashboardData!.avgReceivingTime!,
+                                props: Props(
+                                  dataSource: chartData,
+                                  pointColorMapper: (p0, p1) {
+                                    if (p1 == 0) {
+                                      return const Color.fromARGB(255, 94, 90, 158);
+                                    } else {
+                                      return Colors.transparent;
+                                    }
+                                  },
                                 )),
-                            Container(
-                                margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                              child: LayoutBuilder(
-                                builder: (context, lsize) {
-                                  return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSCartesianChart(
-                                      title: 'Supplier Wise Inbound Summary  ',
-                                      barCount: 1,
-                                      dataSources: isEnabled ? [barData1] : [state.receivingDashboardData!.supplierwiseInboundSummary!.sublist(0,7).map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
-                                      yAxisTitle: 'No of ASNs Received',
-                                      barColors: [const Color.fromARGB(255, 196, 124, 72)]);
-                                }
-                              )),
-                          Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                              child: LayoutBuilder(
-                                builder: (context, lsize) {
-                                  return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSCartesianChart(
-                                      title: 'User Receiving Efficiency  ',
-                                      barCount: 1,
-                                      dataSources: [isEnabled ? userReceivingEfficiency : state.receivingDashboardData!.userReceivingEfficiency!.map((e) => BarData(xLabel: e.userName!.split('_')[0], yValue: e.count!, abbreviation: e.userName!),).toList()],
-                                      yAxisTitle: 'No of LPNs Received',
-                                      barColors: [const Color.fromARGB(255, 55, 126, 170)]);
-                                }
-                              ))
-                        ],
-                      ),
-                      Gap(constraints.maxHeight * 0.05),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                              child: LayoutBuilder(
-                                builder: (context, lsize) {
-                                  return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : SfCircularChart(
-                                    title: const ChartTitle(
-                                        text: "Avg Receiving Time",
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                    annotations: <CircularChartAnnotation>[
-                                      CircularChartAnnotation(
-                                        widget: Container(
-                                          width: 100, // Set the size of the shadowed circle
-                                          height: 100,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: const Color.fromARGB(255, 232, 229, 229),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(0.3),
-                                                blurRadius: 10,
-                                                offset: const Offset(0, 4), // Adjust to set shadow direction
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      CircularChartAnnotation(
-                                        widget: Container(
-                                          child: Text(
-                                            state.receivingDashboardData!.avgReceivingTime!,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 25,
-                                            ),
-                                          ),
-                                        )),
-                                      ],
-                                      series: <CircularSeries>[
-                                        DoughnutSeries<ChartData, String>(
-                                          dataSource: chartData,
-                                          xValueMapper: (ChartData data, _) => data.x,
-                                          yValueMapper: (ChartData data, _) => data.y,
-                                          radius: '60%', // Adjust the radius as needed
-                                          innerRadius: '40%', // Optional: adjust for a thinner ring
-                                          pointColorMapper: (ChartData data, _) => data.color,
-                                        )
-                                      ],
-                                    );
-                                }
-                              )),
-                          Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                              child: LayoutBuilder(
-                                builder: (context, lsize) {
-                                  return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Gauges.SfRadialGauge(
-                                    title: Gauges.GaugeTitle(
-                                        text: "Receiving Efficiency",
-                                        alignment: Gauges.GaugeAlignment.center,
-                                        textStyle: TextStyle(fontSize: aspectRatio * 9, fontWeight: FontWeight.bold)),
-                                    axes: [
-                                      Gauges.RadialAxis(
-                                        maximum: 100,
-                                        minimum: 0,
-                                        interval: 25,
-                                        canScaleToFit: true,
-                                        annotations: [
-                                          Gauges.GaugeAnnotation(
-                                              verticalAlignment: Gauges.GaugeAlignment.center,
-                                              widget: Container(
-                                                height: size.height * 0.12,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.blueGrey.shade100,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey.shade900,
-                                                      blurRadius: 10, // Adjust to set shadow direction
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Text(
-                                                  isEnabled ? "90%" : '${state.receivingDashboardData!.receivingEfficiency!}%',
-                                                  style: TextStyle(fontSize: aspectRatio * 10),
-                                                ),
-                                              ))
-                                        ],
-                                        axisLineStyle: const Gauges.AxisLineStyle(
-                                            thickness: 35, color: Color.fromARGB(255, 86, 185, 180), cornerStyle: Gauges.CornerStyle.bothCurve),
-                                        showTicks: false,
-                                        showLabels: false,
-                                        radiusFactor: aspectRatio * 0.3,
-                                        pointers: [
-                                          Gauges.MarkerPointer(
-                                            value: state.receivingDashboardData!.receivingEfficiency!+3,
-                                            markerType: Gauges.MarkerType.invertedTriangle,
-                                            markerHeight: 20,
-                                            markerWidth: 20,
-                                            color: Colors.white,
-                                            enableAnimation: true,
-                                            elevation: 10,
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  );
-                                }
-                              )),
-                          Container(
-                              margin: EdgeInsets.all(constraints.maxWidth / constraints.maxHeight * 8),
-                              height: constraints.maxHeight * 0.48,
-                              width: constraints.maxWidth * 0.3,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                              padding: EdgeInsets.all(size.height * 0.035),
-                              alignment: Alignment.center,
-                              child: LayoutBuilder(
-                                builder: (context, lsize) {
-                                  return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : SfCircularChart(
-                                    title: const ChartTitle(
-                                        text: "Avg PutAway Time",
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                    annotations: <CircularChartAnnotation>[
-                                      CircularChartAnnotation(
-                                        widget: Container(
-                                          width: 100, // Set the size of the shadowed circle
-                                          height: 100,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: const Color.fromARGB(255, 232, 229, 229),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(0.3),
-                                                blurRadius: 10,
-                                                offset: const Offset(0, 4), // Adjust to set shadow direction
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      CircularChartAnnotation(
-                                        widget: Container(
-                                          child: Text(
-                                            state.receivingDashboardData!.avgPutawayTime!,
-                                            style: TextStyle(
-                                              color: Color.fromARGB(255, 20, 21, 22),
-                                              fontSize: 25,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                    series: <CircularSeries>[
-                                      DoughnutSeries<ChartData, String>(
-                                        dataSource: chartData1,
-                                        xValueMapper: (ChartData data, _) => data.x,
-                                        yValueMapper: (ChartData data, _) => data.y,
-                                        radius: '60%', // Adjust the radius as needed
-                                        innerRadius: '40%', // Optional: adjust for a thinner ring
-                                        pointColorMapper: (ChartData data, _) => data.color,
-                                      )
-                                    ],
-                                  );
-                                }
-                              )),
+                          ),
+                          Customs.DashboardWidget(
+                              size: Size(size.width * 0.25, size.height * 0.45),
+                              margin: aspectRatio * 12,
+                              loaderEnabled: isEnabled,
+                              chartBuilder: (ratio) {
+                                return Customs.WMSRadialGuage(
+                                    title: "Receiving Efficiency",
+                                    titleFontSize: ratio*16,
+                                    annotationHeight: ratio * 120,
+                                    axisLineColor: Color.fromARGB(255, 86, 185, 180),
+                                    annotationText: '${state.receivingDashboardData!.receivingEfficiency!}%',
+                                    annotationFontSize: ratio * 12,
+                                    radiusFactor: ratio * 0.55,
+                                    markerValue: state.receivingDashboardData!.receivingEfficiency!);
+                              }),
+                          Customs.DashboardWidget(
+                            size: Size(size.width * 0.25, size.height * 0.45),
+                            margin: aspectRatio * 10,
+                            loaderEnabled: isEnabled,
+                            chartBuilder: (ratio) => Customs.WMSSfCircularChart(
+                                ratio: ratio,
+                                title: "Avg PutAway Time",
+                                titleFontSize: ratio*13,
+                                enableAnnotation: true,
+                                annotationText: state.receivingDashboardData!.avgPutawayTime!,
+                                props: Props(
+                                  dataSource: chartData,
+                                  pointColorMapper: (p0, p1) {
+                                    if (p1 == 0) {
+                                      return const Color.fromARGB(255, 160, 90, 90);
+                                    } else {
+                                      return Colors.transparent;
+                                    }
+                                  },
+                                )),
+                          )
                         ],
                       ),
                     ],
@@ -544,11 +284,4 @@ var weekDays = {
       );
     });
   }
-}
-
-class ChartData {
-  ChartData(this.x, this.y, this.color);
-  final String x;
-  final double y;
-  final Color color;
 }

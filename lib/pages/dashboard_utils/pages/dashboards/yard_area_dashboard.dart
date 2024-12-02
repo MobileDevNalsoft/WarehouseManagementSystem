@@ -59,149 +59,123 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                      ? Customs.DashboardLoader(lsize: lsize)
-                      : Customs.WMSCartesianChart(
-                              title: 'Vehicle Detention',
-                              barCount: 1,
-                              barColors: [Color.fromRGBO(132, 142, 230, 1)],
-                              dataSources: [
-                                [
-                                  BarData(
-                                      xLabel: '<1 day',
-                                      yValue: isEnabled ? 10 : state.yardDashboardData!.yardDetention!.singleDayCount!.toInt(),
-                                      abbreviation: '<1 day'),
-                                  BarData(
-                                      xLabel: '1-7 days',
-                                      yValue: isEnabled ? 6 : state.yardDashboardData!.yardDetention!.count1To7Days!.toInt(),
-                                      abbreviation: '1-7 days'),
-                                  BarData(
-                                      xLabel: '>7 days',
-                                      yValue: isEnabled ? 20 : state.yardDashboardData!.yardDetention!.countGreaterThan7Days!.toInt(),
-                                      abbreviation: '>7 days'),
-                                ]
-                              ],
-                              yAxisTitle: 'Number of Vehicles',
-                              legendVisibility: false);
-                        }
-                      )),
-                  Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSPieChart(
-                            title: 'Yard Utilization',
-                            dataSource: [
-                              PieData(
-                                  xData: "Available Locations",
-                                  yData: isEnabled
-                                      ? 10
-                                      : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!),
-                                  text: isEnabled
-                                      ? 'String'
-                                      : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!)
-                                          .toString()),
-                              PieData(
-                                  xData: "Occupied",
-                                  yData: isEnabled ? 20 : state.yardDashboardData!.yardUtilization!.occupied!,
-                                  text: isEnabled ? 'String' : (state.yardDashboardData!.yardUtilization!.occupied!).toString())
+                  Customs.DashboardWidget(
+                      size: Size(size.width * 0.25, size.height * 0.45),
+                      margin: aspectRatio * 10,
+                      loaderEnabled: isEnabled,
+                      chartBuilder: (ratio) {
+                        return Customs.WMSCartesianChart(
+                            title: 'Vehicle Detention',
+                            titleFontSize: ratio*13,
+                            xlabelFontSize: ratio * 10,
+                            ylabelFontSize: ratio * 10,
+                            ytitleFontSize: ratio * 12,
+                            barCount: 1,
+                            barColors: [Color.fromRGBO(132, 142, 230, 1)],
+                            dataSources: [
+                              [
+                                BarData(
+                                    xLabel: '<1 day',
+                                    yValue: isEnabled ? 10 : state.yardDashboardData!.yardDetention!.singleDayCount!.toInt(),
+                                    abbreviation: '<1 day'),
+                                BarData(
+                                    xLabel: '1-7 days',
+                                    yValue: isEnabled ? 6 : state.yardDashboardData!.yardDetention!.count1To7Days!.toInt(),
+                                    abbreviation: '1-7 days'),
+                                BarData(
+                                    xLabel: '>7 days',
+                                    yValue: isEnabled ? 20 : state.yardDashboardData!.yardDetention!.countGreaterThan7Days!.toInt(),
+                                    abbreviation: '>7 days'),
+                              ]
                             ],
+                            yAxisTitle: 'Number of Vehicles',
+                            legendVisibility: false);
+                      }),
+                  Customs.DashboardWidget(
+                      size: Size(size.width * 0.25, size.height * 0.45),
+                      margin: aspectRatio * 10,
+                      loaderEnabled: isEnabled,
+                      chartBuilder: (ratio) {
+                        return Customs.WMSSfCircularChart(
+                          ratio: ratio,
+                          series: SeriesName.pieSeries,
+                          title: 'Yard Utilization',
+                          titleFontSize: ratio*13,
+                          legendVisibility: true,
+                          props: Props(dataSource: [
+                            PieData(
+                                xData: "Available Locations",
+                                yData: isEnabled
+                                    ? 10
+                                    : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!),
+                                text: isEnabled
+                                    ? 'String'
+                                    : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!)
+                                        .toString()),
+                            PieData(
+                                xData: "Occupied",
+                                yData: isEnabled ? 20 : state.yardDashboardData!.yardUtilization!.occupied!,
+                                text: isEnabled ? 'String' : (state.yardDashboardData!.yardUtilization!.occupied!).toString())
+                          ], radius: '${ratio * 70}%', labelFontSize: ratio * 10),
+                        );
+                      }),
+                  Customs.DashboardWidget(
+                      size: Size(size.width * 0.25, size.height * 0.45),
+                      margin: aspectRatio * 10,
+                      loaderEnabled: isEnabled,
+                      chartBuilder: (ratio) {
+                        return Customs.WMSCartesianChart(
+                            title: 'Daywise Yard Utilization',
+                            titleFontSize: ratio*13,
+                            xlabelFontSize: ratio * 10,
+                            ylabelFontSize: ratio * 10,
+                            ytitleFontSize: ratio * 12,
+                            barCount: 2,
+                            barColors: [const Color.fromARGB(255, 231, 142, 247), const Color.fromARGB(255, 194, 162, 103)],
                             legendVisibility: true,
-                            pointColorMapper: (piedata, index) {
-                              if (index == 0) {
-                                return Color.fromRGBO(136, 241, 245, 1);
-                              } else if (index == 1) {
-                                return Color.fromRGBO(100, 178, 180, 1);
-                              }
-                            },
-                          );
-                        }
-                      )),
-                  Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSCartesianChart(
-                              title: 'Daywise Yard Utilization',
-                              barCount: 2,
-                              barColors: [const Color.fromARGB(255, 231, 142, 247), const Color.fromARGB(255, 194, 162, 103)],
-                              legendVisibility: true,
-                              yAxisTitle: 'Number of Vehicles',
-                              dataSources: [state.yardDashboardData!.dayWiseYardUtilzation!
-                                        .map(
-                                          (e) => BarData(xLabel: e.checkInDate!, yValue: e.loadingCnt!, abbreviation: e.checkInDate!),
-                                        )
-                                        .toList(), state.yardDashboardData!.dayWiseYardUtilzation!
-                                        .map(
-                                          (e) => BarData(xLabel: e.checkInDate!, yValue: e.unloadingCnt!, abbreviation: e.checkInDate!),
-                                        )
-                                        .toList()]
-                            );
-                        }
-                      )),
+                            yAxisTitle: 'Number of Vehicles',
+                            dataSources: [
+                              state.yardDashboardData!.dayWiseYardUtilzation!
+                                  .map(
+                                    (e) => BarData(xLabel: e.checkInDate!, yValue: e.loadingCnt!, abbreviation: e.checkInDate!),
+                                  )
+                                  .toList(),
+                              state.yardDashboardData!.dayWiseYardUtilzation!
+                                  .map(
+                                    (e) => BarData(xLabel: e.checkInDate!, yValue: e.unloadingCnt!, abbreviation: e.checkInDate!),
+                                  )
+                                  .toList()
+                            ]);
+                      }),
                 ],
               ),
               Row(
                 children: [
-                  Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSSfCircularChart(
-                              title: "Previous month yard acitvity",
-                              series: SeriesName.radialBar,
-                              props: Props(
-                                dataSource: [
-                                          PieData(xData: 'Loading',yData: state.yardDashboardData!.previousMonthYardUtilization!.loadingCount!.toDouble()),
-                                          PieData(xData: 'Unloading',yData: state.yardDashboardData!.previousMonthYardUtilization!.unloadingCount!.toDouble()),
-                                        ],
-                                innerRadius: '30%',
-                                labelFontSize: lsize.maxHeight*0.04,
-                                pointColorMapper: (p0, p1) {
-                                  if (p1 == 0) {
-                                      return Color.fromRGBO(132, 211, 86, 1);
-                                    } else {
-                                      return const Color.fromARGB(255, 215, 221, 124);
-                                    }
-                                },
-                              )
-                            );
-                        }
-                      ))
+                  Customs.DashboardWidget(
+                      size: Size(size.width * 0.25, size.height * 0.45),
+                      margin: aspectRatio * 10,
+                      loaderEnabled: isEnabled,
+                      chartBuilder: (ratio) {
+                        return Customs.WMSSfCircularChart(
+                            ratio: ratio,
+                            title: "Previous month yard acitvity",
+                            titleFontSize: ratio*13,
+                            series: SeriesName.radialBar,
+                            props: Props(
+                              dataSource: [
+                                PieData(xData: 'Loading', yData: state.yardDashboardData!.previousMonthYardUtilization!.loadingCount!.toDouble()),
+                                PieData(xData: 'Unloading', yData: state.yardDashboardData!.previousMonthYardUtilization!.unloadingCount!.toDouble()),
+                              ],
+                              labelFontSize: ratio * 10,
+                              pointColorMapper: (p0, p1) {
+                                if (p1 == 0) {
+                                  return Color.fromRGBO(132, 211, 86, 1);
+                                } else {
+                                  return const Color.fromARGB(255, 215, 221, 124);
+                                }
+                              },
+                            ));
+                      }),
                 ],
               ),
             ],
@@ -217,25 +191,3 @@ class ChartData {
   final String x;
   final double y;
 }
-// models for charts
-// class PieData {
-//   PieData(this.xData, this.yData, [this.text]);
-//   final String xData;
-//   final num yData;
-//   String? text;
-// }
-
-// class BarData {
-//   String xLabel;
-//   int yValue;
-//   String abbreviation;
-//   BarData({required this.xLabel, required this.yValue, required this.abbreviation});
-// }
-
-
-// class AnalogChartData {
-//         AnalogChartData(this.x, this.y, this.color);
-//             final String x;
-//             final double y;
-//             final Color color;
-//     }

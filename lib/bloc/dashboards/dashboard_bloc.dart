@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -39,6 +40,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     on<GetStorageDashboardData>(_onGetStorageDashboardData);
     on<GetYardDashboardData>(_onGetYardDashboardData);
     on<ChangeLocType>(_onChangeLocationType);
+    on<ElevateDashboard>(_onElevateDashboard);
   }
   final NetworkCalls _customApi;
 
@@ -57,6 +59,10 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
 
   void _onChangeLocationType(ChangeLocType event, Emitter<DashboardsState> emit){
     emit(state.copyWith(selectedLocType: event.locType, storageDashboardData: state.storageDashboardData, getStorageDashboardState: state.getStorageDashboardState));
+  }
+
+  void _onElevateDashboard(ElevateDashboard event, Emitter<DashboardsState> emit){
+    emit(state.copyWith(elevates: event.elevates));
   }
 
   Future<void> _onGetDockAppointments(GetDockAppointments event, Emitter<DashboardsState> emit) async {

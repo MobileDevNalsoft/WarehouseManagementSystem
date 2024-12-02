@@ -110,3 +110,11 @@ class ChangeLocType extends DashboardsEvent{
   @override
   List<Object> get props => [locType];
 }
+
+class ElevateDashboard extends DashboardsEvent{
+  List<bool> elevates;
+  ElevateDashboard({required this.elevates});
+
+  @override
+  List<Object> get props => [elevates];
+}

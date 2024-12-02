@@ -23,8 +23,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
   List<BarData>? dockOUTDayWiseDataSource;
 
   final List<PieData> chartData1 = [
-    PieData(xData: 'David',yData:  81),
-    PieData(xData: 'sd',yData:  19),
+    PieData(xData: 'David', yData: 81),
+    PieData(xData: 'sd', yData: 19),
   ];
 
   List<PieData>? dockINDataSource;
@@ -43,6 +43,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
     _dashboardsBloc.state.appointmentsDate = DateTime.parse('2024-09-13');
     _dashboardsBloc.add(GetDockAppointments(date: DateFormat('yyyy-MM-dd').format(DateTime.parse('2024-09-13'))));
     _dashboardsBloc.add(GetDockDashboardData(facilityID: 243));
+    _dashboardsBloc.state.elevates = List.filled(2, false);
   }
 
   @override
@@ -51,218 +52,191 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
     double aspectRatio = size.width / size.height;
     return Row(
       children: [
+        // Expanded(
+        //       flex: 9,
+        //       child: GridView(
+        //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisExtent: aspectRatio*250),
+        //         children: [
+        //           Customs.ElevatedDashboardWidget(size: Size(size.width * 0.3, size.height * 0.45), context: context, index: 0, buildWhen: (p0, p1) => p0.getDockDashboardState != p1.getDockDashboardState,
+        //           chartBuilder: (ratio, state) => Customs.WMSCartesianChart(
+        //                                 title: "Daywise Utilization",
+        //                                 yAxisTitle: 'Number of Vehicles',
+        //                                 barCount: 2,
+        //                                 legendVisibility: true,
+        //                                 barColors: [Colors.teal, Colors.greenAccent],
+        //                                 dataSources: [
+        //                                   state.dockDashboardData!.daywiseDockInUtilization!
+        //                                       .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+        //                                       .toList(),
+        //                                   state.dockDashboardData!.daywiseDockOutUtilization!
+        //                                       .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+        //                                       .toList()
+        //                                 ],
+        //                               ),)
+        //         ],
+        //       ),
+        //     ),
         ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: SingleChildScrollView(
-              child: BlocBuilder<DashboardsBloc, DashboardsState>( builder: (context, state) {
+          child: SingleChildScrollView(child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
             bool isEnabled = state.getDockDashboardState != DockDashboardState.success;
             return Column(
               children: [
                 Row(
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.3,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(builder: (context, lsize) {
-                        return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Stack(
-                                children: [
-                                  Customs.WMSCartesianChart(
-                                    title: "Daywise Utilization",
-                                    yAxisTitle: 'Number of Vehicles',
-                                    barCount: 2,
-                                    legendVisibility: true,
-                                    barColors: [Colors.teal, Colors.greenAccent],
-                                    dataSources: [
-                                      state.dockDashboardData!.daywiseDockInUtilization!
-                                          .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
-                                          .toList(),
-                                      state.dockDashboardData!.daywiseDockOutUtilization!
-                                          .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
-                                          .toList()
-                                    ],
-                                  ),
-                                  Positioned(
-                                    right: lsize.maxWidth * 0.08,
-                                    child: InkWell(onTap: () {}, child: Icon(Icons.calendar_month_rounded)),
-                                  )
+                    Customs.DashboardWidget(
+                        loaderEnabled: isEnabled,
+                        size: Size(size.width * 0.3, size.height * 0.45),
+                        margin: aspectRatio * 12,
+                        chartBuilder: (ratio) {
+                          return Stack(
+                            children: [
+                              Customs.WMSCartesianChart(
+                                title: "Daywise Utilization",
+                                titleFontSize: ratio * 10,
+                                xlabelFontSize: ratio*8,
+                                ylabelFontSize: ratio*8,
+                                ytitleFontSize: ratio*10,
+                                yAxisTitle: 'Number of Vehicles',
+                                barCount: 2,
+                                legendVisibility: true,
+                                barColors: [Colors.teal, Colors.greenAccent],
+                                dataSources: [
+                                  state.dockDashboardData!.daywiseDockInUtilization!
+                                      .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+                                      .toList(),
+                                  state.dockDashboardData!.daywiseDockOutUtilization!
+                                      .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+                                      .toList()
                                 ],
-                              );
-                      }),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.3,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                                ? Customs.DashboardLoader(lsize: lsize)
-                                : Customs.WMSSfCircularChart(
-                                  title: 'Dock-IN Utilization',
-                                  legendVisibility: true,
-                                  props: Props(
-                                    dataSource: state.dockDashboardData!.dockInUtilization!.map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156))).toList(),
-                                    radius: '${lsize.maxHeight*0.3}%',
-                                    pointColorMapper: (p0, p1) {
-                                      if(p1 == 0){
-                                        return const Color.fromARGB(255, 102, 82, 156);
-                                      }else{
-                                        return Color.fromARGB(255, 178, 166, 209);
-                                      }
-                                    },
-                                  )
-                                );
-                        }
-                      ),
-                    ),
+                              ),
+                              // Positioned(
+                              //   right: ratio * 0.08,
+                              //   child: InkWell(onTap: () {}, child: Icon(Icons.calendar_month_rounded)),
+                              // )
+                            ],
+                          );
+                        }),
+                    Customs.DashboardWidget(
+                        loaderEnabled: isEnabled,
+                        margin: aspectRatio * 12,
+                        size: Size(size.width * 0.3, size.height * 0.45),
+                        chartBuilder: (ratio) {
+                          return Customs.WMSSfCircularChart(
+                              ratio: ratio,
+                              title: 'Dock-IN Utilization',
+                              titleFontSize: ratio * 10,
+                              legendVisibility: true,
+                              props: Props(
+                                dataSource: state.dockDashboardData!.dockInUtilization!
+                                    .map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156)))
+                                    .toList(),
+                                pointColorMapper: (p0, p1) {
+                                  if (p1 == 0) {
+                                    return const Color.fromARGB(255, 102, 82, 156);
+                                  } else {
+                                    return Color.fromARGB(255, 178, 166, 209);
+                                  }
+                                },
+                              ));
+                        }),
                   ],
                 ),
                 Row(
                   children: [
-                    Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.3,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.only(left: size.height * 0.035, top: size.height * 0.035, bottom: size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSSfCircularChart(
-                                  title: 'Dock-OUT Utilization',
-                                  legendVisibility: true,
-                                  props: Props(
-                                    dataSource: state.dockDashboardData!.dockOutUtilization!.map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156))).toList(),
-                                    radius: '${lsize.maxHeight*0.3}%',
-                                    pointColorMapper: (p0, p1) {
-                                      if(p1 == 0){
-                                         return const Color.fromARGB(255, 52, 132, 136);
-                                      }else{
-                                        return const Color.fromARGB(255, 154, 197, 200);
-                                      }
-                                    },
-                                  )
-                                );
-                        }
-                      ),
-                    ),
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.3,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.center,
-                        child: LayoutBuilder(
-                          builder: (context, lsize) {
-                            return isEnabled
-                                ? Customs.DashboardLoader(lsize: lsize)
-                                : Customs.WMSSfCircularChart(
-                                  title: "Avg Loading Time",
-                                  enableAnnotation: true,
-                                  annotationText: state.dockDashboardData!.avgLoadingTime!,
-                                  annotationHeight: lsize.maxHeight*0.3,
-                                  annotationFontSize: lsize.maxHeight*0.055,
-                                  props: Props(
-                                    dataSource: chartData1,
-                                    innerRadius: '${lsize.maxHeight*0.15}%',
-                                    radius: '${lsize.maxHeight*0.3}%',
-                                    pointColorMapper: (p0, p1) {
-                                        if(p1 == 0){
-                                          return const Color.fromARGB(255, 151, 174, 206);
-                                        }else{
-                                          return Colors.white;
-                                        }
-                                    },
-                                  )
-                                );
-                          }
-                        )),
+                    Customs.DashboardWidget(
+                        loaderEnabled: isEnabled,
+                        margin: aspectRatio * 12,
+                        size: Size(size.width * 0.3, size.height * 0.45),
+                        chartBuilder: (ratio) {
+                          return Customs.WMSSfCircularChart(
+                              ratio: ratio,
+                              title: 'Dock-OUT Utilization',
+                              titleFontSize: ratio * 10,
+                              legendVisibility: true,
+                              props: Props(
+                                dataSource: state.dockDashboardData!.dockOutUtilization!
+                                    .map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156)))
+                                    .toList(),
+                                pointColorMapper: (p0, p1) {
+                                  if (p1 == 0) {
+                                    return const Color.fromARGB(255, 52, 132, 136);
+                                  } else {
+                                    return const Color.fromARGB(255, 154, 197, 200);
+                                  }
+                                },
+                              ));
+                        }),
+                    Customs.DashboardWidget(
+                        loaderEnabled: isEnabled,
+                        margin: aspectRatio * 12,
+                        size: Size(size.width * 0.3, size.height * 0.45),
+                        chartBuilder: (ratio) {
+                          return Customs.WMSSfCircularChart(
+                              ratio: ratio,
+                              title: "Avg Loading Time",
+                              titleFontSize: ratio * 10,
+                              enableAnnotation: true,
+                              annotationText: state.dockDashboardData!.avgLoadingTime!,
+                              props: Props(
+                                dataSource: chartData1,
+                                pointColorMapper: (p0, p1) {
+                                  if (p1 == 0) {
+                                    return const Color.fromARGB(255, 151, 174, 206);
+                                  } else {
+                                    return Colors.white;
+                                  }
+                                },
+                              ));
+                        }),
                   ],
                 ),
                 Row(
                   children: [
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.3,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.center,
-                        child: LayoutBuilder(
-                          builder: (context, lsize) {
-                            return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSSfCircularChart(
-                                  title: "Avg Unloading Time",
-                                  enableAnnotation: true,
-                                  annotationText: state.dockDashboardData!.avgUnloadingTime!,
-                                  annotationHeight: lsize.maxHeight*0.3,
-                                  annotationFontSize: lsize.maxHeight*0.055,
-                                  props: Props(
-                                    dataSource: chartData1,
-                                    innerRadius: '${lsize.maxHeight*0.15}%',
-                                    radius: '${lsize.maxHeight*0.3}%',
-                                    pointColorMapper: (p0, p1) {
-                                        if(p1 == 0){
-                                          return const Color.fromARGB(255, 176, 211, 141);
-                                        }else{
-                                          return Colors.white;
-                                        }
-                                    },
-                                  )
-                                );
-                          }
-                        )),
-                    Container(
-                        margin: EdgeInsets.all(aspectRatio * 8),
-                        height: size.height * 0.45,
-                        width: size.width * 0.3,
-                        decoration: BoxDecoration(
-                            color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                        padding: EdgeInsets.all(size.height * 0.035),
-                        alignment: Alignment.center,
-                        child: LayoutBuilder(
-                          builder: (context, lsize) {
-                            return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSSfCircularChart(
-                                  title: "Avg Dock TAT",
-                                  enableAnnotation: true,
-                                  annotationText: state.dockDashboardData!.avgDockTAT!,
-                                  annotationHeight: lsize.maxHeight*0.3,
-                                  annotationFontSize: lsize.maxHeight*0.055,
-                                  props: Props(
-                                    dataSource: chartData1,
-                                    innerRadius: '${lsize.maxHeight*0.15}%',
-                                    radius: '${lsize.maxHeight*0.3}%',
-                                    pointColorMapper: (p0, p1) {
-                                        if(p1 == 0){
-                                          return const Color.fromARGB(255, 196, 141, 204);
-                                        }else{
-                                          return Colors.white;
-                                        }
-                                    },
-                                  )
-                                );
-                          }
-                        )),
+                    Customs.DashboardWidget(
+                        loaderEnabled: isEnabled,
+                        margin: aspectRatio * 12,
+                        size: Size(size.width * 0.3, size.height * 0.45),
+                        chartBuilder: (ratio) {
+                          return Customs.WMSSfCircularChart(
+                              ratio: ratio,
+                              titleFontSize: ratio * 10,
+                              title: "Avg Unloading Time",
+                              enableAnnotation: true,
+                              annotationText: state.dockDashboardData!.avgUnloadingTime!,
+                              props: Props(
+                                dataSource: chartData1,
+                                pointColorMapper: (p0, p1) {
+                                  if (p1 == 0) {
+                                    return const Color.fromARGB(255, 176, 211, 141);
+                                  } else {
+                                    return Colors.white;
+                                  }
+                                },
+                              ));
+                        }),
+                    Customs.DashboardWidget(
+                        loaderEnabled: isEnabled,
+                        margin: aspectRatio * 12,
+                        size: Size(size.width * 0.3, size.height * 0.45),
+                        chartBuilder: (ratio) {
+                          return Customs.WMSSfCircularChart(
+                              ratio: ratio,
+                              title: "Avg Dock TAT",
+                              titleFontSize: ratio * 10,
+                              enableAnnotation: true,
+                              annotationText: state.dockDashboardData!.avgDockTAT!,
+                              props: Props(
+                                dataSource: chartData1,
+                                pointColorMapper: (p0, p1) {
+                                  if (p1 == 0) {
+                                    return const Color.fromARGB(255, 196, 141, 204);
+                                  } else {
+                                    return Colors.white;
+                                  }
+                                },
+                              ));
+                        }),
                   ],
                 )
               ],
@@ -270,6 +244,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
           })),
         ),
         Expanded(
+          flex: 3,
           child: LayoutBuilder(builder: (context, lsize) {
             return BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
               bool isEnabled = state.getAppointmentsState == AppointmentsState.loading;
@@ -332,11 +307,11 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
                                             ),
                                             child: Transform.translate(
-                                              offset: Offset(0, -lsize.maxHeight*0.002),
+                                              offset: Offset(0, -lsize.maxHeight * 0.002),
                                               child: Icon(
                                                 Icons.arrow_left_outlined,
                                                 color: Colors.white,
-                                                size: lsize.maxHeight*0.03,
+                                                size: lsize.maxHeight * 0.03,
                                               ),
                                             ),
                                           ),
@@ -355,7 +330,13 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                               color: Color.fromRGBO(12, 46, 87, 1),
                                               borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
                                             ),
-                                            child: Transform.translate(offset: Offset(0, -lsize.maxHeight*0.002),child: Icon(Icons.arrow_right_outlined, color: Colors.white, size: lsize.maxHeight*0.03,)),
+                                            child: Transform.translate(
+                                                offset: Offset(0, -lsize.maxHeight * 0.002),
+                                                child: Icon(
+                                                  Icons.arrow_right_outlined,
+                                                  color: Colors.white,
+                                                  size: lsize.maxHeight * 0.03,
+                                                )),
                                           ),
                                         ),
                                       ],

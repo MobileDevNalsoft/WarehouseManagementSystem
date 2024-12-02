@@ -57,12 +57,12 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
         primaryYAxis: NumericAxis(
           title: AxisTitle(text: yAxisTitle),
           majorGridLines: const MajorGridLines(
-              width: 0,
-            ),
-            majorTickLines: const MajorTickLines(width: 1),
-            axisLine: const AxisLine(
-              width: 1,
-            ),
+            width: 0,
+          ),
+          majorTickLines: const MajorTickLines(width: 1),
+          axisLine: const AxisLine(
+            width: 1,
+          ),
         ),
         plotAreaBorderWidth: 0,
         borderWidth: 0,
@@ -96,33 +96,14 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
         ));
   }
 
-
   late TextEditingController typeAheadController;
 
   late FocusNode typeAheadFocusNode;
   List<String> selectedEmployees = [];
-  // Define lists for job card statuses and their corresponding values (replace with actual data)
-  List<BarData> taskdata = [
-    BarData(xLabel: 'Mon', yValue: 10, abbreviation: 'Monday'),
-    BarData(xLabel: 'Tue', yValue: 4, abbreviation: 'Tuesday'),
-    BarData(xLabel: 'Wed', yValue: 6, abbreviation: 'Wednesday'),
-    BarData(xLabel: 'Thu', yValue: 8, abbreviation: 'Thursday'),
-    BarData(xLabel: 'Fri', yValue: 5, abbreviation: 'Friday'),
-    BarData(xLabel: 'Sat', yValue: 2, abbreviation: 'Saturday'),
-    BarData(xLabel: 'Sun', yValue: 2, abbreviation: 'Sunday')
-  ];
 
   List<BarData> empTaskdata = [];
 
-  final List<PieData> avgTaskExecutionTime = [
-    PieData(xData: 'Execution time', yData: 60),
-    PieData(xData: 'Rest', yData: 40)
-  ];
-
-  final List<PieData> avgPickTime = [
-    PieData(xData: 'Execution time', yData: 60),
-    PieData(xData: 'Rest', yData: 40),
-  ];
+  final List<PieData> avgTime = [PieData(xData: 'Execution time', yData: 60), PieData(xData: 'Rest', yData: 40)];
   late Map<String, List<String>> employeeSuggestionRange;
   var random = Random();
   late bool rangeSelection;
@@ -172,432 +153,410 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
     Size size = MediaQuery.of(context).size;
     double aspectRatio = size.width / size.height;
     return SingleChildScrollView(
-      child: BlocBuilder<DashboardsBloc, DashboardsState>(
-        builder: (context, state) {
-          bool isEnabled = state.getActivityDashboardState != ActivityDashboardState.success;
-          if(state.getActivityDashboardState == ActivityDashboardState.success){
-            employeeSuggestions = state.activityDashboardData!.empwiseTaskSummary!.map((e)=>e.status!).toList();
-            // selectedEmployees = employeeSuggestions;
-          }
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSPieChart(
-                              title: 'Today Task Summary',
-                              dataSource: isEnabled ? [
-                                PieData(xData: "Created", yData: 16, text: "16"),
-                                PieData(xData: "Completed", yData: 6, text: "6"),
-                                PieData(xData: "In Progress", yData: 4, text: "4"),
-                                PieData(xData: "Cancelled", yData: 2, text: "2"),
-                              ] : state.activityDashboardData!.todayTaskSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
-                              legendVisibility: true,
-                              pointColorMapper: (datum, index) {
-                                if(index == 0){
-                                      return const Color.fromARGB(255, 80, 175, 230);
-                                    }else if(index == 1){
-                                      return const Color.fromARGB(255, 115, 102, 189);
-                                    }else if(index == 2){
-                                      return const Color.fromARGB(255, 110, 196, 163);
-                                    }else if(index == 3){
-                                      return const Color.fromARGB(255, 159, 177, 80);
-                                    }
-                              });
-                        }
-                      )),
-                  Container(
-                    margin: EdgeInsets.all(aspectRatio * 8),
-                    height: size.height * 0.45,
-                    width: size.width * 0.25,
-                    decoration: BoxDecoration(
-                        color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                    padding: EdgeInsets.all(size.height * 0.035),
-                    alignment: Alignment.center,
-                    child: LayoutBuilder(
-                      builder: (context, lsize) {
-                        return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSPieChart(
-                          title: 'Task Type Summary',
-                          dataSource: state.activityDashboardData!.taskTypeSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
-                          legendVisibility: true,
-                          pointColorMapper: (p0, p1) {
-                            if(p1 == 0){
-                              return const Color.fromARGB(255, 80, 175, 230);
-                            }else if(p1 == 1){
-                              return const Color.fromARGB(255, 115, 102, 189);
-                            }else if(p1 == 2){
-                              return const Color.fromARGB(255, 110, 196, 163);
-                            }else if(p1 == 3){
-                              return const Color.fromARGB(255, 159, 177, 80);
-                            }
-                          },
-                        );
-                      }
-                    ),
-                  ),
-                  Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSPieChart(
-                              title:'Today Work Order Summary',
-                              dataSource: isEnabled ? [
-                                PieData(xData: "Created", yData: 16, text: "16"),
-                                PieData(xData: "Work In Progress", yData: 6, text: "6"),
-                                PieData(xData: "Completed", yData: 4, text: "4"),
-                              ] : state.activityDashboardData!.todayWorkOrderSummary!.map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString())).toList(),
-                              legendVisibility: true,
-                              pointColorMapper: (datum, index) {
-                                if (index == 0) {
-                                  return const Color.fromARGB(255, 176, 113, 187);
-                                } else if (index == 1) {
-                                  return const Color.fromARGB(255, 175, 147, 70);
-                                } else if (index == 2) {
-                                  return const Color.fromARGB(255, 68, 158, 76);
-                                }else{
-                                  return const Color.fromARGB(255, 165, 180, 79);
-                                }
-                              });
-                        }
-                      )),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.45,
-                      width: size.width * 0.25,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.all(size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: LayoutBuilder(
-                        builder: (context, lsize) {
-                          return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSCartesianChart(
-                            title: 'Daywise Task Summary',
-                            legendVisibility: false,
-                            barCount: 1,
-                            dataSources: [isEnabled ? taskdata : state.activityDashboardData!.daywiseTaskSummary!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()],
-                            yAxisTitle: 'Number of Tasks',
-                            barColors: [Color.fromRGBO(78, 72, 161, 0.69)],
-                          );
-                        }
-                      )),
-                  Container(
-                    margin: EdgeInsets.all(aspectRatio * 8),
-                    height: size.height * 0.45,
-                    width: size.width * 0.25,
-                    decoration:
-                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                    padding: EdgeInsets.all(size.height * 0.035),
-                    alignment: Alignment.center,
-                    child: LayoutBuilder(
-                      builder: (context, lsize) {
-                        return isEnabled
-                            ? Customs.DashboardLoader(lsize: lsize)
-                            : Customs.WMSCartesianChart(
-                          title: "Employee Wise Task Summary",
-                          legendVisibility: false,
-                          barCount: 1,
-                          dataSources: [isEnabled ? taskdata : state.activityDashboardData!.empwiseTaskSummary!.map((e) => BarData(xLabel: e.status!.split('_')[0], yValue: e.count!, abbreviation: e.status!)).toList()],
-                          yAxisTitle: 'Number of Tasks',
-                           barColors: [Color.fromRGBO(64, 133, 138, 1)],
-                        );
-                      }
-                    ),
-                  ),
-                  Customs.DashboardWidget(
-                    size: size,
+      child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+        bool isEnabled = state.getActivityDashboardState != ActivityDashboardState.success;
+        if (state.getActivityDashboardState == ActivityDashboardState.success) {
+          employeeSuggestions = state.activityDashboardData!.empwiseTaskSummary!.map((e) => e.status!).toList();
+          // selectedEmployees = employeeSuggestions;
+        }
+        return Column(
+          children: [
+            Row(
+              children: [
+                Customs.DashboardWidget(
+                    size: Size(size.width * 0.25, size.height * 0.45),
+                    margin: aspectRatio * 10,
                     loaderEnabled: isEnabled,
-                    chartBuilder: (lsize) => Customs.WMSSfCircularChart(
-                      height: lsize.maxHeight,
-                      width: lsize.maxWidth,
+                    chartBuilder: (ratio) {
+                      return Customs.WMSSfCircularChart(
+                          ratio: ratio,
+                          title: 'Today Task Summary',
+                          titleFontSize: ratio*13,
+                          legendVisibility: true,
+                          series: SeriesName.pieSeries,
+                          props: Props(
+                            dataSource: state.activityDashboardData!.todayTaskSummary!
+                                .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
+                                .toList(),
+                            radius: '${ratio * 55}%',
+                            pointColorMapper: (p0, p1) {
+                              if (p1 == 0) {
+                                return const Color.fromARGB(255, 80, 175, 230);
+                              } else if (p1 == 1) {
+                                return const Color.fromARGB(255, 115, 102, 189);
+                              } else if (p1 == 2) {
+                                return const Color.fromARGB(255, 110, 196, 163);
+                              } else if (p1 == 3) {
+                                return const Color.fromARGB(255, 159, 177, 80);
+                              }
+                            },
+                          ));
+                    }),
+                Customs.DashboardWidget(
+                    size: Size(size.width * 0.25, size.height * 0.45),
+                    margin: aspectRatio * 10,
+                    loaderEnabled: isEnabled,
+                    chartBuilder: (ratio) {
+                      return Customs.WMSSfCircularChart(
+                          ratio: ratio,
+                          title: 'Task Type Summary',
+                          titleFontSize: ratio*13,
+                          legendVisibility: true,
+                          series: SeriesName.pieSeries,
+                          props: Props(
+                            dataSource: state.activityDashboardData!.taskTypeSummary!
+                                .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
+                                .toList(),
+                            radius: '${ratio * 55}%',
+                            pointColorMapper: (p0, p1) {
+                              if (p1 == 0) {
+                                return const Color.fromARGB(255, 80, 175, 230);
+                              } else if (p1 == 1) {
+                                return const Color.fromARGB(255, 115, 102, 189);
+                              } else if (p1 == 2) {
+                                return const Color.fromARGB(255, 110, 196, 163);
+                              } else if (p1 == 3) {
+                                return const Color.fromARGB(255, 159, 177, 80);
+                              }
+                            },
+                          ));
+                    }),
+                Customs.DashboardWidget(
+                    size: Size(size.width * 0.25, size.height * 0.45),
+                    margin: aspectRatio * 10,
+                    loaderEnabled: isEnabled,
+                    chartBuilder: (ratio) {
+                      return Customs.WMSSfCircularChart(
+                          ratio: ratio,
+                          title: 'Today Work Order Summary',
+                          titleFontSize: ratio*13,
+                          legendVisibility: true,
+                          series: SeriesName.pieSeries,
+                          props: Props(
+                            dataSource: state.activityDashboardData!.todayWorkOrderSummary!
+                                .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
+                                .toList(),
+                            radius: '${ratio * 55}%',
+                            pointColorMapper: (p0, p1) {
+                              if (p1 == 0) {
+                                return const Color.fromARGB(255, 176, 113, 187);
+                              } else if (p1 == 1) {
+                                return const Color.fromARGB(255, 175, 147, 70);
+                              } else if (p1 == 2) {
+                                return const Color.fromARGB(255, 68, 158, 76);
+                              } else {
+                                return const Color.fromARGB(255, 165, 180, 79);
+                              }
+                            },
+                          ));
+                    }),
+              ],
+            ),
+            Row(
+              children: [
+                Customs.DashboardWidget(
+                    size: Size(size.width * 0.25, size.height * 0.45),
+                    margin: aspectRatio * 10,
+                    loaderEnabled: isEnabled,
+                    chartBuilder: (ratio) {
+                      return Customs.WMSCartesianChart(
+                          title: 'Daywise Task Summary',
+                          titleFontSize: ratio*13,
+                          xlabelFontSize: ratio * 10,
+                          ylabelFontSize: ratio * 10,
+                          ytitleFontSize: ratio * 12,
+                          barCount: 1,
+                          dataSources: [
+                            state.activityDashboardData!.daywiseTaskSummary!
+                                .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+                                .toList()
+                          ],
+                          yAxisTitle: 'Number of Tasks',
+                          legendVisibility: false,
+                          barColors: [Color.fromRGBO(78, 72, 161, 0.69)]);
+                    }),
+                Customs.DashboardWidget(
+                    size: Size(size.width * 0.25, size.height * 0.45),
+                    margin: aspectRatio * 10,
+                    loaderEnabled: isEnabled,
+                    chartBuilder: (ratio) {
+                      return Customs.WMSCartesianChart(
+                          title: "Employee Wise Task Summary",
+                          titleFontSize: ratio*13,
+                          xlabelFontSize: ratio * 10,
+                          ylabelFontSize: ratio * 10,
+                          ytitleFontSize: ratio * 12,
+                          barCount: 1,
+                          dataSources: [
+                            state.activityDashboardData!.empwiseTaskSummary!
+                                .map((e) => BarData(xLabel: e.status!.split('_')[0], yValue: e.count!, abbreviation: e.status!))
+                                .toList()
+                          ],
+                          yAxisTitle: 'Number of orders',
+                          legendVisibility: false,
+                          barColors: [Color.fromRGBO(64, 133, 138, 1)]);
+                    }),
+                Customs.DashboardWidget(
+                  size: Size(size.width * 0.25, size.height * 0.45),
+                  margin: aspectRatio * 10,
+                  loaderEnabled: isEnabled,
+                  chartBuilder: (ratio) => Customs.WMSSfCircularChart(
+                      ratio: ratio,
                       title: "Average Task Execution Time",
+                      titleFontSize: ratio*13,
                       enableAnnotation: true,
                       annotationText: state.activityDashboardData!.avgTaskExecTime!,
-                      annotationHeight: lsize.maxHeight*0.3,
-                      annotationFontSize: lsize.maxHeight*0.05,
-                      props: Props( 
-                        dataSource: avgTaskExecutionTime,
+                      props: Props(
+                        dataSource: avgTime,
                         pointColorMapper: (p0, p1) {
-                          if(p1 == 0){
+                          if (p1 == 0) {
                             return const Color.fromARGB(255, 148, 74, 134);
-                          }else{
+                          } else {
                             return Colors.transparent;
                           }
                         },
-                      )
-                    ),
-                  )
-                 
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Customs.DashboardWidget(
-                    size: size,
-                    loaderEnabled: isEnabled,
-                    chartBuilder: (lsize) => Customs.WMSSfCircularChart(
-                      height: lsize.maxHeight,
-                      width: lsize.maxWidth,
+                      )),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Customs.DashboardWidget(
+                  size: Size(size.width * 0.25, size.height * 0.45),
+                  margin: aspectRatio * 10,
+                  loaderEnabled: isEnabled,
+                  chartBuilder: (ratio) => Customs.WMSSfCircularChart(
+                      ratio: ratio,
                       title: "Avg Pick Time",
+                      titleFontSize: ratio*13,
                       enableAnnotation: true,
                       annotationText: state.activityDashboardData!.avgPickTime!,
-                      annotationHeight: lsize.maxHeight*0.3,
-                      annotationFontSize: lsize.maxHeight*0.05,
                       props: Props(
-                        dataSource: avgPickTime,
+                        dataSource: avgTime,
                         pointColorMapper: (p0, p1) {
-                          if(p1 == 0){
+                          if (p1 == 0) {
                             return const Color.fromARGB(255, 97, 92, 170);
-                          }else{
+                          } else {
                             return Colors.transparent;
                           }
                         },
-                      )
-                    ),
-                  ),
-                  Container(
-                      margin: EdgeInsets.all(aspectRatio * 8),
-                      height: size.height * 0.48,
-                      width: size.width * 0.52,
-                      decoration: BoxDecoration(
-                          color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-                      padding: EdgeInsets.only(left:size.height * 0.035,top:size.height * 0.035,bottom: size.height * 0.035),
-                      alignment: Alignment.center,
-                      child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: size.width * 0.36,
-                            child: LayoutBuilder(
-                              builder: (context, lsize) {
-                                return isEnabled
-                        ? Customs.DashboardLoader(lsize: lsize)
-                        : Customs.WMSCartesianChart(
-                          title: 'Avg Time Taken by Employee',
-                          barCount: 1,
-                          barColors: [Color.fromRGBO(147, 0, 120, 0.5)],
-                          yAxisTitle: 'Number of Tasks',
-                          dataSources: [selectedEmployees.map((e) => BarData(xLabel: e.replaceAll('_', ' '), yValue: state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test)=>test.status==e).count!, abbreviation: e)).toList()]
-                        );
-                              }
-                            ),
-                          ),
-                          Gap(size.width*0.016),
-                          Container(
-                            width: size.width * 0.1,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: TypeAheadField(
-                                        suggestionsController: suggestionsController,
-                                        builder: (context, textController, focusNode) {
-                                          typeAheadController = textController;
-                                          typeAheadFocusNode = focusNode;
-                                          textController = textController;
-                                          focusNode = focusNode;
-                                          focusNode.addListener(() {
-                                            if (!focusNode.hasFocus) {
-                                              textController.clear();
+                      )),
+                ),
+                Customs.DashboardWidget(
+                        size: Size(size.width * 0.52, size.height * 0.45),
+                        margin: aspectRatio*16,
+                        loaderEnabled: isEnabled,
+                        chartBuilder: (ratio) {
+                        return Row(
+                            children: [
+                              SizedBox(
+                                width: ratio*300,
+                                child: Customs.WMSCartesianChart(
+                                    title: 'Avg Time Taken by Employee',
+                                    titleFontSize: ratio*6,
+                                    xlabelFontSize: ratio * 5,
+                                    ylabelFontSize: ratio * 5,
+                                    ytitleFontSize: ratio * 6,
+                                    barCount: 1,
+                                    barColors: [Color.fromRGBO(147, 0, 120, 0.5)],
+                                    yAxisTitle: 'Number of Tasks',
+                                    dataSources: [
+                                      selectedEmployees
+                                          .map((e) => BarData(
+                                              xLabel: e.replaceAll('_', ' '),
+                                              yValue: state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test) => test.status == e).count!,
+                                              abbreviation: e))
+                                          .toList()
+                                    ])
+                              ),
+                              Gap(size.width * 0.016),
+                              Container(
+                          width: size.width * 0.1,
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TypeAheadField(
+                                      suggestionsController: suggestionsController,
+                                      builder: (context, textController, focusNode) {
+                                        typeAheadController = textController;
+                                        typeAheadFocusNode = focusNode;
+                                        textController = textController;
+                                        focusNode = focusNode;
+                                        focusNode.addListener(() {
+                                          if (!focusNode.hasFocus) {
+                                            textController.clear();
+                                          }
+                                        });
+                                        return TextFormField(
+                                          textAlign: TextAlign.center,
+                                          onTap: () {},
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                              hintText: "Compare",
+                                              // rangeSelection ? 'Choose' : "Compare",
+                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+                                              hintStyle: const TextStyle(
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              suffixIconConstraints: const BoxConstraints(minWidth: 16, minHeight: 8)),
+                                          controller: textController,
+                                          focusNode: focusNode,
+                                        );
+                                      },
+                                      suggestionsCallback: (pattern) {
+                                        employeeSuggestions = [];
+                                        if (rangeSelection) {
+                                          employeeSuggestions = employeeSuggestionRange.keys.toList();
+                                        } else {
+                                          for (var empList in state.activityDashboardData!.empwiseTaskSummary!) {
+                                            print(empList);
+                                            employeeSuggestions.add(empList.status.toString());
+                                          }
+                                          print("emp suggestios $employeeSuggestions");
+                                        }
+                                        return employeeSuggestions;
+                                      },
+                                      itemBuilder: (context, suggestion) => Row(
+                                        children: [
+                                          SizedBox(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: SizedBox(
+                                                  child: Row(
+                                                children: [
+                                                  Checkbox(
+                                                      shape: OvalBorder(),
+                                                      value: rangeSelection ? selectedEmployeeRange == suggestion : selectedEmployees.contains(suggestion),
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          if (rangeSelection != true) {
+                                                            if (selectedEmployees.contains(suggestion)) {
+                                                              selectedEmployees.remove(suggestion);
+                                                              empTaskdata.removeWhere((data) => data.xLabel == suggestion);
+                                                              suggestionsController.refresh();
+                                                            } else if (selectedEmployees.length < 10) {
+                                                              selectedEmployees.add(suggestion);
+                                                              empTaskdata
+                                                                  .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                              suggestionsController.refresh();
+                                                            }
+                                                          } else {
+                                                            selectedEmployeeRange = suggestion;
+                                                            empTaskdata = [];
+                                                            selectedEmployees = [];
+                                                            List<String> employees = employeeSuggestionRange[suggestion]!;
+                                                            selectedEmployees.addAll(employees);
+                                                            for (var emp in selectedEmployees) {
+                                                              empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                            }
+                                                          }
+                                                        });
+                                                      }),
+                                                  Text(
+                                                    suggestion.toString().replaceAll('_', ' '),
+                                                    // style: TextStyle(fontSize: ),
+                                                    textAlign: TextAlign.justify,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                              )),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      onSelected: (suggestion) {
+                                        if (rangeSelection == false) {
+                                          setState(
+                                            () {
+                                              if (selectedEmployees.contains(suggestion)) {
+                                                selectedEmployees.remove(suggestion);
+                                                empTaskdata.removeWhere((data) => data.xLabel == suggestion);
+                                                suggestionsController.refresh();
+                                              } else if (selectedEmployees.length < 10) {
+                                                selectedEmployees.add(suggestion);
+                                                empTaskdata.add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                // typeAheadController.clear();
+                                                // suggestionsController.close();
+                                                suggestionsController.refresh();
+                                              }
+                                            },
+                                          );
+                                        } else {
+                                          setState(() {
+                                            selectedEmployeeRange = suggestion;
+                                            List<String> employees = employeeSuggestionRange[suggestion]!;
+                                            empTaskdata = [];
+                                            selectedEmployees = [];
+
+                                            selectedEmployees.addAll(employees);
+                                            for (var emp in selectedEmployees) {
+                                              empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
                                             }
                                           });
-                                          return TextFormField(
-                                            textAlign: TextAlign.center,
-                                            onTap: () {},
-                                            cursorColor: Colors.black,
-                                            decoration: InputDecoration(
-                                                hintText:  "Compare",
-                                                // rangeSelection ? 'Choose' : "Compare",
-                                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                                                hintStyle: const TextStyle(
-                                                  color: Colors.black54,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                                suffixIconConstraints: const BoxConstraints(minWidth: 16, minHeight: 8)),
-                                            controller: textController,
-                                            focusNode: focusNode,
-                                          );
-                                        },
-                                        suggestionsCallback: (pattern) {
-                                          employeeSuggestions = [];
-                                          if (rangeSelection) {
-                                            employeeSuggestions = employeeSuggestionRange.keys.toList();
-                                          } else {
-                                            for (var empList in state.activityDashboardData!.empwiseTaskSummary!) {
-                                              print(empList);
-                                              employeeSuggestions.add(empList.status.toString());
-                                            }
-                                            print("emp suggestios $employeeSuggestions");
-                                          }
-                                          return employeeSuggestions;
-                                        },
-                                        itemBuilder: (context, suggestion) => Row(
-                                          children: [
-                                            SizedBox(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: SizedBox(
-                                                    child: Row(
-                                                  children: [
-                                                    Checkbox(
-                                                        shape: OvalBorder(),
-                                                        value: rangeSelection ? selectedEmployeeRange == suggestion : selectedEmployees.contains(suggestion),
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            if (rangeSelection != true) {
-                                                              if (selectedEmployees.contains(suggestion)) {
-                                                                selectedEmployees.remove(suggestion);
-                                                                empTaskdata.removeWhere((data) => data.xLabel == suggestion);
-                                                                suggestionsController.refresh();
-                                                              } else if (selectedEmployees.length < 10) {
-                                                                selectedEmployees.add(suggestion);
-                                                                empTaskdata
-                                                                    .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                                suggestionsController.refresh();
-                                                              }
-                                                            } else {
-                                                              selectedEmployeeRange = suggestion;
-                                                              empTaskdata = [];
-                                                              selectedEmployees = [];
-                                                              List<String> employees = employeeSuggestionRange[suggestion]!;
-                                                              selectedEmployees.addAll(employees);
-                                                              for (var emp in selectedEmployees) {
-                                                                empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                              }
-                                                            }
-                                                          });
-                                                        }),
-                                                    Text(
-                                                      suggestion.toString().replaceAll('_', ' '),
-                                                      // style: TextStyle(fontSize: ),
-                                                      textAlign: TextAlign.justify,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                  ],
-                                                )),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        onSelected: (suggestion) {
-                                          if (rangeSelection == false) {
-                                            setState(
-                                              () {
-                                                if (selectedEmployees.contains(suggestion)) {
-                                                  selectedEmployees.remove(suggestion);
-                                                  empTaskdata.removeWhere((data) => data.xLabel == suggestion);
-                                                  suggestionsController.refresh();
-                                                } else if (selectedEmployees.length < 10){
-                                                  selectedEmployees.add(suggestion);
-                                                  empTaskdata.add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                  // typeAheadController.clear();
-                                                  // suggestionsController.close();
-                                                  suggestionsController.refresh();
-                                                }
-                                              },
-                                            );
-                                          } else {
-                                            setState(() {
-                                              selectedEmployeeRange = suggestion;
-                                              List<String> employees = employeeSuggestionRange[suggestion]!;
-                                              empTaskdata = [];
-                                              selectedEmployees = [];
-                  
-                                              selectedEmployees.addAll(employees);
-                                              for (var emp in selectedEmployees) {
-                                                empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
-                                              }
-                                            });
-                                          }
-                                        },
-                                        hideOnSelect: false,
-                                      ),
+                                        }
+                                      },
+                                      hideOnSelect: false,
                                     ),
-                                  ],
-                                ),
-                                Gap(size.height * 0.012),
-                                // if (rangeSelection)
-                                  Container(
-                                      width: size.width * 0.1,
-                                      height: size.height * 0.3,
-                                      decoration: BoxDecoration(),
-                                      child:
-                                          // rangeSelection
-                                          //     ? Text(selectedEmployeeRange)
-                                          //     :
-                                          ListView(
-                                        children: selectedEmployees
-                                            .map((emp) => Container(
-                                                margin: EdgeInsets.only(bottom: 4),
-                                                decoration:
-                                                    BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(12), color: Colors.black12),
-                                                child: Row(
-                                                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Gap(size.width * 0.01),
-                                                    Expanded(
-                                                        child: Text(
-                                                      emp.replaceAll("_", " "),
-                                                      style: TextStyle(fontSize: size.height*0.02),
-                                                    )),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          selectedEmployees.remove(emp);
-                                                          empTaskdata.removeWhere((data) => data.xLabel == emp);
-                                                        });
-                                                      },
-                                                      icon: Icon(Icons.cancel_rounded),
-                                                      iconSize: size.width * 0.01,
-                                                      splashRadius: 5,
-                                                      visualDensity: VisualDensity.compact,
-                                                    ),
-                                                  ],
-                                                )))
-                                            .toList(),
-                                      ))
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                              Gap(size.height * 0.012),
+                              // if (rangeSelection)
+                              Container(
+                                  width: size.width * 0.1,
+                                  height: size.height * 0.3,
+                                  decoration: BoxDecoration(),
+                                  child:
+                                      // rangeSelection
+                                      //     ? Text(selectedEmployeeRange)
+                                      //     :
+                                      ListView(
+                                    children: selectedEmployees
+                                        .map((emp) => Container(
+                                            margin: EdgeInsets.only(bottom: 4),
+                                            decoration:
+                                                BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(12), color: Colors.black12),
+                                            child: Row(
+                                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Gap(size.width * 0.01),
+                                                Expanded(
+                                                    child: Text(
+                                                  emp.replaceAll("_", " "),
+                                                  style: TextStyle(fontSize: size.height * 0.02),
+                                                )),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      selectedEmployees.remove(emp);
+                                                      empTaskdata.removeWhere((data) => data.xLabel == emp);
+                                                    });
+                                                  },
+                                                  icon: Icon(Icons.cancel_rounded),
+                                                  iconSize: size.width * 0.01,
+                                                  splashRadius: 5,
+                                                  visualDensity: VisualDensity.compact,
+                                                ),
+                                              ],
+                                            )))
+                                        .toList(),
+                                  ))
+                            ],
                           ),
-                        ],
-                      )),
-                ],
-              ),
-            ],
-          );
-        }
-      ),
+                        ),
+                            ],
+                          );
+                        }
+                      ),
+              ],
+            ),
+          ],
+        );
+      }),
     );
   }
 }
