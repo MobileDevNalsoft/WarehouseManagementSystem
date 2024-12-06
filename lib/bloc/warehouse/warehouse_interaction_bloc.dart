@@ -11,8 +11,10 @@ import 'package:wmssimulator/constants/app_constants.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/local_network_calls.dart';
+import 'package:wmssimulator/models/area_response.dart';
 import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
+import 'package:wmssimulator/models/user_model.dart';
 
 
 part 'warehouse_interaction_event.dart';
@@ -20,15 +22,17 @@ part 'warehouse_interaction_state.dart';
 
 class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, WarehouseInteractionState> {
   JsInteropService? jsInteropService;
-  WarehouseInteractionBloc({this.jsInteropService}) : super(WarehouseInteractionState.initial()) {
+  WarehouseInteractionBloc({this.jsInteropService, required NetworkCalls customApi}) : _customApi = customApi,super(WarehouseInteractionState.initial()) {
     on<SelectedObject>(_onSelectedObject);
     on<ModelLoaded>(_onModelLoaded);
     on<GetCompanyData>(_onGetCompanyData);
     on<SelectedCompanyValue> (_onSelectCompany);
     on<GetFaclityData>(_onGetFacilityData);
-    on<SelectedFacilityValue> (_onSelectFacility);
-
+    on<SelectedFacilityValue>(_onSelectFacility);
+    on<GetUsersData>(_onGetUsersData);
+    on<FilterUsers>(_onFilterUsers);
   }
+  final NetworkCalls _customApi;
 final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5,username: 'nalsoft_adm',password: 'P@s\$w0rd2024');
   final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
@@ -90,7 +94,7 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
   }
 
   void _onGetFacilityData(GetFaclityData event,Emitter<WarehouseInteractionState> emit) async{
-      emit(state.copyWith(facilityDataState:  GetFacilityDataState.loading));
+    emit(state.copyWith(facilityDataState:  GetFacilityDataState.loading));
     try {
       await _companyApi.get(AppConstants.FACILITY,queryParameters: {'parent_company_id':event.company_id}).then((value) {
 
@@ -113,5 +117,23 @@ final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>()
    void _onSelectFacility(SelectedFacilityValue event,Emitter<WarehouseInteractionState> emit) async{
     emit(state.copyWith(selectedFacilityVal: event.facilityVal));
    }
+
+
+  Future<void> _onGetUsersData(GetUsersData event, Emitter<WarehouseInteractionState> emit) async {
+    emit(state.copyWith(getUsersState: GetUsers.loading));
+    try {
+      await getIt<NetworkCalls>().get(AppConstants.USERS).then((value) {
+        AreaResponse<User> usersFromBD = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => User.fromJson(json));
+        emit(state.copyWith(users: usersFromBD.data, filteredUsers: usersFromBD.data, getUsersState: GetUsers.success));
+      });
+    } catch (e) {
+      print("error $e");
+      emit(state.copyWith(getUsersState: GetUsers.failure));
+    }
+  }
+
+  void _onFilterUsers(FilterUsers event, Emitter<WarehouseInteractionState> emit) async {
+    emit(state.copyWith(filteredUsers: event.searchText.isEmpty ? state.users! : state.filteredUsers!.where((e) => e.username!.toLowerCase().contains(event.searchText.toLowerCase())).toList()));
+  }
 
 }

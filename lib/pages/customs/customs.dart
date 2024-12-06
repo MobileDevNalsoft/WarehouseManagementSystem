@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
+import 'package:wmssimulator/pages/customs/users_builder.dart';
 
 class Customs {
   static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
@@ -508,6 +510,31 @@ class Customs {
             ),
           ),
         );
+      },
+    );
+  }
+
+  static void UsersDialog({
+    required BuildContext context
+  }) {
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black45,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.bounceInOut.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return UsersBuilder();
       },
     );
   }

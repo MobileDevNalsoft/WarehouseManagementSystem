@@ -53,4 +53,12 @@ class ModelLoaded extends WarehouseInteractionEvent {
   List<Object> get props => [isLoaded];
 }
 
+class GetUsersData extends WarehouseInteractionEvent{}
 
+class FilterUsers extends WarehouseInteractionEvent{
+  final String searchText;
+  FilterUsers({required this.searchText});
+
+  @override
+  List<Object> get props => [searchText];
+}

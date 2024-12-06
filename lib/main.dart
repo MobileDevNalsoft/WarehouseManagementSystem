@@ -28,7 +28,7 @@ main() async {
 
   runApp(MultiBlocProvider(
     providers: [
-      BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt())),
+      BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt(), customApi: getIt())),
       BlocProvider(create: (_) => ActivityAreaBloc(customApi: getIt())),
       BlocProvider(create: (_) => InspectionAreaBloc(customApi: getIt())),
       BlocProvider(create: (_) => DockAreaBloc(customApi: getIt())),
@@ -47,7 +47,7 @@ main() async {
       ),
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: getIt<SharedPreferences>().getBool("isLogged")==null||getIt<SharedPreferences>().getBool("isLogged")==false? '/dashboards':'/warehouse',
+        initialRoute: getIt<SharedPreferences>().getBool("isLogged")==null||getIt<SharedPreferences>().getBool("isLogged")==false? '/warehouse':'/warehouse',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
         ),

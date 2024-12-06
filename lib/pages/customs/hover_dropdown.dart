@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/dashboard_utils/pages/entry_point.dart';
  import 'dart:html' as html;
 
@@ -49,8 +50,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
                       child: InkWell(
                           onTap: () {
                             setState(() {
-                              height = height == size.height*0.2 ? size.height*0.08 : size.height*0.2; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.08 : size.height*0.2;
+                              height = height == size.height*0.27 ? size.height*0.08 : size.height*0.27; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                              bottomHeight = bottomHeight == size.height*0.27 ? size.height*0.08 : size.height*0.27;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
                             
@@ -61,13 +62,24 @@ class _HoverDropdownState extends State<HoverDropdown> {
                       child: InkWell(
                           onTap: () {
                             setState(() {
-                              height = height == size.height*0.2 ? size.height*0.08 : size.height*0.2; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == size.height*0.2 ? size.height*0.08 : size.height*0.2;
+                              height = height == size.height*0.27 ? size.height*0.08 : size.height*0.27; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                              bottomHeight = bottomHeight == size.height*0.27 ? size.height*0.08 : size.height*0.27;
                               turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                             });
                              urlNavigator.launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
                           },
                           child: ForHover(text: "WMS Cloud"))),
+                  PointerInterceptor(
+                      child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              height = height == size.height*0.27 ? size.height*0.08 : size.height*0.27; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                              bottomHeight = bottomHeight == size.height*0.27 ? size.height*0.08 : size.height*0.27;
+                              turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                            });
+                            Customs.UsersDialog(context: context);
+                          },
+                          child: ForHover(text: "Manage Users"))),
                 ],
               ),
             ),
@@ -78,8 +90,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
             child: InkWell(
               onTap: () {
                 setState(() {
-                  height = height == size.height*0.08 ? size.height*0.2 : size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                  bottomHeight = bottomHeight == size.height*0.08 ? size.height*0.2 : size.height*0.08;
+                  height = height == size.height*0.08 ? size.height*0.27 : size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                  bottomHeight = bottomHeight == size.height*0.08 ? size.height*0.27 : size.height*0.08;
                   turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                 });
               },
