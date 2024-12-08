@@ -17,7 +17,7 @@ enum GetUserInfo{initial, loading, success, failure}
 // ignore: must_be_immutable
 final class WarehouseInteractionState{
   WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "Storagearea", this.searchText,this.getState = GetCompanyDataState.initial,
-  this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal, this.getUserInfoState, this.getUsersState, this.userInfo, this.users, this.updatedUsers, this.filteredUsers});
+  this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal, this.getUserInfoState, this.getUsersState, this.userInfo, this.users, this.filteredUsers});
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -35,11 +35,10 @@ final class WarehouseInteractionState{
   User? userInfo;
   List<User>? users;
   List<User>? filteredUsers;
-  List<User>? updatedUsers;
   // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(dataFromJS: {"object": "null"}, isModelLoaded: false,getState: GetCompanyDataState.initial,facilityDataState: GetFacilityDataState.initial,companyModel: CompanyModel(results: [CompanyResults(name: "M10 Company"),CompanyResults(name: "Demo"),CompanyResults(name: "Demo Customer1"),CompanyResults(name: "Demo Customer2"),CompanyResults(name: "SUM Compnay"),CompanyResults(name: "VIM Company")],),selectedCompanyVal: "M10 Company"
-    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse"),FacilityResults(name: "Duty-Free Warehouse"),]),selectedFacilityVal: "Duty-Paid Warehouse", getUserInfoState: GetUserInfo.initial, getUsersState: GetUsers.initial, users : [], updatedUsers: [], filteredUsers: []
+    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse"),FacilityResults(name: "Duty-Free Warehouse"),]),selectedFacilityVal: "Duty-Paid Warehouse", getUserInfoState: GetUserInfo.initial, getUsersState: GetUsers.initial, users : [], filteredUsers: []
     );
   }
 

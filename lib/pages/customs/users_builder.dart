@@ -24,6 +24,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+    _warehouseInteractionBloc.add(FilterUsers(searchText: ''));
   }
 
   @override
@@ -98,10 +99,10 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                   children: [
                                     Text(state.filteredUsers![index].username!, style: TextStyle(fontSize: size.aspectRatio*8),),
                                     SizedBox(
-                                      height: size.height*0.06,
+                                      height: size.height*0.07,
                                       width: size.width * 0.1,
                                       child: Transform.translate(
-                                        offset: Offset(0, size.height*0.005),
+                                        offset: Offset(0, 0),
                                         child: CustomDropdown<String>.multiSelect(
                                           items: const [
                                             "Dashboards",
@@ -119,8 +120,8 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                           hideSelectedFieldWhenExpanded: true,
                                           onListChanged: (value) {
                                             state.filteredUsers![index].access = value;
-                                            _warehouseInteractionBloc.add(FilterUsers(searchText: textEditingController.text));
-                                            _warehouseInteractionBloc.state.updatedUsers!.add(User(username: state.filteredUsers![index].username, access: value));
+                                            print(value);
+                                            // _warehouseInteractionBloc.add(FilterUsers(searchText: textEditingController.text));
                                           },
                                         ),
                                       ),
@@ -142,7 +143,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                _warehouseInteractionBloc.state.filteredUsers = _warehouseInteractionBloc.state.users;
+                                _warehouseInteractionBloc.add(FilterUsers(searchText: ''));
                                 Navigator.pop(context);
                               },
                               child: Text('Discard'),
@@ -152,7 +153,15 @@ class _UsersBuilderState extends State<UsersBuilder> {
                             ),
                             Gap(size.width*0.005),
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _warehouseInteractionBloc.state.filteredUsers!.removeWhere((e) => e.access.toString() == _warehouseInteractionBloc.state.users![_warehouseInteractionBloc.state.filteredUsers!.indexOf(e)].access.toString());
+                                _warehouseInteractionBloc.state.filteredUsers!.forEach((e) {
+                                  _warehouseInteractionBloc.state.users!.where((i) => i.username == e.username).first.access = e.access;
+                                });
+                                _warehouseInteractionBloc.add(UpdateUserAccess(updatedUsers: _warehouseInteractionBloc.state.filteredUsers!));
+                                print(_warehouseInteractionBloc.state.filteredUsers!.length);
+                                Navigator.pop(context);
+                              },
                               child: Text('Save'),
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
