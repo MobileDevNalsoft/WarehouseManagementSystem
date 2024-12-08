@@ -17,6 +17,7 @@ import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
 import 'package:wmssimulator/pages/customs/custom_progress_bar.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/customs/searchbar_dropdown.dart';
 import 'package:wmssimulator/pages/customs/facility_dropdown.dart';
 import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
@@ -65,6 +66,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+
+    _warehouseInteractionBloc.add(GetUsersData());
  
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
     widthAnimation =
@@ -91,6 +94,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    
     return Scaffold(
         body: Stack(
       children: [
