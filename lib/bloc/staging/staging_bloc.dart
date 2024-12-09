@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wmssimulator/bloc/staging/staging_event.dart';
 import 'package:wmssimulator/bloc/staging/staging_state.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
+import 'package:wmssimulator/models/area_response.dart';
 import 'package:wmssimulator/models/staging_area_model.dart';
 
 import '../../local_network_calls.dart';
@@ -25,17 +26,16 @@ class StagingBloc  extends Bloc<StagingEvent,StagingState>{
         (event.searchText!=null&& event.searchText!="") ? AppConstants.SEARCH :
         AppConstants.STAGING_AREA,
         queryParameters: (event.searchText != null && event.searchText!="")
-                    ? {"search_text": event.searchText, "search_area": "STAGING", "facility_id": '243', "page_num": state.pageNum}: {"facility_id": 243, "page_num": state.pageNum},
+                    ? {"search_text": event.searchText, "search_area": "STAGING", "facility_id": '243', "page_num": state.pageNum}: {"facility_id": 243},
     ).then((value) {
-       StagingArea stagingArea = StagingArea.fromJson(jsonDecode(value.response!.data));
-       if(state.pageNum==0){
-        print("staging are data ${stagingArea.data}");
-      state.stagingList=stagingArea.data;
-       }
-       else{
-       state.stagingList!.addAll(stagingArea.data!);
-       }
-       emit(state.copyWith(stagingArea: stagingArea,stagingStatus:StagingAreaStatus.success,stagingList: state.stagingList!));
+       AreaResponse<StagingAreaItem> stagingAreaData = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => StagingAreaItem.fromJson(json));
+        if (state.pageNum == 0) {
+          state.stagingList = stagingAreaData.data;
+        } else {
+          state.stagingList!.addAll(stagingAreaData.data!);
+        }
+
+        emit(state.copyWith(stagingStatus: StagingAreaStatus.success, stagingList: state.stagingList!));
        
       });
     } catch (e) {

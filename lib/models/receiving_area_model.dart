@@ -57,6 +57,40 @@ class   ReceiveData {
   }
 }
 
+class ReceivingAreaItem{
+  String? vendorName;
+  List<Shipment>? shipments;
+  ReceivingAreaItem({this.vendorName, this.shipments});
+  ReceivingAreaItem.fromJson(Map<String, dynamic> json){
+    vendorName = json.keys.first;
+    shipments = (json.values.first as List).map((e) => Shipment.fromJson(e)).toList();
+  }
+}
+
+class Shipment{
+  String? shipmentNo;
+  List<Item>? items;
+  Shipment({this.shipmentNo, this.items});
+  Shipment.fromJson(Map<String, dynamic> json){
+    shipmentNo = json.keys.first;
+    items = (json.values.first as List).map((e) => Item.fromJson(e)).toList();
+  }
+}
+
+class Item{
+  String? item;
+  String? po;
+  String? containerNBR;
+  String? qty;
+  Item({this.item, this.po, this.containerNBR, this.qty});
+  Item.fromJson(Map<String, dynamic> json){
+    item = json['item_key'];
+    po = json['po'];
+    containerNBR = json['container_nbr'];
+    qty = json['qty'];
+  }
+}
+
 
 class ReceivingDashboard{
   List<InBoundSummary>? totalInBoundSummary;

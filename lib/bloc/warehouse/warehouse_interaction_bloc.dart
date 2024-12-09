@@ -121,6 +121,9 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       await getIt<NetworkCalls>().get(AppConstants.USERS).then((value) {
         AreaResponse<User> usersFromBD = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => User.fromJson(json));
         emit(state.copyWith(users: usersFromBD.data, filteredUsers: usersFromBD.data, getUsersState: GetUsers.success));
+        for(int i = 0; i< state.filteredUsers!.length; i++ ){
+          print(state.filteredUsers![i].access);
+        }
       });
     } catch (e) {
       print("error $e");
@@ -145,9 +148,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
   Future<void> _onUpdateUserAccess(UpdateUserAccess event, Emitter<WarehouseInteractionState> emit) async {
     emit(state.copyWith(getUsersState: GetUsers.loading));
     try {
-      print('{"data": ${jsonEncode(event.updatedUsers.map((e) => e.toJson()).toList())}}');
-      await getIt<NetworkCalls>().post(AppConstants.USERS, data: {"data": jsonEncode(event.updatedUsers.map((e) => e.toJson()).toList())}).then((apiResponse) {
-        print(apiResponse.response!.data);
+      await getIt<NetworkCalls>().post(AppConstants.USERS, data: {"data": event.updatedUsers.map((e) => e.toJson()).toList()}).then((apiResponse) {
         emit(state.copyWith(getUsersState: GetUsers.success));
       });
     } catch (e) {

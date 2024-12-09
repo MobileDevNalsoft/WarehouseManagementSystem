@@ -8,14 +8,14 @@ final class StagingState {
 
   StagingAreaStatus? stagingStatus;
   StagingArea? stagingArea;
-  List<StagingData>? stagingList;
+  List<StagingAreaItem>? stagingList;
   int? pageNum;
 
   factory StagingState.initial() {
     return StagingState(stagingStatus: StagingAreaStatus.initial, pageNum: 0, stagingList: []);
   }
 
-  StagingState copyWith({StagingAreaStatus? stagingStatus, StagingArea? stagingArea, int? pageNum, List<StagingData>? stagingList}) {
+  StagingState copyWith({StagingAreaStatus? stagingStatus, StagingArea? stagingArea, int? pageNum, List<StagingAreaItem>? stagingList}) {
     return StagingState(
         stagingStatus: stagingStatus ?? this.stagingStatus,
         stagingArea: stagingArea ?? this.stagingArea,

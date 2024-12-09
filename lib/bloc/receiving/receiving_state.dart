@@ -8,14 +8,14 @@ final class ReceivingState {
 
   ReceivingAreaStatus? receivingStatus;
   ReceivingArea? receivingArea;
-  List<ReceiveData>? receiveList;
+  List<ReceivingAreaItem>? receiveList;
   int? pageNum;
 
   factory ReceivingState.initial() {
     return ReceivingState(receivingStatus: ReceivingAreaStatus.initial, pageNum: 0, receiveList: []);
   }
 
-  ReceivingState copyWith({ReceivingAreaStatus? receivingStatus, ReceivingArea? receivingArea, int? pageNum, List<ReceiveData>? receiveList}) {
+  ReceivingState copyWith({ReceivingAreaStatus? receivingStatus, ReceivingArea? receivingArea, int? pageNum, List<ReceivingAreaItem>? receiveList}) {
     return ReceivingState(
         receivingStatus: receivingStatus ?? this.receivingStatus,
         receivingArea: receivingArea ?? this.receivingArea,

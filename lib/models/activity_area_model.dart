@@ -1,17 +1,13 @@
 import 'package:wmssimulator/models/inspection_area_model.dart';
+import 'package:wmssimulator/models/staging_area_model.dart';
 
 class ActivityAreaItem {
-  String? workOrderNum;
   String? workOrderType;
-  String? item;
-  int? qty;
-  ActivityAreaItem({this.workOrderNum, this.workOrderType, this.item, this.qty});
-
-  ActivityAreaItem.fromJson(Map<String, dynamic> json) {
-    workOrderNum = json['work_order_num'];
-    workOrderType = json['work_order_type'];
-    item = json['item'];
-    qty = int.parse(json['qty']);
+  List<Item>? items;
+  ActivityAreaItem({this.workOrderType, this.items});
+  ActivityAreaItem.fromJson(Map<String, dynamic> json){
+    workOrderType = json.keys.first;
+    items = (json.values.first as List).map((e) => Item.fromJson(e)).toList();
   }
 }
 

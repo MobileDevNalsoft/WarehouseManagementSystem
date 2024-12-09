@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Gap(size.height*0.1),
                       Text(
-                        "Warehouse Simulator",
+                        "Digital Warehouse",
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: aspectRatio*16, 

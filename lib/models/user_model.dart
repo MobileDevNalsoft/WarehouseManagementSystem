@@ -7,13 +7,13 @@ class User {
 
   User.fromJson(Map<String, dynamic> json) {
     username = json.keys.first;
-    access = (jsonDecode(json.values.first) as List).map((e) => e as String).toList();
+    access = (json.values.first as String).split(',');
   }
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> data = {};
     data['username'] = username;
-    data['access'] = access.toString();
+    data['access'] = access!.join(',');
     return data;
   }
 

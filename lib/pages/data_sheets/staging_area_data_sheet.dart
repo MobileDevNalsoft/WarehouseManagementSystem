@@ -6,6 +6,7 @@ import 'package:wmssimulator/bloc/staging/staging_bloc.dart';
 import 'package:wmssimulator/bloc/staging/staging_event.dart';
 import 'package:wmssimulator/bloc/staging/staging_state.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/models/staging_area_model.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 
 class StagingAreaDataSheet extends StatefulWidget {
@@ -59,121 +60,192 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
             builder: (context, state) {
               bool isEnabled = state.stagingStatus != StagingAreaStatus.success;
               return Expanded(
-                child: LayoutBuilder(
-                  builder: (context, lsize) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child:  (state.stagingStatus== StagingAreaStatus.success &&  state.stagingList!.length==0)?
-                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.044),),Text("Data not found")],)
-                       : 
-                      ListView.builder(
-                            controller: _controller,
-                            itemBuilder: (context, index) => index < state.stagingList!.length
-                                    ? 
-                               Container(
-                                height: lsize.maxHeight*0.16,
-                                  width: lsize.maxWidth*0.96,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      padding: EdgeInsets.all(size.height*0.01),
-                                      margin: EdgeInsets.only(top: size.height*0.01),
-                                      child: LayoutBuilder(
-                                        builder: (context,containerSize) {
-                                          return Column(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Row(children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                  child: Image.asset('assets/images/od.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
-                                                ),
-                                                SizedBox(width: containerSize.maxWidth*0.8, child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.stagingList![index].orderNum!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold), maxLines: 1,))),
-                                                
-                                               ],),
-                                               Padding(
-                                                 padding:  EdgeInsets.only(right: containerSize.maxWidth*0.016),
-                                                 child: Row(
-                                                  // mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [ Image.asset('assets/images/businessman.png', height:   containerSize.maxHeight*0.18, width: containerSize.maxWidth*0.16,),
-                                                  SingleChildScrollView(scrollDirection: Axis.horizontal, child: Text(state.stagingList![index].custName!=""?state.stagingList![index].custName!:"NA", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
-                                                                                               ],),
-                                               ),
-                                              
-                                              Row(children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only( right:containerSize.maxWidth*0.046,left: containerSize.maxWidth*0.018),
-                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.125, width: containerSize.maxWidth*0.095,),
-                                                ),
-                                                Text(state.stagingList![index].item!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                                Spacer(),
-                                                Padding(
-                                                  padding: EdgeInsets.only(right: containerSize.maxWidth*0.016),
-                                                  child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.12,),
-                                                ),
-                                                SizedBox(width: containerSize.maxWidth*0.2, child: Text(state.stagingList![index].qty!.toString(), style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))
-                                              ],)
-                                            ],
-                                          );
-                                        }
-                                      ),
-                                    )
-                                : 
-                                Container(
-                                   height: lsize.maxHeight*0.16,
-                                  width: lsize.maxWidth*0.96,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15)
-                                    ),
-                                    padding: EdgeInsets.all(size.height*0.01),
-                                    margin: EdgeInsets.only(top: size.height*0.01),
-                                    child: LayoutBuilder(
-                                        builder: (context,containerSize) {
-                                        return Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Row(children: [
-                                               Padding(
-                                                  padding: EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.032),
-                                                  child: Image.asset('assets/images/od.png', height: containerSize.maxHeight*0.12, width: containerSize.maxWidth*0.12,),
-                                                ),
-                                                Skeletonizer(enableSwitchAnimation: true,child: Text('ORDER NUM', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold), maxLines: 1,),),
-                                                
-                                               
-                                              ],),
-                                              Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Row(children: [ Image.asset('assets/images/businessman.png', height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
-                                                  Skeletonizer(enableSwitchAnimation: true,child: Text('CUSTOMER ', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),))],),
-                                              ),
-                                              Row(children: [
-                                               Padding(
-                                                  padding: EdgeInsets.only( right:containerSize.maxWidth*0.046,left: containerSize.maxWidth*0.018),
-                                                  child: Image.asset('assets/images/item.png', height: containerSize.maxHeight*0.125, width: containerSize.maxWidth*0.095,),
-                                                ),
-                                                Skeletonizer(enableSwitchAnimation: true,child: Text('ITEM', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)),
-                                                Spacer(),
-                                               Padding(
-                                                  padding: EdgeInsets.only(right: containerSize.maxWidth*0.016),
-                                                  child: Image.asset('assets/images/qty.png', height: containerSize.maxHeight*0.16, width: containerSize.maxWidth*0.12,),
-                                                ),
-                                                Skeletonizer(enableSwitchAnimation: true,child: SizedBox(width: containerSize.maxWidth*0.2, child: Text('QTY', style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),)))
-                                              ],)
-                                          ],
-                                        );
-                                      }
-                                    ),
-                                  ),
-                            itemCount: isEnabled ? 8 : state.stagingList!.length + 1 > (state.pageNum!+1)*100 ? state.stagingList!.length + 1 : state.stagingList!.length),
-                    );
-                  }
-                ),
-              );
+            child: LayoutBuilder(builder: (context, lsize) {
+              return (!isEnabled &&  state.stagingList!.isEmpty)?
+                      Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                     : isEnabled ? Center(child: CircularProgressIndicator(),) : StagingListView(data: state.stagingList!, l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white), l2StyleData: L2StyleData(height: lsize.maxHeight*0.145, color: Color.fromRGBO(43, 79, 122, 1), dropDownColor: Color.fromRGBO(43, 79, 122, 1)));
+            }),
+          );
             },
           )
       ]
     );
   }
+}
+
+
+class StagingListView extends StatefulWidget {
+  StagingListView({super.key, required this.data, required this.l1StyleData, required this.l2StyleData});
+  List<StagingAreaItem> data;
+  L1StyleData l1StyleData;
+  L2StyleData l2StyleData;
+
+  @override
+  _StagingListViewState createState() => _StagingListViewState();
+}
+
+class _StagingListViewState extends State<StagingListView> {
+  List<double> heights = [];
+  List<double> bottomHeights = [];
+  List<double> turns = [];
+  int? openDropdownIndex; // Track which dropdown is currently open
+  int? outerOpenDropdownIndex;
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    heights = List.filled(widget.data.length, widget.l1StyleData.height);
+    bottomHeights = List.filled(widget.data.length, widget.l1StyleData.height);
+    turns = List.filled(widget.data.length, 1);
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25),
+      child: ListView.builder(
+          itemCount: widget.data.length,
+          itemBuilder: (context, oindex) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: heights[oindex],
+              width: widget.l1StyleData.width,
+              child: Stack(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    height: bottomHeights[oindex],
+                    width: widget.l1StyleData.width,
+                    color: Colors.transparent,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 65, bottom: 5),
+                      decoration: BoxDecoration(
+                        color: widget.l1StyleData.dropDownColor,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(25),
+                        child: ListView.builder(
+                            itemCount: widget.data[oindex].items!.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                                padding: EdgeInsets.all(10),
+                                                height: widget.l2StyleData.height,
+                                                margin: EdgeInsets.only(bottom: 5),
+                                                decoration: BoxDecoration(
+                                                  color: widget.l2StyleData.color,
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                child: LayoutBuilder(
+                                                  builder: (context, lsize) {
+                                                    return Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('Item', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045, color: Colors.white),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].items![index].item!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold, color: Colors.white),)],
+                                                        ),
+                                                        Row(
+                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('OD', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045, color: Colors.white),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].items![index].od!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold, color: Colors.white),)],
+                                                        ),
+                                                        Row(
+                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('QTY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045, color: Colors.white),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].items![index].qty!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold, color: Colors.white),)],
+                                                        )
+                                                      ],
+                                                    );
+                                                  }
+                                                ));
+                            }),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (heights[oindex] == widget.l1StyleData.height) {
+                          openDropdownIndex = null; // Reset opened index for inner dropdowns
+                        }
+                        // Close other opened dropdowns
+                        if (outerOpenDropdownIndex == oindex) {
+                          // If the same dropdown is tapped, close it
+                          heights[oindex] = heights[oindex] == widget.l1StyleData.height
+                              ? (widget.data[oindex].items!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
+                              : widget.l1StyleData.height;
+                          bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
+                              ? (widget.data[oindex].items!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
+                              : widget.l1StyleData.height;
+                          turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
+                          outerOpenDropdownIndex = null; // Reset opened index
+                        } else {
+                          // Close previously opened dropdown and open the new one
+                          if (outerOpenDropdownIndex != null) {
+                            heights[outerOpenDropdownIndex!] = widget.l1StyleData.height; // Reset previous dropdown
+                            bottomHeights[outerOpenDropdownIndex!] = widget.l1StyleData.height; // Reset previous bottom height
+                            turns[outerOpenDropdownIndex!] = 1;
+                          }
+                          outerOpenDropdownIndex = oindex; // Set current index as opened
+                          heights[oindex] = (widget.data[oindex].items!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current bottom height
+                          turns[oindex] = 0.5;
+                        }
+                      });
+                    },
+                    child: Container(
+                      height: widget.l1StyleData.height,
+                      width: widget.l1StyleData.width,
+                      padding: EdgeInsets.all(5),
+                      margin: EdgeInsets.only(bottom: 5),
+                      decoration: BoxDecoration(
+                        color: widget.l1StyleData.color, // Purple background
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: LayoutBuilder(builder: (context, lsize) {
+                        return Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/businessman.png',
+                              scale: lsize.maxHeight * 0.05,
+                            ),
+                            Gap(lsize.maxWidth * 0.01),
+                            Text(
+                              '${widget.data[oindex].customerName!.replaceAll('"', '')} (${widget.data[oindex].items!.length})',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            Spacer(),
+                            AnimatedRotation(
+                              turns: turns[oindex],
+                              duration: const Duration(milliseconds: 200),
+                              child: Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: 20,
+                                // color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  )
+                ],
+              ),
+            );
+          }),
+    );
+  }
+}
+
+class L1StyleData {
+  double height;
+  double width;
+  Color? color;
+  Color? dropDownColor;
+  L1StyleData({required this.height, required this.width, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(163, 183, 209, 1)});
+}
+
+class L2StyleData {
+  double height;
+  Color? color;
+  Color? dropDownColor;
+  L2StyleData({required this.height, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(194, 213, 238, 1)});
 }

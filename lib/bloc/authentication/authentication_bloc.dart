@@ -15,11 +15,12 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   NavigatorService? navigator;
-  AuthenticationBloc({this.navigator}) : super(AuthenticationState.initial()) {
+  AuthenticationBloc({this.navigator, required NetworkCalls customApi}) : _customApi = customApi,super(AuthenticationState.initial()) {
     on<LoginButtonPressed>(_onLoginButtonPressed);
     on<ObscurePasswordTapped>(_onObscurePasswordTapped);
   }
 
+  final NetworkCalls _customApi;
   final NetworkCalls _authApi = NetworkCalls(AppConstants.IDCS_URL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5);
   final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
@@ -48,9 +49,13 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         }
         if (token.isNotEmpty) {
           await sharedPreferences.setString("uname", event.username);
-          emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
-          navigator!.pushReplacement('/warehouse');
-          getIt<SharedPreferences>().setBool('isLogged', true);
+          await _customApi.get(AppConstants.USERINFO, queryParameters: {"username": event.username}).then((value) async {
+            await sharedPreferences.setStringList("access_types", apiResponse.response!.data['access_types'].split(','));
+            print(sharedPreferences.getStringList('access_types'));
+            emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
+            // navigator!.pushReplacement('/warehouse');
+            getIt<SharedPreferences>().setBool('isLogged', true);
+          },);
         } else {
           print('invalid');
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.invalidCredentials));

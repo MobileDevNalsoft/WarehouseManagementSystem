@@ -110,7 +110,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                             "3D Model",
                                             "Manage Users",
                                           ],
-                                          initialItems: state.filteredUsers![index].access,
+                                          initialItems: state.filteredUsers![index].access!.toString() == ["NULL"].toString() ? null : state.filteredUsers![index].access!,
                                           hintBuilder: (context, hint, enabled) {
                                             return const Text('Configure Access');
                                           },

@@ -54,6 +54,28 @@ class StagingData {
   }
 }
 
+class StagingAreaItem{
+  String? customerName;
+  List<Item>? items;
+  StagingAreaItem({this.customerName, this.items});
+  StagingAreaItem.fromJson(Map<String, dynamic> json){
+    customerName = json.keys.first;
+    items = (json.values.first as List).map((e) => Item.fromJson(e)).toList();
+  }
+}
+
+class Item{
+  String? item;
+  String? od;
+  String? qty;
+  Item({this.item, this.od, this.qty});
+  Item.fromJson(Map<String, dynamic> json){
+    item = json['item_key'];
+    od = json['order_no'];
+    qty = json['qty'];
+  }
+}
+
 class StagingDashboard{
   List<StatusCount>? todayOrderSummary;
   List<StatusCount>? todayChannelSummary;

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_event.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_state.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
+import 'package:wmssimulator/models/area_response.dart';
 import 'package:wmssimulator/models/receiving_area_model.dart';
 
 import '../../local_network_calls.dart';
@@ -27,17 +28,17 @@ class ReceivingBloc extends Bloc<ReceivingEvent, ReceivingState> {
          (event.searchText != null && event.searchText!="")? AppConstants.SEARCH : AppConstants.RECEIVING_AREA,
         queryParameters: (event.searchText != null&& event.searchText!="")
             ? {"search_text": event.searchText, "search_area": "RECEIVING", "facility_id": '243', "page_num": state.pageNum}
-            : {"facility_id": 243, "page_num": state.pageNum},
+            : {"facility_id": 243},
       )
           .then((value) {
-        ReceivingArea receivingArea = ReceivingArea.fromJson(jsonDecode(value.response!.data));
+        AreaResponse<ReceivingAreaItem> receivingAreaData = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => ReceivingAreaItem.fromJson(json));
         if (state.pageNum == 0) {
-          state.receiveList = receivingArea.data;
+          state.receiveList = receivingAreaData.data;
         } else {
-          state.receiveList!.addAll(receivingArea.data!);
+          state.receiveList!.addAll(receivingAreaData.data!);
         }
 
-        emit(state.copyWith(receivingArea: receivingArea, receivingStatus: ReceivingAreaStatus.success, receiveList: state.receiveList!));
+        emit(state.copyWith(receivingStatus: ReceivingAreaStatus.success, receiveList: state.receiveList!));
       });
     } catch (e) {
       print("error $e");

@@ -8,7 +8,7 @@ final class InspectionAreaState {
 
   GetDataState? getDataState;
   int? pageNum;
-  List<InspectionAreaItem>? inspectionAreaItems;
+  List<ReceivingAreaItem>? inspectionAreaItems;
 
   factory InspectionAreaState.initial() {
     return InspectionAreaState(getDataState: GetDataState.initial, inspectionAreaItems: [], pageNum: 0);
@@ -16,7 +16,7 @@ final class InspectionAreaState {
 
   InspectionAreaState copyWith({
     GetDataState? getDataState,
-    List<InspectionAreaItem>? inspectionAreaItems,
+    List<ReceivingAreaItem>? inspectionAreaItems,
     int? pageNum
   }) {
     return InspectionAreaState(getDataState: getDataState ?? this.getDataState, inspectionAreaItems: inspectionAreaItems ?? this.inspectionAreaItems, pageNum: pageNum ?? this.pageNum);
