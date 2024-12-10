@@ -1,11 +1,17 @@
 import * as GLTFLoader from "gltfLoader";
+import * as THREE from "three";
+import {DRACOLoader} from "draco";
 
 export function loadModel() {
     const loader = new GLTFLoader.GLTFLoader();
 
     return new Promise((resolve, reject) => {
+        // Create and configure the DRACOLoader
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.114.0/examples/js/libs/draco/');
+        loader.setDRACOLoader( dracoLoader );
         loader.load(
-            "../glbs/warehouse_2811_0604.glb",
+            "../glbs/warehouse_1012_1221_compressed.glb",
             function (gltf) {
                 resolve(gltf); // Resolve with the loaded glTF model
             },
