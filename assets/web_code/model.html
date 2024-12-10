@@ -12,6 +12,7 @@
           "orbitControls": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js",
           "bufferGeometryUtils": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/utils/BufferGeometryUtils.js",
           "gltfLoader": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js",
+          "draco":"https://cdn.jsdelivr.net/npm/three@0.114.0/examples/jsm/loaders/DRACOLoader.js",
           "localStorage": "./localStorage.js",
           "animations": "./animations.js",
           "renderer": "./renderer.js",
@@ -21,7 +22,8 @@
           "loader": "./modelLoader.js",
           "skyDome": "./skyDome.js",
           "lights": "./lights.js",
-          "interactions": "./interactions.js"
+          "interactions": "./interactions.js",
+          "navPath": "./navigation_path.js"
         }
       }
     </script>
@@ -39,6 +41,7 @@
       <button class="areaButton ignoreRaycast" id="yardArea">Yard Area</button>
       <button class="areaButton ignoreRaycast" id="dockArea-IN">Dock Area IN</button>
       <button class="areaButton ignoreRaycast" id="dockArea-OUT">Dock Area OUT</button>
+      <button class="path" id="navigation_path">Path</button>
       <button class="ignoreRaycast" id="togglePanel">&#x25B6;</button>
       <!-- Chevron right symbol -->
       <div id="toggleTooltip">Open Controls</div>
