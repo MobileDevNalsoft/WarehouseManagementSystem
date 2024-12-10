@@ -13,7 +13,7 @@ import * as GLTFLoader from "gltfLoader";
 export async function initScene(renderer) {
   const container = document.getElementById("container");
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xcccccc);
+  scene.background = new THREE.Color(0x000000);
 
   // Set up renderer
   renderer.setSize(container.clientWidth, container.clientHeight);

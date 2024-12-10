@@ -80,8 +80,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       // Custom text field for password
                       BlocConsumer<AuthenticationBloc, AuthenticationState>(
-                        listenWhen: (previous, current) => (current.authenticationStatus == AuthenticationStatus.invalidCredentials || current.authenticationStatus == AuthenticationStatus.failure) && previous.authenticationStatus != current.authenticationStatus,
-                        listener: (context, state) => Customs.AnimatedDialog(context: context, header: const Icon(Icons.error, size: 35,), content: [Text(state.authenticationStatus == AuthenticationStatus.invalidCredentials ? 'Invalid Credentials' : 'Error', style: const TextStyle(fontSize: 18),)]),
+                        listenWhen: (previous, current) => (current.authenticationStatus == AuthenticationStatus.invalidCredentials || current.authenticationStatus == AuthenticationStatus.failure || current.authenticationStatus == AuthenticationStatus.accessDenied) && previous.authenticationStatus != current.authenticationStatus,
+                        listener: (context, state) => Customs.AnimatedDialog(context: context, header: const Icon(Icons.error, size: 35,), content: [Text(state.authenticationStatus == AuthenticationStatus.invalidCredentials ? 'Invalid Credentials' : state.authenticationStatus == AuthenticationStatus.accessDenied ? 'Access Denied' : 'Error', style: const TextStyle(fontSize: 18),)]),
                         builder: (context, state) {
                           return CustomTextFormField(
                             hintText: 'password',
@@ -156,10 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Icons.error,
                                 color: Colors.black,
                                 size: 35,
-                              ), content: [SizedBox(
-                                height: size.height*0.1,
-                                width: size.width*0.18,
-                                child: Text(message, style: TextStyle(fontSize: aspectRatio*8),softWrap: true, textAlign: TextAlign.center,))]);
+                              ), content: [Text(message, style: TextStyle(fontSize: aspectRatio*8),textAlign: TextAlign.center,)]);
                           } else {
                             // unfocuses all the focused fields
                             FocusManager.instance.primaryFocus?.unfocus();

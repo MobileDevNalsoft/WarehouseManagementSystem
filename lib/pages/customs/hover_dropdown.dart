@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/navigations/navigator_service.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/dashboard_utils/pages/entry_point.dart';
  import 'dart:html' as html;
 
 class HoverDropdown extends StatefulWidget {
-  HoverDropdown({super.key, required this.size});
+  HoverDropdown({super.key, required this.size, required this.accessTypes});
   Size size;
+  List<String> accessTypes;
 
   @override
   State<HoverDropdown> createState() => _HoverDropdownState();
@@ -18,14 +22,18 @@ class _HoverDropdownState extends State<HoverDropdown> {
 
   double? height;
   double? bottomHeight;
+  double? maxHeight;
   double turns = 1;
   final UrlNavigator urlNavigator = UrlNavigator();
+  SharedPreferences sharedPreferences = getIt<SharedPreferences>();
+  List<String> localAccessTypes = ["Dashboard","WMS Cloud","Manage Users"];
 
   @override
   void initState() {
     super.initState();
     height = widget.size.height*0.08;
     bottomHeight = widget.size.height*0.08;
+    maxHeight = widget.size.height*0.08 + widget.size.height*(Set.from(localAccessTypes).intersection(Set.from(widget.accessTypes)).length*0.061) + widget.size.height*0.061;
   }
 
   @override
@@ -41,46 +49,64 @@ class _HoverDropdownState extends State<HoverDropdown> {
             duration: Duration(milliseconds: 200),
             height: bottomHeight,
             width: size.width * 0.12,
-            child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  Gap(size.height * 0.08),
-                  PointerInterceptor(
-                      child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              height = height == size.height*0.27 ? size.height*0.08 : size.height*0.27; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == size.height*0.27 ? size.height*0.08 : size.height*0.27;
-                              turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
-                            });
-                            
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => EntryPoint(),));
-                          },
-                          child: ForHover(text: "Dashboard"))),
-                  PointerInterceptor(
-                      child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              height = height == size.height*0.27 ? size.height*0.08 : size.height*0.27; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == size.height*0.27 ? size.height*0.08 : size.height*0.27;
-                              turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
-                            });
-                             urlNavigator.launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
-                          },
-                          child: ForHover(text: "WMS Cloud"))),
-                  PointerInterceptor(
-                      child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              height = height == size.height*0.27 ? size.height*0.08 : size.height*0.27; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                              bottomHeight = bottomHeight == size.height*0.27 ? size.height*0.08 : size.height*0.27;
-                              turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
-                            });
-                            Customs.UsersDialog(context: context);
-                          },
-                          child: ForHover(text: "Manage Users"))),
-                ],
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Gap(size.height * 0.08),
+                    if(widget.accessTypes.contains('Dashboard'))
+                    PointerInterceptor(
+                        child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
+                                turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                              });
+                              
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => EntryPoint(),));
+                            },
+                            child: ForHover(text: "Dashboard"))),
+                    if(widget.accessTypes.contains('WMS Cloud'))
+                    PointerInterceptor(
+                        child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
+                                turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                              });
+                               urlNavigator.launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
+                            },
+                            child: ForHover(text: "WMS Cloud"))),
+                    if(widget.accessTypes.contains('Manage Users'))
+                    PointerInterceptor(
+                        child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
+                                turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                              });
+                              Customs.UsersDialog(context: context);
+                            },
+                            child: ForHover(text: "Manage Users"))),
+                    PointerInterceptor(
+                        child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
+                                turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                              });
+                              getIt<NavigatorService>().pushAndRemoveUntil('/login', '/');
+                              sharedPreferences.clear();
+                            },
+                            child: ForHover(text: "Log Out"))),
+                  ],
+                ),
               ),
             ),
           ),
@@ -90,8 +116,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
             child: InkWell(
               onTap: () {
                 setState(() {
-                  height = height == size.height*0.08 ? size.height*0.27 : size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                  bottomHeight = bottomHeight == size.height*0.08 ? size.height*0.27 : size.height*0.08;
+                  height = height == size.height*0.08 ? maxHeight : size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                  bottomHeight = bottomHeight == size.height*0.08 ? maxHeight : size.height*0.08;
                   turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                 });
               },

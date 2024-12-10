@@ -26,6 +26,8 @@ main() async {
 
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
+  List<String> accessList = sharedPreferences.getStringList('access_types') ?? [];
+
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt(), customApi: getIt())),
@@ -44,10 +46,10 @@ main() async {
         navigatorKey: getIt<NavigatorService>().navigatorkey,
         scrollBehavior: MaterialScrollBehavior().copyWith(
         dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
-      ),
+        ),
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: getIt<SharedPreferences>().getBool("isLogged")==null||getIt<SharedPreferences>().getBool("isLogged")==false? '/login':'/warehouse',
+        initialRoute: !sharedPreferences.containsKey('username') ? '/login': '/warehouse',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
         ),

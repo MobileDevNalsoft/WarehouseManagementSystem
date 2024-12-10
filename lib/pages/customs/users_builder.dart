@@ -19,6 +19,12 @@ class _UsersBuilderState extends State<UsersBuilder> {
 
   TextEditingController textEditingController = TextEditingController();
   late WarehouseInteractionBloc _warehouseInteractionBloc;
+  MultiSelectController multiSelectController = MultiSelectController([
+                                            "Dashboard",
+                                            "WMS Cloud",
+                                            "3D Model",
+                                            "Manage Users",
+                                          ]);
 
   @override
   void initState() {
@@ -102,15 +108,15 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                       height: size.height*0.07,
                                       width: size.width * 0.1,
                                       child: Transform.translate(
-                                        offset: Offset(0, 0),
+                                        offset: Offset(0, size.height*0.01),
                                         child: CustomDropdown<String>.multiSelect(
                                           items: const [
-                                            "Dashboards",
+                                            "Dashboard",
                                             "WMS Cloud",
                                             "3D Model",
                                             "Manage Users",
                                           ],
-                                          initialItems: state.filteredUsers![index].access!.toString() == ["NULL"].toString() ? null : state.filteredUsers![index].access!,
+                                          initialItems: state.filteredUsers![index].access!,
                                           hintBuilder: (context, hint, enabled) {
                                             return const Text('Configure Access');
                                           },
@@ -119,6 +125,10 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                           ),
                                           hideSelectedFieldWhenExpanded: true,
                                           onListChanged: (value) {
+                                            if(value.isEmpty){
+                                              print(value);
+                                              value.add('Dashboard');
+                                            }
                                             state.filteredUsers![index].access = value;
                                             print(value);
                                             // _warehouseInteractionBloc.add(FilterUsers(searchText: textEditingController.text));

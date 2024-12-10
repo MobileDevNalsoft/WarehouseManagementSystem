@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -15,7 +17,9 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   NavigatorService? navigator;
-  AuthenticationBloc({this.navigator, required NetworkCalls customApi}) : _customApi = customApi,super(AuthenticationState.initial()) {
+  AuthenticationBloc({this.navigator, required NetworkCalls customApi})
+      : _customApi = customApi,
+        super(AuthenticationState.initial()) {
     on<LoginButtonPressed>(_onLoginButtonPressed);
     on<ObscurePasswordTapped>(_onObscurePasswordTapped);
   }
@@ -48,16 +52,21 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           });
         }
         if (token.isNotEmpty) {
-          await sharedPreferences.setString("uname", event.username);
-          await _customApi.get(AppConstants.USERINFO, queryParameters: {"username": event.username}).then((value) async {
-            await sharedPreferences.setStringList("access_types", apiResponse.response!.data['access_types'].split(','));
-            print(sharedPreferences.getStringList('access_types'));
-            emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
-            // navigator!.pushReplacement('/warehouse');
-            getIt<SharedPreferences>().setBool('isLogged', true);
-          },);
+          await _customApi.get(AppConstants.USERINFO, queryParameters: {"username": event.username}).then(
+            (value) async {
+              emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
+              print(value.response!.data);
+              await sharedPreferences.setStringList("access_types", jsonDecode(value.response!.data)['data']['access_types'].split(','));
+              await sharedPreferences.setString("username", event.username);
+              navigator!.pushReplacement('/warehouse');
+            },
+          ).onError(
+            (error, stackTrace) {
+              emit(state.copyWith(authenticationStatus: AuthenticationStatus.accessDenied));
+              Log.e("no data found in DB to get access details");
+            },
+          );
         } else {
-          print('invalid');
           emit(state.copyWith(authenticationStatus: AuthenticationStatus.invalidCredentials));
           getIt<SharedPreferences>().setBool('isLogged', false);
         }
@@ -72,8 +81,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   Future<String> getRequestState(String token) async {
     String requestState = '';
-    await _authApi.get(AppConstants.AUTHENCTICATE_USER_NAME,
-        methodHeaders: {'Authorization': 'Bearer $token', 'Content-Type': 'application/x-www-form-urlencoded'}).then(
+    await _authApi
+        .get(AppConstants.AUTHENCTICATE_USER_NAME, methodHeaders: {'Authorization': 'Bearer $token', 'Content-Type': 'application/x-www-form-urlencoded'}).then(
       (apiResponse) async {
         if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
           requestState = apiResponse.response!.data["requestState"];

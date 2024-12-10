@@ -1,6 +1,6 @@
 part of 'authentication_bloc.dart';
 
-enum AuthenticationStatus { initial, loading, success, invalidCredentials, failure }
+enum AuthenticationStatus { initial, loading, success, invalidCredentials, accessDenied, failure }
 
 final class AuthenticationState extends Equatable{
   AuthenticationState({this.authenticationStatus, this.obscure});

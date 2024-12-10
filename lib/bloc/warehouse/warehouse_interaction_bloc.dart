@@ -10,6 +10,7 @@ import 'package:wmssimulator/constants/app_constants.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/local_network_calls.dart';
+import 'package:wmssimulator/logger/logger.dart';
 import 'package:wmssimulator/models/area_response.dart';
 import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
@@ -32,6 +33,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<GetUsersData>(_onGetUsersData);
     on<FilterUsers>(_onFilterUsers);
     on<UpdateUserAccess>(_onUpdateUserAccess);
+    on<GetAlerts>(_onGetAlerts);
   }
   final NetworkCalls _customApi;
   final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
@@ -118,12 +120,9 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
   Future<void> _onGetUsersData(GetUsersData event, Emitter<WarehouseInteractionState> emit) async {
     emit(state.copyWith(getUsersState: GetUsers.loading));
     try {
-      await getIt<NetworkCalls>().get(AppConstants.USERS).then((value) {
-        AreaResponse<User> usersFromBD = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => User.fromJson(json));
-        emit(state.copyWith(users: usersFromBD.data, filteredUsers: usersFromBD.data, getUsersState: GetUsers.success));
-        for(int i = 0; i< state.filteredUsers!.length; i++ ){
-          print(state.filteredUsers![i].access);
-        }
+      await _customApi.get(AppConstants.USERS).then((value) {
+        List<User> usersFromBD = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => User.fromJson(json)).data!.where((e) => e.username != sharedPreferences.getString('username')).toList();
+        emit(state.copyWith(users: usersFromBD, filteredUsers: usersFromBD, getUsersState: GetUsers.success));
       });
     } catch (e) {
       print("error $e");
@@ -148,12 +147,26 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
   Future<void> _onUpdateUserAccess(UpdateUserAccess event, Emitter<WarehouseInteractionState> emit) async {
     emit(state.copyWith(getUsersState: GetUsers.loading));
     try {
-      await getIt<NetworkCalls>().post(AppConstants.USERS, data: {"data": event.updatedUsers.map((e) => e.toJson()).toList()}).then((apiResponse) {
+      await _customApi.post(AppConstants.USERS, data: {"data": event.updatedUsers.map((e) => e.toJson()).toList()}).then((apiResponse) {
         emit(state.copyWith(getUsersState: GetUsers.success));
       });
     } catch (e) {
-      print("error $e");
+      Log.e(e);
       emit(state.copyWith(getUsersState: GetUsers.failure));
+    }
+  }
+
+  Future<void> _onGetAlerts(GetAlerts event, Emitter<WarehouseInteractionState> emit) async {
+    emit(state.copyWith(getAlertsStatus: AlertsStatus.loading));
+    try {
+      await _customApi.get(AppConstants.ALERTS).then((apiResponse) {
+        print(apiResponse.response);
+        List<Alert> alerts = AreaResponse<Alert>.fromJson(jsonDecode(apiResponse.response!.data), (json) => Alert.fromJson(json)).data!;
+        emit(state.copyWith(alerts: alerts, getAlertsStatus: AlertsStatus.success));
+      });
+    } catch (e) {
+      Log.e(e);
+      emit(state.copyWith(getAlertsStatus: AlertsStatus.failure));
     }
   }
 }

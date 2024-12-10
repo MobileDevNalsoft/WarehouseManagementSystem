@@ -70,3 +70,5 @@ class UpdateUserAccess extends WarehouseInteractionEvent{
   @override
   List<Object> get props => [updatedUsers];
 }
+
+class GetAlerts extends WarehouseInteractionEvent{}

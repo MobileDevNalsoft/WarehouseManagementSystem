@@ -32,14 +32,14 @@ class AppConstants {
 
   // urls
   static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxwms/wms/';
-  static const BASEURL = 'https://paas.nalsoft.net:4443/ords/xxwms/wms/';
 
   static const INVENTORY_HISTORY = 'inventory_history/';
   static const LOCATION = 'location/';
   static const COMPANY = 'company/';
   static const FACILITY = 'facility/';
   static const USERS = 'users';
-  static const USERINFO = 'userInfo/';
+  static const USERINFO = 'user_info';
+  static const ALERTS = 'get_alerts';
    
   // methods
   static const ACTIVITY_AREA = 'activity_area';

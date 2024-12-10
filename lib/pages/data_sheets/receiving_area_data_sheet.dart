@@ -19,22 +19,22 @@ class ReceivingAreaDataSheet extends StatefulWidget {
 class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
   final ScrollController _controller = ScrollController();
   ReceivingBloc? _receivingBloc;
-late  WarehouseInteractionBloc _warehouseInteractionBloc ;
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
   @override
   void initState() {
     super.initState();
     _receivingBloc = context.read<ReceivingBloc>();
-    
+
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     print("inside receiving init state");
-      _receivingBloc!.add( GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-
+    _receivingBloc!.add(GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
 
     _controller.addListener(_scrollListener);
   }
 
   void _scrollListener() async {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent && _receivingBloc!.state.receiveList!.length + 1 > (_receivingBloc!.state.pageNum! + 1) * 100) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent &&
+        _receivingBloc!.state.receiveList!.length + 1 > (_receivingBloc!.state.pageNum! + 1) * 100) {
       _receivingBloc!.state.pageNum = _receivingBloc!.state.pageNum! + 1;
       _receivingBloc!.add(GetReceivingData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     }
@@ -50,9 +50,28 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
           bool isEnabled = state.receivingStatus != ReceivingAreaStatus.success;
           return Expanded(
             child: LayoutBuilder(builder: (context, lsize) {
-              return (!isEnabled &&  state.receiveList!.isEmpty)?
-                      Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
-                     : isEnabled ? Center(child: CircularProgressIndicator(),) : ReceivingListView(data: state.receiveList!, l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white), l2StyleData: L2StyleData(height: 60, color: Color.fromRGBO(43, 79, 122, 1), dropDownColor: Color.fromRGBO(43, 79, 122, 1)), l3StyleData: L3StyleData(height: lsize.maxHeight*0.145, color: Color.fromRGBO(127, 161, 202, 1)),);
+              return (!isEnabled && state.receiveList!.isEmpty)
+                  ? Column(
+                      children: [
+                        Text(
+                          _warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != ""
+                              ? _warehouseInteractionBloc.state.searchText!
+                              : "",
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.048),
+                        ),
+                        Text("Data not found")
+                      ],
+                    )
+                  : isEnabled
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ReceivingListView(
+                          data: state.receiveList!,
+                          l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white),
+                          l2StyleData: L2StyleData(height: 60, color: Color.fromRGBO(43, 79, 122, 1), dropDownColor: Color.fromRGBO(43, 79, 122, 1)),
+                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.115, color: Color.fromRGBO(127, 161, 202, 1)),
+                        );
             }),
           );
         },
@@ -60,7 +79,6 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
     ]);
   }
 }
-
 
 class ReceivingListView extends StatefulWidget {
   ReceivingListView({super.key, required this.data, required this.l1StyleData, required this.l2StyleData, required this.l3StyleData});
@@ -99,7 +117,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(15),
       child: ListView.builder(
           itemCount: widget.data.length,
           itemBuilder: (context, oindex) {
@@ -123,12 +141,13 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                       margin: EdgeInsets.only(top: 65, bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.dropDownColor,
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                         child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
                             itemCount: widget.data[oindex].shipments!.length,
                             itemBuilder: (context, index) {
                               return AnimatedContainer(
@@ -144,11 +163,12 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                         padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                                         decoration: BoxDecoration(
                                           color: widget.l2StyleData.dropDownColor,
-                                          borderRadius: BorderRadius.circular(25),
+                                          borderRadius: BorderRadius.circular(15),
                                         ),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(25),
+                                          borderRadius: BorderRadius.circular(15),
                                           child: ListView.builder(
+                                            physics: NeverScrollableScrollPhysics(),
                                             itemCount: widget.data[oindex].shipments![index].items!.length,
                                             itemBuilder: (context, inindex) => Container(
                                                 padding: EdgeInsets.all(10),
@@ -156,25 +176,64 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                 margin: EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
                                                   color: widget.l3StyleData.color,
-                                                  borderRadius: BorderRadius.circular(25),
+                                                  borderRadius: BorderRadius.circular(15),
                                                 ),
-                                                child: LayoutBuilder(
-                                                  builder: (context, lsize) {
-                                                    return Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('Item', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].shipments![index].items![inindex].item!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
-                                                        ),
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('PO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].shipments![index].items![inindex].po!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
-                                                        ),
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('QTY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].shipments![index].items![inindex].qty!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
-                                                        )
-                                                      ],
-                                                    );
-                                                  }
-                                                )),
+                                                child: LayoutBuilder(builder: (context, lsize) {
+                                                  return Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                              width: lsize.maxWidth * 0.16,
+                                                              child: Text(
+                                                                'Item',
+                                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                                              )),
+                                                          Gap(lsize.maxWidth * 0.01),
+                                                          Expanded(
+                                                            child: SingleChildScrollView(
+                                                              scrollDirection: Axis.horizontal,
+                                                              child: Text(
+                                                                widget.data[oindex].shipments![index].items![inindex].item!,
+                                                                style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                              width: lsize.maxWidth * 0.16,
+                                                              child: Text(
+                                                                'PO',
+                                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                                              )),
+                                                          Gap(lsize.maxWidth * 0.01),
+                                                          Text(
+                                                            widget.data[oindex].shipments![index].items![inindex].po!,
+                                                            style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                              width: lsize.maxWidth * 0.16,
+                                                              child: Text(
+                                                                'QTY',
+                                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                                              )),
+                                                          Gap(lsize.maxWidth * 0.01),
+                                                          Text(
+                                                            widget.data[oindex].shipments![index].items![inindex].qty!,
+                                                            style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  );
+                                                })),
                                           ),
                                         ),
                                       ),
@@ -186,19 +245,30 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                           if (openDropdownIndex == index) {
                                             // If the same dropdown is tapped, close it
                                             innerHeights[oindex][index] = innerHeights[oindex][index] == widget.l2StyleData.height
-                                                ? (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) + (widget.l2StyleData.height+25)
+                                                ? (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                    (widget.l2StyleData.height + 25)
                                                 : widget.l2StyleData.height;
                                             innerBottomHeights[oindex][index] = innerBottomHeights[oindex][index] == widget.l2StyleData.height
-                                                ? (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) + (widget.l2StyleData.height+25)
+                                                ? (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                    (widget.l2StyleData.height + 25)
                                                 : widget.l2StyleData.height;
                                             innerTurns[oindex][index] = innerTurns[oindex][index] == 0.5 ? 1 : 0.5; // Rotate icon
                                             openDropdownIndex = null; // Reset opened index
-                                            if(heights[oindex] == (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)){
-                                              heights[oindex] = (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height+5) + 25 + (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
-                                              bottomHeights[oindex] = (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height+5) + 25 + (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
-                                            }else{
-                                              heights[oindex] = (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
-                                              bottomHeights[oindex] = (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
+                                            if (heights[oindex] ==
+                                                (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25)) {
+                                              heights[oindex] = (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                  25 +
+                                                  (widget.data[oindex].shipments!.length) * widget.l2StyleData.height +
+                                                  (widget.l1StyleData.height + 25);
+                                              bottomHeights[oindex] = (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                  25 +
+                                                  (widget.data[oindex].shipments!.length) * widget.l2StyleData.height +
+                                                  (widget.l1StyleData.height + 25);
+                                            } else {
+                                              heights[oindex] =
+                                                  (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25);
+                                              bottomHeights[oindex] =
+                                                  (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25);
                                             }
                                           } else {
                                             // Close previously opened dropdown and open the new one
@@ -208,14 +278,20 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                               innerTurns[oindex][openDropdownIndex!] = 1;
                                             }
                                             openDropdownIndex = index; // Set current index as opened
-                                            heights[oindex] = (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height+5) + 25 + (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
-                                            bottomHeights[oindex] = (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height+5) + 25 + (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
+                                            heights[oindex] = (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                25 +
+                                                (widget.data[oindex].shipments!.length) * widget.l2StyleData.height +
+                                                (widget.l1StyleData.height + 25);
+                                            bottomHeights[oindex] = (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                25 +
+                                                (widget.data[oindex].shipments!.length) * widget.l2StyleData.height +
+                                                (widget.l1StyleData.height + 25);
                                             innerHeights[oindex][index] =
                                                 (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) +
-                                                    (widget.l2StyleData.height+25); // Expand current dropdown
+                                                    (widget.l2StyleData.height + 25); // Expand current dropdown
                                             innerBottomHeights[oindex][index] =
                                                 (widget.data[oindex].shipments![index].items!.length) * (widget.l3StyleData.height + 5) +
-                                                    (widget.l2StyleData.height+25); // Expand current bottom height
+                                                    (widget.l2StyleData.height + 25); // Expand current bottom height
                                             innerTurns[oindex][index] = 0.5;
                                           }
                                         });
@@ -226,7 +302,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                         padding: EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                           color: widget.l2StyleData.color,
-                                          borderRadius: BorderRadius.circular(25),
+                                          borderRadius: BorderRadius.circular(15),
                                         ),
                                         child: LayoutBuilder(builder: (context, lsize) {
                                           return Row(
@@ -237,17 +313,30 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                 color: Colors.white,
                                               ),
                                               Gap(lsize.maxWidth * 0.01),
-                                              Text('${widget.data[oindex].shipments![index].shipmentNo!.replaceAll('"', '')} (${widget.data[oindex].shipments![index].items!.length})', style: TextStyle(color: Colors.white),),
+                                              Text(
+                                                widget.data[oindex].shipments![index].shipmentNo!.replaceAll('"', ''),
+                                                style: TextStyle(color: Colors.white),
+                                              ),
                                               Spacer(),
-                                              AnimatedRotation(
+                                              Container(
+                              height: widget.l1StyleData.height * 0.5,
+                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: [
+                                  SizedBox(width: widget.l1StyleData.width*0.1,child: Text(widget.data[oindex].shipments![index].items!.length.toString(),textAlign: TextAlign.center, style: TextStyle(fontSize: lsize.maxHeight*0.3, fontWeight: FontWeight.w500),)),
+                                 AnimatedRotation(
                                                 turns: innerTurns[oindex][index],
                                                 duration: const Duration(milliseconds: 200),
                                                 child: Icon(
                                                   Icons.keyboard_arrow_down_rounded,
                                                   size: 20,
-                                                  // color: Colors.white,
                                                 ),
                                               ),
+                                  Gap(widget.l1StyleData.width*0.02)
+                                ],
+                              ),
+                            ),
+                                              
                                             ],
                                           );
                                         }),
@@ -275,10 +364,10 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                         if (outerOpenDropdownIndex == oindex) {
                           // If the same dropdown is tapped, close it
                           heights[oindex] = heights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
+                              ? (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
+                              ? (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
                           outerOpenDropdownIndex = null; // Reset opened index
@@ -290,8 +379,10 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                             turns[outerOpenDropdownIndex!] = 1;
                           }
                           outerOpenDropdownIndex = oindex; // Set current index as opened
-                          heights[oindex] = (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current dropdown
-                          bottomHeights[oindex] = (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current bottom height
+                          heights[oindex] =
+                              (widget.data[oindex].shipments!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25); // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].shipments!.length) * widget.l2StyleData.height +
+                              (widget.l1StyleData.height + 25); // Expand current bottom height
                           turns[oindex] = 0.5;
                         }
                       });
@@ -303,7 +394,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                       margin: EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.color, // Purple background
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: LayoutBuilder(builder: (context, lsize) {
                         return Row(
@@ -318,15 +409,25 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                             ),
                             Spacer(),
-                            AnimatedRotation(
-                              turns: turns[oindex],
-                              duration: const Duration(milliseconds: 200),
-                              child: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                size: 20,
-                                // color: Colors.white,
+                            Container(
+                              height: widget.l1StyleData.height * 0.5,
+                              decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: [
+                                  SizedBox(width: widget.l1StyleData.width*0.1,child: Text(widget.data[oindex].shipments!.length.toString(),textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: lsize.maxHeight*0.25),)),
+                                  AnimatedRotation(
+                                    turns: turns[oindex],
+                                    duration: const Duration(milliseconds: 200),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Gap(widget.l1StyleData.width*0.02)
+                                ],
                               ),
-                            ),
+                            )
                           ],
                         );
                       }),
@@ -345,7 +446,11 @@ class L1StyleData {
   double width;
   Color? color;
   Color? dropDownColor;
-  L1StyleData({required this.height, required this.width, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(163, 183, 209, 1)});
+  L1StyleData(
+      {required this.height,
+      required this.width,
+      this.color = const Color.fromRGBO(68, 98, 136, 1),
+      this.dropDownColor = const Color.fromRGBO(163, 183, 209, 1)});
 }
 
 class L2StyleData {

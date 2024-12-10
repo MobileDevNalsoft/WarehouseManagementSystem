@@ -30,3 +30,16 @@ class User {
   @override
   int get hashCode => username.hashCode ^ access.hashCode; // Combine hash codes
 }
+
+class Alert{
+  String? subject;
+  String? body;
+  String? time;
+  Alert({this.subject, this.body, this.time});
+
+  Alert.fromJson(Map<String, dynamic> json){
+    subject = json['subject'];
+    body = json['body'];
+    time = json['time'];
+  }
+}

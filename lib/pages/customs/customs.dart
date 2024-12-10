@@ -443,7 +443,7 @@ class Customs {
     Size size = MediaQuery.of(context).size;
     showGeneralDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black45,
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         final curvedValue = Curves.bounceInOut.transform(animation.value);
         return Transform.scale(
@@ -458,56 +458,50 @@ class Customs {
       barrierDismissible: true,
       barrierLabel: '',
       pageBuilder: (context, animation, secondaryAnimation) {
-        return IntrinsicHeight(
-          child: Container(
-            margin: EdgeInsets.only(top: size.height * 0.4),
+        return Container(
+          margin: EdgeInsets.only(top: size.height * 0.4),
+          alignment: Alignment.topCenter,
+          child: Stack(
             alignment: Alignment.topCenter,
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Material(
-                  color: Colors.transparent,
-                  child: IntrinsicHeight(
-                    child: Container(
-                      margin: EdgeInsets.only(top: size.height * 0.035),
-                      width: size.width * 0.16,
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: InkWell(
-                                  onTap: () => Navigator.pop(context),
-                                  child: const Icon(
-                                    Icons.close,
-                                    size: 20,
-                                    weight: 1,
-                                  ),
-                                ),
-                              ),
-                            ],
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: Container(
+                  margin: EdgeInsets.only(top: size.height * 0.035),
+                  width: size.width * 0.16,
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: size.height*0.005, right: size.width*0.002),
+                          child: InkWell(
+                            onTap: () => Navigator.pop(context),
+                            child: const Icon(
+                              Icons.close,
+                              size: 20,
+                              weight: 1,
+                            ),
                           ),
-                          Gap(size.height * 0.01),
-                          ...content
-                        ],
+                        ),
                       ),
-                    ),
+                      ...content,
+                      Gap(size.height * 0.01),
+                    ],
                   ),
                 ),
-                ClipPath(
-                  clipper: DialogTopClipper(),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 35,
-                    child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
-                  ),
-                )
-              ],
-            ),
+              ),
+              ClipPath(
+                clipper: DialogTopClipper(),
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 35,
+                  child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
+                ),
+              )
+            ],
           ),
         );
       },
