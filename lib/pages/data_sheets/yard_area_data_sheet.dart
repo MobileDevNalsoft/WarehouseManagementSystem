@@ -98,10 +98,10 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                         child: Image.asset('assets/images/clock.png',height: containerSize.maxHeight*0.32, width: containerSize.maxWidth*0.12,),
                                       ),
                                       SizedBox(
-                                          width: containerSize.maxWidth*0.16,
+                                          width: containerSize.maxWidth*0.4,
                                           child: Text(
                                             
-                                            state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5),
+                                            '${state.yardAreaItems![index].vehicleEntryTime!.split('T')[0]} ${state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5)}',
                                             textAlign: TextAlign.start,
                                             style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                           ))

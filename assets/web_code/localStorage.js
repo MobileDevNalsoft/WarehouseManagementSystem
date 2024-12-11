@@ -2,6 +2,8 @@ import { resetTrucksAnimation } from "animations";
 import { switchCamera } from "camera";
 import { highlightBinsFromSearch } from "interactions";
 import { moveToBin, getPositionAndTarget } from "camera";
+import globalState from "globalState";
+
 
 export function localStorageSetup(scene, camera, controls) {
   // Local Storage Setup
@@ -14,6 +16,7 @@ export function localStorageSetup(scene, camera, controls) {
   window.addEventListener("storage", (event) => {
     switch (event.key) {
       case "switchToMainCam":
+        
         if (event.newValue != "") {
           const { position, target } = getPositionAndTarget(
             scene,
@@ -54,6 +57,7 @@ export function localStorageSetup(scene, camera, controls) {
           timeline.call(() => {
             controls.enabled = true; // Re-enable controls after animation
             controls.enableDamping = true; // Re-enable damping after animation
+            globalState.setAreaFocused(false);
           });
         }
         break;
