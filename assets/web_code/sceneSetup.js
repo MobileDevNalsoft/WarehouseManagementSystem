@@ -100,7 +100,7 @@ let {nodeMap,nodes,aisleBayPoints}= initNodes(THREE);
 console.warn("nodes",nodes);
 
 document.getElementById("navigation_path").addEventListener("click", (e) => {
- ( { combinedPath, checkpointCircles } = getShortestPath(bins,nodeMap, nodes, aisleBayPoints, THREE, scene, camera, controls, agentGroup));
+ ( { combinedPath, checkpointCircles } = getShortestPath(bins,nodeMap, nodes, aisleBayPoints, THREE, scene, camera, controls, agentGroup,render));
   console.warn(checkpointCircles,combinedPath);
   bins.forEach((bin)=>{
     scene.getObjectByName(bin).material.color.set(0x65543e);
@@ -108,66 +108,6 @@ document.getElementById("navigation_path").addEventListener("click", (e) => {
 });
 
 
-
-  function animateCircles(delta) {
-    const time = clock.getElapsedTime();
-
-    checkpointCircles.forEach((circle, index) => {
-      // Scale the circle up and down
-      const scale = 1 + 0.2 * Math.sin(time * 2); // Adjust frequency with time multiplier
-      circle.scale.set(scale, scale, scale);
-
-      // Optionally adjust opacity for a fading effect
-      circle.material.opacity = 0.5 + 0.5 * Math.sin(time * 2);
-    });
-  }
-
-function move(delta) {
-  if (!combinedPath || combinedPath.length <= 0) {
-    // console.warn("No combinedPath available for agent motion.");
-    return;
-  }
-
-  const targetPosition = combinedPath[0];
-  const direction = targetPosition.clone().sub(agentGroup.position);
-
-  const distanceSq = direction.lengthSq();
-  if (distanceSq > 0.05 * 0.05) {
-    direction.normalize();
-    // Calculate the target angle
-  const targetAngle = Math.atan2(direction.x, direction.z);
-  // Get current angle and calculate the shortest path
-  let currentAngle = agentGroup.rotation.y;
-  const angleDifference =
-    THREE.MathUtils.euclideanModulo(
-      targetAngle - currentAngle + Math.PI,
-      Math.PI * 2
-    ) - Math.PI;
-
-    if (Math.abs(angleDifference) > 0.01) {
-      currentAngle += angleDifference * delta * 5; // Smoothly interpolate rotation
-      agentGroup.rotation.y = currentAngle;
-
-    }
-    const moveDistance = Math.min(delta * SPEED, Math.sqrt(distanceSq));
-    agentGroup.position.add(direction.multiplyScalar(moveDistance));
-  } else {
-    agentGroup.position.copy(targetPosition);
-    combinedPath.shift();
-  }
-}
-
-
-// Game loop
-const delta = clock.getDelta();
-const gameLoop = () => {
- move(clock.getDelta());
- animateCircles(delta);
- controls.update();
- renderer.render(scene, camera);
- requestAnimationFrame(gameLoop);
-};
-gameLoop();
 
   // Resize listener
   window.addEventListener("resize", () => {
