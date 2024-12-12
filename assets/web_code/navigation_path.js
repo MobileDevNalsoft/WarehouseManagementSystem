@@ -11,7 +11,6 @@ export function initNodes(three){
         }
     }
     let nodes=[];
-
     const aisleBayPoints = {
         1: {
           3: new THREE.Vector3(-138.0, 6.19, -123.48706235353588),
@@ -163,6 +162,8 @@ export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,three,scene,ca
     let combinedPath=[];
     let arrows=[];
     let pathLine = null;
+
+    let animationId;
         
 const checkpoints = setupCheckpoints(bins);
   
@@ -191,6 +192,7 @@ const checkpoints = setupCheckpoints(bins);
       combinedPath.push(nodeMap.get(finalPath[i]).point);
     } 
   }
+  scene.add(agentGroup);
   agentGroup.position.set(combinedPath[0].x, combinedPath[0].y, combinedPath[0].z);
   
   }
@@ -466,12 +468,14 @@ const gameLoop = () => {
  animateCircles(delta);
  controls.update();
  renderer.render(scene, camera);
- requestAnimationFrame(gameLoop);
+//  requestAnimationFrame(gameLoop);
+requestAnimationFrame(gameLoop);
 };
 gameLoop();   
-      
-// console.warn(combinedPath,checkpointCircles);
-       return {combinedPath,checkpointCircles}
+      console.warn(delta);
+       return {combinedPath,checkpointCircles,pathLine,delta}
       
 }
+
+
 

@@ -28,6 +28,26 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 function initAfterModelLoaded(){
 
-  const toggleButton = document.getElementById('togglePanel');
-  toggleButton.style.display = "block";
+  const areas = document.getElementById('areas');
+ 
+
+  const pathButton = document.getElementById('path');
+  // const inputContainer = document.getElementById('inputContainer');
+  // const pathImage = pathButton.querySelector('img');
+  // const pathText = pathButton.querySelector('p');
+  areas.style.display = "block";
+  pathButton.style.display = "block";
+  // Add a click event listener to toggle the input field
+  // pathButton.addEventListener('click', () => {
+  //     if (inputContainer.style.display === 'none' || inputContainer.style.display === '') {
+  //         inputContainer.style.display = 'block'; // Show the input field
+  //         pathText.style.display = 'none'; // Hide the text
+  //         pathImage.style.width = '0.6vw'; // Reduce the image size
+  //     } else {
+  //         inputContainer.style.display = 'none'; // Hide the input field
+  //         pathText.style.display = 'block'; // Show the text
+  //         pathImage.style.width = '1vw'; // Reset the image size
+  //     }
+  // });
+
 }

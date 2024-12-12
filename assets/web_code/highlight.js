@@ -2,9 +2,10 @@ import * as THREE from "three";
 
 export function highlightArea(scene, objectName, rgbColor, opacity = 1.0) {
   const object = scene.getObjectByName(objectName);
-
+  
   if (object) {
     // Access the geometry
+    object.visible=true;
     const geometry = object.geometry;
   
     if (geometry && geometry.attributes.position) {
