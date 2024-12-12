@@ -196,9 +196,68 @@ body {
     padding: 5px;
     cursor: pointer;
     border-radius: 5px;
+    border: 1px solid #fff;
+    opacity: 0.9;
     font-size: 12px;
     z-index: 1000;
+    width: auto;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.2);
     /* High enough to appear above other elements */
+
+    animation: bounceIn 0.5s ease forwards; /* Apply animation when visible */
+    transform-origin: center bottom; /* Anchor point for bounce */
+}
+
+/* Bounce animation keyframes */
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.8) translateY(-30px); /* Start small and above */
+        opacity: 0; /* Fully transparent */
+    }
+    50% {
+        transform: scale(1.1) translateY(10px); /* Bounce slightly above final position */
+        opacity: 1; /* Fully opaque */
+    }
+    100% {
+        transform: scale(1) translateY(0); /* Final position */
+        opacity: 1; /* Fully opaque */
+    }
+}
+
+#tooltip strong {
+    display: block; /* Make the name a block element to center it */
+    text-align: center;
+    margin: 5px;
+}
+
+/* #tooltip::before {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  background-color: inherit;
+  transform: translateY(90%);
+  width: 15px;
+  height: 15px;
+  clip-path: polygon(100% 0, 21% 0, 0 98%);
+  z-index: 1;
+}
+
+#tooltip::after {
+    content: "";
+    display: block;
+    position: absolute;
+    transform: translateY(18%);
+    margin-left: -1px;
+    width: calc(15px + 2px); 
+    height: calc(15px + 2px);
+    background-color: #fff;
+    clip-path: polygon(100% 8%, 21% 8%, 0 98%);
+  } */
+
+.hide-speech-bubble::after {
+    display: none; /* Hides the speech bubble */
 }
 
 #arrows-container {

@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation } from "animations";
+import globalState from "globalState";
 
 export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
@@ -38,10 +39,9 @@ export function addInteractions(scene, model, camera, controls) {
   // Store the list in localStorage
   window.localStorage.setItem("modelObjectNames", JSON.stringify(objectNames));
 
+  const tooltip = document.getElementById("tooltip");
   function onMouseMove(e) {
-    const tooltip = document.getElementById("tooltip");
     if (e.target.classList.contains("ignoreRaycast")) {
-      tooltip.style.display = "none";
       return;
     }
     const rect = container.getBoundingClientRect();
@@ -58,14 +58,60 @@ export function addInteractions(scene, model, camera, controls) {
         const targetObject = intersects[0].object;
         if (
           targetObject.name.toString().includes("nav") ||
-          targetObject.name.toString().includes("Area")
+          targetObject.name.toString().includes("Area") && globalState.areaFocused == false
         ) {
-          tooltip.style.display = "block";
-          tooltip.innerHTML = targetObject.name.toString().split("_")[0];
-
-          // Position tooltip at the mouse location
-          tooltip.style.left = `${e.clientX + 10}px`; // Offset for better visibility
-          tooltip.style.top = `${e.clientY + 10}px`;
+          let name = toCamelCase(targetObject.name);
+          switch (name) {
+            case "Yard Area":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
+                                        AWT: 1hr<br>
+                                        Available Slots: 20<br>
+                                        Occupied Slots: 6
+                                    </div>`;
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Receiving Area":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
+                                        Vendors: 12<br>
+                                        Shipments: 136<br>
+                                        Items: 467
+                                    </div>`;
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Inspection Area":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
+                                        Vendors: 12<br>
+                                        Shipments: 136<br>
+                                        Items: 467
+                                    </div>`;
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Activity Area":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
+                                        Assembly: 1<br>
+                                        Items: 2
+                                    </div>`;
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Staging Area":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
+                                        Customers: 25<br>
+                                        Items: 200
+                                    </div>`;
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            default:
+              tooltip.style.display = "block";
+              tooltip.innerHTML = name;
+              tooltip.style.left = `${e.clientX + 10}px`; // Offset for better visibility
+              tooltip.style.top = `${e.clientY + 10}px`;
+              tooltip.classList.add("hide-speech-bubble");
+          }
         } else {
           tooltip.style.display = "none";
         }
@@ -73,9 +119,38 @@ export function addInteractions(scene, model, camera, controls) {
     }
   }
 
+  function setToolTipPosition(targetObject, tooltip, camera){
+    // Position tooltip at the mouse location
+    const objectPosition = new THREE.Vector3();
+    targetObject.getWorldPosition(objectPosition);
+
+    // Compute the bounding box of the object
+    const box = new THREE.Box3().setFromObject(targetObject);
+    const boxSize = new THREE.Vector3();
+    box.getSize(boxSize); // Get the size of the bounding box
+
+    // Calculate the top-left corner position
+    const topLeftCorner = new THREE.Vector3(
+      objectPosition.x - boxSize.x / 3,
+      objectPosition.y,
+      objectPosition.z - boxSize.z / 2
+    );
+
+    // Convert world position to screen coordinates
+    const vector = topLeftCorner.project(camera);
+    const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+    const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
+
+    // Position tooltip at the center of the object's position
+    tooltip.style.left = `${x}px`;
+    tooltip.style.top = `${y}px`;
+    tooltip.classList.remove("hide-speech-bubble");
+  }
+
   function onMouseDown(e) {
     lastPos.x = (e.clientX / container.clientWidth) * 2 - 1;
     lastPos.y = -(e.clientY / container.clientHeight) * 2 + 1;
+    tooltip.style.display = "none"
   }
 
   function onMouseUp(e) {
@@ -94,18 +169,17 @@ export function addInteractions(scene, model, camera, controls) {
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")
         ) {
+          globalState.setAreaFocused(true);
+          tooltip.style.display = "none"
           if (name.includes("rack")) {
             console.log(
               '{"rack":"' +
                 name.substring(name.length - 2, name.length).toUpperCase() +
                 '"}'
             );
-
-            window.localStorage.setItem("getData", name);
           } else {
             console.log('{"area":"' + name + '"}');
             window.localStorage.setItem("rack_cam", "warehouse");
-            window.localStorage.setItem("getData", name);
             if (name == "yardArea") {
               for (let i = 1; i <= 20; i++) {
                 scene.getObjectByName("truck_Y" + i).visible = false;
@@ -144,6 +218,7 @@ export function addInteractions(scene, model, camera, controls) {
       }
     } else {
       console.log('{"object":"null"}');
+      globalState.setAreaFocused(false);
       resetTrucksAnimation(scene);
     }
   }
@@ -159,33 +234,29 @@ export function addInteractions(scene, model, camera, controls) {
 
     //console.log('{"object":"null"}');
     localStorage.removeItem("resetBoxColors");
-    try{
-    if (localStorage.getItem("highlightBins")) {
-      localStorage
-        .getItem("highlightBins")
-        .toString()
-        .split(",")
-        .forEach((e) => {
-          let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
-          scene.getObjectByName(bin).material.color.set(0xFAF3E2);
-          scene.getObjectByName(bin).material.opacity = 0.5;
-        });
+    try {
+      if (localStorage.getItem("highlightBins")) {
+        localStorage
+          .getItem("highlightBins")
+          .toString()
+          .split(",")
+          .forEach((e) => {
+            let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
+            scene.getObjectByName(bin).material.color.set(0xfaf3e2);
+            scene.getObjectByName(bin).material.opacity = 0.5;
+          });
 
-      localStorage.removeItem("highlightBins");
-    }
-    }
-    catch(e){
-      
-    }
-    try{
-    if(localStorage.getItem("prevBin")){
-      let bin =  localStorage.getItem("prevBin").trim();
-      scene.getObjectByName(bin).material.color.set(0xFAF3E2);
-      scene.getObjectByName(bin).material.opacity = 0.5;
-      localStorage.removeItem("prevBin");
-    }
-  }
-  catch(e){}
+        localStorage.removeItem("highlightBins");
+      }
+    } catch (e) {}
+    try {
+      if (localStorage.getItem("prevBin")) {
+        let bin = localStorage.getItem("prevBin").trim();
+        scene.getObjectByName(bin).material.color.set(0xfaf3e2);
+        scene.getObjectByName(bin).material.opacity = 0.5;
+        localStorage.removeItem("prevBin");
+      }
+    } catch (e) {}
   });
 
   // setInterval(() => {
@@ -236,12 +307,12 @@ export function addInteractions(scene, model, camera, controls) {
 
   function changeColor(object) {
     if (prevBin != null) {
-      prevBin.material.color.set(0xFAF3E2);
+      prevBin.material.color.set(0xfaf3e2);
     }
 
     // prevBinColor = object.material.color.clone();
     let objectName = object.name.toString();
-    localStorage.setItem("prevBin",objectName);
+    localStorage.setItem("prevBin", objectName);
 
     if (prevBin != object) {
       object.userData.active = true;
@@ -251,7 +322,6 @@ export function addInteractions(scene, model, camera, controls) {
       console.log('{"bin":"' + objectName + '"}');
       moveToBin(object, camera, controls);
     } else {
-      
       if (object.userData.active == false) {
         object.userData.active = true;
         // prevBinColor = object.material.color.clone();
@@ -260,7 +330,7 @@ export function addInteractions(scene, model, camera, controls) {
         object.material.color.set(0x65543e); // Blue color
         object.material.opacity = 0.5; // Adjust opacity for transparency
         console.log('{"bin":"' + objectName + '"}');
-        
+
         moveToBin(object, camera, controls);
       } else {
         object.userData.active = false;
@@ -308,25 +378,25 @@ export function addInteractions(scene, model, camera, controls) {
 
   // JavaScript to handle the panel toggle
   const toggleButton = document.getElementById("togglePanel");
-  const tooltip = document.getElementById("toggleTooltip");
+  const toggleTooltip = document.getElementById("toggleTooltip");
   const leftPanel = document.getElementById("leftPanel");
   const togglePanel = document.getElementById("togglePanel");
 
   // Show tooltip on hover
   // toggleButton.addEventListener("mouseover", function () {
   //   if(!leftPanel.classList.contains("open")){
-  //     tooltip.style.opacity = 1; // Show tooltip on hover
-  //     tooltip.textContent = "Open Controls";
-  //     tooltip.style.left = "22.5vw";
+  //     toggleTooltip.style.opacity = 1; // Show tooltip on hover
+  //     toggleTooltip.textContent = "Open Controls";
+  //     toggleTooltip.style.left = "22.5vw";
   //   }
   // });
 
   // toggleButton.addEventListener("mouseout", function () {
   //   if (!leftPanel.classList.contains("open")) {
-  //       tooltip.style.opacity = 0; // Hide tooltip if panel is closed
+  //       toggleTooltip.style.opacity = 0; // Hide tooltip if panel is closed
   //   }
   // });
-  tooltip.style.opacity = 0;
+  toggleTooltip.style.opacity = 0;
   // Toggle the panel when the button is clicked
   toggleButton.addEventListener("click", function () {
     // Toggle the 'open' class for both the panel and chevron
@@ -337,11 +407,11 @@ export function addInteractions(scene, model, camera, controls) {
     if (leftPanel.classList.contains("open")) {
       leftPanel.style.left = "0"; // Panel moves out
       togglePanel.style.left = "10vw"; // Button moves to the edge of the panel
-      // tooltip.style.left = "12.5vw"
-      // tooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
+      // toggleTooltip.style.left = "12.5vw"
+      // toggleTooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
 
       // Hide tooltip during the animation
-      // tooltip.style.opacity = 0;
+      // toggleTooltip.style.opacity = 0;
 
       // Wait for the animation to finish
       togglePanel.addEventListener(
@@ -351,7 +421,7 @@ export function addInteractions(scene, model, camera, controls) {
             event.propertyName === "left" &&
             leftPanel.classList.contains("open")
           ) {
-            // tooltip.style.opacity = 1; // Show the tooltip after animation completes
+            // toggleTooltip.style.opacity = 1; // Show the tooltip after animation completes
           }
         },
         { once: true }
@@ -359,11 +429,11 @@ export function addInteractions(scene, model, camera, controls) {
     } else {
       leftPanel.style.left = "-220px"; // Hide panel
       togglePanel.style.left = "0"; // Reset button position
-      // tooltip.style.left = "-100px"
-      // tooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
+      // toggleTooltip.style.left = "-100px"
+      // toggleTooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
 
       // // Hide tooltip during the animation
-      // tooltip.style.opacity = 0;
+      // toggleTooltip.style.opacity = 0;
       switchCamera(scene, "compoundArea", camera, controls);
 
       // Wait for the animation to finish
@@ -374,11 +444,21 @@ export function addInteractions(scene, model, camera, controls) {
             event.propertyName === "left" &&
             !leftPanel.classList.contains("open")
           ) {
-            // tooltip.style.opacity = 1; // Show the tooltip after animation completes
+            // toggleTooltip.style.opacity = 1; // Show the tooltip after animation completes
           }
         },
         { once: true }
       ); // Ensure this runs only once after the transition
     }
   });
+
+  function toCamelCase(str) {
+    var words = str.split("_")[0].split("A");
+    return (
+      words[0].charAt(0).toUpperCase() +
+      words[0].slice(1).toLowerCase() +
+      " A" +
+      words[1]
+    );
+  }
 }

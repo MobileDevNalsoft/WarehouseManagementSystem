@@ -23,7 +23,8 @@
           "skyDome": "./skyDome.js",
           "lights": "./lights.js",
           "interactions": "./interactions.js",
-          "navPath": "./navigation_path.js"
+          "navPath": "./navigation_path.js",
+          "globalState": "./globalState.js"
         }
       }
     </script>
@@ -47,7 +48,7 @@
       <div id="toggleTooltip">Open Controls</div>
     </div>
   </div>
-  <div id="tooltip" style="display: none">Tooltip Data</div>
+  <div class="ignoreRaycast" id="tooltip" style="display: none">Tooltip Data</div>
   <script type="module" src="./index.js"></script>
   <div id="arrows-container">
     <button id="arrow-up" class="arrow ignoreRaycast">▲</button>
