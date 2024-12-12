@@ -150,6 +150,31 @@ body {
     background-color: #a59e9a;
 }
 
+
+#navigation_path {
+    border-radius: 15px;
+    font-size: 1vw;
+    display: block;
+    background-color: #270c58;
+    color: #090909;
+    align-items: center;
+    font-size: 15px;
+    height: 5vh;
+    border: none;
+    cursor: pointer;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 1vh;
+    width: 98%;
+    opacity: 0;
+    /* Buttons are hidden initially */
+    /* transform: translateX(-50px);
+    /* Slide-in effect for buttons */
+    /* transition: opacity 0.4s ease, transform 0.4s ease; */ 
+}
+
 /* When the panel is open, buttons will slide in */
 #leftPanel.open .areaButton {
     opacity: 1;
