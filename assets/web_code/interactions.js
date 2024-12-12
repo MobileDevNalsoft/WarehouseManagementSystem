@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation } from "animations";
+import { highlightArea } from "highlight";
 
 export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
@@ -116,7 +117,7 @@ export function addInteractions(scene, model, camera, controls) {
             }
           }
           switchCamera(scene, targetObject.name, camera, controls);
-
+          highlightArea(scene,`${name}_block`, {"r":100,"g":100,"b":100});
           prevNav = name;
           window.localStorage.setItem("switchToMainCam", "null");
           if (name.includes("rack")) {
@@ -238,6 +239,7 @@ export function addInteractions(scene, model, camera, controls) {
     if (prevBin != null) {
       prevBin.material.color.set(0xFAF3E2);
     }
+
 
     // prevBinColor = object.material.color.clone();
     let objectName = object.name.toString();

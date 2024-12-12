@@ -9,6 +9,8 @@ import { localStorageSetup } from "localStorage";
 import { addSkyDome } from "skyDome";
 import { initNodes, getShortestPath } from "navPath";
 import * as GLTFLoader from "gltfLoader";
+import { highlightArea } from "highlight";
+
 
 export async function initScene(renderer) {
   const container = document.getElementById("container");
@@ -54,6 +56,7 @@ export async function initScene(renderer) {
 
   scene.updateMatrixWorld(true);
 
+  const clock = new THREE.Clock();
 
   // Agent setup
   const agentHeight = 3.0;
@@ -67,8 +70,13 @@ export async function initScene(renderer) {
   agentGroup.add(agent);
   // agentGroup.position.set(-95.1758, 6.0069, -102.0932);
   scene.add(agentGroup);
-
-  // Initial point and random checkpoints
+  highlightArea(scene,`storageArea_block`, {"r":50,"g":205,"b":50},0.4);
+  highlightArea(scene,`yardArea_block`, {"r":255,"g":159,"b":10},0.4);
+  highlightArea(scene,`stagingArea_block`, {"r":255,"g":214,"b":10},0.4);
+  highlightArea(scene,`activityArea_block`, {"r":0,"g":128,"b":128},0.4);
+  highlightArea(scene,`inspectionArea_block`, {"r":138,"g":46,"b":226},0.4);
+  highlightArea(scene,`receivingArea_block`, {"r":255,"g":105,"b":180},0.4);
+  
 
   let combinedPath=[];
   let checkpointCircles=[];
@@ -151,7 +159,6 @@ function move(delta) {
 
 
 // Game loop
-const clock = new THREE.Clock();
 const delta = clock.getDelta();
 const gameLoop = () => {
  move(clock.getDelta());
