@@ -1,34 +1,26 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:touchable/touchable.dart';
-import 'package:wmssimulator/bloc/activity_area/activity_area_bloc.dart';
-import 'package:wmssimulator/bloc/inspection_area/inspection_area_bloc.dart';
 import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
 import 'package:wmssimulator/pages/customs/alerts_slide.dart';
 import 'package:wmssimulator/pages/customs/custom_progress_bar.dart';
-import 'package:wmssimulator/pages/customs/customs.dart';
-import 'package:wmssimulator/pages/customs/searchbar_dropdown.dart';
 import 'package:wmssimulator/pages/customs/facility_dropdown.dart';
+import 'package:wmssimulator/pages/customs/searchbar_dropdown.dart';
 import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/bin_data_sheet.dart';
-import 'package:wmssimulator/pages/data_sheets/dock_out_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/rack_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/staging_area_data_sheet.dart';
-import 'package:wmssimulator/pages/data_sheets/storage_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/yard_area_data_sheet.dart';
 
 import '../../bloc/warehouse/warehouse_interaction_bloc.dart';
@@ -94,6 +86,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _storageStreamController.onListen = () {
       print("messageFromJS");
     };
+    _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
     // _warehouseInteractionBloc.add(GetCompanyData());
     // just for debugging
     // animationController.forward();

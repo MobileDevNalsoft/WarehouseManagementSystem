@@ -2,7 +2,7 @@ import { resetTrucksAnimation } from "animations";
 import { switchCamera } from "camera";
 import { highlightBinsFromSearch } from "interactions";
 import { moveToBin, getPositionAndTarget } from "camera";
-import globalState from "globalState";
+import {globalState} from "globalState";
 
 
 export function localStorageSetup(scene, camera, controls) {

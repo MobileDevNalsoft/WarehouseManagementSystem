@@ -5,4 +5,4 @@ const globalState = {
     }
 };
 
-export default globalState;
+export {globalState};

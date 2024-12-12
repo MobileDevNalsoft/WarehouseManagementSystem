@@ -27,7 +27,8 @@ external _navigateToBin(String message);
 @JS()
 external _resetBoxColors();
 
-
+@JS()
+external _sendOverviewData(String json);
 
 @JS()
 external _showAlert(String message);
@@ -48,6 +49,11 @@ external _getSomeAsyncData();
 external _shareImage(String url, String filename);
 
 class JsInteropService {
+
+  sendOverviewData(String data){
+    _sendOverviewData(data);
+  }
+
   switchToMainCam(String camName) {
     _switchToMainCam(camName);
   }

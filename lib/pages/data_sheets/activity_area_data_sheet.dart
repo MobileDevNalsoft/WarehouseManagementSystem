@@ -56,7 +56,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
             child: LayoutBuilder(builder: (context, lsize) {
               return (!isEnabled &&  state.activityAreaItems!.isEmpty)?
                       Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
-                     : isEnabled ? Center(child: CircularProgressIndicator(),) : ActivityListView(data: state.activityAreaItems!, l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white), l2StyleData: L2StyleData(height: lsize.maxHeight*0.145, color: Color.fromRGBO(43, 79, 122, 1), dropDownColor: Color.fromRGBO(43, 79, 122, 1)));
+                     : isEnabled ? Center(child: CircularProgressIndicator(),) : ActivityListView(data: state.activityAreaItems!, l1StyleData: L1StyleData(height: 60, width: 400), l2StyleData: L2StyleData(height: lsize.maxHeight*0.13));
             }),
           );
             },
@@ -96,7 +96,7 @@ class _ActivityListViewState extends State<ActivityListView> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(15),
       child: ListView.builder(
           itemCount: widget.data.length,
           itemBuilder: (context, oindex) {
@@ -115,12 +115,13 @@ class _ActivityListViewState extends State<ActivityListView> {
                       margin: EdgeInsets.only(top: 65, bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.dropDownColor,
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                         child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
                             itemCount: widget.data[oindex].items!.length,
                             itemBuilder: (context, index) {
                               return Container(
@@ -129,7 +130,7 @@ class _ActivityListViewState extends State<ActivityListView> {
                                                 margin: EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
                                                   color: widget.l2StyleData.color,
-                                                  borderRadius: BorderRadius.circular(25),
+                                                  borderRadius: BorderRadius.circular(15),
                                                 ),
                                                 child: LayoutBuilder(
                                                   builder: (context, lsize) {
@@ -162,10 +163,10 @@ class _ActivityListViewState extends State<ActivityListView> {
                         if (outerOpenDropdownIndex == oindex) {
                           // If the same dropdown is tapped, close it
                           heights[oindex] = heights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].items!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
+                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height+25)
                               : widget.l1StyleData.height;
                           bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].items!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
+                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height+25)
                               : widget.l1StyleData.height;
                           turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
                           outerOpenDropdownIndex = null; // Reset opened index
@@ -177,8 +178,8 @@ class _ActivityListViewState extends State<ActivityListView> {
                             turns[outerOpenDropdownIndex!] = 1;
                           }
                           outerOpenDropdownIndex = oindex; // Set current index as opened
-                          heights[oindex] = (widget.data[oindex].items!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current dropdown
-                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current bottom height
+                          heights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height+25); // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height+25); // Expand current bottom height
                           turns[oindex] = 0.5;
                         }
                       });
@@ -190,7 +191,7 @@ class _ActivityListViewState extends State<ActivityListView> {
                       margin: EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.color, // Purple background
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: LayoutBuilder(builder: (context, lsize) {
                         return Row(
@@ -201,19 +202,35 @@ class _ActivityListViewState extends State<ActivityListView> {
                             ),
                             Gap(lsize.maxWidth * 0.01),
                             Text(
-                              '${widget.data[oindex].workOrderType!.replaceAll('"', '')} (${widget.data[oindex].items!.length})',
+                              widget.data[oindex].workOrderType!.replaceAll('"', ''),
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                             Spacer(),
-                            AnimatedRotation(
-                              turns: turns[oindex],
-                              duration: const Duration(milliseconds: 200),
-                              child: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                size: 20,
-                                // color: Colors.white,
+                            Container(
+                              height: widget.l1StyleData.height * 0.5,
+                              decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                      width: widget.l1StyleData.width * 0.1,
+                                      child: Text(
+                                        widget.data[oindex].items!.length.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.white, fontSize: lsize.maxHeight * 0.25),
+                                      )),
+                                  AnimatedRotation(
+                                    turns: turns[oindex],
+                                    duration: const Duration(milliseconds: 200),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Gap(widget.l1StyleData.width * 0.02)
+                                ],
                               ),
-                            ),
+                            )
                           ],
                         );
                       }),
@@ -232,12 +249,11 @@ class L1StyleData {
   double width;
   Color? color;
   Color? dropDownColor;
-  L1StyleData({required this.height, required this.width, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(163, 183, 209, 1)});
+  L1StyleData({required this.height, required this.width, this.color = Colors.white, this.dropDownColor = Colors.white});
 }
 
 class L2StyleData {
   double height;
   Color? color;
-  Color? dropDownColor;
-  L2StyleData({required this.height, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(194, 213, 238, 1)});
+  L2StyleData({required this.height, this.color = const Color.fromRGBO(43, 79, 122, 1)});
 }

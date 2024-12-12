@@ -72,3 +72,11 @@ class UpdateUserAccess extends WarehouseInteractionEvent{
 }
 
 class GetAlerts extends WarehouseInteractionEvent{}
+
+class GetAreasOverviewData extends WarehouseInteractionEvent{
+  final int facilityID;
+  GetAreasOverviewData({required this.facilityID});
+
+  @override
+  List<Object> get props => [facilityID];
+}

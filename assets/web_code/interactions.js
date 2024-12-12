@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation } from "animations";
-import globalState from "globalState";
+import {globalState} from "globalState";
 
 export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
@@ -18,6 +18,8 @@ export function addInteractions(scene, model, camera, controls) {
 
   const mouse = new THREE.Vector2();
   const lastPos = new THREE.Vector2();
+
+  let areasOverviewData = JSON.parse(window.localStorage.getItem('areasOverviewData'));
 
   let prevNav = "warehouse";
   let prevBin;
@@ -66,42 +68,42 @@ export function addInteractions(scene, model, camera, controls) {
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
                                         AWT: 1hr<br>
-                                        Available Slots: 20<br>
-                                        Occupied Slots: 6
+                                        Available Slots: ${areasOverviewData.yardArea.available}<br>
+                                        Occupied Slots: ${areasOverviewData.yardArea.occupied}
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
             case "Receiving Area":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                        Vendors: 12<br>
-                                        Shipments: 136<br>
-                                        Items: 467
+                                        Vendors: ${areasOverviewData.receivingArea.vendors}<br>
+                                        Shipments: ${areasOverviewData.receivingArea.shipments}<br>
+                                        Items: ${areasOverviewData.receivingArea.items}
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
             case "Inspection Area":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                        Vendors: 12<br>
-                                        Shipments: 136<br>
-                                        Items: 467
+                                        Vendors: ${areasOverviewData.inspectionArea.vendors}<br>
+                                        Shipments: ${areasOverviewData.inspectionArea.shipments}<br>
+                                        Items: ${areasOverviewData.inspectionArea.items}
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
             case "Activity Area":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                        Assembly: 1<br>
-                                        Items: 2
+                                        Assembly: ${areasOverviewData.activityArea.assembly}<br>
+                                        Items: ${areasOverviewData.activityArea.items}
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
             case "Staging Area":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                        Customers: 25<br>
-                                        Items: 200
+                                        Customers: ${areasOverviewData.stagingArea.customers}<br>
+                                        Items: ${areasOverviewData.stagingArea.items}
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
@@ -124,20 +126,8 @@ export function addInteractions(scene, model, camera, controls) {
     const objectPosition = new THREE.Vector3();
     targetObject.getWorldPosition(objectPosition);
 
-    // Compute the bounding box of the object
-    const box = new THREE.Box3().setFromObject(targetObject);
-    const boxSize = new THREE.Vector3();
-    box.getSize(boxSize); // Get the size of the bounding box
-
-    // Calculate the top-left corner position
-    const topLeftCorner = new THREE.Vector3(
-      objectPosition.x - boxSize.x / 3,
-      objectPosition.y,
-      objectPosition.z - boxSize.z / 2
-    );
-
     // Convert world position to screen coordinates
-    const vector = topLeftCorner.project(camera);
+    const vector = objectPosition.project(camera);
     const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
     const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
 

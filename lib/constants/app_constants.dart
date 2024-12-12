@@ -40,6 +40,7 @@ class AppConstants {
   static const USERS = 'users';
   static const USERINFO = 'user_info';
   static const ALERTS = 'get_alerts';
+  static const ARES_OVERVIEW_DATA = 'areas_overview_data';
    
   // methods
   static const ACTIVITY_AREA = 'activity_area';

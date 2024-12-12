@@ -104,7 +104,7 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                           legendVisibility: true,
                           props: Props(dataSource: [
                             PieData(
-                                xData: "Available Locations",
+                                xData: "Available",
                                 yData: isEnabled
                                     ? 10
                                     : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!),

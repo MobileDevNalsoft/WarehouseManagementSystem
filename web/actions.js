@@ -1,4 +1,9 @@
 const init = () => {
+
+    const sendOverviewData = (data) => {
+        window.localStorage.setItem('areasOverviewData', data);
+    }
+
     const switchToMainCam = (camName) => {
         window.localStorage.setItem("switchToMainCam", camName);
     }
@@ -29,6 +34,7 @@ const init = () => {
     window._highlightBins = highlightBins;
     window._navigateToBin = navigateToBin;
     window._resetBoxColors = resetBoxColors;
+    window._sendOverviewData = sendOverviewData;
 }
 
 window.onload = () => {

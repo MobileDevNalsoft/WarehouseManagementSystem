@@ -59,18 +59,18 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
                               : "",
                           style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.048),
                         ),
-                        Text("Data not found")
+                        const Text("Data not found")
                       ],
                     )
                   : isEnabled
-                      ? Center(
+                      ? const Center(
                           child: CircularProgressIndicator(),
                         )
                       : ReceivingListView(
                           data: state.receiveList!,
-                          l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white),
-                          l2StyleData: L2StyleData(height: 60, color: Color.fromRGBO(43, 79, 122, 1), dropDownColor: Color.fromRGBO(43, 79, 122, 1)),
-                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.115, color: Color.fromRGBO(127, 161, 202, 1)),
+                          l1StyleData: L1StyleData(height: 60, width: 400),
+                          l2StyleData: L2StyleData(height: 60),
+                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.115),
                         );
             }),
           );
@@ -138,16 +138,16 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                     width: widget.l1StyleData.width,
                     color: Colors.transparent,
                     child: Container(
-                      margin: EdgeInsets.only(top: 65, bottom: 5),
+                      margin: const EdgeInsets.only(top: 65, bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.dropDownColor,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.data[oindex].shipments!.length,
                             itemBuilder: (context, index) {
                               return AnimatedContainer(
@@ -159,8 +159,8 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                       duration: const Duration(milliseconds: 200),
                                       height: innerBottomHeights[oindex][index],
                                       child: Container(
-                                        margin: EdgeInsets.only(top: 65, bottom: 5),
-                                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                        margin: const EdgeInsets.only(top: 65, bottom: 5),
+                                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                                         decoration: BoxDecoration(
                                           color: widget.l2StyleData.dropDownColor,
                                           borderRadius: BorderRadius.circular(15),
@@ -168,12 +168,12 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(15),
                                           child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
+                                            physics: const NeverScrollableScrollPhysics(),
                                             itemCount: widget.data[oindex].shipments![index].items!.length,
                                             itemBuilder: (context, inindex) => Container(
-                                                padding: EdgeInsets.all(10),
+                                                padding: const EdgeInsets.all(10),
                                                 height: widget.l3StyleData.height,
-                                                margin: EdgeInsets.only(bottom: 5),
+                                                margin: const EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
                                                   color: widget.l3StyleData.color,
                                                   borderRadius: BorderRadius.circular(15),
@@ -298,8 +298,8 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                       },
                                       child: Container(
                                         height: widget.l2StyleData.height,
-                                        margin: EdgeInsets.only(bottom: 5),
-                                        padding: EdgeInsets.all(10),
+                                        margin: const EdgeInsets.only(bottom: 5),
+                                        padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                           color: widget.l2StyleData.color,
                                           borderRadius: BorderRadius.circular(15),
@@ -309,34 +309,39 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                             children: [
                                               Image.asset(
                                                 'assets/images/shipment.png',
-                                                scale: lsize.maxHeight * 0.05,
+                                                scale: lsize.maxHeight * 0.06,
                                                 color: Colors.white,
                                               ),
                                               Gap(lsize.maxWidth * 0.01),
                                               Text(
                                                 widget.data[oindex].shipments![index].shipmentNo!.replaceAll('"', ''),
-                                                style: TextStyle(color: Colors.white),
+                                                style: const TextStyle(color: Colors.white),
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                               Container(
-                              height: widget.l1StyleData.height * 0.5,
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                children: [
-                                  SizedBox(width: widget.l1StyleData.width*0.1,child: Text(widget.data[oindex].shipments![index].items!.length.toString(),textAlign: TextAlign.center, style: TextStyle(fontSize: lsize.maxHeight*0.3, fontWeight: FontWeight.w500),)),
-                                 AnimatedRotation(
-                                                turns: innerTurns[oindex][index],
-                                                duration: const Duration(milliseconds: 200),
-                                                child: Icon(
-                                                  Icons.keyboard_arrow_down_rounded,
-                                                  size: 20,
+                                                height: widget.l1StyleData.height * 0.5,
+                                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                        width: widget.l1StyleData.width * 0.1,
+                                                        child: Text(
+                                                          widget.data[oindex].shipments![index].items!.length.toString(),
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(fontSize: lsize.maxHeight * 0.3, fontWeight: FontWeight.w500),
+                                                        )),
+                                                    AnimatedRotation(
+                                                      turns: innerTurns[oindex][index],
+                                                      duration: const Duration(milliseconds: 200),
+                                                      child: const Icon(
+                                                        Icons.keyboard_arrow_down_rounded,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                    Gap(widget.l1StyleData.width * 0.02)
+                                                  ],
                                                 ),
                                               ),
-                                  Gap(widget.l1StyleData.width*0.02)
-                                ],
-                              ),
-                            ),
-                                              
                                             ],
                                           );
                                         }),
@@ -390,8 +395,8 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                     child: Container(
                       height: widget.l1StyleData.height,
                       width: widget.l1StyleData.width,
-                      padding: EdgeInsets.all(5),
-                      margin: EdgeInsets.only(bottom: 5),
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.color, // Purple background
                         borderRadius: BorderRadius.circular(15),
@@ -406,25 +411,31 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                             Gap(lsize.maxWidth * 0.01),
                             Text(
                               widget.data[oindex].vendorName!,
-                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: widget.l1StyleData.height * 0.5,
-                              decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
+                              decoration: BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
                               child: Row(
                                 children: [
-                                  SizedBox(width: widget.l1StyleData.width*0.1,child: Text(widget.data[oindex].shipments!.length.toString(),textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: lsize.maxHeight*0.25),)),
+                                  SizedBox(
+                                      width: widget.l1StyleData.width * 0.1,
+                                      child: Text(
+                                        widget.data[oindex].shipments!.length.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.white, fontSize: lsize.maxHeight * 0.25),
+                                      )),
                                   AnimatedRotation(
                                     turns: turns[oindex],
                                     duration: const Duration(milliseconds: 200),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       size: 20,
                                       color: Colors.white,
                                     ),
                                   ),
-                                  Gap(widget.l1StyleData.width*0.02)
+                                  Gap(widget.l1StyleData.width * 0.02)
                                 ],
                               ),
                             )
@@ -449,19 +460,19 @@ class L1StyleData {
   L1StyleData(
       {required this.height,
       required this.width,
-      this.color = const Color.fromRGBO(68, 98, 136, 1),
-      this.dropDownColor = const Color.fromRGBO(163, 183, 209, 1)});
+      this.color = Colors.white,
+      this.dropDownColor = Colors.white});
 }
 
 class L2StyleData {
   double height;
   Color? color;
   Color? dropDownColor;
-  L2StyleData({required this.height, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(194, 213, 238, 1)});
+  L2StyleData({required this.height, this.color = const Color.fromRGBO(43, 79, 122, 1), this.dropDownColor = const Color.fromRGBO(43, 79, 122, 1)});
 }
 
 class L3StyleData {
   double height;
   Color? color;
-  L3StyleData({required this.height, this.color = Colors.white});
+  L3StyleData({required this.height, this.color = const Color.fromRGBO(127, 161, 202, 1)});
 }

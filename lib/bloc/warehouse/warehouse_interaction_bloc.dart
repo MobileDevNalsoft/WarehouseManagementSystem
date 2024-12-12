@@ -14,6 +14,7 @@ import 'package:wmssimulator/logger/logger.dart';
 import 'package:wmssimulator/models/area_response.dart';
 import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
+import 'package:wmssimulator/models/overview_model.dart';
 import 'package:wmssimulator/models/user_model.dart';
 
 part 'warehouse_interaction_event.dart';
@@ -34,6 +35,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<FilterUsers>(_onFilterUsers);
     on<UpdateUserAccess>(_onUpdateUserAccess);
     on<GetAlerts>(_onGetAlerts);
+    on<GetAreasOverviewData>(_onGetAreasOverviewData);
   }
   final NetworkCalls _customApi;
   final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
@@ -167,6 +169,21 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     } catch (e) {
       Log.e(e);
       emit(state.copyWith(getAlertsStatus: AlertsStatus.failure));
+    }
+  }
+
+  Future<void> _onGetAreasOverviewData(GetAreasOverviewData event, Emitter<WarehouseInteractionState> emit) async {
+    emit(state.copyWith(getAreasOveriviewDataState: AreasOverviewDataState.loading));
+    try {
+      await _customApi.get(AppConstants.ARES_OVERVIEW_DATA, queryParameters: {"facility_id": event.facilityID}).then((apiResponse) {
+        OverviewResponse overviewResponse = OverviewResponse.fromJson(jsonDecode(apiResponse.response!.data));
+        print(overviewResponse.data);
+        getIt<JsInteropService>().sendOverviewData(overviewResponse.data!);
+        emit(state.copyWith(getAreasOveriviewDataState: AreasOverviewDataState.success));
+      });
+    } catch (e) {
+      Log.e(e);
+      emit(state.copyWith(getAreasOveriviewDataState: AreasOverviewDataState.failure));
     }
   }
 }
