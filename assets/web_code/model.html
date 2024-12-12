@@ -24,6 +24,7 @@
           "lights": "./lights.js",
           "interactions": "./interactions.js",
           "navPath": "./navigation_path.js",
+          "highlight": "./highlight.js",
           "globalState": "./globalState.js"
         }
       }
@@ -32,20 +33,26 @@
 </head>
 
 <body>
-  <div id="container">
-    <div id="leftPanel" class="ignoreRaycast">
-      <button class="areaButton ignoreRaycast" id="inspectionArea">Inspection Area</button>
-      <button class="areaButton ignoreRaycast" id="stagingArea">Staging Area</button>
-      <button class="areaButton ignoreRaycast" id="activityArea">Activity Area</button>
-      <button class="areaButton ignoreRaycast" id="receivingArea">Receiving Area</button>
-      <button class="areaButton ignoreRaycast" id="storageArea">Storage Area</button>
-      <button class="areaButton ignoreRaycast" id="yardArea">Yard Area</button>
-      <button class="areaButton ignoreRaycast" id="dockArea-IN">Dock Area IN</button>
-      <button class="areaButton ignoreRaycast" id="dockArea-OUT">Dock Area OUT</button>
-      <button class="path" id="navigation_path">Path</button>
-      <button class="ignoreRaycast" id="togglePanel">&#x25B6;</button>
+  <div id="container" >
+    <div id="leftPanel" class="ignoreRaycast" >
+      <div class="areaButton ignoreRaycast" id="areas" style="display: none;">
+
+      <img  class="ignoreRaycast" src="./../images/areas.png" alt="areas">
+      <p class="ignoreRaycast">Areas</p>
+      </div>
+     <div class="areaButton ignoreRaycast" id="path" style="display: none;">
+      <img class="ignoreRaycast" src="./../images/path.png" alt="areas">
+      <p class="ignoreRaycast" >Putaway path</p>
+     </div>
+     <!-- <div id="inputContainer" style="display: none; margin-top: 1vh;">
+      <input class="ignoreRaycast" type="text" id="pathInput" placeholder="Enter text here" 
+             style="width: 100%; padding: 0.5vh; font-size: 0.6vw; border-radius: 5px; border: 1px solid #ccc;"> -->
+  </div>
+
+      <!-- <button class="areaButton ignoreRaycast" id="areas">Areas</button>
+      <button class="areaButton ignoreRaycast" id="path">Putaway path</button> -->
       <!-- Chevron right symbol -->
-      <div id="toggleTooltip">Open Controls</div>
+      <!-- <div id="toggleTooltip">Open Controls</div> -->
     </div>
   </div>
   <div id="tooltip" style="display: none">Tooltip Data</div>

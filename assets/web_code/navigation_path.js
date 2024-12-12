@@ -11,7 +11,6 @@ export function initNodes(three){
         }
     }
     let nodes=[];
-
     const aisleBayPoints = {
         1: {
           3: new THREE.Vector3(-138.0, 6.19, -123.48706235353588),
@@ -156,13 +155,15 @@ for (const [nodeName, adjacentNames] of Object.entries(adjacencyList)) {
  
 // }
 
-export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,three,scene,camera,controls,agentGroup){
+export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,three,scene,camera,controls,agentGroup,renderer){
     const THREE=three;
     let finalPath=[];
     let checkpointCircles=[];
     let combinedPath=[];
     let arrows=[];
     let pathLine = null;
+
+    let animationId;
         
 const checkpoints = setupCheckpoints(bins);
   
@@ -191,6 +192,7 @@ const checkpoints = setupCheckpoints(bins);
       combinedPath.push(nodeMap.get(finalPath[i]).point);
     } 
   }
+  scene.add(agentGroup);
   agentGroup.position.set(combinedPath[0].x, combinedPath[0].y, combinedPath[0].z);
   
   }
@@ -406,10 +408,74 @@ const checkpoints = setupCheckpoints(bins);
             arrows.push(arrow);
           }
         }
-      
-      
-// console.warn(combinedPath,checkpointCircles);
-       return {combinedPath,checkpointCircles}
+   
+
+  // function animateCircles(delta) {
+  //   const time = clock.getElapsedTime();
+
+  //   checkpointCircles.forEach((circle, index) => {
+  //     // Scale the circle up and down
+  //     const scale = 1 + 0.2 * Math.sin(time * 2); // Adjust frequency with time multiplier
+  //     circle.scale.set(scale, scale, scale);
+
+  //     // Optionally adjust opacity for a fading effect
+  //     circle.material.opacity = 0.5 + 0.5 * Math.sin(time * 2);
+  //   });
+  // }
+
+function move(delta) {
+  let SPEED=5;
+  if (!combinedPath || combinedPath.length <= 0) {
+    // console.warn("No combinedPath available for agent motion.");
+    return;
+  }
+
+  const targetPosition = combinedPath[0];
+  const direction = targetPosition.clone().sub(agentGroup.position);
+
+  const distanceSq = direction.lengthSq();
+  if (distanceSq > 0.05 * 0.05) {
+    direction.normalize();
+    // Calculate the target angle
+  const targetAngle = Math.atan2(direction.x, direction.z);
+  // Get current angle and calculate the shortest path
+  let currentAngle = agentGroup.rotation.y;
+  const angleDifference =
+    THREE.MathUtils.euclideanModulo(
+      targetAngle - currentAngle + Math.PI,
+      Math.PI * 2
+    ) - Math.PI;
+
+    if (Math.abs(angleDifference) > 0.01) {
+      currentAngle += angleDifference * delta * 5; // Smoothly interpolate rotation
+      agentGroup.rotation.y = currentAngle;
+
+    }
+    const moveDistance = Math.min(delta * SPEED, Math.sqrt(distanceSq));
+    agentGroup.position.add(direction.multiplyScalar(moveDistance));
+  } else {
+    agentGroup.position.copy(targetPosition);
+    combinedPath.shift();
+  }
+}
+
+
+// Game loop
+const clock = new THREE.Clock();
+const delta = clock.getDelta();
+const gameLoop = () => {
+ move(clock.getDelta());
+ animateCircles(delta);
+ controls.update();
+ renderer.render(scene, camera);
+//  requestAnimationFrame(gameLoop);
+requestAnimationFrame(gameLoop);
+};
+gameLoop();   
+      console.warn(delta);
+       return {combinedPath,checkpointCircles,pathLine,delta}
       
 }
+
+
 

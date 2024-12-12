@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation } from "animations";
 import {globalState} from "globalState";
+import { highlightArea } from "highlight";
 
 export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
@@ -43,6 +44,7 @@ export function addInteractions(scene, model, camera, controls) {
 
   const tooltip = document.getElementById("tooltip");
   function onMouseMove(e) {
+  
     if (e.target.classList.contains("ignoreRaycast")) {
       return;
     }
@@ -144,15 +146,17 @@ export function addInteractions(scene, model, camera, controls) {
   }
 
   function onMouseUp(e) {
+    console.warn(e.target.classList);
     if ((lastPos.distanceTo(mouse) === 0) & (e.button === 0)) {
       if (e.target.classList.contains("ignoreRaycast")) return;
-
+       
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
       // we get the objects from the model as list that are intersected by the casted ray.
 
       if (intersects.length > 0) {
+       
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
         if (
@@ -180,7 +184,7 @@ export function addInteractions(scene, model, camera, controls) {
             }
           }
           switchCamera(scene, targetObject.name, camera, controls);
-
+          highlightArea(scene,`${name}_block`, {"r":100,"g":100,"b":100});
           prevNav = name;
           window.localStorage.setItem("switchToMainCam", "null");
           if (name.includes("rack")) {
@@ -300,6 +304,7 @@ export function addInteractions(scene, model, camera, controls) {
       prevBin.material.color.set(0xfaf3e2);
     }
 
+
     // prevBinColor = object.material.color.clone();
     let objectName = object.name.toString();
     localStorage.setItem("prevBin", objectName);
@@ -344,33 +349,33 @@ export function addInteractions(scene, model, camera, controls) {
   }
 
   // Get all elements with the class name "areaButton"
-  let buttons = document.getElementsByClassName("areaButton");
+  // let buttons = document.getElementsByClassName("areaButton");
 
-  // Loop through the buttons collection and log each element
-  for (let i = 0; i < buttons.length; i++) {
-    buttons[i].onclick = function () {
-      switchCamera(scene, buttons[i].id, camera, controls);
-      window.localStorage.setItem("switchToMainCam", "null");
-      if (!buttons[i].id.includes("storage")) {
-        console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
-      }
-      if (buttons[i].id.includes("yard")) {
-        window.localStorage.setItem("getData", "yardArea");
-        for (let i = 1; i <= 20; i++) {
-          scene.getObjectByName("truck_Y" + i).visible = false;
-        }
-        scene.getObjectByName("truck_A1").visible = false;
-        scene.getObjectByName("truck_A2").visible = false;
-        scene.getObjectByName("truck_A3").visible = false;
-      }
-    };
-  }
+  // // Loop through the buttons collection and log each element
+  // for (let i = 0; i < buttons.length; i++) {
+  //   buttons[i].onclick = function () {
+  //     switchCamera(scene, buttons[i].id, camera, controls);
+  //     window.localStorage.setItem("switchToMainCam", "null");
+  //     if (!buttons[i].id.includes("storage")) {
+  //       console.log('{"area":"' + buttons[i].id.split("_")[0] + '"}');
+  //     }
+  //     if (buttons[i].id.includes("yard")) {
+  //       window.localStorage.setItem("getData", "yardArea");
+  //       for (let i = 1; i <= 20; i++) {
+  //         scene.getObjectByName("truck_Y" + i).visible = false;
+  //       }
+  //       scene.getObjectByName("truck_A1").visible = false;
+  //       scene.getObjectByName("truck_A2").visible = false;
+  //       scene.getObjectByName("truck_A3").visible = false;
+  //     }
+  //   };
+  // }
 
   // JavaScript to handle the panel toggle
-  const toggleButton = document.getElementById("togglePanel");
-  const toggleTooltip = document.getElementById("toggleTooltip");
-  const leftPanel = document.getElementById("leftPanel");
-  const togglePanel = document.getElementById("togglePanel");
+  // const toggleButton = document.getElementById("togglePanel");
+  // const toggleTooltip = document.getElementById("toggleTooltip");
+  // const leftPanel = document.getElementById("leftPanel");
+  // const togglePanel = document.getElementById("togglePanel");
 
   // Show tooltip on hover
   // toggleButton.addEventListener("mouseover", function () {
@@ -386,61 +391,61 @@ export function addInteractions(scene, model, camera, controls) {
   //       toggleTooltip.style.opacity = 0; // Hide tooltip if panel is closed
   //   }
   // });
-  toggleTooltip.style.opacity = 0;
+  //toggleTooltip.style.opacity = 0;
   // Toggle the panel when the button is clicked
-  toggleButton.addEventListener("click", function () {
-    // Toggle the 'open' class for both the panel and chevron
-    leftPanel.classList.toggle("open");
-    togglePanel.classList.toggle("open");
+  // toggleButton.addEventListener("click", function () {
+  //   // Toggle the 'open' class for both the panel and chevron
+  //   leftPanel.classList.toggle("open");
+  //   togglePanel.classList.toggle("open");
 
-    // Slide the panel out when clicked
-    if (leftPanel.classList.contains("open")) {
-      leftPanel.style.left = "0"; // Panel moves out
-      togglePanel.style.left = "10vw"; // Button moves to the edge of the panel
-      // toggleTooltip.style.left = "12.5vw"
-      // toggleTooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
+  //   // Slide the panel out when clicked
+  //   if (leftPanel.classList.contains("open")) {
+  //     leftPanel.style.left = "0"; // Panel moves out
+  //     togglePanel.style.left = "10vw"; // Button moves to the edge of the panel
+  //     // toggleTooltip.style.left = "12.5vw"
+  //     // toggleTooltip.textContent = "Close Controls"; // Update tooltip text to 'Close Controls'
 
-      // Hide tooltip during the animation
-      // toggleTooltip.style.opacity = 0;
+  //     // Hide tooltip during the animation
+  //     // toggleTooltip.style.opacity = 0;
 
-      // Wait for the animation to finish
-      togglePanel.addEventListener(
-        "transitionend",
-        function (event) {
-          if (
-            event.propertyName === "left" &&
-            leftPanel.classList.contains("open")
-          ) {
-            // toggleTooltip.style.opacity = 1; // Show the tooltip after animation completes
-          }
-        },
-        { once: true }
-      ); // Ensure this runs only once after the transition
-    } else {
-      leftPanel.style.left = "-220px"; // Hide panel
-      togglePanel.style.left = "0"; // Reset button position
-      // toggleTooltip.style.left = "-100px"
-      // toggleTooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
+  //     // Wait for the animation to finish
+  //     togglePanel.addEventListener(
+  //       "transitionend",
+  //       function (event) {
+  //         if (
+  //           event.propertyName === "left" &&
+  //           leftPanel.classList.contains("open")
+  //         ) {
+  //           // toggleTooltip.style.opacity = 1; // Show the tooltip after animation completes
+  //         }
+  //       },
+  //       { once: true }
+  //     ); // Ensure this runs only once after the transition
+  //   } else {
+  //     // leftPanel.style.left = "-220px"; // Hide panel
+  //     // togglePanel.style.left = "0"; // Reset button position
+  //     // toggleTooltip.style.left = "-100px"
+  //     // toggleTooltip.textContent = "Open Controls"; // Reset tooltip text to 'Open Controls'
 
-      // // Hide tooltip during the animation
-      // toggleTooltip.style.opacity = 0;
-      switchCamera(scene, "compoundArea", camera, controls);
+  //     // // Hide tooltip during the animation
+  //     // toggleTooltip.style.opacity = 0;
+  //     switchCamera(scene, "compoundArea", camera, controls);
 
-      // Wait for the animation to finish
-      togglePanel.addEventListener(
-        "transitionend",
-        function (event) {
-          if (
-            event.propertyName === "left" &&
-            !leftPanel.classList.contains("open")
-          ) {
-            // toggleTooltip.style.opacity = 1; // Show the tooltip after animation completes
-          }
-        },
-        { once: true }
-      ); // Ensure this runs only once after the transition
-    }
-  });
+  //     // Wait for the animation to finish
+  //     // togglePanel.addEventListener(
+  //     //   "transitionend",
+  //     //   function (event) {
+  //     //     if (
+  //     //       event.propertyName === "left" &&
+  //     //       !leftPanel.classList.contains("open")
+  //     //     ) {
+  //     //       // toggleTooltip.style.opacity = 1; // Show the tooltip after animation completes
+  //     //     }
+  //     //   },
+  //     //   { once: true }
+  //     // ); // Ensure this runs only once after the transition
+  //   }
+  // });
 
   function toCamelCase(str) {
     var words = str.split("_")[0].split("A");

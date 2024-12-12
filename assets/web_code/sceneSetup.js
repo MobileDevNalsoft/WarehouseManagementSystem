@@ -9,6 +9,8 @@ import { localStorageSetup } from "localStorage";
 import { addSkyDome } from "skyDome";
 import { initNodes, getShortestPath } from "navPath";
 import * as GLTFLoader from "gltfLoader";
+import { highlightArea } from "highlight";
+
 
 export async function initScene(renderer) {
   const container = document.getElementById("container");
@@ -54,6 +56,7 @@ export async function initScene(renderer) {
 
   scene.updateMatrixWorld(true);
 
+  const clock = new THREE.Clock();
 
   // Agent setup
   const agentHeight = 3.0;
@@ -66,14 +69,14 @@ export async function initScene(renderer) {
   const agentGroup = new THREE.Group();
   agentGroup.add(agent);
   // agentGroup.position.set(-95.1758, 6.0069, -102.0932);
-  scene.add(agentGroup);
-
-  // Initial point and random checkpoints
+  // scene.add(agentGroup);
+ 
 
   let combinedPath=[];
   let checkpointCircles=[];
   let highlightedBins = [];
-
+  let pathLine;
+  let delta;
   let bins = [
     "1LB20201",
     "5RB10602",
@@ -91,76 +94,106 @@ let {nodeMap,nodes,aisleBayPoints}= initNodes(THREE);
 
 console.warn("nodes",nodes);
 
-document.getElementById("navigation_path").addEventListener("click", (e) => {
- ( { combinedPath, checkpointCircles } = getShortestPath(bins,nodeMap, nodes, aisleBayPoints, THREE, scene, camera, controls, agentGroup));
-  console.warn(checkpointCircles,combinedPath);
-  bins.forEach((bin)=>{
-    scene.getObjectByName(bin).material.color.set(0x65543e);
-  });
+const pathButton = document.getElementById('path');
+
+const areasButton = document.getElementById('areas');
+document.getElementById("path").addEventListener("click", (e) => {
+  
+  if(areasButton.classList.contains('focused')){
+    areasButton.classList.remove('focused')
+  }
+ 
+  // Toggle the visibility of the input field and text
+  if (!pathButton.classList.contains('focused')) {
+      if(combinedPath){
+        stopAnimation();
+      }
+      ( { combinedPath, checkpointCircles,pathLine,delta } = getShortestPath(bins,nodeMap, nodes, aisleBayPoints, THREE, scene, camera, controls, agentGroup,renderer));
+      console.warn(checkpointCircles,combinedPath);
+      bins.forEach((bin)=>{
+        scene.getObjectByName(bin).material.color.set(0x65543e);
+      });
+  } else {
+    stopAnimation();
+      }
+
+  pathButton.classList.toggle('focused');   
 });
 
-
-
-  function animateCircles(delta) {
-    const time = clock.getElapsedTime();
-
-    checkpointCircles.forEach((circle, index) => {
-      // Scale the circle up and down
-      const scale = 1 + 0.2 * Math.sin(time * 2); // Adjust frequency with time multiplier
-      circle.scale.set(scale, scale, scale);
-
-      // Optionally adjust opacity for a fading effect
-      circle.material.opacity = 0.5 + 0.5 * Math.sin(time * 2);
-    });
-  }
-
-function move(delta) {
-  if (!combinedPath || combinedPath.length <= 0) {
-    // console.warn("No combinedPath available for agent motion.");
-    return;
-  }
-
-  const targetPosition = combinedPath[0];
-  const direction = targetPosition.clone().sub(agentGroup.position);
-
-  const distanceSq = direction.lengthSq();
-  if (distanceSq > 0.05 * 0.05) {
-    direction.normalize();
-    // Calculate the target angle
-  const targetAngle = Math.atan2(direction.x, direction.z);
-  // Get current angle and calculate the shortest path
-  let currentAngle = agentGroup.rotation.y;
-  const angleDifference =
-    THREE.MathUtils.euclideanModulo(
-      targetAngle - currentAngle + Math.PI,
-      Math.PI * 2
-    ) - Math.PI;
-
-    if (Math.abs(angleDifference) > 0.01) {
-      currentAngle += angleDifference * delta * 5; // Smoothly interpolate rotation
-      agentGroup.rotation.y = currentAngle;
-
-    }
-    const moveDistance = Math.min(delta * SPEED, Math.sqrt(distanceSq));
-    agentGroup.position.add(direction.multiplyScalar(moveDistance));
-  } else {
-    agentGroup.position.copy(targetPosition);
-    combinedPath.shift();
-  }
+function stopAnimation(){
+  scene.remove(combinedPath);
+  checkpointCircles.forEach((circle)=> scene.remove(circle));
+  scene.remove(pathLine);
+  scene.remove(agentGroup);
+  if(delta){
+  delta.stop();}
 }
 
 
-// Game loop
-const clock = new THREE.Clock();
-const delta = clock.getDelta();
-const gameLoop = () => {
- move(clock.getDelta());
- animateCircles(delta);
- controls.update();
- renderer.render(scene, camera);
- requestAnimationFrame(gameLoop);
-};
-gameLoop();
+scene.getObjectByName("storageArea_block").visible=false;
+  scene.getObjectByName("yardArea_block").visible=false;
+  scene.getObjectByName("stagingArea_block").visible=false;
+  scene.getObjectByName("activityArea_block").visible=false;
+  scene.getObjectByName("inspectionArea_block").visible=false;
+  scene.getObjectByName("receivingArea_block").visible=false;
+
+
+const areas = [
+    { name: "storageArea_block", color: { r: 50, g: 205, b: 50 }, opacity: 0.4 },
+    { name: "yardArea_block", color: { r: 255, g: 159, b: 10 }, opacity: 0.4 },
+    { name: "stagingArea_block", color: { r: 255, g: 214, b: 10 }, opacity: 0.4 },
+    { name: "activityArea_block", color: { r: 0, g: 128, b: 128 }, opacity: 0.4 },
+    { name: "inspectionArea_block", color: { r: 138, g: 46, b: 226 }, opacity: 0.4 },
+    { name: "receivingArea_block", color: { r: 255, g: 105, b: 180 }, opacity: 0.4 },
+];
+
+areasButton.addEventListener("click", () => {
+    const isFocused = areasButton.classList.contains('focused');
+
+    areas.forEach(area => {
+      console.warn(isFocused);
+        const obj = scene.getObjectByName(area.name);
+        console.warn(obj)
+        if (obj) {
+            if (!isFocused) {
+              console.warn("inside focused");
+                highlightArea(scene, area.name, area.color, area.opacity); // Highlight the area
+
+            } else {
+                obj.visible = false; // Hide the area
+            }
+        }
+    });
+
+    areasButton.classList.toggle('focused');
+});
+
+// areasButton.addEventListener("click", (e) => {
+  
+
+
+//   if(!(areasButton.classList.contains('focused'))){
+//     highlightArea(scene,`storageArea_block`, {"r":50,"g":205,"b":50},0.4);
+//     highlightArea(scene,`yardArea_block`, {"r":255,"g":159,"b":10},0.4);
+//     highlightArea(scene,`stagingArea_block`, {"r":255,"g":214,"b":10},0.4);
+//     highlightArea(scene,`activityArea_block`, {"r":0,"g":128,"b":128},0.4);
+//     highlightArea(scene,`inspectionArea_block`, {"r":138,"g":46,"b":226},0.4);
+//     highlightArea(scene,`receivingArea_block`, {"r":255,"g":105,"b":180},0.4);
+// }
+// else {
+//   scene.getObjectByName("storageArea_block").visible=false;
+//   scene.getObjectByName("yardArea_block").visible=false;
+//   scene.getObjectByName("stagingArea_block").visible=false;
+//   scene.getObjectByName("activityArea_block").visible=false;
+//   scene.getObjectByName("inspectionArea_block").visible=false;
+//   scene.getObjectByName("receivingArea_block").visible=false;
+
+// }
+
+// areasButton.classList.toggle('focused');
+ 
+// });
+
 
   // Resize listener
   window.addEventListener("resize", () => {
