@@ -120,7 +120,7 @@ document.getElementById("path").addEventListener("click", (e) => {
         stopAnimation();
       }
       console.warn(bins.toString());
-      localStorage.setItem("highlightBins",bins.toString());
+      // localStorage.setItem("highlightBins",bins.toString());
       ( { combinedPath, checkpointCircles,pathLine, clock } = getShortestPath(bins,nodeMap, nodes, aisleBayPoints, THREE, scene, camera, controls, agentGroup,renderer));
      
       bins.forEach((bin)=>{
