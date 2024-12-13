@@ -3,6 +3,8 @@ import { switchCamera } from "camera";
 import { highlightBinsFromSearch } from "interactions";
 import { moveToBin, getPositionAndTarget } from "camera";
 import {globalState} from "globalState";
+import { highlightArea, resetAreas } from "highlight";
+
 
 
 export function localStorageSetup(scene, camera, controls) {
@@ -22,7 +24,30 @@ export function localStorageSetup(scene, camera, controls) {
             scene,
             event.newValue
           );
-
+           resetAreas(scene);
+           if(document.getElementById('areas').classList.contains('focused')){
+           document.getElementById('areas').classList.toggle('focused');}
+          switch (event.newValue.toString().split("_")[0]) {
+            case "storageArea":
+              highlightArea(scene,"storageArea_block", { r: 50, g: 205, b: 50 },0.4);
+              break;
+            case "inspectionArea":
+              highlightArea(scene,"inspectionArea_block", { r: 138, g: 46, b: 226 },0.4);
+              break;
+            case "stagingArea":
+              highlightArea(scene,"stagingArea_block", { r: 255, g: 214, b: 10 },0.4);
+              break;
+            case "activityArea":
+              highlightArea(scene,"activityArea_block", { r: 0, g: 128, b: 128 },0.4);
+              break;
+            case "receivingArea":
+              highlightArea(scene,"receivingArea_block", { r: 255, g: 105, b: 180 },0.4);
+              break;
+            case "yardArea":
+              highlightArea(scene,"yardArea_block",  { r: 255, g: 159, b: 10 },0.4);
+              break;
+            
+          }
           // Create a GSAP timeline for smoother transitions
           const timeline = gsap.timeline();
 
@@ -81,6 +106,8 @@ export function localStorageSetup(scene, camera, controls) {
 
       case "highlightBins":
         try {
+          if(document.getElementById('path').classList.contains('focused')){
+            document.querySelector('#path').click();}
           try {
             highlightedBins.forEach((e) => {
               scene.getObjectByName(e.trim()).material.color.set(0xfaf3e2);

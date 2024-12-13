@@ -4,6 +4,8 @@ export function highlightArea(scene, objectName, rgbColor, opacity = 1.0) {
   const object = scene.getObjectByName(objectName);
   
   if (object) {
+
+
     // Access the geometry
     object.visible=true;
     const geometry = object.geometry;
@@ -49,6 +51,8 @@ export function highlightArea(scene, objectName, rgbColor, opacity = 1.0) {
     console.error("No mesh found with the name '" + objectName + "'");
   }
 
+
+ 
   // if (object) {
   //   const geometry = object.geometry;
 
@@ -90,4 +94,13 @@ export function highlightArea(scene, objectName, rgbColor, opacity = 1.0) {
   // } else {
   //   console.error("No mesh found with the name '" + objectName + "'");
   // }
+}
+
+export function resetAreas(scene){
+  scene.getObjectByName("storageArea_block").visible=false;
+  scene.getObjectByName("yardArea_block").visible=false;
+  scene.getObjectByName("stagingArea_block").visible=false;
+  scene.getObjectByName("activityArea_block").visible=false;
+  scene.getObjectByName("inspectionArea_block").visible=false;
+  scene.getObjectByName("receivingArea_block").visible=false;
 }
