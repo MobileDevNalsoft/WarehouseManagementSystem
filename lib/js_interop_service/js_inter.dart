@@ -31,6 +31,9 @@ external _resetBoxColors();
 external _sendOverviewData(String json);
 
 @JS()
+external _changeFacility(String json);
+
+@JS()
 external _showAlert(String message);
 
 @JS()
@@ -49,6 +52,10 @@ external _getSomeAsyncData();
 external _shareImage(String url, String filename);
 
 class JsInteropService {
+
+  changeFacility(String data) {
+    _changeFacility(data);
+  }
 
   sendOverviewData(String data){
     _sendOverviewData(data);

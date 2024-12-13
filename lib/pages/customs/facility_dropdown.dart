@@ -3,16 +3,16 @@ import 'package:gap/gap.dart';
 
 // ignore: must_be_immutable
 class FacilityDropdown<T> extends StatefulWidget {
-    FacilityDropdown({super.key,this.dropDownType = 'Type', required this.buttonHeight, required this.buttonWidth, required this.dropDownHeight, required this.dropDownWidth, required this.dropDownItems, required this.onChanged, this.selectedValue, this.listItemTextColor});
+    FacilityDropdown({super.key,this.dropDownType = 'Type', required this.buttonHeight, required this.buttonWidth, required this.dropDownItemHeight, required this.dropDownWidth, required this.dropDownItems, required this.onChanged, this.selectedValue, this.listItemTextColor});
   String dropDownType;
   double buttonHeight;
   double buttonWidth;
-  double dropDownHeight;
+  double dropDownItemHeight;
   double dropDownWidth;
   Color? listItemTextColor;
   List<T> dropDownItems;
   String? selectedValue;
-  void Function(T?)? onChanged;
+  void Function(dynamic)? onChanged;
   
   @override
   // ignore: library_private_types_in_public_api
@@ -21,6 +21,7 @@ class FacilityDropdown<T> extends StatefulWidget {
 
 class _FacilityDropdownState extends State<FacilityDropdown> {
   double? height;
+  double? dropDownHeight;
   double turns = 1;
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    dropDownHeight = widget.dropDownItems.length*(widget.dropDownItemHeight + size.height*0.01) + size.height * 0.01;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       height: height,
@@ -43,7 +45,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
             width: widget.dropDownWidth,
             color: Colors.transparent,
             child: Container(
-              margin: EdgeInsets.only(top: size.height * 0.06),
+              margin: EdgeInsets.only(top: widget.buttonHeight+5),
               padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width*0.005),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -60,13 +62,14 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                         onTap: () {
                           widget.onChanged!(item);
                           setState(() {
-                            height = height == widget.dropDownHeight
+                            height = height == dropDownHeight! + (widget.buttonHeight + 5)
                                 ? widget.buttonHeight
-                                : widget.dropDownHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                : dropDownHeight! + (widget.buttonHeight + 5);
                             turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                           });
                         },
                         child: Container(
+                          height: widget.dropDownItemHeight,
                           padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width * 0.01),
                           margin: EdgeInsets.only(bottom: size.height*0.01),
                           decoration: BoxDecoration(
@@ -105,7 +108,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
               onTap: () {
                 setState(() {
                   height = height == widget.buttonHeight
-                      ? widget.dropDownHeight
+                      ? dropDownHeight! + (widget.buttonHeight + 5)
                       : widget.buttonHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                   turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                 });

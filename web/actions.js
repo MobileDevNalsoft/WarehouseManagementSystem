@@ -27,6 +27,10 @@ const init = () => {
     const navigateToBin = (bin)=>{
         window.localStorage.setItem("navigateToBin", bin);
     }
+
+    const changeFacility = (data) => {
+        window.localStorage.setItem("facilityData", data)
+    }
     window._switchToMainCam = switchToMainCam;
     window._isRackDataLoaded = isRacksDataLoaded;
     window._setNumberOfTrucks = setNumberOfTrucks;
@@ -35,6 +39,7 @@ const init = () => {
     window._navigateToBin = navigateToBin;
     window._resetBoxColors = resetBoxColors;
     window._sendOverviewData = sendOverviewData;
+    window._changeFacility = changeFacility;
 }
 
 window.onload = () => {

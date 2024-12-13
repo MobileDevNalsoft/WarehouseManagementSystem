@@ -3,7 +3,12 @@ import { createRenderer } from "renderer";
 import { initScene } from "scene";
 
 document.addEventListener("DOMContentLoaded", async function () {
+  window.localStorage.setItem("isLoaded", false);
   const renderer = createRenderer();
+
+  if(JSON.parse(window.localStorage.getItem('facilityData')).facilityID == 2){
+    document.getElementById('leftPanel').display = "none";
+  }
 
   const {scene, camera, mixer, controls} = await initScene(renderer);
 
