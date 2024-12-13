@@ -185,7 +185,7 @@ export function addInteractions(scene, model, camera, controls) {
             }
           }
           switchCamera(scene, targetObject.name, camera, controls);
-          highlightArea(scene,`${name}_block`, {"r":100,"g":100,"b":100});
+          // highlightArea(scene,`${name}_block`, {"r":100,"g":100,"b":100});
           prevNav = name;
           window.localStorage.setItem("switchToMainCam", "null");
         } else if (

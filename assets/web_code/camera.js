@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import {globalState} from "globalState";
+import { highlightArea, resetAreas } from "highlight";
 
 export function createCamera() {
   const container = document.getElementById("container");
@@ -27,6 +28,32 @@ export function switchCamera(scene, name, camera, controls) {
     scene,
     name
   );
+   resetAreas(scene);
+   if(document.getElementById('areas').classList.contains('focused')){
+   document.getElementById('areas').classList.toggle('focused');}
+   
+   switch (name.toString().split("_")[0]) {
+    case "storageArea":
+      highlightArea(scene,"storageArea_block", { r: 50, g: 205, b: 50 },0.4);
+      break;
+    case "inspectionArea":
+      highlightArea(scene,"inspectionArea_block", { r: 138, g: 46, b: 226 },0.4);
+      break;
+    case "stagingArea":
+      highlightArea(scene,"stagingArea_block", { r: 255, g: 214, b: 10 },0.4);
+      break;
+    case "activityArea":
+      highlightArea(scene,"activityArea_block", { r: 0, g: 128, b: 128 },0.4);
+      break;
+    case "receivingArea":
+      highlightArea(scene,"receivingArea_block", { r: 255, g: 105, b: 180 },0.4);
+      break;
+    case "yardArea":
+      highlightArea(scene,"yardArea_block",  { r: 255, g: 159, b: 10 },0.4);
+      break;
+    
+  }
+  
 
   // Create a GSAP timeline for smoother transitions
   const timeline = gsap.timeline();
@@ -74,7 +101,8 @@ export function moveToBin(object, camera, controls) {
   var center = aabb.getCenter(new THREE.Vector3());
   var size = aabb.getSize(new THREE.Vector3());
   const regex = /^[0-9][R]B\d{5}$/;
-
+  if(document.getElementById('path').classList.contains('focused')){
+  document.querySelector('#path').click();}
   // console.log(object);
   // Create a GSAP timeline for smoother transitions
   const timeline = gsap.timeline();

@@ -10,6 +10,8 @@ import { addSkyDome } from "skyDome";
 import { initNodes, getShortestPath } from "navPath";
 import * as GLTFLoader from "gltfLoader";
 import { highlightArea } from "highlight";
+import { switchCamera} from "camera";
+
 
 
 export async function initScene(renderer) {
@@ -56,7 +58,7 @@ export async function initScene(renderer) {
 
   scene.updateMatrixWorld(true);
 
-  const clock = new THREE.Clock();
+  // const clock = new THREE.Clock();
 
   // Agent setup
   const agentHeight = 3.0;
@@ -76,7 +78,7 @@ export async function initScene(renderer) {
   let checkpointCircles=[];
   let highlightedBins = [];
   let pathLine;
-  let delta;
+  let clock;
   let bins = [
     "1LB20201",
     "5RB10602",
@@ -90,6 +92,9 @@ export async function initScene(renderer) {
     "2RB10601",
     "2LB20201"
   ]
+
+
+  
 let {nodeMap,nodes,aisleBayPoints}= initNodes(THREE);
 
 console.warn("nodes",nodes);
@@ -100,33 +105,41 @@ const areasButton = document.getElementById('areas');
 document.getElementById("path").addEventListener("click", (e) => {
   
   if(areasButton.classList.contains('focused')){
-    areasButton.classList.remove('focused')
+    areasButton.classList.remove('focused');
+    areas.forEach(area => {
+        const obj = scene.getObjectByName(area.name);
+        if (obj) {
+                obj.visible = false; 
+        }
+    });
   }
  
   // Toggle the visibility of the input field and text
   if (!pathButton.classList.contains('focused')) {
-      if(combinedPath){
+      if(combinedPath.length!=0){
         stopAnimation();
       }
-      ( { combinedPath, checkpointCircles,pathLine,delta } = getShortestPath(bins,nodeMap, nodes, aisleBayPoints, THREE, scene, camera, controls, agentGroup,renderer));
-      console.warn(checkpointCircles,combinedPath);
+      console.warn(bins.toString());
+      // localStorage.setItem("highlightBins",bins.toString());
+      ( { combinedPath, checkpointCircles,pathLine, clock } = getShortestPath(bins,nodeMap, nodes, aisleBayPoints, THREE, scene, camera, controls, agentGroup,renderer));
+     
       bins.forEach((bin)=>{
         scene.getObjectByName(bin).material.color.set(0x65543e);
       });
   } else {
     stopAnimation();
       }
-
   pathButton.classList.toggle('focused');   
 });
 
 function stopAnimation(){
-  scene.remove(combinedPath);
+  combinedPath=[];
   checkpointCircles.forEach((circle)=> scene.remove(circle));
   scene.remove(pathLine);
   scene.remove(agentGroup);
-  if(delta){
-  delta.stop();}
+  bins.forEach((e)=>scene.getObjectByName(e).material.color.set(0xfaf3e2));
+  if(clock){
+  clock.stop();}
 }
 
 
@@ -149,14 +162,15 @@ const areas = [
 
 areasButton.addEventListener("click", () => {
     const isFocused = areasButton.classList.contains('focused');
-
+    if (!isFocused) {
+      switchCamera(scene, "compoundArea", camera, controls);  } 
     areas.forEach(area => {
       console.warn(isFocused);
         const obj = scene.getObjectByName(area.name);
         console.warn(obj)
         if (obj) {
             if (!isFocused) {
-              console.warn("inside focused");
+               
                 highlightArea(scene, area.name, area.color, area.opacity); // Highlight the area
 
             } else {

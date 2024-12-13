@@ -472,8 +472,8 @@ const gameLoop = () => {
 requestAnimationFrame(gameLoop);
 };
 gameLoop();   
-      console.warn(delta);
-       return {combinedPath,checkpointCircles,pathLine,delta}
+      console.warn(clock);
+       return {combinedPath,checkpointCircles,pathLine,clock}
       
 }
 
