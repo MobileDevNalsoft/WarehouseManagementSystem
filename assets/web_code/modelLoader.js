@@ -11,7 +11,7 @@ export function loadModel() {
         dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.114.0/examples/js/libs/draco/');
         loader.setDRACOLoader( dracoLoader );
         loader.load(
-            "../glbs/warehouse_1212_0229.glb",
+            "../glbs/wartehouse_1312_1235.glb",
             function (gltf) {
                 resolve(gltf); // Resolve with the loaded glTF model
             },

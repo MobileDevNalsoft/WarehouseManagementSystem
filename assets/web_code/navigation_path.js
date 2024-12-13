@@ -424,7 +424,7 @@ const checkpoints = setupCheckpoints(bins);
   // }
 
 function move(delta) {
-  let SPEED=5;
+  let SPEED=3;
   if (!combinedPath || combinedPath.length <= 0) {
     // console.warn("No combinedPath available for agent motion.");
     return;
@@ -447,7 +447,7 @@ function move(delta) {
     ) - Math.PI;
 
     if (Math.abs(angleDifference) > 0.01) {
-      currentAngle += angleDifference * delta * 5; // Smoothly interpolate rotation
+      currentAngle += angleDifference * delta * 2; // Smoothly interpolate rotation
       agentGroup.rotation.y = currentAngle;
 
     }

@@ -158,7 +158,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: clearSearchText));
 
                                           if (message.containsKey("percentComplete")) {
-                                            print(message['percentComplete']);
+                                           if (message.containsKey("percentComplete")) {
+                                            if(message['percentComplete'] == "100"){
+                                              Future.delayed(Duration(seconds: 5), () => _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true)),);
+                                            }
+                                          }
+ 
                                           }
                                         }
                                       } catch (e) {
@@ -178,13 +183,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                 [];
                                           }
 
-                                          bool? isLoaded =
-                                              await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                          if (isLoaded != null) {
-                                            _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                                            _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                          // bool? isLoaded =
+                                          //     await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
+                                          // if (isLoaded != null) {
+                                          //   _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                                          //   _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
                                             timer.cancel();
-                                          }
+                                          // }
                                         },
                                       );
                                     },
