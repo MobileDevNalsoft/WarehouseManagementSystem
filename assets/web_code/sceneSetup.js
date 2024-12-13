@@ -143,12 +143,14 @@ function stopAnimation(){
 }
 
 
-scene.getObjectByName("storageArea_block").visible=false;
-  scene.getObjectByName("yardArea_block").visible=false;
-  scene.getObjectByName("stagingArea_block").visible=false;
-  scene.getObjectByName("activityArea_block").visible=false;
-  scene.getObjectByName("inspectionArea_block").visible=false;
-  scene.getObjectByName("receivingArea_block").visible=false;
+  if(scene.getObjectByName("storageArea_block")){
+    scene.getObjectByName("storageArea_block").visible=false;
+    scene.getObjectByName("yardArea_block").visible=false;
+    scene.getObjectByName("stagingArea_block").visible=false;
+    scene.getObjectByName("activityArea_block").visible=false;
+    scene.getObjectByName("inspectionArea_block").visible=false;
+    scene.getObjectByName("receivingArea_block").visible=false;
+  }
 
 
 const areas = [

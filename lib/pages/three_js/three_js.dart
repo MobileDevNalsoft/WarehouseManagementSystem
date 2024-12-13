@@ -87,6 +87,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
       print("messageFromJS");
     };
     _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
+    getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1}');
     // _warehouseInteractionBloc.add(GetCompanyData());
     // just for debugging
     // animationController.forward();
@@ -167,7 +168,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                     },
                                     onWebViewCreated: (controller) async {
                                       _warehouseInteractionBloc.state.inAppWebViewController = controller;
-
                                       Timer.periodic(
                                         const Duration(milliseconds: 500),
                                         (timer) async {
@@ -180,9 +180,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
 
                                           bool? isLoaded =
                                               await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                          if (isLoaded != null) {
+                                          print('loaded ${await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded")}');
+                                          if ((isLoaded != false && isLoaded != null) && !state.isModelLoaded) {
                                             _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                                            _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                            print(state.isModelLoaded);
                                             timer.cancel();
                                           }
                                         },
@@ -237,12 +238,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   dropDownType: 'Company',
                   buttonHeight: size.height * 0.052,
                   buttonWidth: size.width * 0.15,
-                  dropDownHeight: size.height * 0.4,
+                  dropDownItemHeight: size.height * 0.05,
                   dropDownWidth: size.width * 0.15,
                   dropDownItems: state.companyModel!.results!,
-                  onChanged: (CompanyResults? value) {
-                    context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: value!.name!.toString()));
-                    // context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
+                  onChanged: (value) {
+                    context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: (value as CompanyResults).name!.toString()));
+                    context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
                   },
                   selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
                 ),
@@ -260,11 +261,15 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   dropDownType: 'Facility',
                   buttonHeight: size.height * 0.052,
                   buttonWidth: size.width * 0.15,
-                  dropDownHeight: size.height * 0.2,
+                  dropDownItemHeight: size.height * 0.05,
                   dropDownWidth: size.width * 0.15,
                   dropDownItems: state.facilityModel!.results!,
-                  onChanged: (FacilityResults? value) {
-                    context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: value!.name.toString()));
+                  onChanged: (value) {
+                    context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: (value as FacilityResults).name.toString()));
+                    state.dataFromJS['percentComplete'] = "0";
+                    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
+                    getIt<JsInteropService>().changeFacility('{"companyID":${state.companyModel!.results!.where((e) => e.name == state.selectedCompanyVal).first.id}, "facilityID":${value.id}}');
+                    _warehouseInteractionBloc.state.inAppWebViewController!.reload();
                   },
                   selectedValue: state.selectedFacilityVal,
                 ),
