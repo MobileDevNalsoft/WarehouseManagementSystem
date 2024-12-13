@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {globalState} from "globalState";
 
 export function createCamera() {
   const container = document.getElementById("container");
@@ -61,6 +62,10 @@ export function switchCamera(scene, name, camera, controls) {
   timeline.call(() => {
     controls.enabled = true; // Re-enable controls after animation
     controls.enableDamping = true; // Re-enable damping after animation
+    console.log(name);
+    if(name.includes('compound')){
+      globalState.setAreaFocused(false);
+    }
   });
 }
 

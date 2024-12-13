@@ -135,7 +135,7 @@ export function addInteractions(scene, model, camera, controls) {
 
     // Position tooltip at the center of the object's position
     tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y}px`;
+    tooltip.style.top = `${y-60}px`;
     tooltip.classList.remove("hide-speech-bubble");
   }
 
@@ -171,6 +171,7 @@ export function addInteractions(scene, model, camera, controls) {
                 name.substring(name.length - 2, name.length).toUpperCase() +
                 '"}'
             );
+            window.localStorage.setItem("rack_cam", "storageArea");
           } else {
             console.log('{"area":"' + name + '"}');
             window.localStorage.setItem("rack_cam", "warehouse");
@@ -187,11 +188,6 @@ export function addInteractions(scene, model, camera, controls) {
           highlightArea(scene,`${name}_block`, {"r":100,"g":100,"b":100});
           prevNav = name;
           window.localStorage.setItem("switchToMainCam", "null");
-          if (name.includes("rack")) {
-            window.localStorage.setItem("rack_cam", "storageArea");
-          } else {
-            window.localStorage.setItem("rack_cam", "warehouse");
-          }
         } else if (
           name.includes("B") &&
           (name.includes("L") || name.includes("R")) &&
@@ -227,6 +223,7 @@ export function addInteractions(scene, model, camera, controls) {
     // console.log(event.movementY);
 
     //console.log('{"object":"null"}');
+    tooltip.style.display = "none";
     localStorage.removeItem("resetBoxColors");
     try {
       if (localStorage.getItem("highlightBins")) {
