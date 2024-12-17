@@ -75,7 +75,7 @@ window.flutter_inappwebview = {
                                                 message += ' ' + arguments[i];
                                             }
                                         }
-                                        oldLogs[oldLog].call(iframe.contentWindow.console, ...arguments);
+                                        // oldLogs[oldLog].call(iframe.contentWindow.console, ...arguments);
                                         window.flutter_inappwebview.nativeCommunication('onConsoleMessage', viewId, [oldLog, message]);
                                     }
                                 })(k);

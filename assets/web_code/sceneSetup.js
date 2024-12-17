@@ -89,13 +89,8 @@ export async function initScene(renderer) {
       model.rotation.y = -(Math.PI/2) ; 
       agentGroup.add(model);
 
-      // scene.add(agentGroup);
-      console.log('Model loaded successfully');
     },
-    (xhr) => {
-      // Optional loading progress
-      console.log(`Loading model: ${(xhr.loaded / xhr.total) * 100}% complete`);
-    },
+    
     (error) => {
       // Handle loading errors
       console.error('An error occurred while loading the model:', error);

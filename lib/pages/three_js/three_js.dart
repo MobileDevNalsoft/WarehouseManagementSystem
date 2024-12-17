@@ -247,7 +247,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   dropDownItems: state.companyModel!.results!,
                   onChanged: (value) {
                     context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: (value as CompanyResults).name!.toString()));
-                    context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
+                    // context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
                   },
                   selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
                 ),
@@ -269,6 +269,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   dropDownWidth: size.width * 0.15,
                   dropDownItems: state.facilityModel!.results!,
                   onChanged: (value) {
+                    print("facility ${value.id}");
                     context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: (value as FacilityResults).name.toString()));
                     state.dataFromJS['percentComplete'] = "0";
                     _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));

@@ -35,12 +35,15 @@ export function loadModel() {
 }
 
 function getGLB(companyID, facilityID){
+    console.warn(facilityID);
     switch(companyID){
+       
         case 1: switch(facilityID){
             case 1: 
                 return  "../glbs/wartehouse_1312_1235.glb";
+                
             case 2:
-                return "../glbs/warehouse_2811_0604.glb";
+                return "../glbs/warehouse_dummy.glb";
         }
     }
 }
