@@ -225,3 +225,13 @@ body {
     object-fit: contain;
     display: none;
 }
+
+iframe {
+    position: fixed; /* Fixed positioning to stay at bottom right */
+    bottom: 20px; /* Distance from bottom edge */
+    right: 20px; /* Distance from right edge */
+    width: 350px;
+    height: 430px;
+    z-index: 1000; /* Ensure it is on top of other elements */
+    border: none; /* Optional: Remove border */
+}

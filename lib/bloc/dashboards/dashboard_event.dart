@@ -79,6 +79,15 @@ class GetStorageDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
+class GetStorageDrilldownData extends DashboardsEvent{
+  int facilityID;
+  String flag;
+  GetStorageDrilldownData({required this.facilityID, required this.flag});
+
+  @override
+  List<Object> get props => [facilityID, flag];
+}
+
 class UpdateDate extends DashboardsEvent{
   DateTime date;
   UpdateDate({required this.date});

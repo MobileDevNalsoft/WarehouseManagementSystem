@@ -361,10 +361,11 @@ class Customs {
       bool enableAnnotation = false,
       String? contentText,
       String annotationText = 'AText',
-      double annotationFontSize = 16}) {
+      double annotationFontSize = 16
+      }) {
     return SfCircularChart(
       title: ChartTitle(text: title, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
-      legend: Legend(isVisible: legendVisibility, alignment: ChartAlignment.far),
+      legend: Legend(isVisible: legendVisibility, alignment: ChartAlignment.far,),
       annotations: enableAnnotation
           ? <CircularChartAnnotation>[
               CircularChartAnnotation(
@@ -397,6 +398,7 @@ class Customs {
                 dataSource: props!.dataSource,
                 xValueMapper: (PieData data, _) => data.xData,
                 yValueMapper: (PieData data, _) => data.yData,
+                onPointTap: props.onPointTap,
                 dataLabelSettings: DataLabelSettings(
                     isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
                 radius: props.radius ?? '${ratio*45}%', // Adjust the radius as needed
@@ -416,6 +418,7 @@ class Customs {
                         textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: props.labelFontSize),
                         alignment: ChartAlignment.center),
                     pointColorMapper: props.pointColorMapper,
+                    onPointTap: props.onPointTap,
                     xValueMapper: (PieData data, _) => data.xData,
                     yValueMapper: (PieData data, _) => data.yData,
                   )
@@ -428,6 +431,7 @@ class Customs {
                         alignment: ChartAlignment.center),
                     radius: props.radius ?? '${ratio*70}%',
                     pointColorMapper: props.pointColorMapper,
+                    onPointTap: props.onPointTap,
                     xValueMapper: (PieData data, _) => data.xData,
                     yValueMapper: (PieData data, _) => data.yData,
                   )
@@ -677,5 +681,6 @@ class Props {
   String? innerRadius;
   double? maximumValue;
   Color? Function(PieData, int)? pointColorMapper;
-  Props({this.dataSource, this.labelFontSize = 14, this.radius, this.innerRadius, this.maximumValue, this.pointColorMapper});
+  void Function(ChartPointDetails pointInteractionDetails)? onPointTap;
+  Props({this.dataSource, this.labelFontSize = 14, this.radius, this.innerRadius, this.maximumValue, this.pointColorMapper, this.onPointTap});
 }

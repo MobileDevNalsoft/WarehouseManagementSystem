@@ -191,6 +191,9 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                   return const Color.fromARGB(255, 178, 166, 209);
                                 }
                               },
+                              onPointTap: (pointInteractionDetails) {
+                                  _dashboardsBloc.add(GetStorageDrilldownData(facilityID: 243, flag: 'WAREHOUSE UTILIZATION'));
+                              },
                             ));
                         }
                       ),

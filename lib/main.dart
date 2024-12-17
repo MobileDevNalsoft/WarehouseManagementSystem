@@ -49,7 +49,7 @@ main() async {
         ),
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: !sharedPreferences.containsKey('username') ? '/login': '/warehouse',
+        initialRoute: !sharedPreferences.containsKey('username') ? '/dashboards': '/warehouse',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
         ),

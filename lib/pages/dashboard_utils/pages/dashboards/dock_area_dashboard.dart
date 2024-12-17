@@ -78,7 +78,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
         //     ),
         ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: SingleChildScrollView(child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+          child: SingleChildScrollView(child: BlocBuilder<DashboardsBloc, DashboardsState>(
+            buildWhen: (previous, current) => previous.getDockDashboardState != current.getDockDashboardState,
+            builder: (context, state) {
             bool isEnabled = state.getDockDashboardState != DockDashboardState.success;
             return Column(
               children: [

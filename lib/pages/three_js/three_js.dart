@@ -140,8 +140,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           return SizedBox(
                             height: size.height * 0.92,
                             width: size.width * widthAnimation.value,
-                            child: accessTypes.contains('3D Model')
-                                ? InAppWebView(
+                            child: 
+                            // accessTypes.contains('3D Model')
+                            //     ? 
+                                InAppWebView(
                                     initialFile: 'assets/web_code/model.html',
                                     onConsoleMessage: (controller, consoleMessage) {
                                       try {
@@ -159,7 +161,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: clearSearchText));
 
                                           if (message.containsKey("percentComplete")) {
-                                            print(message['percentComplete']);
+                                            if(message['percentComplete'] == "100"){
+                                              Future.delayed(Duration(seconds: 5), () => _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true)),);
+                                            }
                                           }
                                         }
                                       } catch (e) {
@@ -178,29 +182,28 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                 [];
                                           }
 
-                                          bool? isLoaded =
-                                              await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                          print('loaded ${await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded")}');
-                                          if ((isLoaded != false && isLoaded != null) && !state.isModelLoaded) {
-                                            _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                                            print(state.isModelLoaded);
-                                            timer.cancel();
-                                          }
+                                          // bool? isLoaded =
+                                          //     await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
+                                          // print('loaded ${await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded")}');
+                                          // if ((isLoaded != false && isLoaded != null) && !state.isModelLoaded) {
+                                            
+                                          //   print(state.isModelLoaded);
+                                          // }
                                         },
                                       );
                                     },
                                     onLoadStop: (controller, url) async {},
                                   )
-                                : Container(
-                                    height: size.height * 0.92,
-                                    width: size.width * widthAnimation.value,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
-                                    child: Text(
-                                      'Get Access for Digital Warehouse',
-                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                // : Container(
+                                //     height: size.height * 0.92,
+                                //     width: size.width * widthAnimation.value,
+                                //     alignment: Alignment.center,
+                                //     decoration: BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
+                                //     child: Text(
+                                //       'Get Access for Digital Warehouse',
+                                //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                //     ),
+                                //   ),
                           );
                         }),
                   ),

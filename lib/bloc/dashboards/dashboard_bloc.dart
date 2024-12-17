@@ -41,6 +41,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     on<GetYardDashboardData>(_onGetYardDashboardData);
     on<ChangeLocType>(_onChangeLocationType);
     on<ElevateDashboard>(_onElevateDashboard);
+    on<GetStorageDrilldownData>(_onGetStorageDrilldownData);
   }
   final NetworkCalls _customApi;
 
@@ -176,6 +177,19 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     } catch(e){
       Log.e(e.toString());
       emit(state.copyWith(getStorageDashboardState: StorageDashboardState.failure));
+    }
+  }
+
+  Future<void> _onGetStorageDrilldownData(GetStorageDrilldownData event, Emitter<DashboardsState> emit) async {
+    try{
+      emit(state.copyWith(getStorageDrilldownState: StorageDrilldownState.loading));
+      await _customApi.post(AppConstants.STORAGE_DRILLDOWN, data: {"facility_id": event.facilityID, "flag": event.flag}).then((apiResponse) {
+        print(apiResponse.response!.data);
+        emit(state.copyWith(getStorageDrilldownState:StorageDrilldownState.success));
+      });
+    } catch(e){
+      Log.e(e.toString());
+      emit(state.copyWith(getStorageDrilldownState: StorageDrilldownState.failure));
     }
   }
 }
