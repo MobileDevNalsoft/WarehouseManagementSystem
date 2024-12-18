@@ -46,10 +46,10 @@ export function switchCamera(scene, name, camera, controls) {
       highlightArea(scene,"activityArea_block", { r: 0, g: 128, b: 128 },0.4);
       break;
     case "receivingArea":
-      highlightArea(scene,"receivingArea_block", { r: 255, g: 105, b: 180 },0.4);
+      highlightArea(scene,"receivingArea_block", { r: 166, g: 20, b: 93 },0.4);
       break;
     case "yardArea":
-      highlightArea(scene,"yardArea_block",  { r: 255, g: 159, b: 10 },0.4);
+      highlightArea(scene,"yardArea_block",  { r: 255, g: 99, b: 99 },0.4);
       break;
     
   }

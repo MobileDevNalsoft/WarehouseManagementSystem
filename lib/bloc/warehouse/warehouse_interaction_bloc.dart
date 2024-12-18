@@ -89,7 +89,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
             companyModel: companyModel,
             getState: GetCompanyDataState.success,
             selectedCompanyVal: companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
-        add(GetFaclityData(company_id: companyModel.results!.where((e) => e.name! == 'M10 Company').first.id!));
+        // add(GetFaclityData(company_id: companyModel.results!.where((e) => e.name! == 'M10 Company').first.id!));
       });
     } catch (e) {
       print("error $e");

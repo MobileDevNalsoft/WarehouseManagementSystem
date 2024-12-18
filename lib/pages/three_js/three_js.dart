@@ -161,9 +161,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: clearSearchText));
 
                                           if (message.containsKey("percentComplete")) {
+                                           if (message.containsKey("percentComplete")) {
                                             if(message['percentComplete'] == "100"){
                                               Future.delayed(Duration(seconds: 5), () => _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true)),);
                                             }
+                                          }
+ 
                                           }
                                         }
                                       } catch (e) {
@@ -184,10 +187,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
 
                                           // bool? isLoaded =
                                           //     await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                          // print('loaded ${await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded")}');
-                                          // if ((isLoaded != false && isLoaded != null) && !state.isModelLoaded) {
-                                            
-                                          //   print(state.isModelLoaded);
+                                          // if (isLoaded != null) {
+                                          //   _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                                          //   _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                            timer.cancel();
                                           // }
                                         },
                                       );
@@ -246,7 +249,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   dropDownItems: state.companyModel!.results!,
                   onChanged: (value) {
                     context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: (value as CompanyResults).name!.toString()));
-                    context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
+                    // context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
                   },
                   selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
                 ),
@@ -268,6 +271,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   dropDownWidth: size.width * 0.15,
                   dropDownItems: state.facilityModel!.results!,
                   onChanged: (value) {
+                    print("facility ${value.id}");
                     context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: (value as FacilityResults).name.toString()));
                     state.dataFromJS['percentComplete'] = "0";
                     _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));

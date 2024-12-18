@@ -44,7 +44,7 @@ final class WarehouseInteractionState{
   // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(dataFromJS: {"object": "null"}, isModelLoaded: false,getState: GetCompanyDataState.initial,facilityDataState: GetFacilityDataState.initial,companyModel: CompanyModel(results: [CompanyResults(name: "M10 Company", id: 1),CompanyResults(name: "Demo", id: 2),CompanyResults(name: "Demo Customer1", id: 3),CompanyResults(name: "Demo Customer2"),CompanyResults(name: "SUM Compnay", id: 4),CompanyResults(name: "VIM Company", id: 5)],),selectedCompanyVal: "M10 Company"
-    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse", id: 2),FacilityResults(name: "Duty-Free Warehouse", id: 2),]),selectedFacilityVal: "Duty-Paid Warehouse", getUserInfoState: GetUserInfo.initial, getUsersState: GetUsers.initial, users : [], filteredUsers: [], getAlertsStatus: AlertsStatus.initial, alerts: [], getAreasOveriviewDataState: AreasOverviewDataState.initial
+    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse", id: 1),FacilityResults(name: "Duty-Free Warehouse", id: 2),]),selectedFacilityVal: "Duty-Paid Warehouse", getUserInfoState: GetUserInfo.initial, getUsersState: GetUsers.initial, users : [], filteredUsers: [], getAlertsStatus: AlertsStatus.initial, alerts: [], getAreasOveriviewDataState: AreasOverviewDataState.initial
     );
   }
 

@@ -11,6 +11,8 @@ import { initNodes, getShortestPath } from "navPath";
 import * as GLTFLoader from "gltfLoader";
 import { highlightArea } from "highlight";
 import { switchCamera} from "camera";
+import {DRACOLoader} from "draco";
+
 
 
 
@@ -63,16 +65,37 @@ export async function initScene(renderer) {
   // Agent setup
   const agentHeight = 3.0;
   const agentRadius = 5.25;
-  const agent = new THREE.Mesh(
-    new THREE.BoxGeometry(agentHeight, agentHeight, agentHeight),
-    new THREE.MeshPhongMaterial({ color: "green" })
-  );
-  agent.position.y = agentHeight / 2;
+  // const agent = new THREE.Mesh(
+  //   new THREE.BoxGeometry(agentHeight, agentHeight, agentHeight),
+  //   new THREE.MeshPhongMaterial({ color: "green" })
+  // );
+  // agent.position.y = agentHeight / 2;
   const agentGroup = new THREE.Group();
-  agentGroup.add(agent);
+  // agentGroup.add(agent);
   // agentGroup.position.set(-95.1758, 6.0069, -102.0932);
   // scene.add(agentGroup);
- 
+  const loader = new GLTFLoader.GLTFLoader();
+  // const dracoLoader = new DRACOLoader();
+  // dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.114.0/examples/js/libs/draco/');
+  // loader.setDRACOLoader( dracoLoader );
+  loader.load(
+    '../glbs/forkLift_final_pro.glb', // Replace with the path to your GLB file
+    (gltf) => {
+      const model = gltf.scene;
+      
+      model.scale.set(2.5, 2.5, 2.5); // Adjust scale as needed
+  
+      // Add the model to the group
+      model.rotation.y = -(Math.PI/2) ; 
+      agentGroup.add(model);
+
+    },
+    
+    (error) => {
+      // Handle loading errors
+      console.error('An error occurred while loading the model:', error);
+    }
+  );
 
   let combinedPath=[];
   let checkpointCircles=[];
@@ -155,11 +178,11 @@ function stopAnimation(){
 
 const areas = [
     { name: "storageArea_block", color: { r: 50, g: 205, b: 50 }, opacity: 0.4 },
-    { name: "yardArea_block", color: { r: 255, g: 159, b: 10 }, opacity: 0.4 },
+    { name: "yardArea_block", color: { r: 255, g: 99, b: 99 }, opacity: 0.4 },
     { name: "stagingArea_block", color: { r: 255, g: 214, b: 10 }, opacity: 0.4 },
     { name: "activityArea_block", color: { r: 0, g: 128, b: 128 }, opacity: 0.4 },
     { name: "inspectionArea_block", color: { r: 138, g: 46, b: 226 }, opacity: 0.4 },
-    { name: "receivingArea_block", color: { r: 255, g: 105, b: 180 }, opacity: 0.4 },
+    { name: "receivingArea_block", color: { r: 166, g: 20, b: 93 }, opacity: 0.4 },
 ];
 
 areasButton.addEventListener("click", () => {
