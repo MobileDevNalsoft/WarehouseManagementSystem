@@ -44,3 +44,27 @@ class StorageBinItem {
     expiryDate = json['expiry_date'] ?? '';
   }
 }
+
+class WarehouseUtilization {
+  List<String>? available;
+  List<String>? occupied;
+  WarehouseUtilization({this.available, this.occupied});
+
+  WarehouseUtilization.fromJson(Map<String, dynamic> json){
+    available = (json['available_bins'] as List).map((e) => (e as Map).values.first as String).toList();
+    occupied = (json['occupied_bins'] as List).map((e) => (e as Map).values.first as String).toList();
+  }
+}
+
+class InventorySummary {
+  List<String>? inStock;
+  List<String>? runningOutOfStock;
+  List<String>? outOfStock;
+  InventorySummary({this.inStock, this.runningOutOfStock, this.outOfStock});
+
+  InventorySummary.fromJson(Map<String, dynamic> json){
+    inStock = (json['in_stock'] as List).map((e) => (e as Map).values.first as String).toList();
+    runningOutOfStock = (json['running_out_of_stock'] as List).map((e) => (e as Map).values.first as String).toList();
+    outOfStock = (json['out_of_stock'] as List).map((e) => (e as Map).values.first as String).toList();
+  }
+}

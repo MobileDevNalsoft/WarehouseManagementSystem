@@ -34,25 +34,32 @@ class EntryPoint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    
     return Scaffold(
       key: _drawerKey,
-      body: Stack(
-        alignment: Alignment.centerLeft,
-        children: [
-          const Sidebar(),
-          Align(
-            alignment: Alignment.centerRight,
-            child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
-              return Container(
-                height: size.height,
-                  width: size.width * 0.85,
-                  decoration:
-                      BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1), borderRadius: const BorderRadius.only(topLeft: Radius.circular(50), bottomLeft: Radius.circular(50)), boxShadow: [BoxShadow(color: Colors.grey.shade900, offset: const Offset(-1,0), blurRadius: 5)]),
-                  padding: EdgeInsets.all(size.height * 0.025),
-                  child: dashboards[state.index!]);
-            }),
-          )
-        ],
+      body: SingleChildScrollView(
+        child: LayoutBuilder(
+          builder: (context, lsize) {
+            return Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Sidebar(lsize: lsize,),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+                    return Container(
+                      height: size.height,
+                        width: size.width * 0.85,
+                        decoration:
+                            BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1), borderRadius: const BorderRadius.only(topLeft: Radius.circular(50), bottomLeft: Radius.circular(50)), boxShadow: [BoxShadow(color: Colors.grey.shade900, offset: const Offset(-1,0), blurRadius: 5)]),
+                        padding: EdgeInsets.all(size.height * 0.025),
+                        child: dashboards[state.index!]);
+                  }),
+                )
+              ],
+            );
+          }
+        ),
       ),
     );
   }

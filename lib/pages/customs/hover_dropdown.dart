@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wmssimulator/inits/init.dart';
@@ -66,7 +67,15 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                               });
                               
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => EntryPoint(),));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ScreenTypeLayout.builder(
+                                mobile: (p0) => Container(
+                                  height: 100,
+                                  width: 100,
+                                  color: Colors.amber,
+                                ),
+                                desktop: (p0) => EntryPoint(),
+                                tablet: (p0) => EntryPoint(),
+                              ),));
                             },
                             child: ForHover(text: "Dashboard"))),
                     if(widget.accessTypes.contains('WMS Cloud'))

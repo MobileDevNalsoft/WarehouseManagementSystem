@@ -17,7 +17,9 @@ import 'package:wmssimulator/models/inspection_area_model.dart';
 import 'package:wmssimulator/models/receiving_area_model.dart';
 import 'package:wmssimulator/models/staging_area_model.dart';
 import 'package:wmssimulator/models/storage_aisle_model.dart';
+import 'package:wmssimulator/models/storage_bin.dart';
 import 'package:wmssimulator/models/yard_area_model.dart';
+import 'package:wmssimulator/pages/test_code/warehouse.dart';
 import '../../local_network_calls.dart';
 
 part 'dashboard_event.dart';
@@ -185,7 +187,18 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
       emit(state.copyWith(getStorageDrilldownState: StorageDrilldownState.loading));
       await _customApi.post(AppConstants.STORAGE_DRILLDOWN, data: {"facility_id": event.facilityID, "flag": event.flag}).then((apiResponse) {
         print(apiResponse.response!.data);
-        emit(state.copyWith(getStorageDrilldownState:StorageDrilldownState.success));
+        switch(event.flag){
+          case 'WAREHOUSE UTILIZATION':
+            WarehouseUtilization warehouseUtilization = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data!), (json) => WarehouseUtilization.fromJson(json)).data!;
+            emit(state.copyWith(warehouseUtilization: warehouseUtilization, getStorageDrilldownState:StorageDrilldownState.success));
+            break;
+          case 'INVENTORY SUMMARY':
+            InventorySummary inventorySummary = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data!), (json) => InventorySummary.fromJson(json)).data!;
+            emit(state.copyWith(inventorySummary: inventorySummary, getStorageDrilldownState:StorageDrilldownState.success));
+            break;
+          default:
+            null;
+        }
       });
     } catch(e){
       Log.e(e.toString());

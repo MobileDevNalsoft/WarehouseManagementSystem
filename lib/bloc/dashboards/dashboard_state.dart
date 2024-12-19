@@ -12,7 +12,7 @@ enum AppointmentsState { initial, loading, success, failure}
 
 // ignore: must_be_immutable
 final class DashboardsState {
-  DashboardsState({this.index, this.getDockDashboardState, this.dockDashboardData, this.getReceivingDashboardState, this.receivingDashboardData, this.getInspectionDashboardState, this.inspectionDashboardData, this.getActivityDashboardState, this.activityDashboardData, this.getStagingDashboardState, this.stagingDashboardData, this.getStorageDashboardState, this.storageDashboardData, this.appointments, this.getAppointmentsState, this.appointmentsDate, this.toggleCalendar, this.selectedLocType, this.getYardDashboardState, this.yardDashboardData, this.elevates, this.getStorageDrilldownState});
+  DashboardsState({this.index, this.getDockDashboardState, this.dockDashboardData, this.getReceivingDashboardState, this.receivingDashboardData, this.getInspectionDashboardState, this.inspectionDashboardData, this.getActivityDashboardState, this.activityDashboardData, this.getStagingDashboardState, this.stagingDashboardData, this.getStorageDashboardState, this.storageDashboardData, this.appointments, this.getAppointmentsState, this.appointmentsDate, this.toggleCalendar, this.selectedLocType, this.getYardDashboardState, this.yardDashboardData, this.elevates, this.getStorageDrilldownState, this.warehouseUtilization, this.inventorySummary});
 
   DockDashboard? dockDashboardData;
   List<Appointment>? appointments;
@@ -32,13 +32,15 @@ final class DashboardsState {
   StagingDashboard? stagingDashboardData;
   StorageDashboardState? getStorageDashboardState;
   StorageDrilldownState? getStorageDrilldownState;
+  WarehouseUtilization? warehouseUtilization;
+  InventorySummary? inventorySummary;
   StorageDashboard? storageDashboardData;
   String? selectedLocType;
   int? index;
   List<bool>? elevates;
 
   factory DashboardsState.initial() {
-    return DashboardsState(index: 1, getDockDashboardState: DockDashboardState.initial, appointments: [], getAppointmentsState: AppointmentsState.initial, appointmentsDate: DateTime.now(), toggleCalendar: false, getReceivingDashboardState: ReceivingDashboardState.initial, getInspectionDashboardState: InspectionDashboardState.initial, getActivityDashboardState: ActivityDashboardState.initial, getStagingDashboardState: StagingDashboardState.initial, getStorageDashboardState: StorageDashboardState.initial, getYardDashboardState: YardDashboardState.initial, elevates: []);
+    return DashboardsState(index: 0, getDockDashboardState: DockDashboardState.initial, appointments: [], getAppointmentsState: AppointmentsState.initial, appointmentsDate: DateTime.now(), toggleCalendar: false, getReceivingDashboardState: ReceivingDashboardState.initial, getInspectionDashboardState: InspectionDashboardState.initial, getActivityDashboardState: ActivityDashboardState.initial, getStagingDashboardState: StagingDashboardState.initial, getStorageDashboardState: StorageDashboardState.initial, getYardDashboardState: YardDashboardState.initial, elevates: []);
   }
 
   DashboardsState copyWith({
@@ -49,7 +51,8 @@ final class DashboardsState {
     ActivityDashboardState? getActivityDashboardState, ActivityDashboard? activityDashboardData,
     StagingDashboardState? getStagingDashboardState, StagingDashboard? stagingDashboardData,
     StorageDashboardState? getStorageDashboardState, StorageDashboard? storageDashboardData,
-    StorageDrilldownState? getStorageDrilldownState,
+    StorageDrilldownState? getStorageDrilldownState, WarehouseUtilization? warehouseUtilization,
+    InventorySummary? inventorySummary,
     YardDashboardState? getYardDashboardState, YardDashboard? yardDashboardData,
     String? selectedLocType,
     List<Appointment>? appointments,
@@ -58,6 +61,6 @@ final class DashboardsState {
     AppointmentsState? getAppointmentsState,
     List<bool>? elevates
   }) {
-    return DashboardsState(index: index ?? this.index, getDockDashboardState: getDockDashboardState ?? this.getDockDashboardState, dockDashboardData: dockDashboardData ?? this.dockDashboardData, appointments: appointments ?? this.appointments,appointmentsDate: appointmentsDate ?? this.appointmentsDate, getAppointmentsState: getAppointmentsState ?? this.getAppointmentsState, toggleCalendar: toggleCalendar ?? this.toggleCalendar, getReceivingDashboardState: getReceivingDashboardState ?? this.getReceivingDashboardState, receivingDashboardData: receivingDashboardData ?? this.receivingDashboardData, getInspectionDashboardState: getInspectionDashboardState ?? this.getInspectionDashboardState, inspectionDashboardData: inspectionDashboardData ?? this.inspectionDashboardData, getActivityDashboardState: getActivityDashboardState ?? this.getActivityDashboardState, activityDashboardData: activityDashboardData ?? this.activityDashboardData, getStagingDashboardState: getStagingDashboardState ?? this.getStagingDashboardState, stagingDashboardData: stagingDashboardData ?? this.stagingDashboardData, getStorageDashboardState: getStorageDashboardState ?? this.getStorageDashboardState, storageDashboardData: storageDashboardData ?? this.storageDashboardData, getYardDashboardState: getYardDashboardState ?? this.getYardDashboardState, yardDashboardData: yardDashboardData ?? this.yardDashboardData, selectedLocType: selectedLocType ?? this.selectedLocType, elevates: elevates ?? this.elevates, getStorageDrilldownState: getStorageDrilldownState ?? this.getStorageDrilldownState);
+    return DashboardsState(index: index ?? this.index, getDockDashboardState: getDockDashboardState ?? this.getDockDashboardState, dockDashboardData: dockDashboardData ?? this.dockDashboardData, appointments: appointments ?? this.appointments,appointmentsDate: appointmentsDate ?? this.appointmentsDate, getAppointmentsState: getAppointmentsState ?? this.getAppointmentsState, toggleCalendar: toggleCalendar ?? this.toggleCalendar, getReceivingDashboardState: getReceivingDashboardState ?? this.getReceivingDashboardState, receivingDashboardData: receivingDashboardData ?? this.receivingDashboardData, getInspectionDashboardState: getInspectionDashboardState ?? this.getInspectionDashboardState, inspectionDashboardData: inspectionDashboardData ?? this.inspectionDashboardData, getActivityDashboardState: getActivityDashboardState ?? this.getActivityDashboardState, activityDashboardData: activityDashboardData ?? this.activityDashboardData, getStagingDashboardState: getStagingDashboardState ?? this.getStagingDashboardState, stagingDashboardData: stagingDashboardData ?? this.stagingDashboardData, getStorageDashboardState: getStorageDashboardState ?? this.getStorageDashboardState, storageDashboardData: storageDashboardData ?? this.storageDashboardData, getYardDashboardState: getYardDashboardState ?? this.getYardDashboardState, yardDashboardData: yardDashboardData ?? this.yardDashboardData, selectedLocType: selectedLocType ?? this.selectedLocType, elevates: elevates ?? this.elevates, getStorageDrilldownState: getStorageDrilldownState ?? this.getStorageDrilldownState, warehouseUtilization: warehouseUtilization ?? this.warehouseUtilization, inventorySummary: inventorySummary ?? this.inventorySummary);
   }
 }

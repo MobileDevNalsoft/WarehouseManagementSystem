@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
-import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
-import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class YardAreaDashboard extends StatefulWidget {
   YardAreaDashboard({super.key});
@@ -16,25 +11,6 @@ class YardAreaDashboard extends StatefulWidget {
 }
 
 class _YardAreaDashboardState extends State<YardAreaDashboard> {
-  // Define lists for job card statuses and their corresponding values (replace with actual data)
-  late List<BarData> barData;
-
-  // Define lists for job card statuses and their corresponding values (replace with actual data)
-  late List<BarData> inBoundData;
-
-  // Define lists for job card statuses and their corresponding values (replace with actual data)
-  late List<BarData> outBoundData;
-
-  late List<BarData> loadingVehiclesData;
-
-  // Define lists for job card statuses and their corresponding values (replace with actual data)
-  late List<BarData> unloadingVehiclesData;
-
-  late List<AnalogChartData> avgYardTime;
-
-  late List<AnalogChartData> loadingUnloadingCount;
-
-  late List<ChartData> chartData;
 
   late DashboardsBloc _dashboardsBloc;
 
@@ -161,6 +137,7 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                             title: "Previous month yard acitvity",
                             titleFontSize: ratio*13,
                             series: SeriesName.radialBar,
+                            legendVisibility: true,
                             props: Props(
                               dataSource: [
                                 PieData(xData: 'Loading', yData: state.yardDashboardData!.previousMonthYardUtilization!.loadingCount!.toDouble()),
