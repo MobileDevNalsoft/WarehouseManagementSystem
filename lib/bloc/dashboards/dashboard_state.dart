@@ -40,7 +40,7 @@ final class DashboardsState {
   List<bool>? elevates;
 
   factory DashboardsState.initial() {
-    return DashboardsState(index: 1, getDockDashboardState: DockDashboardState.initial, appointments: [], getAppointmentsState: AppointmentsState.initial, appointmentsDate: DateTime.now(), toggleCalendar: false, getReceivingDashboardState: ReceivingDashboardState.initial, getInspectionDashboardState: InspectionDashboardState.initial, getActivityDashboardState: ActivityDashboardState.initial, getStagingDashboardState: StagingDashboardState.initial, getStorageDashboardState: StorageDashboardState.initial, getYardDashboardState: YardDashboardState.initial, elevates: []);
+    return DashboardsState(index: 0, getDockDashboardState: DockDashboardState.initial, appointments: [], getAppointmentsState: AppointmentsState.initial, appointmentsDate: DateTime.now(), toggleCalendar: false, getReceivingDashboardState: ReceivingDashboardState.initial, getInspectionDashboardState: InspectionDashboardState.initial, getActivityDashboardState: ActivityDashboardState.initial, getStagingDashboardState: StagingDashboardState.initial, getStorageDashboardState: StorageDashboardState.initial, getYardDashboardState: YardDashboardState.initial, elevates: []);
   }
 
   DashboardsState copyWith({
