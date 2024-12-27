@@ -179,7 +179,6 @@ class Customs {
       bool? legendVisibility}) {
     return LayoutBuilder(builder: (context, constraints) {
       return SfCartesianChart(
-          margin: EdgeInsets.zero,
           title: ChartTitle(
               text: title,
               alignment: ChartAlignment.center,

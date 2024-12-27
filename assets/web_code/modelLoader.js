@@ -42,7 +42,7 @@ function getGLB(companyID, facilityID){
        
         case 1: switch(facilityID){
             case 1: 
-                return "../glbs/warehouse_1312_1235.glb";
+                return "../glbs/warehouse_1223_0603.glb";
             case 2:
                 return "../glbs/final_warehouse_2_com.glb";
         }

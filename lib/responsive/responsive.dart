@@ -12,7 +12,7 @@ enum Device {
 
 Device getDevice(BuildContext context) {
   double deviceWidth = MediaQuery.sizeOf(context).shortestSide;
-  if (deviceWidth > Device.mobile.size!) return Device.tab;
   if (deviceWidth > Device.tab.size!) return Device.desktop;
+  if (deviceWidth > Device.mobile.size!) return Device.tab;
   return Device.mobile;
 } 
