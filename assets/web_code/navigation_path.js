@@ -45,7 +45,6 @@ export function initNodes(three){
           1: new THREE.Vector3(-23.6, 6.19, -110.13989544214405),
         }
       };
-      let  intermediatePointsCircles =[];
       let intermediatePoints = {
       "a1" :new THREE.Vector3(-138.0, 6.19, -130.0),
        "a2" :new THREE.Vector3(-116.0, 6.19, -130.0),
@@ -60,8 +59,26 @@ export function initNodes(three){
        "b4" :new THREE.Vector3( -69.2, 6.19, -100.0),
        "b5" :new THREE.Vector3(-46.4, 6.19, -100.0),
        "b6" :new THREE.Vector3(-23.6, 6.19, -100.0),
+
+       "p1": new THREE.Vector3(-125.16835094362332, 6.19, -91),
+       "p2" : new THREE.Vector3(-104.0724984440678, 6.19, -91),
+       "p3":new THREE.Vector3(-84.20038905146427, 6.19, -91),
+       "p4":new THREE.Vector3(-48.400711886208356, 6.19, -91),
+       
+       "p5":new THREE.Vector3(-14.035990842471623, 6.19, -91),
+       
+       "p6":new THREE.Vector3(-14.185505861653581, 6.19 ,-107.84385506088879),
+       "p7":new THREE.Vector3(-14.114602359858907, 6.19, -131.37753635985396),
+       
+       "p8":new THREE.Vector3(-14.197195127688875, 6.19, -77.49013059402137),
+       "p6":new THREE.Vector3(-14.264927005311744, 6.19, -61.64698518320672),
+       "receiving": new THREE.Vector3(0.569215386407393, 6.19, -75.68733258901474),
+       "inspection":new THREE.Vector3(2.8520766585635045, 6.19 -106.89068254045604),
+       "activity":new THREE.Vector3(-24.21696383882049 ,6.19, -60.86146377835111),
+       "staging":new THREE.Vector3(-125.14815693589341 ,6.19, -76.65696617010423),
       };
       
+
 for (let aisle in aisleBayPoints) {
     for (let bay in aisleBayPoints[aisle]) {
         const point = aisleBayPoints[aisle][bay];
@@ -107,6 +124,19 @@ const adjacencyList = {
     "Node_b4":["Node_b3","Node_4_1","Node_b5"],
     "Node_b5":["Node_b4","Node_5_1","Node_b6"],
     "Node_b6":["Node_b5","Node_6_1"],
+    "Node_p1":["Node_p2"],
+    "Node_p2":["Node_p1","Node_p3"],
+    "Node_p3":["Node_p2","Node_p4"],
+    "Node_p4":["Node_p3","Node_p5"],
+    "Node_p5":["Node_p4","Node_p6","Node_p8"],
+    "Node_p6":["Node_p5"],
+    "Node_p7":["Node_p6","Node_p8"],
+    "Node_p8":["Node_p7"],
+    "receiving":["Node_p7"],
+    "activity":["node_p8"],
+    "inspection":["Node_p6"],
+    "staging":["Node_p1"]
+
   };
   
 

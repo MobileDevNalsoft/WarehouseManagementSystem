@@ -48,7 +48,11 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
                   ? {"search_text": event.searchText, "search_area": "STORAGE_BIN", "facility_id": '243', "page_num": state.pageNum}
                   : {"facility_id": "243", "barcode": event.selectedBin!.toUpperCase(), "page_num": state.pageNum})
           .then((value) {
-        AreaResponse<StorageBinItem> storageBinResponse = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => StorageBinItem.fromJson(json));
+             AreaResponse<StorageBinItem> storageBinResponse;
+            try{
+               storageBinResponse = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => StorageBinItem.fromJson(json));
+        }
+        catch(e){storageBinResponse = AreaResponse.fromJson(jsonDecode(value.response!.data as String), (json) => StorageBinItem.fromJson(json));}
         if(state.pageNum==0){
         state.storageBinItems=  storageBinResponse.data;
         }

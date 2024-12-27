@@ -12,6 +12,7 @@ class StorageBinItem {
   String? currLocationId;
   String? manufactureDate;
   String? expiryDate;
+  String? image;
 
   StorageBinItem(
       {this.containerNbr,
@@ -26,7 +27,10 @@ class StorageBinItem {
       this.currQty,
       this.currLocationId,
       this.manufactureDate,
-      this.expiryDate});
+      this.expiryDate,
+      this.image
+
+      });
 
   StorageBinItem.fromJson(Map<String, dynamic> json) {
     containerNbr = json['container_nbr'] ?? '';
@@ -42,6 +46,7 @@ class StorageBinItem {
     currLocationId = json['curr_location_id'] ?? '';
     manufactureDate = json['manufacture_date'] ?? '';
     expiryDate = json['expiry_date'] ?? '';
+    image = json['image'] ?? '';
   }
 }
 

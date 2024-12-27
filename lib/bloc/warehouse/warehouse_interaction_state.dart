@@ -20,7 +20,7 @@ enum AlertsStatus {initial, loading, success, failure}
 // ignore: must_be_immutable
 final class WarehouseInteractionState{
   WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "Storagearea", this.searchText,this.getState = GetCompanyDataState.initial,
-  this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal, this.getUserInfoState, this.getUsersState, this.userInfo, this.users, this.filteredUsers,this.getAlertsStatus, this.alerts, this.getAreasOveriviewDataState});
+  this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal, this.getUserInfoState, this.getUsersState, this.userInfo, this.users, this.filteredUsers,this.getAlertsStatus, this.alerts, this.getAreasOveriviewDataState,this.selectedTaskId,this.taskIds});
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -41,14 +41,16 @@ final class WarehouseInteractionState{
   AlertsStatus? getAlertsStatus;
   List<Alert>? alerts;
   AreasOverviewDataState? getAreasOveriviewDataState;
+  String? selectedTaskId;
+  List<String>? taskIds;
   // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(dataFromJS: {"object": "null"}, isModelLoaded: false,getState: GetCompanyDataState.initial,facilityDataState: GetFacilityDataState.initial,companyModel: CompanyModel(results: [CompanyResults(name: "M10 Company", id: 1),CompanyResults(name: "Demo", id: 2),CompanyResults(name: "Demo Customer1", id: 3),CompanyResults(name: "Demo Customer2"),CompanyResults(name: "SUM Compnay", id: 4),CompanyResults(name: "VIM Company", id: 5)],),selectedCompanyVal: "M10 Company"
-    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse", id: 1),FacilityResults(name: "Duty-Free Warehouse", id: 2),]),selectedFacilityVal: "Duty-Paid Warehouse", getUserInfoState: GetUserInfo.initial, getUsersState: GetUsers.initial, users : [], filteredUsers: [], getAlertsStatus: AlertsStatus.initial, alerts: [], getAreasOveriviewDataState: AreasOverviewDataState.initial
+    ,facilityModel: FacilityModel(results: [FacilityResults(name: "Duty-Paid Warehouse", id: 1),FacilityResults(name: "Duty-Free Warehouse", id: 2),]),selectedFacilityVal: "Duty-Paid Warehouse", getUserInfoState: GetUserInfo.initial, getUsersState: GetUsers.initial, users : [], filteredUsers: [], getAlertsStatus: AlertsStatus.initial, alerts: [], getAreasOveriviewDataState: AreasOverviewDataState.initial,taskIds: ["task1","task2","task3","task4"]
     );
   }
 
-  WarehouseInteractionState copyWith({Map<String, dynamic>? dataFromJS, bool? isModelLoaded, String? selectedSearchArea, String? searchText,GetCompanyDataState? getState,CompanyModel? companyModel,String? selectedCompanyVal,FacilityModel? facilityModel,GetFacilityDataState? facilityDataState,String? selectedFacilityVal, GetUserInfo? getUserInfoState, GetUsers? getUsersState, User? userInfo, List<User>? users, List<User>? filteredUsers,AlertsStatus? getAlertsStatus, List<Alert>? alerts, AreasOverviewDataState? getAreasOveriviewDataState}) {
+  WarehouseInteractionState copyWith({Map<String, dynamic>? dataFromJS, bool? isModelLoaded, String? selectedSearchArea, String? searchText,GetCompanyDataState? getState,CompanyModel? companyModel,String? selectedCompanyVal,FacilityModel? facilityModel,GetFacilityDataState? facilityDataState,String? selectedFacilityVal, GetUserInfo? getUserInfoState, GetUsers? getUsersState, User? userInfo, List<User>? users, List<User>? filteredUsers,AlertsStatus? getAlertsStatus, List<Alert>? alerts, AreasOverviewDataState? getAreasOveriviewDataState,String? selectedTaskId}) {
     return WarehouseInteractionState(
         dataFromJS: dataFromJS ?? this.dataFromJS,
         isModelLoaded: isModelLoaded ?? this.isModelLoaded,
@@ -69,7 +71,8 @@ final class WarehouseInteractionState{
         filteredUsers: filteredUsers ?? this.filteredUsers,
         getAlertsStatus: getAlertsStatus ?? this.getAlertsStatus,
         alerts: alerts ?? this.alerts,
-        getAreasOveriviewDataState: getAreasOveriviewDataState ?? this.getAreasOveriviewDataState
+        getAreasOveriviewDataState: getAreasOveriviewDataState ?? this.getAreasOveriviewDataState,
+        selectedTaskId: selectedTaskId?? this.selectedTaskId
         );
   }
 

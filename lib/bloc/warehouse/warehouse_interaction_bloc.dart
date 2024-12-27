@@ -36,6 +36,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<UpdateUserAccess>(_onUpdateUserAccess);
     on<GetAlerts>(_onGetAlerts);
     on<GetAreasOverviewData>(_onGetAreasOverviewData);
+    on<UpdateTaskId>(_onUpdateTaskId);
   }
   final NetworkCalls _customApi;
   final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
@@ -185,5 +186,9 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       Log.e(e);
       emit(state.copyWith(getAreasOveriviewDataState: AreasOverviewDataState.failure));
     }
+  }
+
+  void _onUpdateTaskId(UpdateTaskId event, Emitter<WarehouseInteractionState> emit){
+    emit(state.copyWith(selectedTaskId: event.taskId));
   }
 }

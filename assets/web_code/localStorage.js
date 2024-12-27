@@ -153,13 +153,19 @@ export function localStorageSetup(scene, camera, controls) {
           }
         } catch (e) {}
         break;
-
+      case "getShoretestPathForTask":
+        // document.querySelector('#path').click();
+        break;
+      
+      
       case "navigateToBin":
         try {
           moveToBin(scene.getObjectByName(event.newValue), camera, controls);
           scene.getObjectByName(bin).material.color.set(0x65543e);
         } catch (e) {}
         localStorage.removeItem("navigateToBin");
+
+      
       default:
         break;
     }

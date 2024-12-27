@@ -22,7 +22,9 @@ export function loadModel() {
                 if(xhr.lengthComputable){
                     let percentComplete = (xhr.loaded/xhr.total)*100;
 
-                    console.log('{"percentComplete":"' + Math.round(percentComplete) + '"}')
+                    console.log('{"percentComplete":"' +
+                         Math.round(percentComplete)
+                          + '"}')
                 }
             },
             undefined,
@@ -40,7 +42,7 @@ function getGLB(companyID, facilityID){
        
         case 1: switch(facilityID){
             case 1: 
-                return "../glbs/final_warehouse_1_com.glb";
+                return "../glbs/warehouse_1312_1235.glb";
             case 2:
                 return "../glbs/final_warehouse_2_com.glb";
         }

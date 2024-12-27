@@ -80,3 +80,11 @@ class GetAreasOverviewData extends WarehouseInteractionEvent{
   @override
   List<Object> get props => [facilityID];
 }
+
+class UpdateTaskId extends WarehouseInteractionEvent{
+   String taskId;
+ UpdateTaskId({required this.taskId});
+
+  @override
+  List<Object> get props => [taskId];
+}
