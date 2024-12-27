@@ -29,16 +29,20 @@ class _SidebarState extends State<Sidebar> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double fontSize;
+    double scale;
     Device device = getDevice(context);
     switch(device){
       case Device.mobile:
-        fontSize = 14;
+        fontSize = 12;
+        scale = 2.2;
         break;
       case Device.tab:
-        fontSize = 16;
+        fontSize = 14;
+        scale = 2.5;
         break;
       case Device.desktop:
         fontSize = 18;
+        scale = 1.8;
         break;
     }
 
@@ -54,7 +58,7 @@ class _SidebarState extends State<Sidebar> {
           Row(
             children: [
               Gap(size.width*0.02),
-              Image.asset('assets/images/dashboard.png', scale: 1.8, color: Colors.white,),
+              Image.asset('assets/images/dashboard.png', scale: scale, color: Colors.white,),
               Gap(size.width*0.002),
               Text("Dashboard's",style: TextStyle(fontSize: fontSize,fontWeight: FontWeight.bold,color: Colors.white),textAlign: TextAlign.center,),
             ],

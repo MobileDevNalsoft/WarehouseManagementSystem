@@ -27,8 +27,6 @@ main() async {
 
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
-  List<String> accessList = sharedPreferences.getStringList('access_types') ?? [];
-
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => WarehouseInteractionBloc(jsInteropService: getIt(), customApi: getIt())),
@@ -50,7 +48,7 @@ main() async {
         ),
         theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
         debugShowCheckedModeBanner: false,
-        initialRoute: !sharedPreferences.containsKey('username') ? '/dashboards': '/warehouse',
+        initialRoute: !sharedPreferences.containsKey('username') ? '/warehouse': '/warehouse',
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorObservers: [MyNavigationObserver()],
         ),
