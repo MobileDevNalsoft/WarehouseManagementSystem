@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,7 @@ import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
 import 'package:wmssimulator/pages/customs/alerts_slide.dart';
 import 'package:wmssimulator/pages/customs/custom_progress_bar.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/customs/facility_dropdown.dart';
 import 'package:wmssimulator/pages/customs/searchbar_dropdown.dart';
 import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
@@ -43,6 +45,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   final SharedPreferences sharedPreferences = getIt();
   List objectNames = [];
   FocusNode focusNode = FocusNode();
+  SuggestionsController suggestionsController = SuggestionsController();
 
   // for animation
   late AnimationController animationController;
@@ -58,14 +61,14 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   final NavigatorService navigator = getIt<NavigatorService>();
 
   List<String> accessTypes = getIt<SharedPreferences>().getStringList('access_types') ?? [];
-
+  late TextEditingController textEditingController;
   @override
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-
+   
     _warehouseInteractionBloc.add(GetUsersData());
-
+ textEditingController = TextEditingController(text: _warehouseInteractionBloc.state.selectedTaskId??"");
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
     sliderAnimationController =
         AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 100), vsync: this);
@@ -158,6 +161,35 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           } else if (message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
                                             context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
                                           }
+                                          else if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
+                                           
+                                            Customs.AnimatedDialog(context: context, header:  Icon(Icons.error, size: 35,), content: [
+                                              
+                                              Text("Please enter task Id"),
+                                              TypeAheadField(
+                                                controller: textEditingController,
+                                                
+                                                suggestionsController:  suggestionsController,
+                                                itemBuilder: (context, value) {
+                                                return ListTile(title: Text(value.toString()),);
+                                              }, 
+                                              suggestionsCallback: (pattern) {
+                                                return  ["task1","task2","task3","task4"].where((element) => element.contains(pattern)).toList();
+                                              },
+
+                                              onSelected: (value) {
+                                                _warehouseInteractionBloc.add(UpdateTaskId(taskId: value.toString()));
+                                                textEditingController.text=value;
+                                                suggestionsController.refresh();
+                                              },
+                                              ),
+                                              TextButton(onPressed: (){
+                                                getIt<JsInteropService>().getShoretestPathForTask(_warehouseInteractionBloc.state.selectedTaskId??"");
+                                              }, child: PointerInterceptor(child: Text("Done")))
+                                              ],
+                                              
+                                              );
+                                        }
                                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: clearSearchText));
 
                                           if (message.containsKey("percentComplete")) {
@@ -168,7 +200,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           }
  
                                           }
-                                        }
+                                          }
                                       } catch (e) {
                                         print("error $e");
                                       }
@@ -197,6 +229,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                     },
                                     onLoadStop: (controller, url) async {},
                                   )
+                               
+                               
+                               
+                               
                                 // : Container(
                                 //     height: size.height * 0.92,
                                 //     width: size.width * widthAnimation.value,
@@ -222,15 +258,16 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('3D Model'))
-                    Align(
-                        alignment: Alignment.bottomCenter,
-                        child: CustomProgressBar(
-                            height: size.height * 0.92,
-                            width: size.width,
-                            progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
+                  // if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('3D Model'))
+                  //   Align(
+                  //       alignment: Alignment.bottomCenter,
+                  //       child: CustomProgressBar(
+                  //           height: size.height * 0.92,
+                  //           width: size.width,
+                  //           progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
                 ],
               ),
+           
             ],
           );
         }),

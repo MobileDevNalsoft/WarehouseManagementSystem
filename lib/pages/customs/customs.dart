@@ -480,12 +480,14 @@ class Customs {
                         alignment: Alignment.topRight,
                         child: Padding(
                           padding: EdgeInsets.only(top: size.height*0.005, right: size.width*0.002),
-                          child: InkWell(
-                            onTap: () => Navigator.pop(context),
-                            child: const Icon(
-                              Icons.close,
-                              size: 20,
-                              weight: 1,
+                          child: PointerInterceptor(
+                            child: InkWell(
+                              onTap: () => Navigator.pop(context),
+                              child: const Icon(
+                                Icons.close,
+                                size: 20,
+                                weight: 1,
+                              ),
                             ),
                           ),
                         ),

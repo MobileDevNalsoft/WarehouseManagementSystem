@@ -34,6 +34,9 @@ external _sendOverviewData(String json);
 external _changeFacility(String json);
 
 @JS()
+external _getShoretestPathForTask(String task);
+
+@JS()
 external _showAlert(String message);
 
 @JS()
@@ -79,6 +82,10 @@ class JsInteropService {
 
  navigateToBin(String message) {
     _navigateToBin(message);
+  }
+
+   getShoretestPathForTask(String message) {
+    _getShoretestPathForTask(message);
   }
 
  resetBoxColors() {

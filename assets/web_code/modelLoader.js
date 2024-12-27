@@ -22,7 +22,9 @@ export function loadModel() {
                 if(xhr.lengthComputable){
                     let percentComplete = (xhr.loaded/xhr.total)*100;
 
-                    console.log('{"percentComplete":"' + Math.round(percentComplete) + '"}')
+                    console.log('{"percentComplete":"' +
+                         Math.round(percentComplete)
+                          + '"}')
                 }
             },
             undefined,

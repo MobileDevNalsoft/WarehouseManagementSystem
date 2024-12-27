@@ -31,6 +31,11 @@ const init = () => {
     const changeFacility = (data) => {
         window.localStorage.setItem("facilityData", data)
     }
+
+    const getShoretestPathForTask=(data)=>{
+        window.localStorage.setItem("task", data)
+    }
+
     window._switchToMainCam = switchToMainCam;
     window._isRackDataLoaded = isRacksDataLoaded;
     window._setNumberOfTrucks = setNumberOfTrucks;
@@ -40,6 +45,7 @@ const init = () => {
     window._resetBoxColors = resetBoxColors;
     window._sendOverviewData = sendOverviewData;
     window._changeFacility = changeFacility;
+    window._getShoretestPathForTask = getShoretestPathForTask;
 }
 
 window.onload = () => {

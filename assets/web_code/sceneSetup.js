@@ -10,11 +10,7 @@ import { addSkyDome } from "skyDome";
 import { initNodes, getShortestPath } from "navPath";
 import * as GLTFLoader from "gltfLoader";
 import { highlightArea } from "highlight";
-import { switchCamera} from "camera";
-import {DRACOLoader} from "draco";
-
-
-
+import { switchCamera } from "camera";
 
 export async function initScene(renderer) {
   const container = document.getElementById("container");
@@ -79,26 +75,25 @@ export async function initScene(renderer) {
   // dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.114.0/examples/js/libs/draco/');
   // loader.setDRACOLoader( dracoLoader );
   loader.load(
-    '../glbs/forkLift_final_pro.glb', // Replace with the path to your GLB file
+    "../glbs/forkLift_final_pro.glb", // Replace with the path to your GLB file
     (gltf) => {
       const model = gltf.scene;
-      
-      model.scale.set(2.5, 2.5, 2.5); // Adjust scale as needed
-  
-      // Add the model to the group
-      model.rotation.y = -(Math.PI/2) ; 
-      agentGroup.add(model);
 
+      model.scale.set(2.5, 2.5, 2.5); // Adjust scale as needed
+
+      // Add the model to the group
+      model.rotation.y = -(Math.PI / 2);
+      agentGroup.add(model);
     },
-    
+
     (error) => {
       // Handle loading errors
-      console.error('An error occurred while loading the model:', error);
+      console.error("An error occurred while loading the model:", error);
     }
   );
 
-  let combinedPath=[];
-  let checkpointCircles=[];
+  let combinedPath = [];
+  let checkpointCircles = [];
   let highlightedBins = [];
   let pathLine;
   let clock;
@@ -113,126 +108,152 @@ export async function initScene(renderer) {
     "3RB10102",
     "2LB20501",
     "2RB10601",
-    "2LB20201"
-  ]
+    "2LB20201",
+  ];
 
+  let { nodeMap, nodes, aisleBayPoints } = initNodes(THREE);
 
-  
-let {nodeMap,nodes,aisleBayPoints}= initNodes(THREE);
+  console.warn("nodes", nodes);
 
-console.warn("nodes",nodes);
+  const pathButton = document.getElementById("path");
 
-const pathButton = document.getElementById('path');
+  const areasButton = document.getElementById("areas");
 
-const areasButton = document.getElementById('areas');
-document.getElementById("path").addEventListener("click", (e) => {
-  
-  if(areasButton.classList.contains('focused')){
-    areasButton.classList.remove('focused');
-    areas.forEach(area => {
+  document.getElementById("path").addEventListener("click", (e) => {
+    if (areasButton.classList.contains("focused")) {
+      areasButton.classList.remove("focused");
+      areas.forEach((area) => {
         const obj = scene.getObjectByName(area.name);
         if (obj) {
-                obj.visible = false; 
+          obj.visible = false;
         }
-    });
-  }
- 
-  // Toggle the visibility of the input field and text
-  if (!pathButton.classList.contains('focused')) {
-      if(combinedPath.length!=0){
+      });
+    }
+    // Toggle the visibility of the input field and text
+    if (!pathButton.classList.contains("focused")) {
+      if (combinedPath.length != 0) {
         stopAnimation();
       }
+      console.log('{"openPathDialog":"true"}');
       console.warn(bins.toString());
-      // localStorage.setItem("highlightBins",bins.toString());
-      ( { combinedPath, checkpointCircles,pathLine, clock } = getShortestPath(bins,nodeMap, nodes, aisleBayPoints, THREE, scene, camera, controls, agentGroup,renderer));
-     
-      bins.forEach((bin)=>{
-        scene.getObjectByName(bin).material.color.set(0x65543e);
-      });
-  } else {
-    stopAnimation();
+      if (localStorage.getItem("path") == "focused") {
+        localStorage.setItem("highlightBins", bins.toString());
+        ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
+          bins,
+          nodeMap,
+          nodes,
+          aisleBayPoints,
+          THREE,
+          scene,
+          camera,
+          controls,
+          agentGroup,
+          renderer
+        ));
+
+        bins.forEach((bin) => {
+          scene.getObjectByName(bin).material.color.set(0x65543e);
+        });
       }
-  pathButton.classList.toggle('focused');   
-});
+    } else {
+      stopAnimation();
+    }
+    pathButton.classList.toggle("focused");
+  });
 
-function stopAnimation(){
-  combinedPath=[];
-  checkpointCircles.forEach((circle)=> scene.remove(circle));
-  scene.remove(pathLine);
-  scene.remove(agentGroup);
-  bins.forEach((e)=>scene.getObjectByName(e).material.color.set(0xfaf3e2));
-  if(clock){
-  clock.stop();}
-}
-
-
-  if(scene.getObjectByName("storageArea_block")){
-    scene.getObjectByName("storageArea_block").visible=false;
-    scene.getObjectByName("yardArea_block").visible=false;
-    scene.getObjectByName("stagingArea_block").visible=false;
-    scene.getObjectByName("activityArea_block").visible=false;
-    scene.getObjectByName("inspectionArea_block").visible=false;
-    scene.getObjectByName("receivingArea_block").visible=false;
+  function stopAnimation() {
+    combinedPath = [];
+    checkpointCircles.forEach((circle) => scene.remove(circle));
+    scene.remove(pathLine);
+    scene.remove(agentGroup);
+    bins.forEach((e) => scene.getObjectByName(e).material.color.set(0xfaf3e2));
+    if (clock) {
+      clock.stop();
+    }
   }
 
+  if (scene.getObjectByName("storageArea_block")) {
+    scene.getObjectByName("storageArea_block").visible = false;
+    scene.getObjectByName("yardArea_block").visible = false;
+    scene.getObjectByName("stagingArea_block").visible = false;
+    scene.getObjectByName("activityArea_block").visible = false;
+    scene.getObjectByName("inspectionArea_block").visible = false;
+    scene.getObjectByName("receivingArea_block").visible = false;
+  }
 
-const areas = [
-    { name: "storageArea_block", color: { r: 50, g: 205, b: 50 }, opacity: 0.4 },
+  const areas = [
+    {
+      name: "storageArea_block",
+      color: { r: 50, g: 205, b: 50 },
+      opacity: 0.4,
+    },
     { name: "yardArea_block", color: { r: 255, g: 99, b: 99 }, opacity: 0.4 },
-    { name: "stagingArea_block", color: { r: 255, g: 214, b: 10 }, opacity: 0.4 },
-    { name: "activityArea_block", color: { r: 0, g: 128, b: 128 }, opacity: 0.4 },
-    { name: "inspectionArea_block", color: { r: 138, g: 46, b: 226 }, opacity: 0.4 },
-    { name: "receivingArea_block", color: { r: 166, g: 20, b: 93 }, opacity: 0.4 },
-];
+    {
+      name: "stagingArea_block",
+      color: { r: 255, g: 214, b: 10 },
+      opacity: 0.4,
+    },
+    {
+      name: "activityArea_block",
+      color: { r: 0, g: 128, b: 128 },
+      opacity: 0.4,
+    },
+    {
+      name: "inspectionArea_block",
+      color: { r: 138, g: 46, b: 226 },
+      opacity: 0.4,
+    },
+    {
+      name: "receivingArea_block",
+      color: { r: 166, g: 20, b: 93 },
+      opacity: 0.4,
+    },
+  ];
 
-areasButton.addEventListener("click", () => {
-    const isFocused = areasButton.classList.contains('focused');
+  areasButton.addEventListener("click", () => {
+    const isFocused = areasButton.classList.contains("focused");
     if (!isFocused) {
-      switchCamera(scene, "compoundArea", camera, controls);  } 
-    areas.forEach(area => {
+      switchCamera(scene, "compoundArea", camera, controls);
+    }
+    areas.forEach((area) => {
       console.warn(isFocused);
-        const obj = scene.getObjectByName(area.name);
-        console.warn(obj)
-        if (obj) {
-            if (!isFocused) {
-               
-                highlightArea(scene, area.name, area.color, area.opacity); // Highlight the area
-
-            } else {
-                obj.visible = false; // Hide the area
-            }
+      const obj = scene.getObjectByName(area.name);
+      console.warn(obj);
+      if (obj) {
+        if (!isFocused) {
+          highlightArea(scene, area.name, area.color, area.opacity); // Highlight the area
+        } else {
+          obj.visible = false; // Hide the area
         }
+      }
     });
 
-    areasButton.classList.toggle('focused');
-});
+    areasButton.classList.toggle("focused");
+  });
 
-// areasButton.addEventListener("click", (e) => {
-  
+  // areasButton.addEventListener("click", (e) => {
 
+  //   if(!(areasButton.classList.contains('focused'))){
+  //     highlightArea(scene,`storageArea_block`, {"r":50,"g":205,"b":50},0.4);
+  //     highlightArea(scene,`yardArea_block`, {"r":255,"g":159,"b":10},0.4);
+  //     highlightArea(scene,`stagingArea_block`, {"r":255,"g":214,"b":10},0.4);
+  //     highlightArea(scene,`activityArea_block`, {"r":0,"g":128,"b":128},0.4);
+  //     highlightArea(scene,`inspectionArea_block`, {"r":138,"g":46,"b":226},0.4);
+  //     highlightArea(scene,`receivingArea_block`, {"r":255,"g":105,"b":180},0.4);
+  // }
+  // else {
+  //   scene.getObjectByName("storageArea_block").visible=false;
+  //   scene.getObjectByName("yardArea_block").visible=false;
+  //   scene.getObjectByName("stagingArea_block").visible=false;
+  //   scene.getObjectByName("activityArea_block").visible=false;
+  //   scene.getObjectByName("inspectionArea_block").visible=false;
+  //   scene.getObjectByName("receivingArea_block").visible=false;
 
-//   if(!(areasButton.classList.contains('focused'))){
-//     highlightArea(scene,`storageArea_block`, {"r":50,"g":205,"b":50},0.4);
-//     highlightArea(scene,`yardArea_block`, {"r":255,"g":159,"b":10},0.4);
-//     highlightArea(scene,`stagingArea_block`, {"r":255,"g":214,"b":10},0.4);
-//     highlightArea(scene,`activityArea_block`, {"r":0,"g":128,"b":128},0.4);
-//     highlightArea(scene,`inspectionArea_block`, {"r":138,"g":46,"b":226},0.4);
-//     highlightArea(scene,`receivingArea_block`, {"r":255,"g":105,"b":180},0.4);
-// }
-// else {
-//   scene.getObjectByName("storageArea_block").visible=false;
-//   scene.getObjectByName("yardArea_block").visible=false;
-//   scene.getObjectByName("stagingArea_block").visible=false;
-//   scene.getObjectByName("activityArea_block").visible=false;
-//   scene.getObjectByName("inspectionArea_block").visible=false;
-//   scene.getObjectByName("receivingArea_block").visible=false;
+  // }
 
-// }
+  // areasButton.classList.toggle('focused');
 
-// areasButton.classList.toggle('focused');
- 
-// });
-
+  // });
 
   // Resize listener
   window.addEventListener("resize", () => {
