@@ -144,8 +144,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                             height: size.height * 0.92,
                             width: size.width * widthAnimation.value,
                             child: 
-                            // accessTypes.contains('3D Model')
-                            //     ? 
+                            accessTypes.contains('3D Model')
+                                ? 
                                 InAppWebView(
                                     initialFile: 'assets/web_code/model.html',
                                     onConsoleMessage: (controller, consoleMessage) {
@@ -161,35 +161,38 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           } else if (message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
                                             context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
                                           }
-                                          else if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
+                                        //   else if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
                                            
-                                            Customs.AnimatedDialog(context: context, header:  Icon(Icons.error, size: 35,), content: [
+                                        //     Customs.AnimatedDialog(context: context, header:  Icon(Icons.error, size: 35,), content: [
                                               
-                                              Text("Please enter task Id"),
-                                              TypeAheadField(
-                                                controller: textEditingController,
+                                        //       Text("Please enter task Id"),
+                                        //       TypeAheadField(
+                                        //         controller: textEditingController,
                                                 
-                                                suggestionsController:  suggestionsController,
-                                                itemBuilder: (context, value) {
-                                                return ListTile(title: Text(value.toString()),);
-                                              }, 
-                                              suggestionsCallback: (pattern) {
-                                                return  ["task1","task2","task3","task4"].where((element) => element.contains(pattern)).toList();
-                                              },
+                                        //         suggestionsController:  suggestionsController,
+                                        //         itemBuilder: (context, value) {
+                                        //         return ListTile(title: Text(value.toString()),);
+                                        //       }, 
+                                        //       suggestionsCallback: (pattern) {
+                                        //         return  ["task1","task2","task3","task4"].where((element) => element.contains(pattern)).toList();
+                                        //       },
 
-                                              onSelected: (value) {
-                                                _warehouseInteractionBloc.add(UpdateTaskId(taskId: value.toString()));
-                                                textEditingController.text=value;
-                                                suggestionsController.refresh();
-                                              },
-                                              ),
-                                              TextButton(onPressed: (){
-                                                getIt<JsInteropService>().getShoretestPathForTask(_warehouseInteractionBloc.state.selectedTaskId??"");
-                                              }, child: PointerInterceptor(child: Text("Done")))
-                                              ],
+                                        //       onSelected: (value) {
+                                        //         _warehouseInteractionBloc.add(UpdateTaskId(taskId: value.toString()));
+                                        //         textEditingController.text=value;
+                                        //         suggestionsController.refresh();
+                                        //       },
+                                        //       ),
+                                        //       TextButton(onPressed: (){
+                                        //         // getIt<JsInteropService>().getShoretestPathForTask(_warehouseInteractionBloc.state.selectedTaskId??"");
+                                        //        controller.webStorage.localStorage.removeItem( key: "switchToMainCam");
+                                        //         // getIt<JsInteropService>().switchToMainCam("compoundArea");
+                                        //         Navigator.pop(context);
+                                        //       }, child: PointerInterceptor(child: Text("Done")))
+                                        //       ],
                                               
-                                              );
-                                        }
+                                        //       );
+                                        // }
                                           _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: clearSearchText));
 
                                           if (message.containsKey("percentComplete")) {
@@ -233,16 +236,16 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                
                                
                                
-                                // : Container(
-                                //     height: size.height * 0.92,
-                                //     width: size.width * widthAnimation.value,
-                                //     alignment: Alignment.center,
-                                //     decoration: BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
-                                //     child: Text(
-                                //       'Get Access for Digital Warehouse',
-                                //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                //     ),
-                                //   ),
+                                : Container(
+                                    height: size.height * 0.92,
+                                    width: size.width * widthAnimation.value,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
+                                    child: Text(
+                                      'Get Access for Digital Warehouse',
+                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                           );
                         }),
                   ),
@@ -258,13 +261,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  // if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('3D Model'))
-                  //   Align(
-                  //       alignment: Alignment.bottomCenter,
-                  //       child: CustomProgressBar(
-                  //           height: size.height * 0.92,
-                  //           width: size.width,
-                  //           progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
+                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('3D Model'))
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: CustomProgressBar(
+                            height: size.height * 0.92,
+                            width: size.width,
+                            progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
                 ],
               ),
            

@@ -107,7 +107,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                     borderRadius: BorderRadius.circular(12),
                                                     child: Image.memory(
                                                       base64Decode(state.storageBinItems![index].image!),
-                                                      fit: BoxFit.fill,
+                                                      fit: BoxFit.cover,
                                                     ),
                                                   ),
                                                 ),
