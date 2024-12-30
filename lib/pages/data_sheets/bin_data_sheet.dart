@@ -108,7 +108,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                     child: Image.memory(
                                                       
                                                       base64Decode(state.storageBinItems![index].image!),
-                                                      fit: BoxFit.fill,
+                                                      fit: BoxFit.cover,
                                                     ),
                                                   ),
                                                 ),

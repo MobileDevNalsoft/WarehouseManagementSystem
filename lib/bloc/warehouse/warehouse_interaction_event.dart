@@ -88,3 +88,11 @@ class UpdateTaskId extends WarehouseInteractionEvent{
   @override
   List<Object> get props => [taskId];
 }
+
+class Rendering extends WarehouseInteractionEvent{
+  bool isRendered;
+  Rendering({required this.isRendered});
+
+  @override
+  List<Object> get props => [isRendered];
+}
