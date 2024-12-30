@@ -18,12 +18,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   function animate() {
     requestAnimationFrame(() => {
       animate(renderer, scene, camera);
-      window.localStorage.setItem("isLoaded", true);
     });
     const delta = clock.getDelta(); // seconds.
     mixer.update(delta); // Update the animation mixer
     controls.update();
     renderer.render(scene, camera);
+    window.localStorage.setItem("isLoaded", true);
   }
 
   initAfterModelLoaded();

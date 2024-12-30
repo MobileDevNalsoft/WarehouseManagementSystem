@@ -108,7 +108,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
               Container(
                 height: size.height * 0.08,
                 width: size.width,
-                color: Color.fromRGBO(68, 98, 136, 1),
+                color: const Color.fromRGBO(68, 98, 136, 1),
                 child: Row(
                   children: [
                     const Spacer(),
@@ -123,7 +123,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                         _warehouseInteractionBloc.add(GetAlerts());
                         sliderAnimationController.forward();
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.notifications_none,
                         color: Colors.white,
                       ),
@@ -167,15 +167,24 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           if (message.containsKey("percentComplete")) {
                                            if (message.containsKey("percentComplete")) {
                                             if(message['percentComplete'] == "100"){
-                                              Future.delayed(Duration(seconds: 5), () => _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true)),);
+                                              _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
+                                              _warehouseInteractionBloc.add(Rendering(isRendered: false));
+                                              Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+                                                bool? isLoaded = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
+                                                if (isLoaded != null && isLoaded) {
+                                                  _warehouseInteractionBloc.add(Rendering(isRendered: true));
+                                                  _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                                  timer.cancel();
+                                                }
+                                              });
                                             }
                                           }
  
                                           }
                                           if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
                                            
-                                            Customs.AnimatedDialog(context: context, header:  Icon(Icons.error, size: 35,), content: [
-                                              Text("Please enter task Id"),
+                                            Customs.AnimatedDialog(context: context, header:  const Icon(Icons.error, size: 35,), content: [
+                                              const Text("Please enter task Id"),
                                               TypeAheadField(
                                                 
                                                 controller: textEditingController,
@@ -195,7 +204,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                               TextButton(onPressed: (){
                                                 getIt<JsInteropService>().getShoretestPathForTask(_warehouseInteractionBloc.state.selectedTaskId??"");
                                                 Navigator.pop(context);
-                                              }, child: PointerInterceptor(child: Text("Done")))
+                                              }, child: PointerInterceptor(child: const Text("Done")))
                                               ],
                                               
                                               );
@@ -216,29 +225,18 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                     .getItem(key: "modelObjectNames") ??
                                                 [];
                                           }
-
-                                          // bool? isLoaded =
-                                          //     await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
-                                          // if (isLoaded != null) {
-                                          //   _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
-                                          //   _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
                                             timer.cancel();
-                                          // }
                                         },
                                       );
                                     },
                                     onLoadStop: (controller, url) async {},
                                   )
-                               
-                               
-                               
-                               
                                 : Container(
                                     height: size.height * 0.92,
                                     width: size.width * widthAnimation.value,
                                     alignment: Alignment.center,
-                                    decoration: BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
-                                    child: Text(
+                                    decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
+                                    child: const Text(
                                       'Get Access for Digital Warehouse',
                                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                     ),
@@ -265,6 +263,26 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                             height: size.height * 0.92,
                             width: size.width,
                             progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
+                  if (!context.watch<WarehouseInteractionBloc>().state.isRendered && accessTypes.contains('3D Model'))
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                                    height: size.height * 0.92,
+                                    width: size.width * widthAnimation.value,
+                                    alignment: Alignment.center,
+                                    decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const CircularProgressIndicator(color: Color.fromRGBO(68, 98, 136, 1),),
+                                        Gap(size.width * 0.01),
+                                        const Text(
+                                          'Rendering...',
+                                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),),
                 ],
               ),
            
@@ -352,23 +370,23 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           objectNames: objectNames,
         );
       case 'bin':
-        return BinDataSheet();
+        return const BinDataSheet();
       case 'area':
         switch (objectValue.toLowerCase().replaceAll("-", "")) {
           case 'stagingarea':
-            return StagingAreaDataSheet();
+            return const StagingAreaDataSheet();
           case 'activityarea':
-            return ActivityAreaDataSheet();
+            return const ActivityAreaDataSheet();
           case 'receivingarea':
-            return ReceivingAreaDataSheet();
+            return const ReceivingAreaDataSheet();
           case 'inspectionarea':
-            return InspectionAreaDataSheet();
+            return const InspectionAreaDataSheet();
           case 'dockareain':
-            return DockAreaDataSheet();
+            return const DockAreaDataSheet();
           case 'dockareaout':
-            return DockAreaDataSheet();
+            return const DockAreaDataSheet();
           case 'yardarea':
-            return YardAreaDataSheet();
+            return const YardAreaDataSheet();
           // case 'storagearea':
           //   return BinD();
           default:

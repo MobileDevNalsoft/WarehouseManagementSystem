@@ -19,12 +19,13 @@ enum GetUserInfo{initial, loading, success, failure}
 enum AlertsStatus {initial, loading, success, failure}
 // ignore: must_be_immutable
 final class WarehouseInteractionState{
-  WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.selectedSearchArea = "Storagearea", this.searchText,this.getState = GetCompanyDataState.initial,
+  WarehouseInteractionState({required this.dataFromJS, this.inAppWebViewController, this.isModelLoaded = false, this.isRendered = true, this.selectedSearchArea = "Storagearea", this.searchText,this.getState = GetCompanyDataState.initial,
   this.companyModel,this.selectedCompanyVal,this.facilityModel,this.facilityDataState = GetFacilityDataState.initial,this.selectedFacilityVal, this.getUserInfoState, this.getUsersState, this.userInfo, this.users, this.filteredUsers,this.getAlertsStatus, this.alerts, this.getAreasOveriviewDataState,this.selectedTaskId,this.taskIds});
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
   bool isModelLoaded;
+  bool isRendered;
   String selectedSearchArea;
   String? searchText;
   CompanyModel? companyModel;
@@ -50,7 +51,7 @@ final class WarehouseInteractionState{
     );
   }
 
-  WarehouseInteractionState copyWith({Map<String, dynamic>? dataFromJS, bool? isModelLoaded, String? selectedSearchArea, String? searchText,GetCompanyDataState? getState,CompanyModel? companyModel,String? selectedCompanyVal,FacilityModel? facilityModel,GetFacilityDataState? facilityDataState,String? selectedFacilityVal, GetUserInfo? getUserInfoState, GetUsers? getUsersState, User? userInfo, List<User>? users, List<User>? filteredUsers,AlertsStatus? getAlertsStatus, List<Alert>? alerts, AreasOverviewDataState? getAreasOveriviewDataState,String? selectedTaskId}) {
+  WarehouseInteractionState copyWith({Map<String, dynamic>? dataFromJS, bool? isModelLoaded, bool? isRendered, String? selectedSearchArea, String? searchText,GetCompanyDataState? getState,CompanyModel? companyModel,String? selectedCompanyVal,FacilityModel? facilityModel,GetFacilityDataState? facilityDataState,String? selectedFacilityVal, GetUserInfo? getUserInfoState, GetUsers? getUsersState, User? userInfo, List<User>? users, List<User>? filteredUsers,AlertsStatus? getAlertsStatus, List<Alert>? alerts, AreasOverviewDataState? getAreasOveriviewDataState,String? selectedTaskId}) {
     return WarehouseInteractionState(
         dataFromJS: dataFromJS ?? this.dataFromJS,
         isModelLoaded: isModelLoaded ?? this.isModelLoaded,
@@ -68,6 +69,7 @@ final class WarehouseInteractionState{
         getUsersState: getUsersState ?? this.getUsersState,
         userInfo: userInfo ?? this.userInfo,
         users: users ?? this.users,
+        isRendered: isRendered ?? this.isRendered,
         filteredUsers: filteredUsers ?? this.filteredUsers,
         getAlertsStatus: getAlertsStatus ?? this.getAlertsStatus,
         alerts: alerts ?? this.alerts,
