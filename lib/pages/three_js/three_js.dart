@@ -80,7 +80,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         .animate(CurvedAnimation(parent: sliderAnimationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
     // Listen for changes in the state
     _warehouseInteractionBloc.stream.listen((state) {
-      if (state.dataFromJS.keys.first != 'object' && state.dataFromJS.keys.first != 'percentComplete') {
+      if (!state.dataFromJS.keys.contains('object') && state.dataFromJS.keys.first != 'percentComplete') {
         animationController.forward(); // Start animation when data sheet is visible
       } else {
         animationController.reverse(); // Reverse when not visible
@@ -156,44 +156,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           if (message.containsKey("area")) {
                                             print("console ${message["area"]}");
                                             message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
-                                            clearSearchText =
-                                                _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll('-', '') != message["area"];
+                                            clearSearchText =_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll('-', '') != message["area"];
+                                             
                                           } else if (message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
                                             context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
+                                            
                                           }
-                                        //   else if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
-                                           
-                                        //     Customs.AnimatedDialog(context: context, header:  Icon(Icons.error, size: 35,), content: [
-                                              
-                                        //       Text("Please enter task Id"),
-                                        //       TypeAheadField(
-                                        //         controller: textEditingController,
-                                                
-                                        //         suggestionsController:  suggestionsController,
-                                        //         itemBuilder: (context, value) {
-                                        //         return ListTile(title: Text(value.toString()),);
-                                        //       }, 
-                                        //       suggestionsCallback: (pattern) {
-                                        //         return  ["task1","task2","task3","task4"].where((element) => element.contains(pattern)).toList();
-                                        //       },
-
-                                        //       onSelected: (value) {
-                                        //         _warehouseInteractionBloc.add(UpdateTaskId(taskId: value.toString()));
-                                        //         textEditingController.text=value;
-                                        //         suggestionsController.refresh();
-                                        //       },
-                                        //       ),
-                                        //       TextButton(onPressed: (){
-                                        //         // getIt<JsInteropService>().getShoretestPathForTask(_warehouseInteractionBloc.state.selectedTaskId??"");
-                                        //        controller.webStorage.localStorage.removeItem( key: "switchToMainCam");
-                                        //         // getIt<JsInteropService>().switchToMainCam("compoundArea");
-                                        //         Navigator.pop(context);
-                                        //       }, child: PointerInterceptor(child: Text("Done")))
-                                        //       ],
-                                              
-                                        //       );
-                                        // }
-                                          _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: clearSearchText));
+                                         _warehouseInteractionBloc.add(SelectedObject(dataFromJS: message, clearSearchText: clearSearchText));
 
                                           if (message.containsKey("percentComplete")) {
                                            if (message.containsKey("percentComplete")) {
@@ -203,6 +172,35 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           }
  
                                           }
+                                          if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
+                                           
+                                            Customs.AnimatedDialog(context: context, header:  Icon(Icons.local_activity_rounded, size: 35,), content: [
+                                              Text("Please enter task Id"),
+                                              TypeAheadField(
+                                                
+                                                controller: textEditingController,
+                                                suggestionsController:  suggestionsController,
+                                                itemBuilder: (context, value) {
+                                                return ListTile(title: Text(value.toString()),);
+                                              }, 
+                                              suggestionsCallback: (pattern) {
+                                                return  ["task1","task2","task3","task4"].where((element) => element.contains(pattern)).toList();
+                                              },
+                                              onSelected: (value) {
+                                                _warehouseInteractionBloc.add(UpdateTaskId(taskId: value.toString()));
+                                                textEditingController.text=value;
+                                                suggestionsController.refresh();
+                                              },
+                                              ),
+                                              TextButton(onPressed: (){
+                                                controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
+                                                getIt<JsInteropService>().getShoretestPathForTask(_warehouseInteractionBloc.state.selectedTaskId??"");
+                                                Navigator.pop(context);
+                                              }, child: PointerInterceptor(child: Text("Done")))
+                                              ],
+                                              
+                                              );
+                                        }
                                           }
                                       } catch (e) {
                                         print("error $e");
@@ -377,7 +375,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           default:
             return null;
         }
+      default:
+            return null;  
     }
-    return null;
   }
 }

@@ -154,7 +154,8 @@ export function localStorageSetup(scene, camera, controls) {
         } catch (e) {}
         break;
       case "getShoretestPathForTask":
-        // document.querySelector('#path').click();
+        console.warn("got inside local storage");
+        document.querySelector('#showPath').click();
         break;
       
       

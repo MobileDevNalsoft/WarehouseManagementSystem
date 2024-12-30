@@ -33,7 +33,7 @@ const init = () => {
     }
 
     const getShoretestPathForTask=(data)=>{
-        window.localStorage.setItem("task", data)
+        window.localStorage.setItem("getShoretestPathForTask", data)
     }
 
     window._switchToMainCam = switchToMainCam;
