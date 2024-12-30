@@ -84,11 +84,15 @@ export async function initScene(renderer) {
       // Add the model to the group
       model.rotation.y = -(Math.PI / 2);
       agentGroup.add(model);
+      console.warn('fork lift model loaded');
     },
-
+    (xhr) => {
+      // Log the loading progress
+      console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
+    },
     (error) => {
       // Handle loading errors
-      console.error("An error occurred while loading the model:", error);
+      console.warn("An error occurred while loading the model:", error);
     }
   );
 
@@ -111,7 +115,7 @@ export async function initScene(renderer) {
     "2LB20201",
   ];
 
-  let { nodeMap, nodes, aisleBayPoints } = initNodes(THREE);
+  let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(THREE);
 
   console.warn("nodes", nodes);
 
@@ -120,6 +124,7 @@ export async function initScene(renderer) {
   const areasButton = document.getElementById("areas");
 
   document.getElementById("path").addEventListener("click", (e) => {
+    console.warn("got inside path click");
     if (areasButton.classList.contains("focused")) {
       areasButton.classList.remove("focused");
       areas.forEach((area) => {
@@ -129,32 +134,14 @@ export async function initScene(renderer) {
         }
       });
     }
+
     // Toggle the visibility of the input field and text
     if (!pathButton.classList.contains("focused")) {
       if (combinedPath.length != 0) {
         stopAnimation();
       }
-      console.log('{"openPathDialog":"true"}');
+      console.log('{"openPathDialog":"true","object":"null"}');
       console.warn(bins.toString());
-      if (localStorage.getItem("path") == "focused") {
-        localStorage.setItem("highlightBins", bins.toString());
-        ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
-          bins,
-          nodeMap,
-          nodes,
-          aisleBayPoints,
-          THREE,
-          scene,
-          camera,
-          controls,
-          agentGroup,
-          renderer
-        ));
-
-        bins.forEach((bin) => {
-          scene.getObjectByName(bin).material.color.set(0x65543e);
-        });
-      }
     } else {
       stopAnimation();
     }
@@ -166,12 +153,40 @@ export async function initScene(renderer) {
     checkpointCircles.forEach((circle) => scene.remove(circle));
     scene.remove(pathLine);
     scene.remove(agentGroup);
-    bins.forEach((e) => scene.getObjectByName(e).material.color.set(0xfaf3e2));
+    bins.forEach((e) => {if(!e.toLowerCase().includes('area')){scene.getObjectByName(e).material.color.set(0xfaf3e2)}});
     if (clock) {
       clock.stop();
     }
   }
 
+document.getElementById('showPath').addEventListener('click',(e)=>{
+  localStorage.setItem("highlightBins", bins.toString());
+        ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
+          bins,
+          nodeMap,
+          nodes,
+          aisleBayPoints,
+          intermediatePoints,
+          THREE,
+          scene,
+          camera,
+          controls,
+          agentGroup,
+          renderer
+        ));
+
+        bins.forEach((bin) => {
+          if(!bin.toLowerCase().includes('area')){
+          scene.getObjectByName(bin).material.color.set(0x65543e);}
+        });
+});
+
+document.getElementById('stopAnimation').addEventListener('click',(e)=>{
+  stopAnimation();
+})
+
+
+  
   if (scene.getObjectByName("storageArea_block")) {
     scene.getObjectByName("storageArea_block").visible = false;
     scene.getObjectByName("yardArea_block").visible = false;

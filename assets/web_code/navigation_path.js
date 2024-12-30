@@ -132,10 +132,10 @@ const adjacencyList = {
     "Node_p6":["Node_p5"],
     "Node_p7":["Node_p6","Node_p8"],
     "Node_p8":["Node_p7"],
-    "receiving":["Node_p7"],
-    "activity":["node_p8"],
-    "inspection":["Node_p6"],
-    "staging":["Node_p1"]
+    "Node_receiving":["Node_p7"],
+    "Node_activity":["node_p8"],
+    "Node_inspection":["Node_p6"],
+    "Node_staging":["Node_p1"]
 
   };
   
@@ -153,7 +153,7 @@ for (const [nodeName, adjacentNames] of Object.entries(adjacencyList)) {
         console.error(`Node ${nodeName} is missing in nodeMap.`);
     }
   }
-  return {nodeMap,nodes,aisleBayPoints}
+  return {nodeMap,nodes,aisleBayPoints,intermediatePoints}
 
 }
 
@@ -185,7 +185,7 @@ for (const [nodeName, adjacentNames] of Object.entries(adjacencyList)) {
  
 // }
 
-export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,three,scene,camera,controls,agentGroup,renderer){
+export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,intermediatePoints,three,scene,camera,controls,agentGroup,renderer){
     const THREE=three;
     let finalPath=[];
     let checkpointCircles=[];
@@ -339,6 +339,7 @@ const checkpoints = setupCheckpoints(bins);
           let binPoints = [];
         
           for (let index in binNames) {
+            if(!binNames[index].toLowerCase().includes('area')){
             const aisle = parseInt(binNames[index]); // Convert first character (aisle number) to an integer
             const bay = binNames[index][3]; // Extract the bay number from the bin
             const direction = binNames[index][1]; // Extract the direction ("R" or "L")
@@ -354,6 +355,14 @@ const checkpoints = setupCheckpoints(bins);
             }
             if (!binPoints.includes(point)) {
               binPoints.push(point);
+            }}
+            else{
+              switch(binNames[index]){
+                case 'inspectionArea': binPoints.push(intermediatePoints['inspection']);break;
+                case 'activityArea': binPoints.push(intermediatePoints['activity']);break;
+                case 'stagingArea': binPoints.push(intermediatePoints['staging']);break;
+                case 'receivingArea': binPoints.push(intermediatePoints['receiving']);break;
+              }
             }
           }
         

@@ -100,12 +100,13 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                               if (state.storageBinItems![index].image != null && state.storageBinItems![index].image != '')
                                                 Container(
                                                   margin: EdgeInsets.only(right: containerSize.maxWidth * 0.02),
-                                                  height: containerSize.maxHeight * 0.24,
-                                                  width: containerSize.maxWidth * 0.24,
+                                                  height: containerSize.maxHeight * 0.3,
+                                                  width: containerSize.maxWidth * 0.2,
                                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
                                                   child: ClipRRect(
                                                     borderRadius: BorderRadius.circular(12),
                                                     child: Image.memory(
+                                                      
                                                       base64Decode(state.storageBinItems![index].image!),
                                                       fit: BoxFit.fill,
                                                     ),
