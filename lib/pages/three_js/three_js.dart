@@ -183,8 +183,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           }
                                           if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
                                            
-                                            Customs.AnimatedDialog(context: context, header:  const Icon(Icons.error, size: 35,), content: [
-                                              const Text("Please enter task Id"),
+                                            Customs.AnimatedDialog(context: context, header:  Icon(Icons.local_activity_rounded, size: 35,), content: [
+                                              Text("Please enter task Id"),
                                               TypeAheadField(
                                                 
                                                 controller: textEditingController,
@@ -202,6 +202,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                               },
                                               ),
                                               TextButton(onPressed: (){
+                                                controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
                                                 getIt<JsInteropService>().getShoretestPathForTask(_warehouseInteractionBloc.state.selectedTaskId??"");
                                                 Navigator.pop(context);
                                               }, child: PointerInterceptor(child: const Text("Done")))
