@@ -95,6 +95,33 @@ export async function initScene(renderer) {
       console.warn("An error occurred while loading the model:", error);
     }
   );
+  const circleMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffff00, // Yellow
+    side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.8, // Start opacity
+  });
+
+  // [
+    // new THREE.Vector3(-125.16835094362332, 6.19, -91),
+  //   new THREE.Vector3(-104.0724984440678, 6.19, -91),
+  //  new THREE.Vector3(-84.20038905146427, 6.19, -91),
+  //  new THREE.Vector3(-48.400711886208356, 6.19, -91),
+  // new THREE.Vector3(-104.0, 6.19, -100.0),
+  //  new THREE.Vector3(-14.035990842471623, 6.19, -91),
+  //  new THREE.Vector3(-14.185505861653581, 6.19 ,-107.84385506088879),
+  //  new THREE.Vector3(-14.114602359858907, 6.19, -131.37753635985396),
+  //  new THREE.Vector3(-14.197195127688875, 6.19, -77.49013059402137),
+  //  new THREE.Vector3(-14.264927005311744, 6.19, -61.64698518320672)
+  // ].forEach((point) => { const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius 2, 32 segments
+  //    const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+
+  //    // Rotate to lie flat on the ground
+  //    circle.rotation.x = -Math.PI / 2;
+
+  //    // Position at the checkpoint
+  //    circle.position.set(point.x, point.y + 0.1, point.z); // Slightly above ground
+  //    scene.add(circle);});
 
   let combinedPath = [];
   let checkpointCircles = [];
@@ -102,9 +129,11 @@ export async function initScene(renderer) {
   let pathLine;
   let clock;
   let bins = [
-    "1LB20201",
-    "5RB10602",
-    "1LB10201",
+    'p4',
+    // "1LB20201",
+    "4RB30602",
+    // "1LB10201",
+    '4LB30102',
     "1RB30602",
     "3RB20602",
     "2RB10601",
@@ -113,6 +142,8 @@ export async function initScene(renderer) {
     "2LB20501",
     "2RB10601",
     "2LB20201",
+    "stagingArea",
+
   ];
 
   let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(THREE);
@@ -135,6 +166,7 @@ export async function initScene(renderer) {
       });
     }
 
+   
     // Toggle the visibility of the input field and text
     if (!pathButton.classList.contains("focused")) {
       if (combinedPath.length != 0) {
@@ -153,7 +185,11 @@ export async function initScene(renderer) {
     checkpointCircles.forEach((circle) => scene.remove(circle));
     scene.remove(pathLine);
     scene.remove(agentGroup);
-    bins.forEach((e) => {if(!e.toLowerCase().includes('area')){scene.getObjectByName(e).material.color.set(0xfaf3e2)}});
+    try{
+    bins.forEach((e) => {if(!e.toLowerCase().includes('area')){scene.getObjectByName(e).material.color.set(0xfaf3e2)}});}
+    catch(e){
+      console.warn('error in setting color back to original');
+    }
     if (clock) {
       clock.stop();
     }
@@ -177,8 +213,15 @@ document.getElementById('showPath').addEventListener('click',(e)=>{
 
         bins.forEach((bin) => {
           if(!bin.toLowerCase().includes('area')){
+            try{
           scene.getObjectByName(bin).material.color.set(0x65543e);}
+          catch(e){
+            console.warn('error in setting color to bins');
+          }
+        }
+         
         });
+        
 });
 
 document.getElementById('stopAnimation').addEventListener('click',(e)=>{

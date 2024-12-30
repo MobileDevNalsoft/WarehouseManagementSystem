@@ -156,7 +156,6 @@ export function addInteractions(scene, model, camera, controls) {
       // we get the objects from the model as list that are intersected by the casted ray.
 
       if (intersects.length > 0) {
-       
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
         if (
