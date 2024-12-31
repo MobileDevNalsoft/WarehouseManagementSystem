@@ -99,3 +99,19 @@ class StagingDashboard{
     fulfilmentTime = json['fulfilment_time'];
   }
 }
+
+class TodayOrderSummary{
+  List<String>? created;
+  List<String>? allocated;
+  List<String>? picked;
+  List<String>? loaded;
+  List<String>? shipped;
+  TodayOrderSummary({this.created, this.picked, this.allocated, this.shipped, this.loaded});
+  TodayOrderSummary.fromJson(Map<String, dynamic> json){
+    created = ((json['created'] ?? []) as List).map((e) => (e as Map).values.first as String).toList();
+    picked = ((json['picked'] ?? []) as List).map((e) => (e as Map).values.first as String).toList();
+    allocated = ((json['allocated'] ?? []) as List).map((e) => (e as Map).values.first as String).toList();
+    shipped = ((json['shipped'] ?? []) as List).map((e) => (e as Map).values.first as String).toList();
+    loaded = ((json['loaded'] ?? []) as List).map((e) => (e as Map).values.first as String).toList();
+  }
+}

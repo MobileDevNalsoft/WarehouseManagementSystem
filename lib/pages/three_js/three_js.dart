@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
@@ -245,6 +246,16 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           );
                         }),
                   ),
+                  Align(
+                        alignment: Alignment.bottomCenter,
+                        child: PointerInterceptor(
+                          intercepting: state.intercepting!,
+                          child: Container(
+                                      height: size.height * 0.92,
+                                      width: size.width,
+                                      color: Colors.transparent,
+                                    ),
+                        ),),
                   AnimatedBuilder(
                       animation: positionAnimation,
                       builder: (context, child) {
@@ -272,17 +283,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                     width: size.width * widthAnimation.value,
                                     alignment: Alignment.center,
                                     decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        const CircularProgressIndicator(color: Color.fromRGBO(68, 98, 136, 1),),
-                                        Gap(size.width * 0.01),
-                                        const Text(
-                                          'Rendering...',
-                                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
+                                    child: Lottie.asset('assets/lottie/rendering.json'),
                                   ),),
                 ],
               ),

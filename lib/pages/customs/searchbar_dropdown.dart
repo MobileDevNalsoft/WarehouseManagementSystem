@@ -51,7 +51,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     bottomHeight = widget.size.height * 0.06;
     placeholderText = 'Search';
     dropdownValue = "Area";
-    _warehouseInteractionBloc =  context.read<WarehouseInteractionBloc>();
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
   }
 
   void searchData() {
@@ -61,7 +61,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") && !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
       if (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().contains("storage")) {
         print("search text ${_warehouseInteractionBloc.state.searchText}");
-        _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"bin": ""}, clearSearchText: false));
+        _warehouseInteractionBloc.add(SelectedObject(dataFromJS: const {"bin": ""}, clearSearchText: false));
         getIt<JsInteropService>().switchToMainCam("");
         getIt<JsInteropService>().switchToMainCam("storageArea");
       } else {
@@ -125,254 +125,284 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      height: height,
-      width: size.width * 0.26,
-      child: Stack(
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            height: bottomHeight,
-            width: size.width * 0.1,
-            color: Colors.transparent,
-            child: Container(
-              margin: EdgeInsets.only(top: size.height * 0.06),
-              padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
+    return MouseRegion(
+      onExit: (event) {
+        context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+        setState(() {
+          height = size.height * 0.08;
+          bottomHeight = size.height * 0.06;
+          turns = 0.5;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: height,
+        width: size.width * 0.26,
+        child: Stack(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: bottomHeight,
+              width: size.width * 0.1,
+              color: Colors.transparent,
+              child: Container(
+                margin: EdgeInsets.only(top: size.height * 0.06),
+                padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                  child: MouseRegion(
+                    onExit: (event) {
+                      setState(() {
+                        height = size.height * 0.08;
+                        bottomHeight = size.height * 0.06;
+                        turns = 0.5;
+                      });
+                      Future.delayed(Duration(milliseconds: 1200), () {
+                        context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+                      });
+                    },
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: dropdownItems.map((item) {
+                        return InkWell(
+                          onTap: () {
+                            print("item selected $item");
+                            try {
+                              _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "rack_cam");
+                            } catch (e) {
+                              print(e);
+                            }
+                            switch (item.replaceAll(" ", "").toLowerCase()) {
+                              case "storagearea":
+                                getIt<JsInteropService>().switchToMainCam("storageArea");
+                                _warehouseInteractionBloc.state.searchText = "";
+                                break;
+                              case "storagebin":
+                                getIt<JsInteropService>().switchToMainCam("storageArea");
+                                _warehouseInteractionBloc.state.searchText = "";
+                                break;
+                              case "inspectionarea":
+                                getIt<JsInteropService>().switchToMainCam("inspectionArea");
+                                _warehouseInteractionBloc.state.searchText = "";
+
+                                break;
+                              case "stagingarea":
+                                getIt<JsInteropService>().switchToMainCam("stagingArea");
+                                _warehouseInteractionBloc.state.searchText = "";
+                                break;
+                              case "activityarea":
+                                getIt<JsInteropService>().switchToMainCam("activityArea");
+                                _warehouseInteractionBloc.state.searchText = "";
+                                break;
+                              case "receivingarea":
+                                getIt<JsInteropService>().switchToMainCam("receivingArea");
+                                _warehouseInteractionBloc.state.searchText = "";
+                                break;
+                              case "yardarea":
+                                getIt<JsInteropService>().switchToMainCam("yardArea");
+                                _warehouseInteractionBloc.state.searchText = "";
+
+                                break;
+                              case "dockareain":
+                                getIt<JsInteropService>().switchToMainCam("dockArea-IN");
+                                _warehouseInteractionBloc.state.searchText = "";
+                                break;
+                              case "dockareaout":
+                                getIt<JsInteropService>().switchToMainCam("dockArea-OUT");
+                                _warehouseInteractionBloc.state.searchText = "";
+                                break;
+                              default:
+                                null;
+                            }
+                            if (item.toLowerCase().contains("storage")) {
+                              _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
+                              _warehouseInteractionBloc.add(SelectedObject(dataFromJS: const {"object": "bin"}));
+                            } else {
+                              _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${item.toLowerCase().replaceAll(" ", '')}"}));
+                            }
+
+                            setState(() {
+                              placeholderText = 'Search...';
+                              height = height == size.height * 0.3
+                                  ? size.height * 0.08
+                                  : size.height * 0.3; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                              bottomHeight = bottomHeight == size.height * 0.3 ? size.height * 0.06 : size.height * 0.3;
+                              turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width * 0.01),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Text(
+                              item,
+                              style: TextStyle(
+                                color: item == dropdownValue ? Color.fromRGBO(68, 98, 136, 1) : Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: size.height * 0.022,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: size.height * 0.055,
+              width: size.width * 0.26,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(50),
               ),
-              child: ScrollConfiguration(
-                behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                child: ListView(
-                  shrinkWrap: true,
-                  children: dropdownItems.map((item) {
-                    return GestureDetector(
-                      onTap: () {
-                        print("item selected $item");
-                        try {
-                          _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "rack_cam");
-                        } catch (e) {
-                          print(e);
-                        }
-                        switch (item.replaceAll(" ", "").toLowerCase()) {
-                          case "storagearea":
-                            getIt<JsInteropService>().switchToMainCam("storageArea");
-                            _warehouseInteractionBloc.state.searchText = "";
-                            break;
-                          case "storagebin":
-                            getIt<JsInteropService>().switchToMainCam("storageArea");
-                            _warehouseInteractionBloc.state.searchText = "";
-                            break;
-                          case "inspectionarea":
-                            getIt<JsInteropService>().switchToMainCam("inspectionArea");
-                            _warehouseInteractionBloc.state.searchText = "";
-                            
-                            break;
-                          case "stagingarea":
-                            getIt<JsInteropService>().switchToMainCam("stagingArea");
-                            _warehouseInteractionBloc.state.searchText = "";
-                            break;
-                          case "activityarea":
-                            getIt<JsInteropService>().switchToMainCam("activityArea");
-                            _warehouseInteractionBloc.state.searchText = "";
-                            break;
-                          case "receivingarea":
-                            getIt<JsInteropService>().switchToMainCam("receivingArea");
-                            _warehouseInteractionBloc.state.searchText = "";
-                            break;
-                          case "yardarea":
-                            getIt<JsInteropService>().switchToMainCam("yardArea");
-                            _warehouseInteractionBloc.state.searchText = "";
-
-                            break;
-                          case "dockareain":
-                            getIt<JsInteropService>().switchToMainCam("dockArea-IN");
-                            _warehouseInteractionBloc.state.searchText = "";
-                            break;
-                          case "dockareaout":
-                            getIt<JsInteropService>().switchToMainCam("dockArea-OUT");
-                            _warehouseInteractionBloc.state.searchText = "";
-                            break;
-                          default:
-                            null;
-                        }
-                        if (item.toLowerCase().contains("storage")) {
-                          _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
-                          _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"object": "bin"}));
-                        } else {
-                          _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${item.toLowerCase().replaceAll(" ", '')}"}));
-                        }
-
-                        setState(() {
-                          placeholderText = 'Search...';
-                          height = height == size.height * 0.3
-                              ? size.height * 0.08
-                              : size.height * 0.3; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                          bottomHeight = bottomHeight == size.height * 0.3 ? size.height * 0.06 : size.height * 0.3;
-                          turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width * 0.01),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Text(
-                          item,
-                          style: TextStyle(
-                            color: item == dropdownValue ? Color.fromRGBO(68, 98, 136, 1) : Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: size.height * 0.022,
-                          ),
-                        ),
+              padding: EdgeInsets.only(left: size.width * 0.002, right: size.width * 0.006, top: size.width * 0.002, bottom: size.width * 0.002),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    onHover: (value) {
+                      context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: true));
+                      setState(() {
+                        height = size.height * 0.3; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                        bottomHeight = size.height * 0.3;
+                        turns = 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(68, 98, 136, 1), // Purple background
+                        borderRadius: BorderRadius.circular(50),
                       ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            height: size.height * 0.055,
-            width: size.width * 0.26,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            padding: EdgeInsets.only(left: size.width * 0.002, right: size.width * 0.006, top: size.width * 0.002, bottom: size.width * 0.002),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    print("dropdown");
-                    // _warehouseInteractionBloc.state.selectedSearchArea = _warehouseInteractionBloc.state.selectedSearchArea.split("Area")[0].trim();
-
-                    setState(() {
-                      height = height == size.height * 0.08
-                          ? size.height * 0.3
-                          : size.height * 0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                      bottomHeight = bottomHeight == size.height * 0.06 ? size.height * 0.3 : size.height * 0.06;
-                      turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(68, 98, 136, 1), // Purple background
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
                             context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("area").join(" "),
                             // context.watch<WarehouseInteractionBloc>().state.selectedSearchArea,
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
-                        ),
-                        Gap(size.width * 0.005),
-                        AnimatedRotation(
-                          turns: turns,
-                          duration: const Duration(milliseconds: 200),
-                          child: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            size: size.height * 0.025,
-                            color: Colors.white,
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
                           ),
-                        ),
-                      ],
+                          Gap(size.width * 0.005),
+                          AnimatedRotation(
+                            turns: turns,
+                            duration: const Duration(milliseconds: 200),
+                            child: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: size.height * 0.025,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // Search Box
-                Expanded(
-                  flex: 10,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Transform.translate(
-                          offset: Offset(0, -size.height * 0.005),
-                          child: TextField(
-                            controller: TextEditingController(text: _warehouseInteractionBloc.state.searchText),
-                            onSubmitted: (value) { searchData();},
-                            onChanged: (value) {
-                              if (value.trim() == "") {
-                                _warehouseInteractionBloc.state.searchText = null;
-                                switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
-                                  case 'stagingarea':
-                                    context.read<StagingBloc>().state.pageNum = 0;
-                                    context.read<StagingBloc>().add(GetStagingData());
-                                    break;
-                                  case 'activityarea':
-                                    context.read<ActivityAreaBloc>().state.pageNum = 0;
-                                    context.read<ActivityAreaBloc>().add(GetActivityAreaData());
-                                    break;
-                                  case 'receivingarea':
-                                    context.read<ReceivingBloc>().state.pageNum = 0;
-                                    context.read<ReceivingBloc>().add(GetReceivingData());
-                                    break;
-                                  case 'inspectionarea':
-                                    context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
-                                    context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
-                                    break;
-                                  case 'dockarea-in':
-                                    context.read<DockAreaBloc>().state.pageNum = 0;
+                  // Search Box
+                  Expanded(
+                    flex: 10,
+                    child: MouseRegion(
+                      onEnter: (event) {
+                        setState(() {
+                          height = size.height * 0.08;
+                          bottomHeight = size.height * 0.06;
+                          turns = 0.5;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Transform.translate(
+                              offset: Offset(0, -size.height * 0.005),
+                              child: TextField(
+                                controller: TextEditingController(text: _warehouseInteractionBloc.state.searchText),
+                                onSubmitted: (value) {
+                                  searchData();
+                                },
+                                onChanged: (value) {
+                                  if (value.trim() == "") {
+                                    _warehouseInteractionBloc.state.searchText = null;
+                                    switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
+                                      case 'stagingarea':
+                                        context.read<StagingBloc>().state.pageNum = 0;
+                                        context.read<StagingBloc>().add(GetStagingData());
+                                        break;
+                                      case 'activityarea':
+                                        context.read<ActivityAreaBloc>().state.pageNum = 0;
+                                        context.read<ActivityAreaBloc>().add(GetActivityAreaData());
+                                        break;
+                                      case 'receivingarea':
+                                        context.read<ReceivingBloc>().state.pageNum = 0;
+                                        context.read<ReceivingBloc>().add(GetReceivingData());
+                                        break;
+                                      case 'inspectionarea':
+                                        context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
+                                        context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
+                                        break;
+                                      case 'dockarea-in':
+                                        context.read<DockAreaBloc>().state.pageNum = 0;
 
-                                    context.read<DockAreaBloc>().add(GetDockAreaData());
+                                        context.read<DockAreaBloc>().add(GetDockAreaData());
 
-                                  case 'dockarea-out':
-                                    context.read<DockAreaBloc>().state.pageNum = 0;
+                                      case 'dockarea-out':
+                                        context.read<DockAreaBloc>().state.pageNum = 0;
 
-                                    context.read<DockAreaBloc>().add(GetDockAreaData());
-                                  case 'yardarea':
-                                    context.read<YardBloc>().state.pageNum = 0;
-                                    context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
-                                    break;
-                                  default:
-                                    return null;
-                                }
-                              } else {
-                                _warehouseInteractionBloc.state.searchText = value.trim();
-                              }
-                            },
-                            textAlignVertical: TextAlignVertical.center,
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              hintText: placeholderText,
-                              contentPadding: EdgeInsets.only(left: size.width * 0.008, top: size.height * 0.012),
-                              isCollapsed: true,
-                              hintStyle: TextStyle(
-                                color: Colors.black54, // Purple
-                                fontSize: size.height * 0.022,
-                                fontWeight: FontWeight.w500,
+                                        context.read<DockAreaBloc>().add(GetDockAreaData());
+                                      case 'yardarea':
+                                        context.read<YardBloc>().state.pageNum = 0;
+                                        context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
+                                        break;
+                                      default:
+                                        return null;
+                                    }
+                                  } else {
+                                    _warehouseInteractionBloc.state.searchText = value.trim();
+                                  }
+                                },
+                                textAlignVertical: TextAlignVertical.center,
+                                maxLines: 1,
+                                decoration: InputDecoration(
+                                  hintText: placeholderText,
+                                  contentPadding: EdgeInsets.only(left: size.width * 0.008, top: size.height * 0.012),
+                                  isCollapsed: true,
+                                  hintStyle: TextStyle(
+                                    color: Colors.black54, // Purple
+                                    fontSize: size.height * 0.022,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                                cursorHeight: size.height * 0.03,
+                                style: TextStyle(
+                                  color: Color.fromRGBO(68, 98, 136, 1),
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                              border: InputBorder.none,
-                            ),
-                            cursorHeight: size.height * 0.03,
-                            style: TextStyle(
-                              color: Color.fromRGBO(68, 98, 136, 1),
-                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ),
+                          IconButton(
+                              onPressed: () {
+                                searchData();
+                              },
+                              icon: Icon(
+                                Icons.search,
+                                color: Color.fromRGBO(68, 98, 136, 1),
+                                size: size.height * 0.035,
+                              )),
+                        ],
                       ),
-                      IconButton(
-                          onPressed: () {
-                            searchData();
-                          },
-                          icon: Icon(
-                            Icons.search,
-                            color: Color.fromRGBO(68, 98, 136, 1),
-                            size: size.height * 0.035,
-                          )),
-                    ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          )
-        ],
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,16 +1,22 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
+import 'package:wmssimulator/models/storage_bin.dart';
 import 'package:wmssimulator/pages/customs/users_builder.dart';
+import 'package:wmssimulator/pages/test_code/warehouse.dart';
 
 class Customs {
   static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
@@ -20,7 +26,9 @@ class Customs {
         Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-              color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+              color: const Color.fromRGBO(12, 46, 87, 1),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.02),
           margin: EdgeInsets.only(top: size.height * 0.02, bottom: size.height * 0.004, right: size.height * 0.01),
           height: size.height * 0.06,
@@ -32,7 +40,7 @@ class Customs {
                 title,
                 style: TextStyle(color: Colors.white, fontSize: size.width * 0.012, letterSpacing: 1.6, fontWeight: FontWeight.bold),
               ),
-              Spacer(),
+              const Spacer(),
               InkWell(
                   onTap: () async {
                     getIt<JsInteropService>().switchToMainCam("");
@@ -47,7 +55,7 @@ class Customs {
 
                     getIt<JsInteropService>().resetTrucks();
                   },
-                  child: Icon(Icons.cancel_rounded, color: Colors.white))
+                  child: const Icon(Icons.cancel_rounded, color: Colors.white))
             ],
           ),
         ),
@@ -55,7 +63,9 @@ class Customs {
           height: size.height * 0.86,
           width: size.width * 0.22,
           decoration: BoxDecoration(
-              color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+              color: const Color.fromRGBO(12, 46, 87, 1),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.all(size.height * 0.012),
           child: LayoutBuilder(builder: (context, layout) {
             return Column(
@@ -67,12 +77,18 @@ class Customs {
     );
   }
 
-  static Widget DashboardWidget({Size size = const Size(100, 100), double? margin, Decoration? decoration, bool loaderEnabled = true, required Widget Function(double ratio) chartBuilder}) {
+  static Widget DashboardWidget(
+      {Size size = const Size(100, 100),
+      double? margin,
+      Decoration? decoration,
+      bool loaderEnabled = true,
+      required Widget Function(double ratio) chartBuilder}) {
     return Container(
-      margin: EdgeInsets.all(margin??0),
+      margin: EdgeInsets.all(margin ?? 0),
       height: size.height,
       width: size.width,
-      decoration: decoration ?? BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+      decoration: decoration ??
+          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
       padding: EdgeInsets.all(size.height * 0.035),
       alignment: Alignment.center,
       child: LayoutBuilder(builder: (context, lsize) {
@@ -87,52 +103,58 @@ class Customs {
     );
   }
 
-  static Widget ElevatedDashboardWidget({Size size = const Size(100, 100),required BuildContext context, double? margin,required int index, required Widget Function(double ratio, DashboardsState state) chartBuilder, bool Function(DashboardsState, DashboardsState)? buildWhen}) {
+  static Widget ElevatedDashboardWidget(
+      {Size size = const Size(100, 100),
+      required BuildContext context,
+      double? margin,
+      required int index,
+      required Widget Function(double ratio, DashboardsState state) chartBuilder,
+      bool Function(DashboardsState, DashboardsState)? buildWhen}) {
     DashboardsBloc _dashboardsBloc = context.read<DashboardsBloc>();
     return Stack(
       children: [
+        BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+          return MouseRegion(
+            onEnter: (event) {
+              state.elevates![index] = true;
+              _dashboardsBloc.add(ElevateDashboard(elevates: state.elevates!));
+            },
+            onExit: (event) {
+              state.elevates![index] = false;
+              _dashboardsBloc.add(ElevateDashboard(elevates: state.elevates!));
+            },
+            child: Container(
+              height: size.height,
+              width: size.width,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [BoxShadow(color: state.elevates![index] == true ? Colors.black : Colors.grey, blurRadius: 5)]),
+            ),
+          );
+        }),
         BlocBuilder<DashboardsBloc, DashboardsState>(
-          builder: (context, state) {
-            return MouseRegion(
-              onEnter: (event) {
-                state.elevates![index] = true;
-                _dashboardsBloc.add(ElevateDashboard(elevates: state.elevates!));
-              },
-              onExit: (event) {
-                state.elevates![index] = false;
-                _dashboardsBloc.add(ElevateDashboard(elevates: state.elevates!));
-              },
-              child: Container(
-                height: size.height,
-                width: size.width,
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [BoxShadow(color: state.elevates![index] == true ? Colors.black : Colors.grey, blurRadius: 5)]),
-              ),
-            );
-          }
-        ),
-        BlocBuilder<DashboardsBloc, DashboardsState>(
-          buildWhen: buildWhen,
-          builder: (context, state) {
-            bool isEnabled = state.getDockDashboardState != DockDashboardState.success;
-            return IgnorePointer(
-              child: Container(
-                margin: EdgeInsets.all(margin??0),
-                padding: EdgeInsets.all(size.height * 0.035),
-                height: size.height,
-                width: size.width,
-                child: LayoutBuilder(builder: (context, lsize) {
-                          double aspectRatio;
-                          if (lsize.maxHeight > lsize.maxWidth) {
-                            aspectRatio = lsize.maxHeight / lsize.maxWidth;
-                          } else {
-                            aspectRatio = lsize.maxWidth / lsize.maxHeight;
-                          }
-                          return isEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(aspectRatio, state);
-                        }),
-              ),
-            );
-          }
-        )
+            buildWhen: buildWhen,
+            builder: (context, state) {
+              bool isEnabled = state.getDockDashboardState != DockDashboardState.success;
+              return IgnorePointer(
+                child: Container(
+                  margin: EdgeInsets.all(margin ?? 0),
+                  padding: EdgeInsets.all(size.height * 0.035),
+                  height: size.height,
+                  width: size.width,
+                  child: LayoutBuilder(builder: (context, lsize) {
+                    double aspectRatio;
+                    if (lsize.maxHeight > lsize.maxWidth) {
+                      aspectRatio = lsize.maxHeight / lsize.maxWidth;
+                    } else {
+                      aspectRatio = lsize.maxWidth / lsize.maxHeight;
+                    }
+                    return isEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(aspectRatio, state);
+                  }),
+                ),
+              );
+            })
       ],
     );
   }
@@ -179,13 +201,7 @@ class Customs {
       bool? legendVisibility}) {
     return LayoutBuilder(builder: (context, constraints) {
       return SfCartesianChart(
-          title: ChartTitle(
-              text: title,
-              alignment: ChartAlignment.center,
-              textStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: titleFontSize
-              )),
+          title: ChartTitle(text: title, alignment: ChartAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
           primaryXAxis: CategoryAxis(
             labelStyle: TextStyle(fontSize: xlabelFontSize),
             majorGridLines: const MajorGridLines(
@@ -301,7 +317,8 @@ class Customs {
       Color axisLineColor = const Color.fromARGB(255, 86, 185, 152),
       double markerValue = 0}) {
     return Gauges.SfRadialGauge(
-      title: Gauges.GaugeTitle(text: title, alignment: Gauges.GaugeAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
+      title:
+          Gauges.GaugeTitle(text: title, alignment: Gauges.GaugeAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
       axes: [
         Gauges.RadialAxis(
           maximum: 100,
@@ -360,16 +377,18 @@ class Customs {
       bool enableAnnotation = false,
       String? contentText,
       String annotationText = 'AText',
-      double annotationFontSize = 16
-      }) {
+      double annotationFontSize = 16}) {
     return SfCircularChart(
       title: ChartTitle(text: title, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
-      legend: Legend(isVisible: legendVisibility, alignment: ChartAlignment.far,),
+      legend: Legend(
+        isVisible: legendVisibility,
+        alignment: ChartAlignment.far,
+      ),
       annotations: enableAnnotation
           ? <CircularChartAnnotation>[
               CircularChartAnnotation(
                 widget: Container(
-                    height: ratio*75,
+                    height: ratio * 75,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -400,8 +419,8 @@ class Customs {
                 onPointTap: props.onPointTap,
                 dataLabelSettings: DataLabelSettings(
                     isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
-                radius: props.radius ?? '${ratio*45}%', // Adjust the radius as needed
-                innerRadius: props.innerRadius ?? '${ratio*32}%', // Optional: adjust for a thinner ring
+                radius: props.radius ?? '${ratio * 45}%', // Adjust the radius as needed
+                innerRadius: props.innerRadius ?? '${ratio * 32}%', // Optional: adjust for a thinner ring
                 pointColorMapper: props.pointColorMapper,
               )
             : series == SeriesName.radialBar
@@ -409,8 +428,8 @@ class Customs {
                     dataSource: props!.dataSource,
                     maximumValue: props.maximumValue,
                     cornerStyle: CornerStyle.bothCurve,
-                    radius: props.radius ?? '${ratio*50}%', // Adjust the radius as needed
-                    innerRadius: props.innerRadius ?? '${ratio*32}%', // Optional: adjust for a thinner ring
+                    radius: props.radius ?? '${ratio * 50}%', // Adjust the radius as needed
+                    innerRadius: props.innerRadius ?? '${ratio * 32}%', // Optional: adjust for a thinner ring
                     dataLabelSettings: DataLabelSettings(
                         // Renders the data label
                         isVisible: true,
@@ -428,13 +447,93 @@ class Customs {
                         isVisible: true,
                         textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: props.labelFontSize),
                         alignment: ChartAlignment.center),
-                    radius: props.radius ?? '${ratio*70}%',
+                    radius: props.radius ?? '${ratio * 70}%',
                     pointColorMapper: props.pointColorMapper,
                     onPointTap: props.onPointTap,
                     xValueMapper: (PieData data, _) => data.xData,
                     yValueMapper: (PieData data, _) => data.yData,
                   )
       ],
+    );
+  }
+
+  static void DrillDownDialog({
+    required BuildContext context,
+    required List<DataSource> dataSources,
+  }) {
+    Size size = MediaQuery.of(context).size;
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.bounceInOut.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+          bool isEnabled = state.getDrilldownState != DrilldownState.success;
+          return Skeletonizer(
+            enableSwitchAnimation: true,
+            enabled: isEnabled,
+            child: IntrinsicWidth(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(onPressed: () {
+                        
+                      }, icon: Icon(Icons.send_to_mobile_rounded, color: Colors.white,))
+                    ],
+                  ),
+                  Container(
+                      height: size.height * 0.5,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          dataSources.length,
+                          (index) => SizedBox(
+                              width: size.width * 0.15,
+                              child: SfDataGrid(
+                                allowFiltering: true,
+                                allowSorting: true,
+                                columnWidthMode: ColumnWidthMode.fitByColumnName,
+                                source: dataSources[index].dataGridSourceBuilder(isEnabled, state),
+                                columns: [
+                                  GridColumn(
+                                      columnName: dataSources[index].columnName,
+                                      minimumWidth: size.width * 0.15,
+                                      filterPopupMenuOptions: const FilterPopupMenuOptions(canShowSortingOptions: false),
+                                      label: Container(
+                                          padding: EdgeInsets.all(size.width * 0.002),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            dataSources[index].columnName,
+                                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                          ))),
+                                ],
+                              )),
+                        ),
+                      )),
+                ],
+              ),
+            ),
+          );
+        });
+      },
     );
   }
 
@@ -479,7 +578,7 @@ class Customs {
                       Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: EdgeInsets.only(top: size.height*0.005, right: size.width*0.002),
+                          padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
                           child: PointerInterceptor(
                             child: InkWell(
                               onTap: () => Navigator.pop(context),
@@ -513,9 +612,7 @@ class Customs {
     );
   }
 
-  static void UsersDialog({
-    required BuildContext context
-  }) {
+  static void UsersDialog({required BuildContext context}) {
     showGeneralDialog(
       context: context,
       barrierColor: Colors.black45,
@@ -533,7 +630,7 @@ class Customs {
       barrierDismissible: true,
       barrierLabel: '',
       pageBuilder: (context, animation, secondaryAnimation) {
-        return UsersBuilder();
+        return const UsersBuilder();
       },
     );
   }
@@ -685,3 +782,38 @@ class Props {
   void Function(ChartPointDetails pointInteractionDetails)? onPointTap;
   Props({this.dataSource, this.labelFontSize = 14, this.radius, this.innerRadius, this.maximumValue, this.pointColorMapper, this.onPointTap});
 }
+
+class DrillDownDataSource extends DataGridSource {
+  DrillDownDataSource({required List<String> data, required String columnName}) {
+    _data = List.generate(
+      data.length,
+      (index) => DataGridRow(cells: [
+        DataGridCell(columnName: columnName, value: index < data.length ? data[index] : ''),
+      ]),
+    );
+  }
+
+  List<DataGridRow> _data = [];
+
+  @override
+  List<DataGridRow> get rows => _data;
+
+  @override
+  DataGridRowAdapter? buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((dataGridCell) {
+      return Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(dataGridCell.value.toString()),
+      );
+    }).toList());
+  }
+}
+
+class DataSource {
+  DataSource({required this.dataGridSourceBuilder, required this.columnName});
+  DataGridSource Function(bool isEnabled, DashboardsState state) dataGridSourceBuilder;
+  String columnName;
+}
+
+List<String> dummyData = List.generate(10, (index) => 'data $index');

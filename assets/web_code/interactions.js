@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation } from "animations";
 import {globalState} from "globalState";
-import { highlightArea } from "highlight";
+import { highlightArea, resetAreas } from "highlight";
 
 export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
@@ -209,6 +209,7 @@ export function addInteractions(scene, model, camera, controls) {
     } else {
       console.log('{"object":"null"}');
       globalState.setAreaFocused(false);
+      resetAreas(scene);
       resetTrucksAnimation(scene);
     }
   }
