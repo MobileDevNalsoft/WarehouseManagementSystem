@@ -109,6 +109,14 @@ export function addInteractions(scene, model, camera, controls) {
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
+              case "Storage Area":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
+                                        Available bin: 280<br>
+                                        Occupied bins: 60
+                                    </div>`;
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
             default:
               tooltip.style.display = "block";
               tooltip.innerHTML = name;
