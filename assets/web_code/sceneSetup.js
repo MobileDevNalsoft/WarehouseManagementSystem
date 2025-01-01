@@ -27,23 +27,25 @@ export async function initScene(renderer) {
   // Load main model
   const gltf = await loadModel(renderer, scene);
   const model = gltf.scene;
-  model.position.set(0, -11.2, 0);
+  // model.position.set(0, -11.2, 0);
   scene.add(model);
 
   const SPEED = 5;
 
-  scene.getObjectByName("Plane").visible = false;
+  // scene.getObjectByName("Plane").visible = false;
+
+  addSkyDome(scene);
 
   // weed
-  let weedGeom = createWeedGeometry();
-  let weedMat = createWeedMaterial();
-  let weed = new THREE.Mesh(weedGeom, weedMat);
-  scene.add(weed);
+  // let weedGeom = createWeedGeometry();
+  // let weedMat = createWeedMaterial();
+  // let weed = new THREE.Mesh(weedGeom, weedMat);
+  // scene.add(weed);
 
-  let backGeom = createBackGeometry();
-  let backMat = createBackMaterial();
-  let backMesh = new THREE.Mesh(backGeom, backMat);
-  scene.add(backMesh);
+  // let backGeom = createBackGeometry();
+  // let backMat = createBackMaterial();
+  // let backMesh = new THREE.Mesh(backGeom, backMat);
+  // scene.add(backMesh);
 
   // Animation setup
   const mixer = animationMixer(gltf);
@@ -261,10 +263,7 @@ export async function initScene(renderer) {
 
   let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(THREE);
 
-  let agvTask = ["receivingArea","5RB30602","3RB20602","2RB30602",
-    "3RB10102","2LB20501",
-    "2RB10601",
-    "2LB20201"];
+  let agvTask = ["receivingArea","5RB30602","3RB20602"];
    let digitalTwin= document.getElementById("digitalTwin");
     document.getElementById("digitalTwin").addEventListener("click", (e) => {
       if (digitalTwin.classList.contains("focused")) {
@@ -273,6 +272,8 @@ export async function initScene(renderer) {
         return;
       }
    digitalTwin.classList.add("focused");
+   stopAnimation();
+   document.getElementById('path').classList.remove('focused');
   ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
     agvTask,
     nodeMap,
@@ -287,6 +288,44 @@ export async function initScene(renderer) {
     renderer,2000,
     agvTask[agvTask.length-1]
   ));
+
+  // Create a GSAP timeline for smoother transitions
+  const timeline = gsap.timeline();
+
+  controls.enabled = false;
+  controls.enableDamping = false;
+
+  let warehouse = scene.getObjectByName('warehouse_wall');
+
+  // Animate position and rotation simultaneously
+  timeline
+    .to(camera.position, {
+      duration: 3,
+      x: warehouse.position.x,
+      y: warehouse.position.y+250,
+      z: warehouse.position.z+100,
+      ease: "power3.inOut",
+    })
+    .to(
+      controls.target,
+      {
+        duration: 3,
+        x: warehouse.position.x,
+        y: warehouse.position.y,
+        z: warehouse.position.z,
+        ease: "power3.inOut",
+        onUpdate: function () {
+          camera.lookAt(controls.target); // Smoothly look at the target
+        },
+      },
+      "<"
+    );
+
+  // Callbacks after animation completes
+  timeline.call(() => {
+    controls.enabled = true; 
+    controls.enableDamping = true;
+  });
 
 });
 
@@ -308,6 +347,7 @@ export async function initScene(renderer) {
       });
     }
 
+   
    
     // Toggle the visibility of the input field and text
     if (!pathButton.classList.contains("focused")) {
@@ -350,7 +390,9 @@ document.getElementById('showPath').addEventListener('click',(e)=>{
           camera,
           controls,
           forkLift,
-          renderer
+          renderer,
+          2000,
+    bins[bins.length-1]
         ));
 
         bins.forEach((bin) => {
@@ -363,6 +405,44 @@ document.getElementById('showPath').addEventListener('click',(e)=>{
         }
          
         });
+
+     // Create a GSAP timeline for smoother transitions
+  const timeline = gsap.timeline();
+
+  controls.enabled = false;
+  controls.enableDamping = false;
+
+  let warehouse = scene.getObjectByName('warehouse_wall');
+
+  // Animate position and rotation simultaneously
+  timeline
+    .to(camera.position, {
+      duration: 3,
+      x: warehouse.position.x,
+      y: warehouse.position.y+250,
+      z: warehouse.position.z+100,
+      ease: "power3.inOut",
+    })
+    .to(
+      controls.target,
+      {
+        duration: 3,
+        x: warehouse.position.x,
+        y: warehouse.position.y,
+        z: warehouse.position.z,
+        ease: "power3.inOut",
+        onUpdate: function () {
+          camera.lookAt(controls.target); // Smoothly look at the target
+        },
+      },
+      "<"
+    );
+
+  // Callbacks after animation completes
+  timeline.call(() => {
+    controls.enabled = true; 
+    controls.enableDamping = true;
+  });
         
 });
 

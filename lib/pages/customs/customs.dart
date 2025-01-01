@@ -580,10 +580,12 @@ class Customs {
     required BuildContext context,
     required Widget header,
     required List<Widget> content,
+    Function? onClose
   }) {
     Size size = MediaQuery.of(context).size;
     showGeneralDialog(
       context: context,
+      
       barrierColor: Colors.black45,
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         final curvedValue = Curves.bounceInOut.transform(animation.value);
@@ -620,7 +622,10 @@ class Customs {
                           padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
                           child: PointerInterceptor(
                             child: InkWell(
-                              onTap: () => Navigator.pop(context),
+                              onTap: () {
+                                if(onClose!=null){
+                                onClose();}
+                                Navigator.pop(context);},
                               child: const Icon(
                                 Icons.close,
                                 size: 20,

@@ -38,19 +38,15 @@ body {
     align-items: center;
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
     transition: width 0.4s ease, box-shadow 0.3s ease; /* Smooth hover effects */
-    overflow: hidden; /* Hide overflowing text when collapsed */
+    overflow: visible; 
 }
 
-#leftPanel:hover {
-    width: 8vw; /* Expand the panel on hover */
-}
 
 .areaButton {
-    display: flex;
-    flex-direction: row; /* Align icon and text horizontally */
-    align-items: center; /* Center-align content */
-    justify-content: flex-start; /* Align items to the left in expanded mode */
-    width: 90%; /* Full width of the expanded panel */
+    position: relative;
+        display: inline-block;
+    
+    /* width: 90%; Full width of the expanded panel */
     margin: 1vh auto; /* Space buttons evenly */
     padding: 10px;
     border-radius: 8px;
@@ -59,9 +55,7 @@ body {
     text-decoration: none;
 }
 
-.areaButton:hover {
-    background-color:  #446188b0; /* Change background color on hover */
-}
+
 
 .areaButton i {
     width: 20px; /* Default size for icons */
@@ -71,17 +65,7 @@ body {
 }
 
 
-.areaButton p {
-    display: none;
-    font-size: 0.8vw; /* Adjust font size */
-    margin-left: 6px;
-    color: white;
-    line-height: 1.2px;
-    white-space: nowrap; /* Prevent text from wrapping */
-    opacity: 0; /* Hide text by default */
-    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth fade-in */
-    transform: translateX(-20px); /* Start slightly hidden to the left */
-}
+
 
 #leftPanel:hover .areaButton p {
     display: block;
@@ -91,10 +75,15 @@ body {
 
 .areaButton.focused,
 .areaButton:focus {
+    overflow: hidden;
     background-color: #858181; /* Custom background for focused state */
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
 }
+.areaButton.focused,.areaButton:focus #area_tooltip{
+    overflow: visible;
+}
+
 .fa-cube {
     color: #fdfdfd; 
     height: 16px;
@@ -124,6 +113,58 @@ body {
     transform-origin: center bottom; /* Anchor point for bounce */
 }
 
+
+#area_tooltip {
+    visibility: hidden;
+    width: auto;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: .25rem;
+    padding: .25rem;
+    position: absolute;
+    z-index: 100;
+    bottom: -25px; /* Adjust as needed */
+    left:50%;
+    transform: translateX(-50%);
+    opacity: .75;
+}
+#shortestPath_tooltip {
+    visibility: hidden;
+    width: auto;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: .25rem;
+    padding: .25rem;
+    position: absolute;
+    z-index: 100;
+    bottom: -25px; /* Adjust as needed */
+    left:50%;
+    transform: translateX(-50%);
+    opacity: .75;
+}
+
+#digitalTwin_tooltip {
+    visibility: hidden;
+    width: auto;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: .25rem;
+    padding: .25rem;
+    position: absolute;
+    z-index: 100;
+    bottom: -25px; /* Adjust as needed */
+    left:50%;
+    transform: translateX(-50%);
+    opacity: .75;
+}
+
+
+.areaButton:hover #area_tooltip {
+    visibility: visible;
+}
 /* Bounce animation keyframes */
 @keyframes bounceIn {
     0% {

@@ -400,6 +400,7 @@ const endpoints = findNodeNamesForPoints([endCheckpoints[0]],nodes);
           let binPoints = [];
         
           for (let index in binNames) {
+            console.warn(binNames);
             if(!binNames[index].toLowerCase().includes('area')){
               if(binNames[index].startsWith('p')){
                 binPoints.push(intermediatePoints[binNames[index]]);

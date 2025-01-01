@@ -171,7 +171,14 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           }
                                           if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
                                            
-                                            Customs.AnimatedDialog(context: context, header:  const Icon(Icons.local_activity_rounded, size: 35,), content: [
+                                            Customs.AnimatedDialog(context: context, header:   IconButton(icon:Icon(Icons.local_activity_rounded,),onPressed: (){
+                                                
+                                            }),
+                                            onClose: (){
+                                              controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
+                                                getIt<JsInteropService>().getShoretestPathForTask("");
+                                            },
+                                             content: [
                                               const Text("Please enter task Id"),
                                               TypeAheadField(
                                                 
@@ -180,6 +187,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                 itemBuilder: (context, value) {
                                                 return ListTile(title: Text(value.toString()),);
                                               }, 
+                                              
                                               suggestionsCallback: (pattern) {
                                                 return  ["task1","task2","task3","task4"].where((element) => element.contains(pattern)).toList();
                                               },

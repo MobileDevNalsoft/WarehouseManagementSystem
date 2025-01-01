@@ -40,8 +40,8 @@ function initAfterModelLoaded(){
   // const inputContainer = document.getElementById('inputContainer');
   // const pathImage = pathButton.querySelector('img');
   // const pathText = pathButton.querySelector('p');
-  areas.style.display = "block";
-  pathButton.style.display = "block";
+  areas.style.display = "flex";
+  pathButton.style.display = "flex";
   // Add a click event listener to toggle the input field
   // pathButton.addEventListener('click', () => {
   //     if (inputContainer.style.display === 'none' || inputContainer.style.display === '') {
