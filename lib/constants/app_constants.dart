@@ -61,6 +61,7 @@ class AppConstants {
   static const STAGING_DASHBOARD = 'staging_dashboard';
   static const STORAGE_DASHBOARD = 'storage_dashboard';
   static const STORAGE_DRILLDOWN = 'storage_drilldown';
+  static const STAGING_DRILLDOWN = 'staging_drilldown';
 }
 
  

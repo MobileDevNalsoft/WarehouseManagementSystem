@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
@@ -109,27 +110,14 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                 height: size.height * 0.08,
                 width: size.width,
                 color: const Color.fromRGBO(68, 98, 136, 1),
-                child: Row(
-                  children: [
-                    const Spacer(),
-                    Image.asset(
-                      'assets/images/nalsoft_logo_white.png',
-                      scale: size.height * 0.004,
-                      isAntiAlias: true,
-                    ),
-                    Gap(size.width * 0.06),
-                    InkWell(
-                      onTap: () {
-                        _warehouseInteractionBloc.add(GetAlerts());
-                        sliderAnimationController.forward();
-                      },
-                      child: const Icon(
-                        Icons.notifications_none,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Gap(size.width * 0.007),
-                  ],
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: size.width * 0.01),
+                  child: Image.asset(
+                    'assets/images/nalsoft_logo_white.png',
+                    scale: size.height * 0.004,
+                    isAntiAlias: true,
+                  ),
                 ),
               ),
               Stack(
@@ -183,8 +171,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           }
                                           if(message.containsKey("openPathDialog") && message['openPathDialog'] == "true"){
                                            
-                                            Customs.AnimatedDialog(context: context, header:  Icon(Icons.local_activity_rounded, size: 35,), content: [
-                                              Text("Please enter task Id"),
+                                            Customs.AnimatedDialog(context: context, header:  const Icon(Icons.local_activity_rounded, size: 35,), content: [
+                                              const Text("Please enter task Id"),
                                               TypeAheadField(
                                                 
                                                 controller: textEditingController,
@@ -245,6 +233,16 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           );
                         }),
                   ),
+                  Align(
+                        alignment: Alignment.bottomCenter,
+                        child: PointerInterceptor(
+                          intercepting: state.intercepting!,
+                          child: Container(
+                                      height: size.height * 0.92,
+                                      width: size.width,
+                                      color: Colors.transparent,
+                                    ),
+                        ),),
                   AnimatedBuilder(
                       animation: positionAnimation,
                       builder: (context, child) {
@@ -272,17 +270,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                     width: size.width * widthAnimation.value,
                                     alignment: Alignment.center,
                                     decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        const CircularProgressIndicator(color: Color.fromRGBO(68, 98, 136, 1),),
-                                        Gap(size.width * 0.01),
-                                        const Text(
-                                          'Rendering...',
-                                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
+                                    child: Lottie.asset('assets/lottie/rendering.json'),
                                   ),),
                 ],
               ),
@@ -291,7 +279,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           );
         }),
         Positioned(
-          left: size.width * 0.01,
+          left: size.width * 0.15,
           top: size.height * 0.013,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
@@ -314,7 +302,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           ),
         ),
         Positioned(
-          left: size.width * 0.18,
+          left: size.width * 0.32,
           top: size.height * 0.013,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
@@ -340,9 +328,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
             },
           ),
         ),
-        Positioned(right: size.width * 0.25, top: size.height * 0.013, child: PointerInterceptor(child: SearchBarDropdown(size: size))),
+        Positioned(right: size.width * 0.08, top: size.height * 0.013, child: PointerInterceptor(child: SearchBarDropdown(size: size))),
         Positioned(
-          right: size.width * 0.02,
+          right: 0,
           top: 0,
           child: PointerInterceptor(
             child: HoverDropdown(
@@ -350,6 +338,21 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
               accessTypes: accessTypes,
             ),
           ),
+        ),
+        Positioned(
+          right: size.width * 0.04,
+          top: size.height * 0.023,
+          child: InkWell(
+                      onTap: () {
+                        _warehouseInteractionBloc.add(GetAlerts());
+                        sliderAnimationController.forward();
+                      },
+                      child: Icon(
+                        Icons.notifications_none,
+                        color: Colors.white,
+                        size: size.width * 0.015,
+                      ),
+                    ),
         ),
         AnimatedBuilder(
             animation: sliderPositionAnimation,

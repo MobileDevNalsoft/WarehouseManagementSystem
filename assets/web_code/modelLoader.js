@@ -45,7 +45,7 @@ function getGLB(companyID, facilityID){
                 return  "../glbs/warehouse_3112_1218.glb";
                 
             case 2:
-                return "../glbs/final_warehouse_2_com.glb";
+                return "../glbs/warehouse_2.glb";
         }
     }
 }

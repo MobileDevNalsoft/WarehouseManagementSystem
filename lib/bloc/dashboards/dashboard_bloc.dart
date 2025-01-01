@@ -44,6 +44,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     on<ChangeLocType>(_onChangeLocationType);
     on<ElevateDashboard>(_onElevateDashboard);
     on<GetStorageDrilldownData>(_onGetStorageDrilldownData);
+    on<GetStagingDrilldownData>(_onGetStagingDrilldownData);
   }
   final NetworkCalls _customApi;
 
@@ -184,17 +185,17 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
 
   Future<void> _onGetStorageDrilldownData(GetStorageDrilldownData event, Emitter<DashboardsState> emit) async {
     try{
-      emit(state.copyWith(getStorageDrilldownState: StorageDrilldownState.loading));
-      await _customApi.post(AppConstants.STORAGE_DRILLDOWN, data: {"facility_id": event.facilityID, "flag": event.flag}).then((apiResponse) {
+      emit(state.copyWith(getDrilldownState:DrilldownState.loading));
+      await _customApi.get(AppConstants.STORAGE_DRILLDOWN, queryParameters: {"facility_id": event.facilityID, "flag": event.flag}).then((apiResponse) {
         print(apiResponse.response!.data);
         switch(event.flag){
           case 'WAREHOUSE UTILIZATION':
             WarehouseUtilization warehouseUtilization = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data!), (json) => WarehouseUtilization.fromJson(json)).data!;
-            emit(state.copyWith(warehouseUtilization: warehouseUtilization, getStorageDrilldownState:StorageDrilldownState.success));
+            emit(state.copyWith(warehouseUtilization: warehouseUtilization, getDrilldownState:DrilldownState.success));
             break;
           case 'INVENTORY SUMMARY':
             InventorySummary inventorySummary = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data!), (json) => InventorySummary.fromJson(json)).data!;
-            emit(state.copyWith(inventorySummary: inventorySummary, getStorageDrilldownState:StorageDrilldownState.success));
+            emit(state.copyWith(inventorySummary: inventorySummary, getDrilldownState:DrilldownState.success));
             break;
           default:
             null;
@@ -202,7 +203,21 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
       });
     } catch(e){
       Log.e(e.toString());
-      emit(state.copyWith(getStorageDrilldownState: StorageDrilldownState.failure));
+      emit(state.copyWith(getDrilldownState: DrilldownState.failure));
+    }
+  }
+
+  Future<void> _onGetStagingDrilldownData(GetStagingDrilldownData event, Emitter<DashboardsState> emit) async {
+    try{
+      emit(state.copyWith(getDrilldownState: DrilldownState.loading));
+      await _customApi.get(AppConstants.STAGING_DRILLDOWN, queryParameters: {"facility_id": event.facilityID}).then((apiResponse) {
+        print(apiResponse.response!.data);
+        TodayOrderSummary todayOrderSummary = DashboardResponse.fromJson(jsonDecode(apiResponse.response!.data!), (json) => TodayOrderSummary.fromJson(json)).data!;
+        emit(state.copyWith(todayOrderSummary: todayOrderSummary, getDrilldownState:DrilldownState.success));
+      });
+    } catch(e){
+      Log.e(e.toString());
+      emit(state.copyWith(getDrilldownState: DrilldownState.failure));
     }
   }
 }

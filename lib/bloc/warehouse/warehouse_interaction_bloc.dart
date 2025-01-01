@@ -38,6 +38,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<GetAreasOverviewData>(_onGetAreasOverviewData);
     on<UpdateTaskId>(_onUpdateTaskId);
     on<Rendering>(_onRendering);
+    on<Intercepting>(_onIntercepting);
   }
   final NetworkCalls _customApi;
   final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
@@ -77,6 +78,10 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
 
   void _onRendering(Rendering event, Emitter<WarehouseInteractionState> emit) {
     emit(state.copyWith(isRendered: event.isRendered));
+  }
+
+  void _onIntercepting(Intercepting event, Emitter<WarehouseInteractionState> emit) {
+    emit(state.copyWith(intercepting: event.intercepting));
   }
 
   void _onModelLoaded(ModelLoaded event, Emitter<WarehouseInteractionState> emit) {

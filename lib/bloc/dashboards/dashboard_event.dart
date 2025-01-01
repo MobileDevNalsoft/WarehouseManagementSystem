@@ -71,6 +71,14 @@ class GetStagingDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
+class GetStagingDrilldownData extends DashboardsEvent{
+  int facilityID;
+  GetStagingDrilldownData({required this.facilityID});
+
+  @override
+  List<Object> get props => [facilityID];
+}
+
 class GetStorageDashboardData extends DashboardsEvent{
   int facilityID;
   GetStorageDashboardData({required this.facilityID});

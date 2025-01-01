@@ -99,12 +99,9 @@ class _RackDataSheetState extends State<RackDataSheet> {
                                       style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                     ),
                                     Spacer(),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: size.width * 0.008),
-                                      child: Image.asset(
-                                        'assets/images/qty.png',
-                                        height: containerSize.maxHeight*0.14, width: containerSize.maxWidth*0.14
-                                      ),
+                                    Image.asset(
+                                      'assets/images/qty.png',
+                                      height: containerSize.maxHeight*0.2, width: containerSize.maxWidth*0.2
                                     ),
                                     Text(
                                       isEnabled ? '36' : state.storageArea!.data!.length.toString(),
