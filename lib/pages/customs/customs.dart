@@ -17,6 +17,9 @@ import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 import 'package:wmssimulator/models/storage_bin.dart';
 import 'package:wmssimulator/pages/customs/users_builder.dart';
 import 'package:wmssimulator/pages/test_code/warehouse.dart';
+import 'dart:html' as html; // Import the HTML library
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel; // Ensure you have this package
+import 'package:path/path.dart'; // For manipulating paths
 
 class Customs {
   static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
@@ -460,6 +463,7 @@ class Customs {
   static void DrillDownDialog({
     required BuildContext context,
     required List<DataSource> dataSources,
+    required void Function(DashboardsState state) onExport,
   }) {
     Size size = MediaQuery.of(context).size;
     showGeneralDialog(
@@ -491,9 +495,44 @@ class Customs {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      IconButton(onPressed: () {
-                        
-                      }, icon: Icon(Icons.send_to_mobile_rounded, color: Colors.white,))
+                      if(!isEnabled)
+                      Transform.translate(
+                        offset: Offset(size.width * 0.008, -size.height * 0.01),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                            onTap: () => onExport(state),
+                            child: Image.asset(
+                              'assets/images/export.png',
+                              height: size.height * 0.03,
+                              width: size.width * 0.03,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if(!isEnabled)
+                      Gap(size.width * 0.01),
+                      if(!isEnabled)
+                      Transform.translate(
+                        offset: Offset(0, -size.height * 0.009),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                            onTap: () => Navigator.pop(context),
+                            child: CircleAvatar(
+                              radius: size.width*0.007,
+                              backgroundColor: Colors.white,
+                              child: const Icon(
+                                Icons.close_rounded,
+                                size: 20,
+                                weight: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   Container(
@@ -667,6 +706,47 @@ class Customs {
       boxShadows: [BoxShadow(blurRadius: 12, blurStyle: BlurStyle.outer, spreadRadius: 0, color: Colors.blue.shade900, offset: const Offset(0, 0))],
       margin: EdgeInsets.only(top: size.height * 0.016, left: size.width * 0.8, right: size.width * 0.02),
     ).show(context);
+  }
+
+  static Future<void> sendMail({required BuildContext context,required String dashboardName,required List<List<String>> data}) async {
+    DateTime now = DateTime.now();
+
+    // Create a new Excel workbook
+    final excel.Workbook workbook = excel.Workbook();
+    final excel.Worksheet sheet = workbook.worksheets[0];
+
+    // Set worksheet name and headers
+    sheet.name = '$dashboardName ${DateTime.now().toString().split(' ')[0]} data';
+
+    for (int i = 1; i <= data.length; i++) {
+      for (int j = 1; j <= data[i - 1].length; j++) {
+        sheet.getRangeByIndex(j, i).setText(data[i - 1][j - 1]);
+        if(j == 1) {
+          sheet.getRangeByIndex(j, i).cellStyle.bold = true;
+        }
+      }
+    }
+
+    // Auto-fit columns
+    for (int i = 1; i <= sheet.getLastColumn(); i++) {
+      sheet.autoFitColumn(i);
+    }
+
+    // Save the workbook to a byte array
+    final List<int> bytes = workbook.saveAsStream();
+
+    // Create a Blob from the byte array
+    final blob = html.Blob([bytes], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    // Create an anchor element and trigger download
+    final url = html.Url.createObjectUrlFromBlob(blob);
+
+    final anchor = html.AnchorElement(href: url)
+      ..setAttribute('download', '${sheet.name}.xlsx')
+      ..click();
+
+    // Clean up
+    html.Url.revokeObjectUrl(url);
   }
 }
 

@@ -131,7 +131,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
         setState(() {
           height = size.height * 0.08;
           bottomHeight = size.height * 0.06;
-          turns = 0.5;
+          turns = 1;
         });
       },
       child: AnimatedContainer(
@@ -159,10 +159,12 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                       setState(() {
                         height = size.height * 0.08;
                         bottomHeight = size.height * 0.06;
-                        turns = 0.5;
+                        turns = 1;
                       });
                       Future.delayed(Duration(milliseconds: 1200), () {
-                        context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+                        if(height == size.height * 0.08) {
+                          context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+                        }
                       });
                     },
                     child: ListView(
@@ -272,7 +274,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                       setState(() {
                         height = size.height * 0.3; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                         bottomHeight = size.height * 0.3;
-                        turns = 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                        turns = 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                       });
                     },
                     child: Container(
@@ -311,7 +313,6 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                         setState(() {
                           height = size.height * 0.08;
                           bottomHeight = size.height * 0.06;
-                          turns = 0.5;
                         });
                       },
                       child: Row(
@@ -386,6 +387,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                             ),
                           ),
                           IconButton(
+                            hoverColor: Colors.transparent,
                               onPressed: () {
                                 searchData();
                               },

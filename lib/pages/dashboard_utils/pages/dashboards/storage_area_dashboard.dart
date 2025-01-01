@@ -195,7 +195,10 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                   dataGridSourceBuilder: (isEnabled, state) =>
                                       DrillDownDataSource(data: isEnabled ? dummyData : state.warehouseUtilization!.occupied!, columnName: 'Occupied'),
                                   columnName: 'Occupied')
-                            ]);
+                                  ,
+                            ],
+                            onExport: (state) => Customs.sendMail(context: context,dashboardName : 'Warehouse Utilization',data : [['Available', ...state.warehouseUtilization!.available!], ['Occupied', ...state.warehouseUtilization!.occupied!]]),
+                            );
                           },
                         ));
                   }),
@@ -241,7 +244,9 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                   dataGridSourceBuilder: (isEnabled, state) =>
                                       DrillDownDataSource(data: isEnabled ? dummyData : state.inventorySummary!.outOfStock!, columnName: 'Out of Stock'),
                                   columnName: 'Out of Stock')
-                            ]);
+                            ],
+                            onExport: (state) => Customs.sendMail(context: context,dashboardName : 'Inventory Summary',data : [['In Stock', ...state.inventorySummary!.inStock!], ['Running Out of Stock', ...state.inventorySummary!.runningOutOfStock!], ['Out of Stock', ...state.inventorySummary!.outOfStock!]]),
+                            );
                           },
                         ));
                   }),

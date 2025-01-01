@@ -27,12 +27,23 @@ export async function initScene(renderer) {
   // Load main model
   const gltf = await loadModel(renderer, scene);
   const model = gltf.scene;
+  model.position.set(0, -11.2, 0);
   scene.add(model);
 
   const SPEED = 5;
 
-  // Add sky dome
-  addSkyDome(scene);
+  scene.getObjectByName("Plane").visible = false;
+
+  // weed
+  let weedGeom = createWeedGeometry();
+  let weedMat = createWeedMaterial();
+  let weed = new THREE.Mesh(weedGeom, weedMat);
+  scene.add(weed);
+
+  let backGeom = createBackGeometry();
+  let backMat = createBackMaterial();
+  let backMesh = new THREE.Mesh(backGeom, backMat);
+  scene.add(backMesh);
 
   // Animation setup
   const mixer = animationMixer(gltf);
@@ -49,8 +60,6 @@ export async function initScene(renderer) {
 
   // Add interactions
   addInteractions(scene, model, camera, controls);
-
-  scene.add(model);
 
   scene.add(camera);
 
@@ -101,6 +110,107 @@ export async function initScene(renderer) {
     transparent: true,
     opacity: 0.8, // Start opacity
   });
+
+  function createBackMaterial() {
+    let m = new THREE.MeshBasicMaterial({
+      color: 0xC0D0E6,
+      side: THREE.BackSide,
+      onBeforeCompile: (shader) => {
+        shader.fragmentShader = `
+          ${shader.fragmentShader}
+        `.replace(
+          `vec4 diffuseColor = vec4( diffuse, opacity );`,
+          `
+          vec3 col = mix(diffuse, diffuse + vec3(0.75), smoothstep(0.5, 0.7, vUv.y));
+          vec4 diffuseColor = vec4( col, opacity );
+          `
+        );
+        //console.log(shader.fragmentShader);
+      }
+    });
+    m.defines = { USE_UV: "" };
+    return m;
+  }
+
+  function createBackGeometry() {
+    let g = new THREE.SphereGeometry(800,  // Radius of the hemisphere
+      32,   // Width segments
+      32,   // Height segments
+      0,    // phiStart: Start angle in the X axis
+      Math.PI * 2,  // phiLength: Full horizontal circle
+      0,    // thetaStart: Start angle in the Y axis
+      Math.PI / 1.75  // thetaLength: Only upper half to create a dome
+      );
+    g.translate(6, 0, 0);
+    return g;
+  }
+
+  function createWeedMaterial() {
+    let m = new THREE.MeshLambertMaterial({
+      wireframe: false,
+      onBeforeCompile: (shader) => {
+        shader.uniforms.time = m.userData.uniforms.time;
+    
+        shader.vertexShader = `
+          uniform float time;
+          varying vec4 vPos;
+          ${simpleNoise}
+          ${shader.vertexShader}
+        `.replace(
+          `#include <begin_vertex>`,
+          `#include <begin_vertex>
+            vec2 waveUv = uv * vec2(5., 8.);
+            float wave = smoothNoise(waveUv - vec2(time, 0.));
+            transformed.y += wave * 2.;
+            vPos = modelMatrix * vec4(transformed, 1.0);
+          `
+        );
+    
+        shader.fragmentShader = `
+          uniform float time;
+          varying vec4 vPos;
+          ${simpleNoise}
+          ${shader.fragmentShader}
+        `.replace(
+          `vec4 diffuseColor = vec4( diffuse, opacity );`,
+          `
+          vec3 col = vec3(0);
+    
+          vec2 weedUv = (vUv - vec2(time / 20., 0.)) * vec2(20., 1000.);
+          float weed = smoothNoise(weedUv);
+          col = mix(vec3(194.0 / 255.0, 178.0 / 255.0, 128.0 / 255.0), vec3(0.8, 0.8, 0.8), weed) * 0.75;
+    
+          float circleDist = length(vUv - 0.5);
+          
+          vec4 diffuseColor = vec4( col, opacity );
+          `
+        ).replace(
+          `#include <dithering_fragment>`,
+          `#include <dithering_fragment>
+    
+          // Change grey to sky blue color
+          gl_FragColor.rgb = mix(vec3(0.7529, 0.8157, 0.9019), gl_FragColor.rgb, smoothstep(0.5, 0., circleDist));
+          `
+        );
+      }
+    });
+    m.defines = { USE_UV: "" };
+    m.userData = {
+      uniforms: {
+        time: {
+          value: 0
+        }
+      }
+    };
+    return m;
+  }
+  
+  function createWeedGeometry() {
+    let g = new THREE.PlaneGeometry(1600, 1600, 200, 200);
+    g.rotateX(Math.PI * -0.5);
+    g.translate(6, -10, 0);
+    return g;
+  }
 
   // [
     // new THREE.Vector3(-125.16835094362332, 6.19, -91),

@@ -52,7 +52,9 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
           turns = 0.5;
         });
         Future.delayed(const Duration(milliseconds: 1200), () {
-          context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+          if(height == widget.buttonHeight) {
+            context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+          }
         });
       },
       child: AnimatedContainer(

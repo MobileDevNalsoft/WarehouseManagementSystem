@@ -48,7 +48,9 @@ class _HoverDropdownState extends State<HoverDropdown> {
                 bottomHeight = size.height*0.08;
               });
               Future.delayed(Duration(milliseconds: 1200), () {
-                context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+                if(height == size.height*0.08) {// because intercepting becoming false if i again open dropdown before 1200ms
+                  context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+                }
               });
             },
       child: AnimatedContainer(
@@ -141,9 +143,9 @@ class _HoverDropdownState extends State<HoverDropdown> {
                     });
                   },
                   child: SizedBox(
-                    height: widget.size.height*0.05,
+                    height: widget.size.height*0.045,
                     child: Image.asset(
-                      'assets/images/profile.png',
+                      'assets/images/menu.png',
                       fit: BoxFit.fitHeight
                     ),
                   ),

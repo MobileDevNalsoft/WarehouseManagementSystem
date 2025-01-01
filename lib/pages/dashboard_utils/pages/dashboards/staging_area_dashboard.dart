@@ -158,7 +158,9 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                           dataGridSourceBuilder: (isEnabled, state) =>
                                               DrillDownDataSource(data: isEnabled ? dummyData : state.todayOrderSummary!.shipped!, columnName: 'Shipped'),
                                           columnName: 'Shipped')
-                                    ]);
+                                    ],
+                                    onExport: (state) => Customs.sendMail(context: context, dashboardName: 'Today Order Summary', data: [['Created', ...state.todayOrderSummary!.created!], ['Allocated', ...state.todayOrderSummary!.allocated!], ['Picked', ...state.todayOrderSummary!.picked!], ['Loaded', ...state.todayOrderSummary!.loaded!], ['Shipped', ...state.todayOrderSummary!.shipped!]]),
+                                    );
                                   },
                                 ));
                           }),

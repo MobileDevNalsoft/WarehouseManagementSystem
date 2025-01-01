@@ -101,7 +101,7 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                                     padding: EdgeInsets.only(right: size.width * 0.008),
                                     child: Image.asset(
                                       'assets/images/qty.png',
-                                     height: containerSize.maxHeight*0.36, width: containerSize.maxWidth*0.16,
+                                     scale: 1,
                                     ),
                                   ),
                                   Text(
