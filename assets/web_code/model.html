@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>3D Model</title>
   <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap-grid.min.css" integrity="sha512-i1b/nzkVo97VN5WbEtaPebBG8REvjWeqNclJ6AItj7msdVcaveKrlIIByDpvjk5nwHjXkIqGZscVxOrTb9tsMA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
   <script type="importmap">
       {
         "imports": {
@@ -34,19 +38,58 @@
 
 <body>
   <div id="container" >
-    <div id="leftPanel" class="ignoreRaycast" >
-      <div class="areaButton ignoreRaycast" id="areas" style="display: none;">
-
-      <img  class="ignoreRaycast" src="./../images/areas.png" alt="areas">
-      <p class="ignoreRaycast">Areas</p>
+    <!-- <div id="leftPanel" class="ignoreRaycast" >
+      <div class="areaButton ignoreRaycast" id="areas" st yle="display: block;">
+          <img  class="ignoreRaycast" src="./../images/areas.png" alt="areas">
+          <p class="ignoreRaycast">Areas</p>
       </div>
-     <div class="areaButton ignoreRaycast" id="path" style="display: none;">
-      <img class="ignoreRaycast" src="./../images/path.png" alt="areas">
-      <p class="ignoreRaycast">Shortest path</p>
-     </div>
-     <!-- <div id="inputContainer" style="display: none; margin-top: 1vh;">
-      <input class="ignoreRaycast" type="text" id="pathInput" placeholder="Enter text here" 
-             style="width: 100%; padding: 0.5vh; font-size: 0.6vw; border-radius: 5px; border: 1px solid #ccc;"> -->
+     <div class="areaButton ignoreRaycast" id="path" style="display: block;">
+        <img class="ignoreRaycast" src="./../images/path.png" alt="areas">
+        <p class="ignoreRaycast">Shortest path</p>
+     </div> -->
+     <div id="leftPanel" class="ignoreRaycast">
+      <!-- Areas Button -->
+      <div class="areaButton ignoreRaycast" id="areas">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  class="bi bi-grid" viewBox="0 0 16 16" fill="white">
+          <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+        </svg>
+          <!-- <img class="ignoreRaycast" src="./../images/areas.png" alt="areas"> -->
+          <p class="ignoreRaycast"> Areas</p>
+      </div>
+      <!-- Shortest Path Button -->
+      <div class="areaButton ignoreRaycast" id="path" display="block">
+         
+          <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+          width="24" height="24" viewBox="0 0 512.000000 512.000000"
+          preserveAspectRatio="xMidYMid meet">
+         <g transform=" scale(0.100000,0.100000)"
+         fill="white" stroke="none">
+         <path d="M1245 4845 c-158 -29 -288 -97 -400 -209 -388 -389 -246 -1050 266
+         -1243 281 -106 593 -39 805 172 82 83 144 181 180 289 l26 77 527 -4 c445 -3
+         537 -7 596 -21 187 -44 308 -101 401 -189 121 -112 167 -219 168 -387 1 -171
+         -45 -285 -160 -396 -63 -60 -195 -132 -299 -163 -163 -48 -214 -51 -784 -51
+         -295 0 -576 -5 -626 -10 -383 -43 -692 -210 -847 -460 -119 -190 -156 -455
+         -98 -696 82 -343 358 -576 798 -676 92 -20 125 -22 653 -25 l556 -4 12 -51
+         c59 -229 275 -438 527 -509 112 -32 286 -32 399 0 273 77 483 300 539 573 72
+         350 -106 702 -430 849 -100 45 -185 62 -314 62 -139 1 -237 -23 -353 -86 -174
+         -94 -306 -250 -361 -427 l-24 -75 -479 -3 c-325 -2 -507 1 -568 9 -259 33
+         -475 148 -575 305 -51 82 -75 173 -74 294 1 81 6 119 23 169 78 225 288 366
+         617 416 78 12 212 15 634 15 327 0 570 4 625 11 411 50 740 260 871 555 84
+         191 94 457 23 669 -114 340 -449 568 -919 625 -47 5 -302 10 -570 10 l-486 0
+         -24 76 c-112 355 -485 577 -855 509z m207 -326 c222 -47 370 -256 336 -478
+         -20 -129 -113 -253 -237 -314 -62 -30 -72 -32 -176 -32 -103 0 -114 2 -177 32
+         -167 79 -270 269 -240 442 17 93 54 164 120 230 108 108 235 149 374 120z
+         m2388 -3085 c212 -50 357 -261 321 -467 -39 -232 -251 -390 -476 -356 -178 27
+         -327 176 -354 354 -32 213 109 419 324 471 68 17 109 16 185 -2z"/>
+         </g>
+         </svg>
+          <p class="ignoreRaycast"> Shortest Path</p>
+      </div>
+      <div class="areaButton ignoreRaycast" id="digitalTwin" display="block">
+        <i class="fa-solid fa-cube"></i>
+        <p class="ignoreRaycast"> Digital Twin </p>
+    </div>
+  </div>
   </div>
 
       <!-- <button class="areaButton ignoreRaycast" id="areas">Areas</button>
@@ -56,7 +99,7 @@
     </div>
   </div>
   <div id="tooltip" style="display: none">Tooltip Data</div>
-  <script type="module" src="./index.js"></script>
+  <!-- <script type="module" src="./index.js"></script> -->
   <div id="arrows-container">
     <button id="arrow-up" class="arrow ignoreRaycast">▲</button>
     <button id="arrow-left" class="arrow ignoreRaycast">◄</button>

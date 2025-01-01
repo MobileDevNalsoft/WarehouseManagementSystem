@@ -154,8 +154,13 @@ export function localStorageSetup(scene, camera, controls) {
         } catch (e) {}
         break;
       case "getShoretestPathForTask":
-        console.warn("got inside local storage");
-        document.querySelector('#showPath').click();
+        if(event.newValue!="" && event.newValue!=null){
+          document.querySelector('#showPath').click();
+        }
+        else{
+          document.querySelector('#stopAnimation').click();
+          document.querySelector('#path').classList.toggle('focused');
+        }
         break;
       
       

@@ -63,18 +63,18 @@ export function initNodes(three){
        "p1": new THREE.Vector3(-125.16835094362332, 6.19, -91),
        "p2" : new THREE.Vector3(-104.0724984440678, 6.19, -91),
        "p3":new THREE.Vector3(-84.20038905146427, 6.19, -91),
-       "p4":new THREE.Vector3(-48.400711886208356, 6.19, -91),
+       "p4":new THREE.Vector3(-46.4, 6.19, -91),
        
        "p5":new THREE.Vector3(-14.035990842471623, 6.19, -91),
        
        "p6":new THREE.Vector3(-14.185505861653581, 6.19 ,-107.84385506088879),
-       "p7":new THREE.Vector3(-14.114602359858907, 6.19, -131.37753635985396),
+       "p7":new THREE.Vector3(-14.114602359858907, 6.19, -130.0),
        
        "p8":new THREE.Vector3(-14.197195127688875, 6.19, -77.49013059402137),
        "p9":new THREE.Vector3(-14.264927005311744, 6.19, -61.64698518320672),
        "p10":new THREE.Vector3(-104.0, 6.19, -100.0),
-       "receiving": new THREE.Vector3(0.569215386407393, 6.19, -75.68733258901474),
-       "inspection":new THREE.Vector3(2.8520766585635045, 6.19 -106.89068254045604),
+       "receiving": new THREE.Vector3(0.569215386407393, 6.19, -77.49013059402137),
+       "inspection":new THREE.Vector3(-8, 6.19 -106.89068254045604),
        "activity":new THREE.Vector3(-24.21696383882049 ,6.19, -60.86146377835111),
        "staging":new THREE.Vector3(-125.14815693589341 ,6.19, -76.65696617010423),
       };
@@ -188,7 +188,7 @@ for (const [nodeName, adjacentNames] of Object.entries(adjacencyList)) {
  
 // }
 
-export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,intermediatePoints,three,scene,camera,controls,agentGroup,renderer){
+export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,intermediatePoints,three,scene,camera,controls,agentGroup,renderer,waitPeriodAtPoints,endBin){
     const THREE=three;
     let finalPath=[];
     let checkpointCircles=[];
@@ -197,13 +197,15 @@ export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,intermediatePo
     let pathLine = null;
 
     let animationId;
-        
 const checkpoints = setupCheckpoints(bins);
-  
-  const nodesToVisit =   findNodeNamesForPoints(checkpoints,nodes);
+const endCheckpoints = setupCheckpoints([endBin]);
+const nodesToVisit =   findNodeNamesForPoints(checkpoints,nodes);
+const endpoints = findNodeNamesForPoints([endCheckpoints[0]],nodes); 
+
+
   console.warn("nodesToVisit",nodesToVisit)
   const { distMatrix, pathMatrix } = computeDistanceMatrix(nodesToVisit, nodeMap);
-  const { minDist, path } = findShortestPath(nodesToVisit, distMatrix, pathMatrix,nodesToVisit[0],nodesToVisit[nodesToVisit.length-1]);
+  const { minDist, path } = findShortestPath(nodesToVisit, distMatrix, pathMatrix,nodesToVisit[0],endpoints[0]);
   console.warn("Shortest Path Distance:", minDist,path,pathMatrix);
   
   
@@ -229,12 +231,13 @@ const checkpoints = setupCheckpoints(bins);
   agentGroup.position.set(combinedPath[0].x, combinedPath[0].y, combinedPath[0].z);
   
   }
-    function findNodeNamesForPoints(randomPoints, nodes) {
+    
+  function findNodeNamesForPoints(randomPoints, nodes) {
         return randomPoints.map(point => {
-            return nodes.find(node => 
-                node.point.x === point.x &&
+            return nodes.find(node =>{
+                return node.point.x === point.x &&
                 node.point.y === point.y &&
-                node.point.z === point.z
+                node.point.z === point.z}
             ).name;
         });
       }
@@ -411,7 +414,7 @@ const checkpoints = setupCheckpoints(bins);
             // Get the corresponding Vector3 point
             const point = aisleBayPoints[adjustedAisle.toString()]?.[bay];
             if (!point) {
-              console.warn(`No point found for bin: ${bin}`);
+              console.warn(`No point found for bin: ${bins[index]}`);
               return null;
             }
             if (!binPoints.includes(point)) {
@@ -565,10 +568,10 @@ const checkpoints = setupCheckpoints(bins);
   //     circle.material.opacity = 0.5 + 0.5 * Math.sin(time * 2);
   //   });
   // }
-
-function move(delta) {
+  let waiting = false;
+  async function move(delta,waitPeriodAtPoints) {
   let SPEED=3;
-  if (!combinedPath || combinedPath.length <= 0) {
+  if (!combinedPath || combinedPath.length <= 0|| waiting) {
     // console.warn("No combinedPath available for agent motion.");
     return;
   }
@@ -600,14 +603,40 @@ function move(delta) {
     agentGroup.position.copy(targetPosition);
     combinedPath.shift();
   }
+  console.warn()
+  if (isRequierdPoints(combinedPath[0],agentGroup) ) {
+    console.log("Waiting at point:", combinedPath[0]);
+    waiting = true; // Set waiting flag
+    await new Promise((resolve) => setTimeout(resolve, waitPeriodAtPoints));
+    waiting = false; // Reset waiting flag
+  }
 }
 
+
+
+function wait(ms) {
+  return 
+}
+
+function isRequierdPoints(point, agentGroup) {
+  for (const nodeName of nodesToVisit) {
+    const p = nodeMap.get(nodeName).point;
+    if (p.x === point.x && p.y === point.y && p.z === point.z) {
+      console.warn("Matching point:", point.x, point.y, point.z);
+      console.warn("Node point:", p.x, p.y, p.z);
+      if (agentGroup.position.distanceTo(point) <= 0.1) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 // Game loop
 const clock = new THREE.Clock();
 const delta = clock.getDelta();
 const gameLoop = () => {
- move(clock.getDelta());
+ move(clock.getDelta(),waitPeriodAtPoints);
  animateCircles(delta);
  controls.update();
  renderer.render(scene, camera);

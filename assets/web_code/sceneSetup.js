@@ -51,56 +51,58 @@ export async function initScene(renderer) {
   addInteractions(scene, model, camera, controls);
 
   scene.add(model);
-
   scene.add(camera);
-
   scene.updateMatrixWorld(true);
 
-  // const clock = new THREE.Clock();
-
-  // Agent setup
-  const agentHeight = 3.0;
-  const agentRadius = 5.25;
-  // const agent = new THREE.Mesh(
-  //   new THREE.BoxGeometry(agentHeight, agentHeight, agentHeight),
-  //   new THREE.MeshPhongMaterial({ color: "green" })
-  // );
-  // agent.position.y = agentHeight / 2;
-  const agentGroup = new THREE.Group();
-  // agentGroup.add(agent);
-  // agentGroup.position.set(-95.1758, 6.0069, -102.0932);
-  // scene.add(agentGroup);
+  const forkLift = new THREE.Group();
+  const agv = new THREE.Group();
   const loader = new GLTFLoader.GLTFLoader();
-  // const dracoLoader = new DRACOLoader();
-  // dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.114.0/examples/js/libs/draco/');
-  // loader.setDRACOLoader( dracoLoader );
+
+  //fork lift model
   loader.load(
-    "../glbs/forkLift_final_pro.glb", // Replace with the path to your GLB file
+    "../glbs/forkLift_final_pro.glb", 
     (gltf) => {
       const model = gltf.scene;
 
-      model.scale.set(2.5, 2.5, 2.5); // Adjust scale as needed
+      model.scale.set(2.5, 2.5, 2.5); 
 
-      // Add the model to the group
       model.rotation.y = -(Math.PI / 2);
-      agentGroup.add(model);
+      forkLift.add(model);
       console.warn('fork lift model loaded');
     },
     (xhr) => {
-      // Log the loading progress
       console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
     },
     (error) => {
-      // Handle loading errors
       console.warn("An error occurred while loading the model:", error);
     }
   );
-  const circleMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffff00, // Yellow
-    side: THREE.DoubleSide,
-    transparent: true,
-    opacity: 0.8, // Start opacity
-  });
+
+  //agv model
+  loader.load(
+    "../glbs/agv_with_boxes.glb",
+    (gltf) => {
+      const model = gltf.scene;
+      model.scale.set(2.5, 2.5, 2.5); 
+      model.rotation.y = -(Math.PI );
+      agv.add(model);
+      console.warn('agv model loaded');
+    },
+    (xhr) => {
+      console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
+    },
+    (error) => {
+      console.warn("An error occurred while loading the model:", error);
+    }
+  );
+
+
+  // const circleMaterial = new THREE.MeshBasicMaterial({
+  //   color: 0xffff00, // Yellow
+  //   side: THREE.DoubleSide,
+  //   transparent: true,
+  //   opacity: 0.8, // Start opacity
+  // });
 
   // [
     // new THREE.Vector3(-125.16835094362332, 6.19, -91),
@@ -130,9 +132,7 @@ export async function initScene(renderer) {
   let clock;
   let bins = [
     'p4',
-    // "1LB20201",
     "4RB30602",
-    // "1LB10201",
     '4LB30102',
     "1RB30602",
     "3RB20602",
@@ -143,10 +143,40 @@ export async function initScene(renderer) {
     "2RB10601",
     "2LB20201",
     "stagingArea",
-
   ];
 
+ 
+
   let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(THREE);
+
+  let agvTask = ["receivingArea","5RB30602","3RB20602","2RB30602",
+    "3RB10102","2LB20501",
+    "2RB10601",
+    "2LB20201"];
+   let digitalTwin= document.getElementById("digitalTwin");
+    document.getElementById("digitalTwin").addEventListener("click", (e) => {
+      if (digitalTwin.classList.contains("focused")) {
+        digitalTwin.classList.remove("focused");
+        stopAnimation();
+        return;
+      }
+   digitalTwin.classList.add("focused");
+  ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
+    agvTask,
+    nodeMap,
+    nodes,
+    aisleBayPoints,
+    intermediatePoints,
+    THREE,
+    scene,
+    camera,
+    controls,
+    agv,
+    renderer,2000,
+    agvTask[agvTask.length-1]
+  ));
+
+});
 
   console.warn("nodes", nodes);
 
@@ -184,7 +214,7 @@ export async function initScene(renderer) {
     combinedPath = [];
     checkpointCircles.forEach((circle) => scene.remove(circle));
     scene.remove(pathLine);
-    scene.remove(agentGroup);
+    scene.remove(forkLift);
     try{
     bins.forEach((e) => {if(!e.toLowerCase().includes('area')){scene.getObjectByName(e).material.color.set(0xfaf3e2)}});}
     catch(e){
@@ -207,7 +237,7 @@ document.getElementById('showPath').addEventListener('click',(e)=>{
           scene,
           camera,
           controls,
-          agentGroup,
+          forkLift,
           renderer
         ));
 
@@ -288,6 +318,15 @@ document.getElementById('stopAnimation').addEventListener('click',(e)=>{
 
     areasButton.classList.toggle("focused");
   });
+
+
+
+
+
+
+
+
+
 
   // areasButton.addEventListener("click", (e) => {
 
