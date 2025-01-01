@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/navigations/navigator_service.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
@@ -24,7 +26,6 @@ class _HoverDropdownState extends State<HoverDropdown> {
   double? height;
   double? bottomHeight;
   double? maxHeight;
-  double turns = 1;
   final UrlNavigator urlNavigator = UrlNavigator();
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
   List<String> localAccessTypes = ["Dashboard","WMS Cloud","Manage Users"];
@@ -40,31 +41,42 @@ class _HoverDropdownState extends State<HoverDropdown> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
-      height: height,
-      width: size.width * 0.12,
-      child: Stack(
-        children: [
-          AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            height: bottomHeight,
-            width: size.width * 0.12,
-            child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-              child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    Gap(size.height * 0.08),
-                    if(widget.accessTypes.contains('Dashboard'))
-                    PointerInterceptor(
-                        child: InkWell(
+    return MouseRegion(
+      onExit: (value) {
+              setState(() {
+                height = size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                bottomHeight = size.height*0.08;
+              });
+              Future.delayed(Duration(milliseconds: 1200), () {
+                if(height == size.height*0.08) {// because intercepting becoming false if i again open dropdown before 1200ms
+                  context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+                }
+              });
+            },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: height,
+        width: size.width * 0.12,
+        child: Stack(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: bottomHeight,
+              width: size.width * 0.12,
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: PointerInterceptor(
+                    child: Column(
+                      children: [
+                        Gap(size.height * 0.08),
+                        if(widget.accessTypes.contains('Dashboard'))
+                        InkWell(
                             onTap: () {
                               setState(() {
                                 height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                                 bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
-                                turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                               });
                               
                               Navigator.push(context, MaterialPageRoute(builder: (context) => ScreenTypeLayout.builder(
@@ -77,84 +89,71 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 tablet: (p0) => EntryPoint(),
                               ),));
                             },
-                            child: ForHover(text: "Dashboard"))),
-                    if(widget.accessTypes.contains('WMS Cloud'))
-                    PointerInterceptor(
-                        child: InkWell(
+                            child: const ForHover(text: "Dashboard")),
+                        if(widget.accessTypes.contains('WMS Cloud'))
+                        InkWell(
                             onTap: () {
                               setState(() {
                                 height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                                 bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
-                                turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                               });
                                urlNavigator.launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
                             },
-                            child: ForHover(text: "WMS Cloud"))),
-                    if(widget.accessTypes.contains('Manage Users'))
-                    PointerInterceptor(
-                        child: InkWell(
+                            child: const ForHover(text: "WMS Cloud")),
+                        if(widget.accessTypes.contains('Manage Users'))
+                        InkWell(
                             onTap: () {
                               setState(() {
                                 height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                                 bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
-                                turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                               });
                               Customs.UsersDialog(context: context);
                             },
-                            child: ForHover(text: "Manage Users"))),
-                    PointerInterceptor(
-                        child: InkWell(
+                            child: const ForHover(text: "Manage Users")),
+                        InkWell(
                             onTap: () {
                               setState(() {
                                 height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                                 bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
-                                turns = turns == 1 ? 0.5 : 1; // when icon is click and move down it change to opposit direction otherwise as it is
                               });
                               getIt<NavigatorService>().pushAndRemoveUntil('/login', '/');
                               sharedPreferences.clear();
                             },
-                            child: ForHover(text: "Log Out"))),
-                  ],
+                            child: const ForHover(text: "Log Out")),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-          // Container that holds the main profiles section
-          Padding(
-            padding: EdgeInsets.all(size.width * 0.008),
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  height = height == size.height*0.08 ? maxHeight : size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                  bottomHeight = bottomHeight == size.height*0.08 ? maxHeight : size.height*0.08;
-                  turns = turns == 0.5 ? 1 : 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
-                });
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    height: widget.size.height*0.05,
+            // Container that holds the main profiles section
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: EdgeInsets.all(size.width * 0.008),
+                child: InkWell(
+                  onTap: () {
+                    
+                  },
+                  onHover: (data) {
+                    context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: true));
+                    setState(() {
+                      height = maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                      bottomHeight = maxHeight;
+                    });
+                  },
+                  child: SizedBox(
+                    height: widget.size.height*0.045,
                     child: Image.asset(
-                      'assets/images/profile.png',
+                      'assets/images/menu.png',
                       fit: BoxFit.fitHeight
                     ),
                   ),
-                  Gap(size.width * 0.003),
-                  AnimatedRotation(
-                    turns: turns,
-                    duration: const Duration(milliseconds: 300),
-                    child: const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      size: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -182,7 +181,7 @@ class _ForHoverState extends State<ForHover> {
       onEnter: (event) {
         // change color on hover
         setState(() {
-          hoverColor = Color.fromRGBO(68, 98, 136, 1);
+          hoverColor = const Color.fromRGBO(68, 98, 136, 1);
           textColor = Colors.white;
         });
       },

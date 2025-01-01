@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation } from "animations";
 import {globalState} from "globalState";
-import { highlightArea } from "highlight";
+import { highlightArea, resetAreas } from "highlight";
 
 export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
@@ -112,8 +112,8 @@ export function addInteractions(scene, model, camera, controls) {
               case "Storage Area":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                        Available bin: 280<br>
-                                        Occupied bins: 60
+                                        Available bins: 100<br>
+                                        Occupied bins: 260
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
@@ -162,9 +162,8 @@ export function addInteractions(scene, model, camera, controls) {
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
       // we get the objects from the model as list that are intersected by the casted ray.
-
+      console.warn("position",  intersects[0].x,  intersects[0].y, intersects[0].z);
       if (intersects.length > 0) {
-       
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
         if (
@@ -217,6 +216,7 @@ export function addInteractions(scene, model, camera, controls) {
     } else {
       console.log('{"object":"null"}');
       globalState.setAreaFocused(false);
+      resetAreas(scene);
       resetTrucksAnimation(scene);
     }
   }

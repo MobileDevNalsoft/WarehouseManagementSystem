@@ -96,3 +96,11 @@ class Rendering extends WarehouseInteractionEvent{
   @override
   List<Object> get props => [isRendered];
 }
+
+class Intercepting extends WarehouseInteractionEvent{
+  final bool intercepting;
+  Intercepting({required this.intercepting});
+
+  @override
+  List<Object> get props => [intercepting];
+}

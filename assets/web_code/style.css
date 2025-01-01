@@ -23,64 +23,83 @@ body {
     z-index: 1000;
     /* Ensure it appears above other elements */
 }
+
+
 #leftPanel {
     z-index: 99;
     position: fixed;
     top: 8vh;
-    left: 0; /* Keep the panel on the left */
-    width: 3vw; /* Slightly increase panel width for better spacing */
-   
-    padding: 1vw;
-    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-    border-top-right-radius: 1.5vw;
-    border-bottom-right-radius: 1.5vw; */
-    transition: left 0.4s ease;
+    margin-left: 8px;
+    width: 3vw; /* Default collapsed width */
+    background-color: #446288;
+    border-radius: 18px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
+    transition: width 0.4s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+    overflow: hidden; /* Hide overflowing text when collapsed */
+}
+
+#leftPanel:hover {
+    width: 8vw; /* Expand the panel on hover */
 }
 
 .areaButton {
     display: flex;
-    flex-direction: column; /* Stack image and text vertically */
+    flex-direction: row; /* Align icon and text horizontally */
     align-items: center; /* Center-align content */
-    justify-content: center;
-    text-align: center;
-    width: 80%; /* Adjust button width */
-    margin: 1vh auto; /* Space buttons evenly and center them */
-    padding: 1vh;
-    background-color: #cbcbcb;
+    justify-content: flex-start; /* Align items to the left in expanded mode */
+    width: 90%; /* Full width of the expanded panel */
+    margin: 1vh auto; /* Space buttons evenly */
+    padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-   
+    transition: background-color 0.3s ease, transform 0.2s ease, padding 0.3s ease;
     text-decoration: none;
 }
 
 .areaButton:hover {
-    background-color: #a4a4a4; /* Change background color on hover */
-    /* transform: scale(1.05); Add a slight zoom effect */
+    background-color:  #446188b0; /* Change background color on hover */
 }
 
-.areaButton img {
-    width: 1vw; /* Default size */
+.areaButton i {
+    width: 20px; /* Default size for icons */
     height: auto; /* Maintain aspect ratio */
-    margin-bottom: 0.5vh;
-    transition: width 0.3s ease; /* Smooth resizing */
+    margin-right: 0.5vw; /* Spacing between icon and text */
+    transition: transform 0.3s ease; /* Smooth hover animation */
 }
+
 
 .areaButton p {
-    font-size: 0.6vw;
-    margin: 0;
-    color: black;
-    line-height: 1.2;
-    /* transition: opacity 0.3s ease; Smooth hiding */
+    display: none;
+    font-size: 0.8vw; /* Adjust font size */
+    margin-left: 6px;
+    color: white;
+    line-height: 1.2px;
+    white-space: nowrap; /* Prevent text from wrapping */
+    opacity: 0; /* Hide text by default */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth fade-in */
+    transform: translateX(-20px); /* Start slightly hidden to the left */
+}
+
+#leftPanel:hover .areaButton p {
+    display: block;
+    opacity: 1; /* Show text on hover */
+    transform: translateX(0); /* Move text into view */
 }
 
 .areaButton.focused,
 .areaButton:focus {
     background-color: #858181; /* Custom background for focused state */
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-    /* transform: scale(1.05); */
     transition: all 0.3s ease;
+}
+.fa-cube {
+    color: #fdfdfd; 
+    height: 16px;
+    width: 16px;
+    padding-left: 4px;
 }
 
 #tooltip {
