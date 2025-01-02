@@ -39,10 +39,9 @@ export function loadModel() {
 function getGLB(companyID, facilityID){
     console.warn(facilityID);
     switch(companyID){
-       
         case 1: switch(facilityID){
             case 1: 
-                return  "../glbs/warehouse_3112_1218.glb";
+                return  "../glbs/warehouse_1227_0354-v1.glb";
                 
             case 2:
                 return "../glbs/warehouse_2.glb";

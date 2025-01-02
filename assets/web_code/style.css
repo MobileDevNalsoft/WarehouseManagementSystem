@@ -91,7 +91,7 @@ body {
     padding-left: 4px;
 }
 
-#tooltip {
+#tooltip, #agvtooltip {
     position: absolute;
     display: none;
     /* Initially hidden */
