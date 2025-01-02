@@ -69,6 +69,7 @@ export async function initScene(renderer) {
 
   const forkLift = new THREE.Group();
   const agv = new THREE.Group();
+  const box = new THREE.Group();
   const loader = new GLTFLoader.GLTFLoader();
 
   //fork lift model
@@ -77,7 +78,7 @@ export async function initScene(renderer) {
     (gltf) => {
       const model = gltf.scene;
 
-      model.scale.set(2.5, 2.5, 2.5); 
+      model.scale.set(3.5, 2.5, 2.5); 
 
       model.rotation.y = -(Math.PI / 2);
       forkLift.add(model);
@@ -96,7 +97,7 @@ export async function initScene(renderer) {
     "../glbs/agv_with_boxes.glb",
     (gltf) => {
       const model = gltf.scene;
-      model.scale.set(2.5, 2.5, 2.5); 
+      model.scale.set(3.5, 3.5, 3.5); 
       model.rotation.y = -(Math.PI );
       agv.add(model);
       console.warn('agv model loaded');
@@ -110,6 +111,28 @@ export async function initScene(renderer) {
   );
 
 
+  //box model
+  loader.load(
+    "../glbs/box.glb",
+    (gltf) => {
+      const model = gltf.scene;
+      model.scale.set(10.5, 10.5, 3.5); 
+      model.rotation.y = -(Math.PI );
+      
+      box.add(model);
+      scene.add(box);
+      box.position.set(0.569215386407393, 6.19, -77.49013059402137); 
+      console.warn('box model loaded');
+    },
+    
+    (xhr) => {
+      console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
+    },
+    (error) => {
+      console.warn("An error occurred while loading the model:", error);
+    }
+  )
+  
   // const circleMaterial = new THREE.MeshBasicMaterial({
   //   color: 0xffff00, // Yellow
   //   side: THREE.DoubleSide,
@@ -244,7 +267,8 @@ export async function initScene(renderer) {
   let highlightedBins = [];
   let pathLine;
   let clock;
-  let bins = [
+  let bins=[];
+  let forkLiftbins = [
     'p4',
     "4RB30602",
     '4LB30102',
@@ -274,6 +298,7 @@ export async function initScene(renderer) {
    digitalTwin.classList.add("focused");
    stopAnimation();
    document.getElementById('path').classList.remove('focused');
+   bins = agvTask;
   ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
     agvTask,
     nodeMap,
@@ -286,9 +311,20 @@ export async function initScene(renderer) {
     controls,
     agv,
     renderer,2000,
-    agvTask[agvTask.length-1]
+    agvTask[agvTask.length-1],
+    0xffff00,
+    0x0099ff
   ));
-
+  bins.forEach((bin) => {
+    if(!bin.toLowerCase().includes('area')){
+      try{
+    scene.getObjectByName(bin).material.color.set(0x65543e);}
+    catch(e){
+      console.warn('error in setting color to bins');
+    }
+  }
+   
+  });
   // Create a GSAP timeline for smoother transitions
   const timeline = gsap.timeline();
 
@@ -365,10 +401,15 @@ export async function initScene(renderer) {
   function stopAnimation() {
     combinedPath = [];
     checkpointCircles.forEach((circle) => scene.remove(circle));
-    scene.remove(pathLine);
+    try{ 
+    pathLine.forEach((line) => scene.remove(line));}
+    catch(e){
+      console.warn('error in removing path line');
+    }
+    // scene.remove(pathLine);
     scene.remove(forkLift);
     try{
-    bins.forEach((e) => {if(!e.toLowerCase().includes('area')){scene.getObjectByName(e).material.color.set(0xfaf3e2)}});}
+    bins.forEach((e) => {if(!e.toLowerCase().includes('area') && !e.toLowerCase().startsWith('p')){scene.getObjectByName(e).material.color.set(0xfaf3e2)}});}
     catch(e){
       console.warn('error in setting color back to original');
     }
@@ -378,6 +419,8 @@ export async function initScene(renderer) {
   }
 
 document.getElementById('showPath').addEventListener('click',(e)=>{
+  digitalTwin.classList.remove("focused");
+  bins=forkLiftbins;
   localStorage.setItem("highlightBins", bins.toString());
         ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
           bins,
@@ -392,7 +435,9 @@ document.getElementById('showPath').addEventListener('click',(e)=>{
           forkLift,
           renderer,
           2000,
-    bins[bins.length-1]
+    bins[bins.length-1],
+    0xffff00,
+    0xcc0066
         ));
 
         bins.forEach((bin) => {

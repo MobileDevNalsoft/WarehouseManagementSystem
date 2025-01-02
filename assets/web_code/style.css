@@ -1,296 +1,264 @@
 html,
 body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    /* Make sure body takes full height */
-    display: flex;
-    flex-direction: column;
-    /* Vertical layout */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  /* Make sure body takes full height */
+  display: flex;
+  flex-direction: column;
+  /* Vertical layout */
 }
 
 #container {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 #loading {
-    font-size: 24px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 1000;
-    /* Ensure it appears above other elements */
+  font-size: 24px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  /* Ensure it appears above other elements */
 }
-
 
 #leftPanel {
-    z-index: 99;
-    position: fixed;
-    top: 8vh;
-    margin-left: 8px;
-    width: 3vw; /* Default collapsed width */
-    background-color: #446288;
-    border-radius: 18px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
-    transition: width 0.4s ease, box-shadow 0.3s ease; /* Smooth hover effects */
-    overflow: visible; 
+  z-index: 99;
+  position: fixed;
+  display: flex;
+  top: 8vh;
+  margin-left: 8px;
+  width: 50px; /* Default collapsed width */
+  background-color: #446288;
+  border-radius: 18px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 0 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
+  transition: width 0.4s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+  overflow: visible;
 }
-
 
 .areaButton {
-    position: relative;
-        display: inline-block;
-    
-    /* width: 90%; Full width of the expanded panel */
-    margin: 1vh auto; /* Space buttons evenly */
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, padding 0.3s ease;
-    text-decoration: none;
+  display: flex;
+
+  /* width: 90%; Full width of the expanded panel */
+  margin: 1vh auto; /* Space buttons evenly */
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, padding 0.3s ease;
+  text-decoration: none;
 }
-
-
 
 .areaButton i {
-    width: 20px; /* Default size for icons */
-    height: auto; /* Maintain aspect ratio */
-    margin-right: 0.5vw; /* Spacing between icon and text */
-    transition: transform 0.3s ease; /* Smooth hover animation */
+  width: 20px; /* Default size for icons */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: 0.5vw; /* Spacing between icon and text */
+  transition: transform 0.3s ease; /* Smooth hover animation */
 }
 
-
-
-
 #leftPanel:hover .areaButton p {
-    display: block;
-    opacity: 1; /* Show text on hover */
-    transform: translateX(0); /* Move text into view */
+  display: block;
+  opacity: 1; /* Show text on hover */
+  transform: translateX(0); /* Move text into view */
 }
 
 .areaButton.focused,
 .areaButton:focus {
-    overflow: hidden;
-    background-color: #858181; /* Custom background for focused state */
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
+  overflow: hidden;
+  border-radius: 25%;
+  background-color: #0f2441; /* Custom background for focused state */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
 }
-.areaButton.focused,.areaButton:focus #area_tooltip{
-    overflow: visible;
+.areaButton.focused,
+.areaButton:focus #area_tooltip {
+  overflow: visible;
 }
 
 .fa-cube {
-    color: #fdfdfd; 
-    height: 16px;
-    width: 16px;
-    padding-left: 4px;
+  color: #fdfdfd;
+  height: 16px;
+  width: 16px;
+  padding-left: 4px;
 }
 
 #tooltip {
-    position: absolute;
-    display: none;
-    /* Initially hidden */
-    background-color: #333;
-    color: #fff;
-    padding: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    border: 1px solid #fff;
-    opacity: 0.9;
-    font-size: 12px;
-    z-index: 1000;
-    width: auto;
-    letter-spacing: 1px;
-    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.2);
-    /* High enough to appear above other elements */
+  position: absolute;
+  display: none;
+  /* Initially hidden */
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #fff;
+  opacity: 0.9;
+  font-size: 12px;
+  z-index: 1000;
+  width: auto;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.2);
+  /* High enough to appear above other elements */
 
-    animation: bounceIn 0.5s ease forwards; /* Apply animation when visible */
-    transform-origin: center bottom; /* Anchor point for bounce */
+  animation: bounceIn 0.5s ease forwards; /* Apply animation when visible */
+  transform-origin: center bottom; /* Anchor point for bounce */
 }
-
 
 #area_tooltip {
-    visibility: hidden;
-    width: auto;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: .25rem;
-    padding: .25rem;
-    position: absolute;
-    z-index: 100;
-    bottom: -25px; /* Adjust as needed */
-    left:50%;
-    transform: translateX(-50%);
-    opacity: .75;
+  visibility: hidden;
+  width: auto;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  position: absolute;
+  z-index: 100;
+  /* bottom: -25px; Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.75;
 }
 #shortestPath_tooltip {
-    visibility: hidden;
-    width: auto;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: .25rem;
-    padding: .25rem;
-    position: absolute;
-    z-index: 100;
-    bottom: -25px; /* Adjust as needed */
-    left:50%;
-    transform: translateX(-50%);
-    opacity: .75;
+  visibility: hidden;
+  width: auto;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  position: absolute;
+  z-index: 100;
+  bottom: -25px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.75;
 }
 
 #digitalTwin_tooltip {
-    visibility: hidden;
-    width: auto;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: .25rem;
-    padding: .25rem;
-    position: absolute;
-    z-index: 100;
-    bottom: -25px; /* Adjust as needed */
-    left:50%;
-    transform: translateX(-50%);
-    opacity: .75;
+  visibility: hidden;
+  width: auto;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  position: absolute;
+  z-index: 100;
+  bottom: -25px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.75;
 }
 
-
 .areaButton:hover #area_tooltip {
-    visibility: visible;
+  visibility: visible;
 }
 /* Bounce animation keyframes */
 @keyframes bounceIn {
-    0% {
-        transform: scale(0.8) translateY(-30px); /* Start small and above */
-        opacity: 0; /* Fully transparent */
-    }
-    50% {
-        transform: scale(1.1) translateY(10px); /* Bounce slightly above final position */
-        opacity: 1; /* Fully opaque */
-    }
-    100% {
-        transform: scale(1) translateY(0); /* Final position */
-        opacity: 1; /* Fully opaque */
-    }
+  0% {
+    transform: scale(0.8) translateY(-30px); /* Start small and above */
+    opacity: 0; /* Fully transparent */
+  }
+  50% {
+    transform: scale(1.1) translateY(10px); /* Bounce slightly above final position */
+    opacity: 1; /* Fully opaque */
+  }
+  100% {
+    transform: scale(1) translateY(0); /* Final position */
+    opacity: 1; /* Fully opaque */
+  }
 }
 
 #tooltip strong {
-    display: block; /* Make the name a block element to center it */
-    text-align: center;
-    margin: 5px;
+  display: block; /* Make the name a block element to center it */
+  text-align: center;
+  margin: 5px;
 }
-
-/* #tooltip::before {
-  content: "";
-  display: block;
-  position: absolute;
-  bottom: 0;
-  background-color: inherit;
-  transform: translateY(90%);
-  width: 15px;
-  height: 15px;
-  clip-path: polygon(100% 0, 21% 0, 0 98%);
-  z-index: 1;
-}
-
-#tooltip::after {
-    content: "";
-    display: block;
-    position: absolute;
-    transform: translateY(18%);
-    margin-left: -1px;
-    width: calc(15px + 2px); 
-    height: calc(15px + 2px);
-    background-color: #fff;
-    clip-path: polygon(100% 8%, 21% 8%, 0 98%);
-  } */
 
 .hide-speech-bubble::after {
-    display: none; /* Hides the speech bubble */
+  display: none; /* Hides the speech bubble */
 }
 
 #arrows-container {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    display: grid;
-    grid-template-areas:
-        ". up ."
-        "left . right"
-        ". down .";
-    gap: 5px;
-    z-index: 10;
-    display: none;
-    /* Ensure it stays on top of the 3D view */
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: grid;
+  grid-template-areas:
+    ". up ."
+    "left . right"
+    ". down .";
+  gap: 5px;
+  z-index: 10;
+  display: none;
+  /* Ensure it stays on top of the 3D view */
 }
 
 .arrow {
-    display: none;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
+  display: none;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
 }
 
 #arrow-up {
-    grid-area: up;
-    display: none;
+  grid-area: up;
+  display: none;
 }
 
 #arrow-left {
-    grid-area: left;
-    display: none;
+  grid-area: left;
+  display: none;
 }
 
 #arrow-right {
-    grid-area: right;
-    display: none;
+  grid-area: right;
+  display: none;
 }
 
 #arrow-down {
-    grid-area: down;
-    display: none;
+  grid-area: down;
+  display: none;
 }
 
 #image-button-container {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    /* Set width of the button */
-    height: 60px;
-    /* Set height of the button */
-    cursor: pointer;
-    z-index: 10;
-    display: none;
-    /* Make sure it overlays the 3D view */
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  /* Set width of the button */
+  height: 60px;
+  /* Set height of the button */
+  cursor: pointer;
+  z-index: 10;
+  display: none;
+  /* Make sure it overlays the 3D view */
 }
 
 #image-button {
-    width: 100%;
-    /* Make image fill container */
-    height: 100%;
-    object-fit: contain;
-    display: none;
+  width: 100%;
+  /* Make image fill container */
+  height: 100%;
+  object-fit: contain;
+  display: none;
 }
 
 df-messenger {
-    --df-messenger-bot-message: #c8daf1d3;
-    --df-messenger-user-message: #a6cbd1d3;
-    --df-messenger-button-titlebar-color: #446288;
-    --df-messenger-chat-background-color: #fafafa;
-    --df-messenger-font-color: black;
-    --df-messenger-send-icon: #878fac;
-   }
+  --df-messenger-bot-message: #c8daf1d3;
+  --df-messenger-user-message: #a6cbd1d3;
+  --df-messenger-button-titlebar-color: #446288;
+  --df-messenger-chat-background-color: #fafafa;
+  --df-messenger-font-color: black;
+  --df-messenger-send-icon: #878fac;
+}

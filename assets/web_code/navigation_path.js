@@ -188,13 +188,13 @@ for (const [nodeName, adjacentNames] of Object.entries(adjacencyList)) {
  
 // }
 
-export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,intermediatePoints,three,scene,camera,controls,agentGroup,renderer,waitPeriodAtPoints,endBin){
+export function getShortestPath(bins,nodeMap,nodes,aisleBayPoints,intermediatePoints,three,scene,camera,controls,agentGroup,renderer,waitPeriodAtPoints,endBin,color,lineColor){
     const THREE=three;
     let finalPath=[];
     let checkpointCircles=[];
     let combinedPath=[];
     let arrows=[];
-    let pathLine = null;
+    let pathLine = [];
 
     let animationId;
 const checkpoints = setupCheckpoints(bins);
@@ -442,7 +442,7 @@ const endpoints = findNodeNamesForPoints([endCheckpoints[0]],nodes);
       
         checkpointCircles=[];
           const circleMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffff00, // Yellow
+            color: color, // Yellow
             side: THREE.DoubleSide,
             transparent: true,
             opacity: 0.8, // Start opacity
@@ -466,15 +466,42 @@ const endpoints = findNodeNamesForPoints([endCheckpoints[0]],nodes);
         // Function to visualize the path
         function visualizePath(path) {
       
-          const lineGeometry = new THREE.BufferGeometry().setFromPoints(path);
-          const lineMaterial = new THREE.LineDashedMaterial({
-            color: 0xff0000,
-            dashSize: 0.5,
-            gapSize: 0.5,
-          });
-      
-          pathLine = new THREE.Line(lineGeometry, lineMaterial);
-          scene.add(pathLine);
+          // const lineGeometry = new THREE.BufferGeometry().setFromPoints(path);
+          // const lineMaterial =new THREE.LineBasicMaterial( {
+          //   color: lineColor,
+          //   linewidth: 5,
+          //   linecap: 'round', //ignored by WebGLRenderer
+          //   linejoin:  'round' //ignored by WebGLRenderer
+          // } );
+          // pathLine = new THREE.Line(lineGeometry, lineMaterial);
+          // scene.add(pathLine);
+          for (let i = 0; i < path.length - 1; i++) {
+            const start = path[i];
+            const end = path[i + 1];
+        
+            // Calculate the distance and direction
+            const direction = new THREE.Vector3().subVectors(end, start);
+            const distance = direction.length();
+        
+            // Create a cylinder geometry for the tube
+            const tubeGeometry = new THREE.CylinderGeometry(0.3, 0.3, distance, 32); // Adjust radius (0.1) for thickness
+            const tubeMaterial = new THREE.MeshBasicMaterial({ color: lineColor });
+            const segment = new THREE.Mesh(tubeGeometry, tubeMaterial);
+        
+            // Position the segment midpoint between start and end
+            segment.position.copy(start.clone().add(end).multiplyScalar(0.5));
+        
+            // Align the segment with the direction vector
+            segment.lookAt(end);
+        
+            // Adjust orientation to align with the correct axis (default cylinder points along Y-axis)
+            segment.rotateX(Math.PI / 2);
+        
+            // Add to the scene
+            scene.add(segment);
+            pathLine.push(segment);
+
+          }
         }
       //   function visualizePath(pathPoints) {
       //     // Create a TubeGeometry for the thick, highlighted path
@@ -606,7 +633,6 @@ const endpoints = findNodeNamesForPoints([endCheckpoints[0]],nodes);
   }
   console.warn()
   if (isRequierdPoints(combinedPath[0],agentGroup) ) {
-    console.log("Waiting at point:", combinedPath[0]);
     waiting = true; // Set waiting flag
     await new Promise((resolve) => setTimeout(resolve, waitPeriodAtPoints));
     waiting = false; // Reset waiting flag

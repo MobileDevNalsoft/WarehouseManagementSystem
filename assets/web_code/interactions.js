@@ -162,7 +162,7 @@ export function addInteractions(scene, model, camera, controls) {
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
       // we get the objects from the model as list that are intersected by the casted ray.
-      console.warn("position",  intersects[0].x,  intersects[0].y, intersects[0].z);
+      // console.warn("position",  intersects[0].point.x,  intersects[0].point.y, intersects[0].point.z);
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
