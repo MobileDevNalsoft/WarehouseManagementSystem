@@ -119,7 +119,7 @@ export function addInteractions(scene, model, camera, controls) {
               break;
             default:
               tooltip.style.display = "block";
-              tooltip.innerHTML = name;
+              tooltip.innerHTML = name.split("A")[0];
               tooltip.style.left = `${e.clientX + 10}px`; // Offset for better visibility
               tooltip.style.top = `${e.clientY + 10}px`;
               tooltip.classList.add("hide-speech-bubble");

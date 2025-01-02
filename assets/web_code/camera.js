@@ -238,7 +238,9 @@ export function getPositionAndTarget(scene, name) {
       position.set(-45, 80, -20);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
+      
       box.getCenter(target);
+      target.x = target.x+4;
       break;
     case "receivingArea":
       position.set(22, 80, 0);

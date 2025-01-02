@@ -55,7 +55,7 @@ export async function initScene(renderer) {
 
   const forkLift = new THREE.Group();
   const agv = new THREE.Group();
-  const box = new THREE.Group();
+  //const box = new THREE.Group();
   const loader = new GLTFLoader.GLTFLoader();
 
   //fork lift model
@@ -99,26 +99,26 @@ export async function initScene(renderer) {
 
 
   //box model
-  loader.load(
-    "../glbs/box.glb",
-    (gltf) => {
-      const model = gltf.scene;
-      model.scale.set(10.5, 10.5, 3.5); 
-      model.rotation.y = -(Math.PI );
+  // loader.load(
+  //   "../glbs/box.glb",
+  //   (gltf) => {
+  //     const model = gltf.scene;
+  //     model.scale.set(10.5, 10.5, 3.5); 
+  //     model.rotation.y = -(Math.PI );
       
-      box.add(model);
-      scene.add(box);
-      box.position.set(0.569215386407393, 6.19, -77.49013059402137); 
-      console.warn('box model loaded');
-    },
+  //     box.add(model);
+  //     scene.add(box);
+  //     box.position.set(0.569215386407393, 6.19, -77.49013059402137); 
+  //     console.warn('box model loaded');
+  //   },
     
-    (xhr) => {
-      console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
-    },
-    (error) => {
-      console.warn("An error occurred while loading the model:", error);
-    }
-  )
+  //   (xhr) => {
+  //     console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
+  //   },
+  //   (error) => {
+  //     console.warn("An error occurred while loading the model:", error);
+  //   }
+  // )
   
   // const circleMaterial = new THREE.MeshBasicMaterial({
   //   color: 0xffff00, // Yellow
