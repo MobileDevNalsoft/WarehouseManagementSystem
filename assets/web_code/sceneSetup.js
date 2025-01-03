@@ -208,13 +208,13 @@ export async function initScene(renderer) {
       console.warn('box models loaded');
     },
     
-    (xhr) => {
-      console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
-    },
-    (error) => {
-      console.warn("An error occurred while loading the model:", error);
-    }
-  )
+  //   (xhr) => {
+  //     console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
+  //   },
+  //   (error) => {
+  //     console.warn("An error occurred while loading the model:", error);
+  //   }
+  // )
   
   // const circleMaterial = new THREE.MeshBasicMaterial({
   //   color: 0xffff00, // Yellow
