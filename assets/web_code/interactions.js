@@ -59,12 +59,15 @@ export function addInteractions(scene, model, camera, controls) {
       // we get the objects from the model as list that are intersected by the casted ray.
 
       if (intersects.length > 0) {
+        intersects.forEach((e) => {console.warn("object name ", e.object.name)});
         const targetObject = intersects[0].object;
+        console.warn("name", targetObject.name);
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area") && globalState.areaFocused == false
         ) {
           let name = toCamelCase(targetObject.name);
+         
           switch (name) {
             case "Yard Area":
               tooltip.style.display = "block";
@@ -117,6 +120,104 @@ export function addInteractions(scene, model, camera, controls) {
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
+              case "Box1 Area":
+                tooltip.style.display = "block";
+                tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+                                          LPN: IBPAIDL00001676	<br>
+                                          Status: Received<br>
+                                          Item: HP LAPTOP<br>
+                                          Description: HP LAPTOP Series 7 1TB<br>
+                                          Qty: 150 <br>
+                                          UOM: units
+                                      </div>`;
+                setToolTipPosition(targetObject, tooltip, camera);
+                break;
+                case "Box2 Area":
+                  tooltip.style.display = "block";
+                  tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+                                           LPN: IBPAIDL00001677<br>
+                                           LPN: Received<br>
+                                           Item: ITEM1<br>
+                                           Description: ITEM1	<br>
+                                           Qty: 500 <br>
+                                           UOM: units<br>
+                                        </div>`;
+                  setToolTipPosition(targetObject, tooltip, camera);
+                  break;
+                  case "Box3 Area":
+                    tooltip.style.display = "block";
+                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+                                             LPN: IBPAIDL00001678<br>
+                                             LPN: Received<br>
+                                             Item: ROTHSCHILD<br>
+                                             Description: Chateau Mouton Rothschild 1945<br>
+                                             Qty: 450<br>
+                                             UOM: units
+                                          </div>`;
+                    setToolTipPosition(targetObject, tooltip, camera);
+                    break;
+                    case "Box4 Area":
+                    tooltip.style.display = "block";
+                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+                                            LPN Number:IBPAIDL00001674	<br>
+                                            LPN Status:Received<br>
+                                            Item: ROTHSCHILD<br>
+                                            Item Description: 	Chateau Mouton Rothschild 1945<br>
+                                            Qty:45<br>
+                                            UOM:units
+                                          </div>`;
+                    setToolTipPosition(targetObject, tooltip, camera);
+                    break;
+                    case "Box5 Area":
+                    tooltip.style.display = "block";
+                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+                                             LPN Number:IBPAIDL00001673	<br>
+                                             LPN Status:Received<br>
+                                             Item: ITEM1<br>
+                                             Item Description: ITEM1	<br>
+                                             Qty:500 <br>
+                                             UOM:units
+                                          </div>`;
+                    setToolTipPosition(targetObject, tooltip, camera);
+                    break;
+                    // case "Box5 Area":
+                    // tooltip.style.display = "block";
+                    // tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+                    //                          LPN: IBPAIDL00001678<br>
+                    //                          LPN: Received<br>
+                    //                          Item: ROTHSCHILD<br>
+                    //                          Description: Chateau Mouton Rothschild 1945<br>
+                    //                          Qty: 450<br>
+                    //                          UOM: units
+                    //                       </div>`;
+                    // setToolTipPosition(targetObject, tooltip, camera);
+                    // break;
+                    case "Box6 Area":
+                    tooltip.style.display = "block";
+                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+                                               LPN Number: IBPAIDL00001116	<br>
+                                               LPN Status: Quality Check<br>
+                                               QC Status: Marked for QC<br>
+                                               Item: OLD MONK-1-100<br>
+                                               Description: SAMs OLD MONK RUM	<br>
+                                               Qty: 10 <br>
+                                               UOM: units
+                                          </div>`;
+                    setToolTipPosition(targetObject, tooltip, camera);
+                    break;
+                    case "Box7 Area":
+                    tooltip.style.display = "block";
+                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+                                            LPN Number:IBPAIDL00001117	<br>
+                                            LPN Status:Quality Check<br>
+                                            QC Status: Marked for QC<br>
+                                            Item: ITEM1<br>
+                                            Item Description: ITEM1	<br>
+                                            Qty:5 <br>
+                                            UOM:units                                          
+                                          </div>`;
+                    setToolTipPosition(targetObject, tooltip, camera);
+                    break;
             default:
               tooltip.style.display = "block";
               tooltip.innerHTML = name.split("A")[0];
@@ -162,10 +263,11 @@ export function addInteractions(scene, model, camera, controls) {
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
       // we get the objects from the model as list that are intersected by the casted ray.
-      // console.warn("position",  intersects[0].point.x,  intersects[0].point.y, intersects[0].point.z);
+      console.warn("position",  intersects[0].point.x,  intersects[0].point.y, intersects[0].point.z);
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
+        document.getElementById("wms-bot").style.display = "none";  
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")
@@ -215,6 +317,7 @@ export function addInteractions(scene, model, camera, controls) {
       }
     } else {
       console.log('{"object":"null"}');
+      document.getElementById("wms-bot").style.display = "block";  
       globalState.setAreaFocused(false);
       resetAreas(scene);
       resetTrucksAnimation(scene);

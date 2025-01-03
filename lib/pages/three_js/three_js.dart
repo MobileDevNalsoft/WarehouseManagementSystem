@@ -290,8 +290,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           );
         }),
         Positioned(
-          left: size.width * 0.15,
-          top: size.height * 0.013,
+          left: size.width * 0.18,
+          top: size.height * 0.015,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
               return PointerInterceptor(
@@ -313,8 +313,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           ),
         ),
         Positioned(
-          left: size.width * 0.32,
-          top: size.height * 0.013,
+          left: size.width * 0.35,
+          top: size.height * 0.015,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
               return PointerInterceptor(

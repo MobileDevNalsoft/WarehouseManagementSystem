@@ -29,8 +29,7 @@ export async function initScene(renderer) {
   const model = gltf.scene;
   scene.add(model);
 
-  const SPEED = 5;
-
+  // Add skydome
   addSkyDome(scene);
 
   // Animation setup
@@ -55,7 +54,11 @@ export async function initScene(renderer) {
 
   const forkLift = new THREE.Group();
   const agv = new THREE.Group();
-  //const box = new THREE.Group();
+  const box = new THREE.Group();
+  
+  const box2 = new THREE.Group();
+  const box3 = new THREE.Group();
+
   const loader = new GLTFLoader.GLTFLoader();
 
   //fork lift model
@@ -87,7 +90,7 @@ export async function initScene(renderer) {
       model.rotation.y = -(Math.PI );
       agv.add(model);
       model.name = 'agvModel';
-      console.warn('agv model loaded'+model.name.toString());
+      console.warn('agv model loaded');
     },
     (xhr) => {
       console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
@@ -99,18 +102,110 @@ export async function initScene(renderer) {
 
 
   //box model
-  // loader.load(
-  //   "../glbs/box.glb",
-  //   (gltf) => {
-  //     const model = gltf.scene;
-  //     model.scale.set(10.5, 10.5, 3.5); 
-  //     model.rotation.y = -(Math.PI );
+  loader.load(
+    "../glbs/box.glb",
+    (gltf) => {
+      const model = gltf.scene;
+      model.scale.set(10.5, 10.5, 3.5); 
+      model.rotation.y = -(Math.PI );
+      let box2Model = model.clone();
+      let box3Model = model.clone();
+      let box4Model= model.clone();
+      let box5Model= model.clone();
+      let box6Model= model.clone();
+      let box7Model= model.clone();
       
-  //     box.add(model);
-  //     scene.add(box);
-  //     box.position.set(0.569215386407393, 6.19, -77.49013059402137); 
-  //     console.warn('box model loaded');
-  //   },
+      model.name = 'box1Area';
+      scene.add(model);
+      model.position.set(12.812496810374281, 11.155107021331787, -54.67921206610449); 
+      
+      model.traverse((child) => {
+        if (child.isMesh) {
+          child.name='box1Area';
+          child.material = child.material.clone();
+          child.material.transparent = true; // Enable transparency
+          child.material.opacity = 0;     // Set opacity (0 is fully transparent, 1 is fully opaque)
+        }
+      });
+      box2Model.traverse((child) => {
+        if (child.isMesh) {
+          child.name='box2Area';
+          child.material = child.material.clone();
+          child.material.transparent = true; // Enable transparency
+          child.material.opacity = 0;     // Set opacity (0 is fully transparent, 1 is fully opaque)
+        }
+      });
+      box3Model.traverse((child) => {
+        if (child.isMesh) {
+          child.name='box3Area';
+          child.material = child.material.clone();
+          child.material.transparent = true; // Enable transparency
+          child.material.opacity = 0;     // Set opacity (0 is fully transparent, 1 is fully opaque)
+        }
+        
+      });
+      box4Model.traverse((child) => {
+        if (child.isMesh) {
+          child.name='box4Area';
+          child.material = child.material.clone();
+          child.material.transparent = true; // Enable transparency
+          child.material.opacity = 1;     // Set opacity (0 is fully transparent, 1 is fully opaque)
+        }
+      });
+
+      box5Model.traverse((child) => {
+        if (child.isMesh) {
+          child.name='box5Area';
+          child.material = child.material.clone();
+          child.material.transparent = true; // Enable transparency
+          child.material.opacity = 1;     // Set opacity (0 is fully transparent, 1 is fully opaque)
+        }
+      });
+
+      box6Model.traverse((child) => {
+        if (child.isMesh) {
+          child.name='box6Area';
+          child.material = child.material.clone();
+          child.material.transparent = true; // Enable transparency
+          child.material.opacity = 0;     // Set opacity (0 is fully transparent, 1 is fully opaque)
+        }
+      });
+
+      box7Model.traverse((child) => {
+        if (child.isMesh) {
+          child.name='box7Area';
+          child.material = child.material.clone();
+          child.material.transparent = true; // Enable transparency
+          child.material.opacity = 0;     // Set opacity (0 is fully transparent, 1 is fully opaque)
+        }
+      });
+      box2.add(box2Model);
+      scene.add(box2);
+      box2.position.set(12.812496810374281, 11.155107021331787, -49.061114295086436);  
+
+      box3.add(box3Model);
+      scene.add(box3);
+      box3.position.set(12.812496810374281, 11.155107021331787, -46.80325333229198);  
+      
+      scene.add(box4Model);
+      box4Model.scale.set(8.5,20.5, 5.5);
+      box4Model.position.set(32.45690885576458, 10, -63.375218967468555);  
+
+      scene.add(box5Model);
+      box5Model.scale.set(8.5,20.5, 5.5);
+      box5Model.position.set(40.45690885576458, 10, -63.375218967468555);  
+
+      scene.add(box6Model);
+      box6Model.scale.set(10.5,11, 15.5);
+      box6Model.position.set(10.034054594205543, 11.155107021331787, -130.33101405425458);  
+
+      scene.add(box7Model);
+      box7Model.scale.set(10.5,11, 15.5);
+      box7Model.position.set(9.028635267710587, 11.155107021331787, -105.6580355896106);  
+
+
+      console.warn('box models loaded');
+    },
     
   //   (xhr) => {
   //     console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
@@ -211,43 +306,8 @@ export async function initScene(renderer) {
   }
    
   });
-  // Create a GSAP timeline for smoother transitions
-  const timeline = gsap.timeline();
-
-  controls.enabled = false;
-  controls.enableDamping = false;
-
-  let warehouse = scene.getObjectByName('warehouse_wall');
-
-  // Animate position and rotation simultaneously
-  timeline
-    .to(camera.position, {
-      duration: 3,
-      x: warehouse.position.x,
-      y: warehouse.position.y+250,
-      z: warehouse.position.z+100,
-      ease: "power3.inOut",
-    })
-    .to(
-      controls.target,
-      {
-        duration: 3,
-        x: warehouse.position.x,
-        y: warehouse.position.y,
-        z: warehouse.position.z,
-        ease: "power3.inOut",
-        onUpdate: function () {
-          camera.lookAt(controls.target); // Smoothly look at the target
-        },
-      },
-      "<"
-    );
-
-  // Callbacks after animation completes
-  timeline.call(() => {
-    controls.enabled = true; 
-    controls.enableDamping = true;
-  });
+  
+  switchCamera(scene, "warehouse_wall", camera, controls);
 
 });
 
@@ -339,43 +399,7 @@ document.getElementById('showPath').addEventListener('click',(e)=>{
          
         });
 
-     // Create a GSAP timeline for smoother transitions
-  const timeline = gsap.timeline();
-
-  controls.enabled = false;
-  controls.enableDamping = false;
-
-  let warehouse = scene.getObjectByName('warehouse_wall');
-
-  // Animate position and rotation simultaneously
-  timeline
-    .to(camera.position, {
-      duration: 3,
-      x: warehouse.position.x,
-      y: warehouse.position.y+250,
-      z: warehouse.position.z+100,
-      ease: "power3.inOut",
-    })
-    .to(
-      controls.target,
-      {
-        duration: 3,
-        x: warehouse.position.x,
-        y: warehouse.position.y,
-        z: warehouse.position.z,
-        ease: "power3.inOut",
-        onUpdate: function () {
-          camera.lookAt(controls.target); // Smoothly look at the target
-        },
-      },
-      "<"
-    );
-
-  // Callbacks after animation completes
-  timeline.call(() => {
-    controls.enabled = true; 
-    controls.enableDamping = true;
-  });
+        switchCamera(scene, "warehouse_wall", camera, controls);
         
 });
 

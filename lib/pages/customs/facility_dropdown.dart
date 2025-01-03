@@ -53,6 +53,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
         });
         Future.delayed(const Duration(milliseconds: 1200), () {
           if(height == widget.buttonHeight) {
+            // ignore: use_build_context_synchronously
             context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
           }
         });
@@ -78,7 +79,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
                     child: ListView(
                       shrinkWrap: true,
                       children: widget.dropDownItems.map((item) {

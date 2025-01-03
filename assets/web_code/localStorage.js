@@ -20,6 +20,7 @@ export function localStorageSetup(scene, camera, controls) {
       case "switchToMainCam":
         
         if (event.newValue != "") {
+          document.getElementById("wms-bot").style.display = "none";  
           const { position, target } = getPositionAndTarget(
             scene,
             event.newValue
@@ -46,6 +47,11 @@ export function localStorageSetup(scene, camera, controls) {
             case "yardArea":
               highlightArea(scene,"yardArea_block",  { r: 255, g: 99, b: 99 },0.4);
               break;
+            case "dockArea-IN" || "dockArea-OUT":
+              break;
+            default:
+              document.getElementById("wms-bot").style.display = "block"; 
+              break; 
             
           }
           // Create a GSAP timeline for smoother transitions
