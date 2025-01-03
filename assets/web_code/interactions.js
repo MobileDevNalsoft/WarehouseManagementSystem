@@ -166,6 +166,7 @@ export function addInteractions(scene, model, camera, controls) {
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
+        document.getElementById("wms-bot").style.display = "none";  
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")
@@ -215,6 +216,7 @@ export function addInteractions(scene, model, camera, controls) {
       }
     } else {
       console.log('{"object":"null"}');
+      document.getElementById("wms-bot").style.display = "block";  
       globalState.setAreaFocused(false);
       resetAreas(scene);
       resetTrucksAnimation(scene);

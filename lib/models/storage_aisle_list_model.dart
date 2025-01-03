@@ -17,9 +17,9 @@ class ListOfStorageAisles {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['response_code'] = this.responseCode;
-    data['response_message'] = this.responseMessage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['response_code'] = responseCode;
+    data['response_message'] = responseMessage;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -43,11 +43,11 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['area'] = this.area;
-    data['aisle'] = this.aisle;
-    data['location_category'] = this.locationCategory;
-    data['barcode'] = this.barcode;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['area'] = area;
+    data['aisle'] = aisle;
+    data['location_category'] = locationCategory;
+    data['barcode'] = barcode;
     return data;
   }
 }

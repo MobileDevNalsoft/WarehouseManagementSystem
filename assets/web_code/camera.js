@@ -21,7 +21,6 @@ export function createCamera() {
 
 export function switchCamera(scene, name, camera, controls) {
   if(name == 'storageArea'){
-    // console.log('{"area":"' + name + '"}');
     window.localStorage.setItem("rack_cam", "null");
   }
   const { position, target } = getPositionAndTarget(
@@ -103,7 +102,6 @@ export function moveToBin(object, camera, controls) {
   const regex = /^[0-9][R]B\d{5}$/;
   if(document.getElementById('path').classList.contains('focused')){
   document.querySelector('#path').click();}
-  // console.log(object);
   // Create a GSAP timeline for smoother transitions
   const timeline = gsap.timeline();
 
@@ -179,32 +177,12 @@ export function moveCam(controls, camera, target) {
   });
 }
 
-function findCameraByName(cameraList, name) {
-  // Use Array.prototype.find to locate the camera by name
-  const foundCamera = cameraList.find((cam) => cam.name.includes(name));
-
-  if (foundCamera) {
-    return foundCamera;
-  } else {
-    console.log('{"Camera Not Found":"' + name + '"}');
-    return null;
-  }
-}
-
 export function getPositionAndTarget(scene, name) {
   let position = new THREE.Vector3();
   let target = new THREE.Vector3(0, 0, 0);
   let object = new THREE.Object3D();
   let box;
   let view = name.toString().split("_")[0];
-  let number;
-
-  // if(name.includes("rack")){
-  //   const result = view.match(/\d+/);  // Matches one or more digits
-  //   number = result ? parseInt(result[0], 10) : null;
-  //   view = "rack";
-  //   console.log(number);
-  // }
 
   switch (view) {
     case "compoundArea":
@@ -212,6 +190,13 @@ export function getPositionAndTarget(scene, name) {
       target.set(0, 0, -60);
       target.z = target.z+50;
       console.log('{"object":"null"}');
+      break;
+    case "warehouse":
+      console.warn('name' + name);
+      object = scene.getObjectByName(name);
+      position.set(object.position.x, object.position.y + 250, object.position.z + 100);
+      box = new THREE.Box3().setFromObject(object);
+      box.getCenter(target);
       break;
     case "storageArea":
       position.set(-78, 60, 20);
@@ -235,13 +220,13 @@ export function getPositionAndTarget(scene, name) {
       box.getCenter(target);
       break;
     case "activityArea":
-      position.set(-45, 80, -20);
+      position.set(-49, 80, -20);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       break;
     case "receivingArea":
-      position.set(22, 80, 0);
+      position.set(21, 80, 0);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);

@@ -42,7 +42,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(15),
       child: ListView.builder(
           itemCount: widget.data.length,
           itemBuilder: (context, oindex) {
@@ -63,15 +63,16 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                     width: widget.l1StyleData.width,
                     color: Colors.transparent,
                     child: Container(
-                      margin: EdgeInsets.only(top: 65, bottom: 5),
+                      margin: const EdgeInsets.only(top: 65, bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.dropDownColor,
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                         child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.data[oindex].vendors!.length,
                             itemBuilder: (context, index) {
                               return AnimatedContainer(
@@ -83,23 +84,24 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                       duration: const Duration(milliseconds: 200),
                                       height: innerBottomHeights[oindex][index],
                                       child: Container(
-                                        margin: EdgeInsets.only(top: 65, bottom: 5),
-                                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                        margin: const EdgeInsets.only(top: 65, bottom: 5),
+                                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                                         decoration: BoxDecoration(
                                           color: widget.l2StyleData.dropDownColor,
-                                          borderRadius: BorderRadius.circular(25),
+                                          borderRadius: BorderRadius.circular(15),
                                         ),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(25),
+                                          borderRadius: BorderRadius.circular(15),
                                           child: ListView.builder(
+                                            physics: const NeverScrollableScrollPhysics(),
                                             itemCount: widget.data[oindex].vendors![index].items!.length,
                                             itemBuilder: (context, inindex) => Container(
-                                                padding: EdgeInsets.all(10),
+                                                padding: const EdgeInsets.all(10),
                                                 height: widget.l3StyleData.height,
-                                                margin: EdgeInsets.only(bottom: 5),
+                                                margin: const EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
                                                   color: widget.l3StyleData.color,
-                                                  borderRadius: BorderRadius.circular(25),
+                                                  borderRadius: BorderRadius.circular(15),
                                                 ),
                                                 child: LayoutBuilder(
                                                   builder: (context, lsize) {
@@ -119,7 +121,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                                             Row(
                                                               children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('QTY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].qty!.toString(), style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Text(widget.data[oindex].vendors![index].items![inindex].checkinTS!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.04),)
                                                           ],
                                                         )
@@ -145,8 +147,22 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                                 : widget.l2StyleData.height;
                                             innerTurns[oindex][index] = innerTurns[oindex][index] == 0.5 ? 1 : 0.5; // Rotate icon
                                             openDropdownIndex = null; // Reset opened index
-                                            heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
-                                            bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
+                                            if (heights[oindex] ==
+                                                (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25)) {
+                                              heights[oindex] = (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                  25 +
+                                                  (widget.data[oindex].vendors!.length) * widget.l2StyleData.height +
+                                                  (widget.l1StyleData.height + 25);
+                                              bottomHeights[oindex] = (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                  25 +
+                                                  (widget.data[oindex].vendors!.length) * widget.l2StyleData.height +
+                                                  (widget.l1StyleData.height + 25);
+                                            } else {
+                                              heights[oindex] =
+                                                  (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25);
+                                              bottomHeights[oindex] =
+                                                  (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25);
+                                            }
                                           } else {
                                             // Close previously opened dropdown and open the new one
                                             if (openDropdownIndex != null) {
@@ -155,25 +171,31 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                               innerTurns[oindex][openDropdownIndex!] = 1;
                                             }
                                             openDropdownIndex = index; // Set current index as opened
-                                            heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
-                                            bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25);
+                                            heights[oindex] = (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                25 +  
+                                                (widget.data[oindex].vendors!.length) * widget.l2StyleData.height +
+                                                (widget.l1StyleData.height + 25);
+                                            bottomHeights[oindex] = (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                25 +
+                                                (widget.data[oindex].vendors!.length) * widget.l2StyleData.height +
+                                                (widget.l1StyleData.height + 25);
                                             innerHeights[oindex][index] =
                                                 (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
-                                                    (widget.l2StyleData.height+25); // Expand current dropdown
+                                                    (widget.l2StyleData.height + 25); // Expand current dropdown
                                             innerBottomHeights[oindex][index] =
                                                 (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
-                                                    (widget.l2StyleData.height+25); // Expand current bottom height
+                                                    (widget.l2StyleData.height + 25); // Expand current bottom height
                                             innerTurns[oindex][index] = 0.5;
                                           }
                                         });
                                       },
                                       child: Container(
                                         height: widget.l2StyleData.height,
-                                        margin: EdgeInsets.only(bottom: 5),
-                                        padding: EdgeInsets.all(10),
+                                        margin: const EdgeInsets.only(bottom: 5),
+                                        padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                           color: widget.l2StyleData.color,
-                                          borderRadius: BorderRadius.circular(25),
+                                          borderRadius: BorderRadius.circular(15),
                                         ),
                                         child: LayoutBuilder(builder: (context, lsize) {
                                           return Row(
@@ -184,15 +206,30 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                                 color: Colors.white,
                                               ),
                                               Gap(lsize.maxWidth * 0.01),
-                                              Text('${widget.data[oindex].vendors![index].vendorName} (${widget.data[oindex].vendors![index].items!.length})', style: TextStyle(color: Colors.white),),
-                                              Spacer(),
-                                              AnimatedRotation(
-                                                turns: innerTurns[oindex][index],
-                                                duration: const Duration(milliseconds: 200),
-                                                child: Icon(
-                                                  Icons.keyboard_arrow_down_rounded,
-                                                  size: 20,
-                                                  // color: Colors.white,
+                                              Text(widget.data[oindex].vendors![index].vendorName!, style: const TextStyle(color: Colors.white),),
+                                              const Spacer(),
+                                              Container(
+                                                height: widget.l1StyleData.height * 0.5,
+                                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                        width: widget.l1StyleData.width * 0.1,
+                                                        child: Text(
+                                                          widget.data[oindex].vendors![index].items!.length.toString(),
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(fontSize: lsize.maxHeight * 0.3, fontWeight: FontWeight.w500),
+                                                        )),
+                                                    AnimatedRotation(
+                                                      turns: innerTurns[oindex][index],
+                                                      duration: const Duration(milliseconds: 200),
+                                                      child: const Icon(
+                                                        Icons.keyboard_arrow_down_rounded,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                    Gap(widget.l1StyleData.width * 0.02)
+                                                  ],
                                                 ),
                                               ),
                                             ],
@@ -246,11 +283,11 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                     child: Container(
                       height: widget.l1StyleData.height,
                       width: widget.l1StyleData.width,
-                      padding: EdgeInsets.all(5),
-                      margin: EdgeInsets.only(bottom: 5),
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.color, // Purple background
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: LayoutBuilder(builder: (context, lsize) {
                         return Row(
@@ -262,18 +299,34 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                             Gap(lsize.maxWidth * 0.01),
                             Text(
                               widget.data[oindex].truckNum!,
-                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                             ),
-                            Spacer(),
-                            AnimatedRotation(
-                              turns: turns[oindex],
-                              duration: const Duration(milliseconds: 200),
-                              child: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                size: 20,
-                                // color: Colors.white,
+                            const Spacer(),
+                            Container(
+                              height: widget.l1StyleData.height * 0.5,
+                              decoration: BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                      width: widget.l1StyleData.width * 0.1,
+                                      child: Text(
+                                        widget.data[oindex].vendors!.length.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.white, fontSize: lsize.maxHeight * 0.25),
+                                      )),
+                                  AnimatedRotation(
+                                    turns: turns[oindex],
+                                    duration: const Duration(milliseconds: 200),
+                                    child: const Icon(
+                                      Icons.keyboard_arrow_down_rounded,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Gap(widget.l1StyleData.width * 0.02)
+                                ],
                               ),
-                            ),
+                            )
                           ],
                         );
                       }),

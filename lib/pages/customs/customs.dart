@@ -496,17 +496,25 @@ class Customs {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       if(!isEnabled)
-                      Transform.translate(
-                        offset: Offset(size.width * 0.008, -size.height * 0.01),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            overlayColor: WidgetStatePropertyAll(Colors.transparent),
-                            onTap: () => onExport(state),
-                            child: Image.asset(
-                              'assets/images/export.png',
-                              height: size.height * 0.03,
-                              width: size.width * 0.03,
+                      Tooltip(
+                        message: 'Export',
+                        verticalOffset: -size.height*0.075,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Transform.translate(
+                          offset: Offset(size.width * 0.008, -size.height * 0.01),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                              onTap: () => onExport(state),
+                              child: Image.asset(
+                                'assets/images/export.png',
+                                height: size.height * 0.03,
+                                width: size.width * 0.03,
+                              ),
                             ),
                           ),
                         ),
@@ -545,7 +553,7 @@ class Customs {
                         children: List.generate(
                           dataSources.length,
                           (index) => SizedBox(
-                              width: size.width * 0.15,
+                              width: size.width * 0.17,
                               child: SfDataGrid(
                                 allowFiltering: true,
                                 allowSorting: true,
@@ -554,7 +562,7 @@ class Customs {
                                 columns: [
                                   GridColumn(
                                       columnName: dataSources[index].columnName,
-                                      minimumWidth: size.width * 0.15,
+                                      minimumWidth: size.width * 0.17,
                                       filterPopupMenuOptions: const FilterPopupMenuOptions(canShowSortingOptions: false),
                                       label: Container(
                                           padding: EdgeInsets.all(size.width * 0.002),

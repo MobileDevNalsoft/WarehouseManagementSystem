@@ -10,4 +10,9 @@ export function setupLights(scene) {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
     directionalLight.position.set(0, 2, 0); // Position the light
     scene.add(directionalLight);
+
+    // // Add directional light
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1); // Bright white light
+    directionalLight.position.set(0, -5, 0); // Position the light
+    scene.add(directionalLight1);
 }
