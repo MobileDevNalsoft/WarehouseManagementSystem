@@ -58,28 +58,26 @@ class _UsersBuilderState extends State<UsersBuilder> {
                         height: size.height * 0.05,
                         width: size.width * 0.35,
                         child: LayoutBuilder(builder: (context, constraints) {
-                          double aspectRatio;
-                          aspectRatio = constraints.maxWidth / constraints.maxHeight;
                           return TextFormField(
                             controller: textEditingController,
                             textAlign: TextAlign.start,
                             textAlignVertical: TextAlignVertical.center,
-                            style: TextStyle(fontSize: aspectRatio * 1.6, height: constraints.maxHeight * 0.01),
+                            style: TextStyle(fontSize: 15, height: constraints.maxHeight * 0.01),
                             cursorColor: Colors.black,
-                            cursorHeight: aspectRatio * 2,
+                            cursorHeight: size.height*0.03,
                             onChanged: (value) {
                               _warehouseInteractionBloc.add(FilterUsers(searchText: value));
                             },
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.symmetric(
-                                vertical: aspectRatio * 0.03,
+                                vertical: size.height*0.0,
                               ),
-                              hintStyle: TextStyle(color: Colors.black26, fontSize: aspectRatio * 1.6),
+                              hintStyle: TextStyle(color: Colors.black26, fontSize: 15),
                               hintText: 'Search',
                               prefixIcon: Padding(
                                 padding: EdgeInsets.only(
-                                  top: aspectRatio * 0.6,
+                                  top: size.height*0.01,
                                 ), // Center icon vertically
                                 child: Icon(Icons.search_rounded),
                               ),
@@ -103,12 +101,12 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(state.filteredUsers![index].username!, style: TextStyle(fontSize: size.aspectRatio*8),),
+                                    Text(state.filteredUsers![index].username!, style: TextStyle(fontSize: 15),),
                                     SizedBox(
                                       height: size.height*0.07,
                                       width: size.width * 0.1,
                                       child: Transform.translate(
-                                        offset: Offset(0, size.height*0.01),
+                                        offset: Offset(0, size.height*0.002),
                                         child: CustomDropdown<String>.multiSelect(
                                           items: const [
                                             "Dashboard",
@@ -126,12 +124,9 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                           hideSelectedFieldWhenExpanded: true,
                                           onListChanged: (value) {
                                             if(value.isEmpty){
-                                              print(value);
                                               value.add('Dashboard');
                                             }
                                             state.filteredUsers![index].access = value;
-                                            print(value);
-                                            // _warehouseInteractionBloc.add(FilterUsers(searchText: textEditingController.text));
                                           },
                                         ),
                                       ),

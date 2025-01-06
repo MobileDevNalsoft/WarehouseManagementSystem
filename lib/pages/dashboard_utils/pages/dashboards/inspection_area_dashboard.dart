@@ -68,14 +68,14 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
               crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
           children: [
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSSfCircularChart(
-                      ratio: ratio,
+                      lsize: lsize,
                       title: 'Today Quality Status',
-                      titleFontSize: ratio * 13,
+                      titleFontSize: 13,
                       legendVisibility: true,
                       series: SeriesName.pieSeries,
                       props: Props(
@@ -86,7 +86,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                                 yData: e.count!,
                                 text: e.count!.toString()))
                             .toList(),
-                        radius: '${ratio * 55}%',
+                        radius: '${lsize.maxWidth*0.23}%',
                         pointColorMapper: (p0, p1) {
                           if (p1 == 1) {
                             return const Color.fromARGB(255, 45, 134, 172);
@@ -99,31 +99,31 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       ));
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 12,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSRadialGuage(
                       title: "Quality Efficiency",
-                      titleFontSize: ratio * 16,
-                      annotationHeight: ratio * 120,
+                      titleFontSize: 15,
+                      annotationHeight: lsize.maxHeight*0.35,
                       axisLineColor: Color.fromARGB(255, 189, 187, 64),
                       annotationText:
                           '${state.inspectionDashboardData!.qualityEfficiency!}%',
-                      annotationFontSize: ratio * 14,
-                      radiusFactor: ratio * 0.55,
+                      annotationFontSize: 15,
+                      radiusFactor: lsize.maxHeight*0.0022,
                       markerValue:
                           state.inspectionDashboardData!.qualityEfficiency!);
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSSfCircularChart(
-                      ratio: ratio,
+                      lsize: lsize,
                       title: "Material Quality",
-                      titleFontSize: ratio * 13,
+                      titleFontSize: 13,
                       enableAnnotation: true,
                       annotationText:
                           '${state.inspectionDashboardData!.materialQuality!}%',
@@ -139,16 +139,16 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       ));
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSCartesianChart(
                       title: 'Daywise Quality Summary',
-                      titleFontSize: ratio * 13,
-                      xlabelFontSize: ratio * 10,
-                      ylabelFontSize: ratio * 10,
-                      ytitleFontSize: ratio * 12,
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
                       barCount: 1,
                       dataSources: [
                         state.inspectionDashboardData!.daywiseQualitySummary!
@@ -163,16 +163,16 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       barColors: [Color.fromARGB(255, 158, 103, 27)]);
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSCartesianChart(
                       title: 'Supplier Wise Quality',
-                      titleFontSize: ratio * 13,
-                      xlabelFontSize: ratio * 10,
-                      ylabelFontSize: ratio * 10,
-                      ytitleFontSize: ratio * 12,
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
                       barCount: 1,
                       dataSources: [
                         state.inspectionDashboardData!.supplierQuality!

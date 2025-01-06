@@ -68,7 +68,7 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
                           data: state.inspectionAreaItems!,
                           l1StyleData: L1StyleData(height: 60, width: 400),
                           l2StyleData: L2StyleData(height: 60),
-                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.145),
+                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.155),
                         );
             }),
           );
@@ -182,7 +182,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                       Row(
                                                         children: [
                                                           SizedBox(
-                                                              width: lsize.maxWidth * 0.16,
+                                                              width: lsize.maxWidth * 0.18,
                                                               child: Text(
                                                                 'Item',
                                                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
@@ -197,7 +197,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                       Row(
                                                         children: [
                                                           SizedBox(
-                                                              width: lsize.maxWidth * 0.16,
+                                                              width: lsize.maxWidth * 0.18,
                                                               child: Text(
                                                                 'PO',
                                                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
@@ -215,9 +215,9 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                       Row(
                                                         children: [
                                                           SizedBox(
-                                                              width: lsize.maxWidth * 0.16,
+                                                              width: lsize.maxWidth * 0.18,
                                                               child: Text(
-                                                                'CO No.',
+                                                                'IBLPN',
                                                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
                                                               )),
                                                           Gap(lsize.maxWidth * 0.01),
@@ -230,7 +230,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                       Row(
                                                         children: [
                                                           SizedBox(
-                                                              width: lsize.maxWidth * 0.16,
+                                                              width: lsize.maxWidth * 0.18,
                                                               child: Text(
                                                                 'QTY',
                                                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
@@ -323,12 +323,17 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                 scale: lsize.maxHeight * 0.05,
                                                 color: Colors.white,
                                               ),
-                                              Gap(lsize.maxWidth * 0.01),
-                                              Text(
-                                                widget.data[oindex].shipments![index].shipmentNo!.replaceAll('"', ''),
-                                                style: TextStyle(color: Colors.white),
+                                              Gap(lsize.maxWidth * 0.015),
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  scrollDirection: Axis.horizontal,
+                                                  child: Text(
+                                                    widget.data[oindex].shipments![index].shipmentNo!.replaceAll('"', ''),
+                                                    style: TextStyle(color: Colors.white),
+                                                  ),
+                                                ),
                                               ),
-                                              Spacer(),
+                                              Gap(lsize.maxWidth * 0.025),
                                               Container(
                                                 height: widget.l1StyleData.height * 0.5,
                                                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),

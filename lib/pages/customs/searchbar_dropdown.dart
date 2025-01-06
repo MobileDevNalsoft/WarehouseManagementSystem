@@ -320,7 +320,9 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               child: TextField(
                                 controller: TextEditingController(text: _warehouseInteractionBloc.state.searchText),
                                 onSubmitted: (value) {
+                                    if(_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != ""){
                                   searchData();
+                                }
                                 },
                                 onChanged: (value) {
                                   if (value.trim() == "") {
@@ -383,16 +385,23 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               ),
                             ),
                           ),
-                          IconButton(
-                            hoverColor: Colors.transparent,
-                              onPressed: () {
-                                searchData();
-                              },
-                              icon: Icon(
-                                Icons.search,
-                                color: Color.fromRGBO(68, 98, 136, 1),
-                                size: size.height * 0.035,
-                              )),
+                          Transform.translate(
+                            offset: Offset(0, -size.height * 0.005),
+                            child: IconButton(
+                              hoverColor: Colors.transparent,
+                                onPressed: () {
+                                   if(_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != ""){
+                                  searchData();
+                                }
+                                },
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                icon: Icon(
+                                  Icons.search,
+                                  color: Color.fromRGBO(68, 98, 136, 1),
+                                  size: size.height * 0.035,
+                                )),
+                          ),
                         ],
                       ),
                     ),

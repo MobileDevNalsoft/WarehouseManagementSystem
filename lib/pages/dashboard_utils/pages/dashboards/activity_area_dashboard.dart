@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -38,7 +39,11 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
               fontWeight: FontWeight.bold,
             )),
         legend: isLegendVisible != null
-            ? Legend(alignment: ChartAlignment.near, isVisible: isLegendVisible ?? false, isResponsive: true, position: LegendPosition.bottom)
+            ? Legend(
+                alignment: ChartAlignment.near,
+                isVisible: isLegendVisible ?? false,
+                isResponsive: true,
+                position: LegendPosition.bottom)
             : Legend(),
         onLegendItemRender: (legendRenderArgs) {
           if (legendText != null) {
@@ -103,7 +108,10 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
 
   List<BarData> empTaskdata = [];
 
-  final List<PieData> avgTime = [PieData(xData: 'Execution time', yData: 60), PieData(xData: 'Rest', yData: 40)];
+  final List<PieData> avgTime = [
+    PieData(xData: 'Execution time', yData: 60),
+    PieData(xData: 'Rest', yData: 40)
+  ];
   late Map<String, List<String>> employeeSuggestionRange;
   var random = Random();
   late bool rangeSelection;
@@ -130,9 +138,42 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
         "109",
         "110",
       ],
-      "111-120": ["111", "112", "113", "114", "115", "116", "117", "118", "119", "120"],
-      "121-130": ["121", "122", "123", "124", "125", "126", "127", "128", "129", "130"],
-      "131-140": ["131", "132", "133", "134", "135", "136", "137", "138", "139", "140"],
+      "111-120": [
+        "111",
+        "112",
+        "113",
+        "114",
+        "115",
+        "116",
+        "117",
+        "118",
+        "119",
+        "120"
+      ],
+      "121-130": [
+        "121",
+        "122",
+        "123",
+        "124",
+        "125",
+        "126",
+        "127",
+        "128",
+        "129",
+        "130"
+      ],
+      "131-140": [
+        "131",
+        "132",
+        "133",
+        "134",
+        "135",
+        "136",
+        "137",
+        "138",
+        "139",
+        "140"
+      ],
     };
 
     _dashboardsBloc = context.read<DashboardsBloc>();
@@ -151,227 +192,238 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double aspectRatio = size.width / size.height;
     return SingleChildScrollView(
-      child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
-        bool isEnabled = state.getActivityDashboardState != ActivityDashboardState.success;
+      child: BlocBuilder<DashboardsBloc, DashboardsState>(
+          builder: (context, state) {
+        bool isEnabled =
+            state.getActivityDashboardState != ActivityDashboardState.success;
         if (state.getActivityDashboardState == ActivityDashboardState.success) {
-          employeeSuggestions = state.activityDashboardData!.empwiseTaskSummary!.map((e) => e.status!).toList();
-          // selectedEmployees = employeeSuggestions;
+          employeeSuggestions = state.activityDashboardData!.empwiseTaskSummary!
+              .map((e) => e.status!)
+              .toList();
         }
-        return Column(
+        return StaggeredGrid.count(
+          crossAxisCount: 3,
           children: [
-            Row(
-              children: [
-                Customs.DashboardWidget(
-                    size: Size(size.width * 0.24, size.height * 0.45),
-                    margin: aspectRatio * 10,
-                    loaderEnabled: isEnabled,
-                    chartBuilder: (ratio) {
-                      return Customs.WMSSfCircularChart(
-                          ratio: ratio,
-                          title: 'Today Task Summary',
-                          titleFontSize: ratio*13,
-                          legendVisibility: true,
-                          series: SeriesName.pieSeries,
-                          props: Props(
-                            dataSource: state.activityDashboardData!.todayTaskSummary!
-                                .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
-                                .toList(),
-                            radius: '${ratio * 55}%',
-                            pointColorMapper: (p0, p1) {
-                              if (p1 == 0) {
-                                return const Color.fromARGB(255, 80, 175, 230);
-                              } else if (p1 == 1) {
-                                return const Color.fromARGB(255, 115, 102, 189);
-                              } else if (p1 == 2) {
-                                return const Color.fromARGB(255, 110, 196, 163);
-                              } else if (p1 == 3) {
-                                return const Color.fromARGB(255, 159, 177, 80);
-                              }
-                            },
-                          ));
-                    }),
-                Customs.DashboardWidget(
-                    size: Size(size.width * 0.24, size.height * 0.45),
-                    margin: aspectRatio * 10,
-                    loaderEnabled: isEnabled,
-                    chartBuilder: (ratio) {
-                      return Customs.WMSSfCircularChart(
-                          ratio: ratio,
-                          title: 'Task Type Summary',
-                          titleFontSize: ratio*13,
-                          legendVisibility: true,
-                          series: SeriesName.pieSeries,
-                          props: Props(
-                            dataSource: state.activityDashboardData!.taskTypeSummary!
-                                .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
-                                .toList(),
-                            radius: '${ratio * 55}%',
-                            pointColorMapper: (p0, p1) {
-                              if (p1 == 0) {
-                                return const Color.fromARGB(255, 80, 175, 230);
-                              } else if (p1 == 1) {
-                                return const Color.fromARGB(255, 115, 102, 189);
-                              } else if (p1 == 2) {
-                                return const Color.fromARGB(255, 110, 196, 163);
-                              } else if (p1 == 3) {
-                                return const Color.fromARGB(255, 159, 177, 80);
-                              }
-                            },
-                          ));
-                    }),
-                Customs.DashboardWidget(
-                    size: Size(size.width * 0.24, size.height * 0.45),
-                    margin: aspectRatio * 10,
-                    loaderEnabled: isEnabled,
-                    chartBuilder: (ratio) {
-                      return Customs.WMSSfCircularChart(
-                          ratio: ratio,
-                          title: 'Today Work Order Summary',
-                          titleFontSize: ratio*13,
-                          legendVisibility: true,
-                          series: SeriesName.pieSeries,
-                          props: Props(
-                            dataSource: state.activityDashboardData!.todayWorkOrderSummary!
-                                .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
-                                .toList(),
-                            radius: '${ratio * 55}%',
-                            pointColorMapper: (p0, p1) {
-                              if (p1 == 0) {
-                                return const Color.fromARGB(255, 176, 113, 187);
-                              } else if (p1 == 1) {
-                                return const Color.fromARGB(255, 175, 147, 70);
-                              } else if (p1 == 2) {
-                                return const Color.fromARGB(255, 68, 158, 76);
-                              } else {
-                                return const Color.fromARGB(255, 165, 180, 79);
-                              }
-                            },
-                          ));
-                    }),
-              ],
-            ),
-            Row(
-              children: [
-                Customs.DashboardWidget(
-                    size: Size(size.width * 0.24, size.height * 0.45),
-                    margin: aspectRatio * 10,
-                    loaderEnabled: isEnabled,
-                    chartBuilder: (ratio) {
-                      return Customs.WMSCartesianChart(
-                          title: 'Daywise Task Summary',
-                          titleFontSize: ratio*13,
-                          xlabelFontSize: ratio * 10,
-                          ylabelFontSize: ratio * 10,
-                          ytitleFontSize: ratio * 12,
-                          barCount: 1,
-                          dataSources: [
-                            state.activityDashboardData!.daywiseTaskSummary!
-                                .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
-                                .toList()
-                          ],
-                          yAxisTitle: 'Number of Tasks',
-                          legendVisibility: false,
-                          barColors: [Color.fromRGBO(78, 72, 161, 0.69)]);
-                    }),
-                Customs.DashboardWidget(
-                    size: Size(size.width * 0.24, size.height * 0.45),
-                    margin: aspectRatio * 10,
-                    loaderEnabled: isEnabled,
-                    chartBuilder: (ratio) {
-                      return Customs.WMSCartesianChart(
-                          title: "Employee Wise Task Summary",
-                          titleFontSize: ratio*13,
-                          xlabelFontSize: ratio * 10,
-                          ylabelFontSize: ratio * 10,
-                          ytitleFontSize: ratio * 12,
-                          barCount: 1,
-                          dataSources: [
-                            state.activityDashboardData!.empwiseTaskSummary!
-                                .map((e) => BarData(xLabel: e.status!.split('_')[0], yValue: e.count!, abbreviation: e.status!))
-                                .toList()
-                          ],
-                          yAxisTitle: 'Number of orders',
-                          legendVisibility: false,
-                          barColors: [Color.fromRGBO(64, 133, 138, 1)]);
-                    }),
-                Customs.DashboardWidget(
-                  size: Size(size.width * 0.24, size.height * 0.45),
-                  margin: aspectRatio * 10,
-                  loaderEnabled: isEnabled,
-                  chartBuilder: (ratio) => Customs.WMSSfCircularChart(
-                      ratio: ratio,
-                      title: "Average Task Execution Time",
-                      titleFontSize: ratio*13,
-                      enableAnnotation: true,
-                      annotationText: state.activityDashboardData!.avgTaskExecTime!,
+            Customs.DashboardWidget(
+                height: size.height * 0.45,
+                margin: size.height * 0.02,
+                loaderEnabled: isEnabled,
+                chartBuilder: (lsize) {
+                  return Customs.WMSSfCircularChart(
+                      lsize: lsize,
+                      title: 'Today Task Summary',
+                      titleFontSize: 13,
+                      legendVisibility: true,
+                      series: SeriesName.pieSeries,
                       props: Props(
-                        dataSource: avgTime,
+                        dataSource: state.activityDashboardData!.todayTaskSummary!
+                            .map((e) => PieData(
+                                xData: e.status!,
+                                yData: e.count!,
+                                text: e.count!.toString()))
+                            .toList(),
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
-                            return const Color.fromARGB(255, 148, 74, 134);
-                          } else {
-                            return Colors.transparent;
+                            return const Color.fromARGB(255, 80, 175, 230);
+                          } else if (p1 == 1) {
+                            return const Color.fromARGB(255, 115, 102, 189);
+                          } else if (p1 == 2) {
+                            return const Color.fromARGB(255, 110, 196, 163);
+                          } else if (p1 == 3) {
+                            return const Color.fromARGB(255, 159, 177, 80);
                           }
                         },
-                      )),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Customs.DashboardWidget(
-                  size: Size(size.width * 0.24, size.height * 0.45),
-                  margin: aspectRatio * 10,
-                  loaderEnabled: isEnabled,
-                  chartBuilder: (ratio) => Customs.WMSSfCircularChart(
-                      ratio: ratio,
-                      title: "Avg Pick Time",
-                      titleFontSize: ratio*13,
-                      enableAnnotation: true,
-                      annotationText: state.activityDashboardData!.avgPickTime!,
+                      ));
+                }),
+            Customs.DashboardWidget(
+                height: size.height * 0.45,
+                margin: size.height * 0.02,
+                loaderEnabled: isEnabled,
+                chartBuilder: (lsize) {
+                  return Customs.WMSSfCircularChart(
+                      lsize: lsize,
+                      title: 'Task Type Summary',
+                      titleFontSize: 13,
+                      legendVisibility: true,
+                      series: SeriesName.pieSeries,
                       props: Props(
-                        dataSource: avgTime,
+                        dataSource: state.activityDashboardData!.taskTypeSummary!
+                            .map((e) => PieData(
+                                xData: e.status!,
+                                yData: e.count!,
+                                text: e.count!.toString()))
+                            .toList(),
+                        radius: '${lsize.maxWidth * 0.23}%',
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
-                            return const Color.fromARGB(255, 97, 92, 170);
-                          } else {
-                            return Colors.transparent;
+                            return const Color.fromARGB(255, 80, 175, 230);
+                          } else if (p1 == 1) {
+                            return const Color.fromARGB(255, 115, 102, 189);
+                          } else if (p1 == 2) {
+                            return const Color.fromARGB(255, 110, 196, 163);
+                          } else if (p1 == 3) {
+                            return const Color.fromARGB(255, 159, 177, 80);
                           }
                         },
-                      )),
-                ),
-                Customs.DashboardWidget(
-                        size: Size(size.width * 0.51, size.height * 0.45),
-                        margin: aspectRatio*16,
-                        loaderEnabled: isEnabled,
-                        chartBuilder: (ratio) {
-                        return Row(
-                            children: [
-                              SizedBox(
-                                width: size.width*0.36,
-                                child: Customs.WMSCartesianChart(
-                                    title: 'Avg Time Taken by Employee',
-                                    titleFontSize: ratio*6,
-                                    xlabelFontSize: ratio * 5,
-                                    ylabelFontSize: ratio * 5,
-                                    ytitleFontSize: ratio * 6,
-                                    barCount: 1,
-                                    barColors: [Color.fromRGBO(147, 0, 120, 0.5)],
-                                    yAxisTitle: 'Number of Tasks',
-                                    dataSources: [
-                                      selectedEmployees
-                                          .map((e) => BarData(
-                                              xLabel: e.replaceAll('_', ' '),
-                                              yValue: state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test) => test.status == e).count!,
-                                              abbreviation: e))
-                                          .toList()
-                                    ])
-                              ),
-                              Gap(size.width * 0.016),
-                              Container(
+                      ));
+                }),
+            Customs.DashboardWidget(
+                height: size.height * 0.45,
+                margin: size.height * 0.02,
+                loaderEnabled: isEnabled,
+                chartBuilder: (lsize) {
+                  return Customs.WMSSfCircularChart(
+                      lsize: lsize,
+                      title: 'Today Work Order Summary',
+                      titleFontSize: 13,
+                      legendVisibility: true,
+                      series: SeriesName.pieSeries,
+                      props: Props(
+                        dataSource: state
+                            .activityDashboardData!.todayWorkOrderSummary!
+                            .map((e) => PieData(
+                                xData: e.status!,
+                                yData: e.count!,
+                                text: e.count!.toString()))
+                            .toList(),
+                        pointColorMapper: (p0, p1) {
+                          if (p1 == 0) {
+                            return const Color.fromARGB(255, 176, 113, 187);
+                          } else if (p1 == 1) {
+                            return const Color.fromARGB(255, 175, 147, 70);
+                          } else if (p1 == 2) {
+                            return const Color.fromARGB(255, 68, 158, 76);
+                          } else {
+                            return const Color.fromARGB(255, 165, 180, 79);
+                          }
+                        },
+                      ));
+                }),
+            Customs.DashboardWidget(
+                height: size.height * 0.45,
+                margin: size.height * 0.02,
+                loaderEnabled: isEnabled,
+                chartBuilder: (lsize) {
+                  return Customs.WMSCartesianChart(
+                      title: 'Daywise Task Summary',
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
+                      barCount: 1,
+                      dataSources: [
+                        state.activityDashboardData!.daywiseTaskSummary!
+                            .map((e) => BarData(
+                                xLabel: e.status!,
+                                yValue: e.count!,
+                                abbreviation: e.status!))
+                            .toList()
+                      ],
+                      yAxisTitle: 'Number of Tasks',
+                      legendVisibility: false,
+                      barColors: [Color.fromRGBO(78, 72, 161, 0.69)]);
+                }),
+            Customs.DashboardWidget(
+                height: size.height * 0.45,
+                margin: size.height * 0.02,
+                loaderEnabled: isEnabled,
+                chartBuilder: (lsize) {
+                  return Customs.WMSCartesianChart(
+                      title: "Employee Wise Task Summary",
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
+                      barCount: 1,
+                      dataSources: [
+                        state.activityDashboardData!.empwiseTaskSummary!
+                            .map((e) => BarData(
+                                xLabel: e.status!.split('_')[0],
+                                yValue: e.count!,
+                                abbreviation: e.status!))
+                            .toList()
+                      ],
+                      yAxisTitle: 'Number of orders',
+                      legendVisibility: false,
+                      barColors: [Color.fromRGBO(64, 133, 138, 1)]);
+                }),
+            Customs.DashboardWidget(
+              height: size.height * 0.45,
+              margin: size.height * 0.02,
+              loaderEnabled: isEnabled,
+              chartBuilder: (lsize) => Customs.WMSSfCircularChart(
+                  lsize: lsize,
+                  title: "Average Task Execution Time",
+                  titleFontSize: 13,
+                  enableAnnotation: true,
+                  annotationText: state.activityDashboardData!.avgTaskExecTime!,
+                  props: Props(
+                    dataSource: avgTime,
+                    pointColorMapper: (p0, p1) {
+                      if (p1 == 0) {
+                        return const Color.fromARGB(255, 148, 74, 134);
+                      } else {
+                        return Colors.transparent;
+                      }
+                    },
+                  )),
+            ),
+            Customs.DashboardWidget(
+              height: size.height * 0.45,
+              margin: size.height * 0.02,
+              loaderEnabled: isEnabled,
+              chartBuilder: (lsize) => Customs.WMSSfCircularChart(
+                  lsize: lsize,
+                  title: "Avg Pick Time",
+                  titleFontSize: 13,
+                  enableAnnotation: true,
+                  annotationText: state.activityDashboardData!.avgPickTime!,
+                  props: Props(
+                    dataSource: avgTime,
+                    pointColorMapper: (p0, p1) {
+                      if (p1 == 0) {
+                        return const Color.fromARGB(255, 97, 92, 170);
+                      } else {
+                        return Colors.transparent;
+                      }
+                    },
+                  )),
+            ),
+            StaggeredGridTile.fit(
+              crossAxisCellCount: 2,
+              child: Customs.DashboardWidget(
+                  height: size.height * 0.45,
+                  margin: size.height * 0.02,
+                  loaderEnabled: isEnabled,
+                  chartBuilder: (lsize) {
+                    return Row(
+                      children: [
+                        SizedBox(
+                            width: size.width * 0.38,
+                            child: Customs.WMSCartesianChart(
+                                title: 'Avg Time Taken by Employee',
+                                titleFontSize: 13,
+                                xlabelFontSize: 12,
+                                ylabelFontSize: 12,
+                                ytitleFontSize: 13,
+                                barCount: 1,
+                                barColors: [Color.fromRGBO(147, 0, 120, 0.5)],
+                                yAxisTitle: 'Number of Tasks',
+                                dataSources: [
+                                  selectedEmployees
+                                      .map((e) => BarData(
+                                          xLabel: e.replaceAll('_', ' '),
+                                          yValue: state.activityDashboardData!
+                                              .avgTimeTakenByEmp!
+                                              .firstWhere(
+                                                  (test) => test.status == e)
+                                              .count!,
+                                          abbreviation: e))
+                                      .toList()
+                                ])),
+                        Gap(size.width * 0.016),
+                        Container(
                           width: size.width * 0.1,
                           child: Column(
                             children: [
@@ -380,7 +432,8 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                   Expanded(
                                     child: TypeAheadField(
                                       suggestionsController: suggestionsController,
-                                      builder: (context, textController, focusNode) {
+                                      builder:
+                                          (context, textController, focusNode) {
                                         typeAheadController = textController;
                                         typeAheadFocusNode = focusNode;
                                         textController = textController;
@@ -397,12 +450,16 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                           decoration: InputDecoration(
                                               hintText: "Compare",
                                               // rangeSelection ? 'Choose' : "Compare",
-                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(24)),
                                               hintStyle: const TextStyle(
                                                 color: Colors.black54,
                                                 fontWeight: FontWeight.normal,
                                               ),
-                                              suffixIconConstraints: const BoxConstraints(minWidth: 16, minHeight: 8)),
+                                              suffixIconConstraints:
+                                                  const BoxConstraints(
+                                                      minWidth: 16, minHeight: 8)),
                                           controller: textController,
                                           focusNode: focusNode,
                                         );
@@ -410,13 +467,18 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                       suggestionsCallback: (pattern) {
                                         employeeSuggestions = [];
                                         if (rangeSelection) {
-                                          employeeSuggestions = employeeSuggestionRange.keys.toList();
+                                          employeeSuggestions =
+                                              employeeSuggestionRange.keys.toList();
                                         } else {
-                                          for (var empList in state.activityDashboardData!.empwiseTaskSummary!) {
+                                          for (var empList in state
+                                              .activityDashboardData!
+                                              .empwiseTaskSummary!) {
                                             print(empList);
-                                            employeeSuggestions.add(empList.status.toString());
+                                            employeeSuggestions
+                                                .add(empList.status.toString());
                                           }
-                                          print("emp suggestios $employeeSuggestions");
+                                          print(
+                                              "emp suggestios $employeeSuggestions");
                                         }
                                         return employeeSuggestions;
                                       },
@@ -430,34 +492,68 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                 children: [
                                                   Checkbox(
                                                       shape: OvalBorder(),
-                                                      value: rangeSelection ? selectedEmployeeRange == suggestion : selectedEmployees.contains(suggestion),
+                                                      value: rangeSelection
+                                                          ? selectedEmployeeRange ==
+                                                              suggestion
+                                                          : selectedEmployees
+                                                              .contains(suggestion),
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          if (rangeSelection != true) {
-                                                            if (selectedEmployees.contains(suggestion)) {
-                                                              selectedEmployees.remove(suggestion);
-                                                              empTaskdata.removeWhere((data) => data.xLabel == suggestion);
-                                                              suggestionsController.refresh();
-                                                            } else if (selectedEmployees.length < 10) {
-                                                              selectedEmployees.add(suggestion);
-                                                              empTaskdata
-                                                                  .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
-                                                              suggestionsController.refresh();
+                                                          if (rangeSelection !=
+                                                              true) {
+                                                            if (selectedEmployees
+                                                                .contains(
+                                                                    suggestion)) {
+                                                              selectedEmployees
+                                                                  .remove(
+                                                                      suggestion);
+                                                              empTaskdata.removeWhere(
+                                                                  (data) =>
+                                                                      data.xLabel ==
+                                                                      suggestion);
+                                                              suggestionsController
+                                                                  .refresh();
+                                                            } else if (selectedEmployees
+                                                                    .length <
+                                                                10) {
+                                                              selectedEmployees
+                                                                  .add(suggestion);
+                                                              empTaskdata.add(BarData(
+                                                                  xLabel:
+                                                                      suggestion,
+                                                                  yValue: random
+                                                                      .nextInt(10),
+                                                                  abbreviation:
+                                                                      suggestion));
+                                                              suggestionsController
+                                                                  .refresh();
                                                             }
                                                           } else {
-                                                            selectedEmployeeRange = suggestion;
+                                                            selectedEmployeeRange =
+                                                                suggestion;
                                                             empTaskdata = [];
                                                             selectedEmployees = [];
-                                                            List<String> employees = employeeSuggestionRange[suggestion]!;
-                                                            selectedEmployees.addAll(employees);
-                                                            for (var emp in selectedEmployees) {
-                                                              empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                            List<String> employees =
+                                                                employeeSuggestionRange[
+                                                                    suggestion]!;
+                                                            selectedEmployees
+                                                                .addAll(employees);
+                                                            for (var emp
+                                                                in selectedEmployees) {
+                                                              empTaskdata.add(BarData(
+                                                                  xLabel: emp,
+                                                                  yValue: random
+                                                                      .nextInt(10),
+                                                                  abbreviation:
+                                                                      suggestion));
                                                             }
                                                           }
                                                         });
                                                       }),
                                                   Text(
-                                                    suggestion.toString().replaceAll('_', ' '),
+                                                    suggestion
+                                                        .toString()
+                                                        .replaceAll('_', ' '),
                                                     // style: TextStyle(fontSize: ),
                                                     textAlign: TextAlign.justify,
                                                     overflow: TextOverflow.ellipsis,
@@ -472,13 +568,20 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                         if (rangeSelection == false) {
                                           setState(
                                             () {
-                                              if (selectedEmployees.contains(suggestion)) {
-                                                selectedEmployees.remove(suggestion);
-                                                empTaskdata.removeWhere((data) => data.xLabel == suggestion);
+                                              if (selectedEmployees
+                                                  .contains(suggestion)) {
+                                                selectedEmployees
+                                                    .remove(suggestion);
+                                                empTaskdata.removeWhere((data) =>
+                                                    data.xLabel == suggestion);
                                                 suggestionsController.refresh();
-                                              } else if (selectedEmployees.length < 10) {
+                                              } else if (selectedEmployees.length <
+                                                  10) {
                                                 selectedEmployees.add(suggestion);
-                                                empTaskdata.add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                empTaskdata.add(BarData(
+                                                    xLabel: suggestion,
+                                                    yValue: random.nextInt(10),
+                                                    abbreviation: suggestion));
                                                 // typeAheadController.clear();
                                                 // suggestionsController.close();
                                                 suggestionsController.refresh();
@@ -488,13 +591,18 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                         } else {
                                           setState(() {
                                             selectedEmployeeRange = suggestion;
-                                            List<String> employees = employeeSuggestionRange[suggestion]!;
+                                            List<String> employees =
+                                                employeeSuggestionRange[
+                                                    suggestion]!;
                                             empTaskdata = [];
                                             selectedEmployees = [];
-
+                    
                                             selectedEmployees.addAll(employees);
                                             for (var emp in selectedEmployees) {
-                                              empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
+                                              empTaskdata.add(BarData(
+                                                  xLabel: emp,
+                                                  yValue: random.nextInt(10),
+                                                  abbreviation: suggestion));
                                             }
                                           });
                                         }
@@ -518,8 +626,11 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                     children: selectedEmployees
                                         .map((emp) => Container(
                                             margin: EdgeInsets.only(bottom: 4),
-                                            decoration:
-                                                BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(12), color: Colors.black12),
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.rectangle,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                color: Colors.black12),
                                             child: Row(
                                               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
@@ -527,19 +638,23 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                 Expanded(
                                                     child: Text(
                                                   emp.replaceAll("_", " "),
-                                                  style: TextStyle(fontSize: size.height * 0.02),
+                                                  style: TextStyle(
+                                                      fontSize: size.height * 0.02),
                                                 )),
                                                 IconButton(
                                                   onPressed: () {
                                                     setState(() {
                                                       selectedEmployees.remove(emp);
-                                                      empTaskdata.removeWhere((data) => data.xLabel == emp);
+                                                      empTaskdata.removeWhere(
+                                                          (data) =>
+                                                              data.xLabel == emp);
                                                     });
                                                   },
                                                   icon: Icon(Icons.cancel_rounded),
                                                   iconSize: size.width * 0.01,
                                                   splashRadius: 5,
-                                                  visualDensity: VisualDensity.compact,
+                                                  visualDensity:
+                                                      VisualDensity.compact,
                                                 ),
                                               ],
                                             )))
@@ -548,11 +663,9 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                             ],
                           ),
                         ),
-                            ],
-                          );
-                        }
-                      ),
-              ],
+                      ],
+                    );
+                  }),
             ),
           ],
         );

@@ -41,7 +41,7 @@ class _SidebarState extends State<Sidebar> {
         scale = 2.5;
         break;
       case Device.desktop:
-        fontSize = 18;
+        fontSize = 16;
         scale = 1.8;
         break;
     }

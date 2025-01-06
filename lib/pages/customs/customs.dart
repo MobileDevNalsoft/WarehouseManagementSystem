@@ -81,29 +81,22 @@ class Customs {
   }
 
   static Widget DashboardWidget(
-      {Size size = const Size(100, 100),
+      {double height = 150,
       double? margin,
       Decoration? decoration,
       bool loaderEnabled = true,
-      required Widget Function(double ratio) chartBuilder}) {
+      required Widget Function(BoxConstraints lsize) chartBuilder}) {
     return Container(
-      margin: EdgeInsets.all(margin ?? 0),
-      height: size.height,
-      width: size.width,
-      decoration: decoration ??
-          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-      padding: EdgeInsets.all(size.height * 0.035),
-      alignment: Alignment.center,
-      child: LayoutBuilder(builder: (context, lsize) {
-        double aspectRatio;
-        if (lsize.maxHeight > lsize.maxWidth) {
-          aspectRatio = lsize.maxHeight / lsize.maxWidth;
-        } else {
-          aspectRatio = lsize.maxWidth / lsize.maxHeight;
-        }
-        return loaderEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(aspectRatio);
-      }),
-    );
+    margin: EdgeInsets.all(margin ?? 0),
+    height: height,
+    decoration: decoration ??
+        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+    padding: EdgeInsets.all(height * 0.035),
+    alignment: Alignment.center,
+    child: LayoutBuilder(builder: (context, lsize) {
+      return loaderEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(lsize);
+    }),
+          );
   }
 
   static Widget ElevatedDashboardWidget(
@@ -371,7 +364,7 @@ class Customs {
   }
 
   static Widget WMSSfCircularChart(
-      {required double ratio,
+      {required BoxConstraints lsize,
       String title = 'Title',
       double titleFontSize = 16,
       SeriesName series = SeriesName.doughnut,
@@ -391,7 +384,7 @@ class Customs {
           ? <CircularChartAnnotation>[
               CircularChartAnnotation(
                 widget: Container(
-                    height: ratio * 75,
+                    height: lsize.maxHeight * 0.3,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -422,8 +415,8 @@ class Customs {
                 onPointTap: props.onPointTap,
                 dataLabelSettings: DataLabelSettings(
                     isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
-                radius: props.radius ?? '${ratio * 45}%', // Adjust the radius as needed
-                innerRadius: props.innerRadius ?? '${ratio * 32}%', // Optional: adjust for a thinner ring
+                radius: props.radius ?? '${lsize.maxWidth*0.18}%', // Adjust the radius as needed
+                innerRadius: props.innerRadius ?? '${lsize.maxWidth*0.15}%', // Optional: adjust for a thinner ring
                 pointColorMapper: props.pointColorMapper,
               )
             : series == SeriesName.radialBar
@@ -431,8 +424,8 @@ class Customs {
                     dataSource: props!.dataSource,
                     maximumValue: props.maximumValue,
                     cornerStyle: CornerStyle.bothCurve,
-                    radius: props.radius ?? '${ratio * 50}%', // Adjust the radius as needed
-                    innerRadius: props.innerRadius ?? '${ratio * 32}%', // Optional: adjust for a thinner ring
+                    radius: props.radius ?? '${lsize.maxWidth*0.2}%', // Adjust the radius as needed
+                    innerRadius: props.innerRadius ?? '${lsize.maxWidth*0.1}%', // Optional: adjust for a thinner ring
                     dataLabelSettings: DataLabelSettings(
                         // Renders the data label
                         isVisible: true,
@@ -450,7 +443,7 @@ class Customs {
                         isVisible: true,
                         textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: props.labelFontSize),
                         alignment: ChartAlignment.center),
-                    radius: props.radius ?? '${ratio * 70}%',
+                    radius: props.radius ?? '${lsize.maxWidth*0.2}%',
                     pointColorMapper: props.pointColorMapper,
                     onPointTap: props.onPointTap,
                     xValueMapper: (PieData data, _) => data.xData,

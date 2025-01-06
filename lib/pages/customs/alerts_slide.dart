@@ -37,7 +37,7 @@ class _AlertsSlideState extends State<AlertsSlide> {
                 padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
                 child: Text(
                   'Notifications',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.aspectRatio * 13, color: Colors.white),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                 ),
               ),
               InkWell(
@@ -71,7 +71,7 @@ class _AlertsSlideState extends State<AlertsSlide> {
                         children: [
                           Text(
                             isEnabled ? 'Subject' : state.alerts![index].subject!,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.aspectRatio * 8),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           Text(isEnabled ? 'Body body body body body body body body\n body body body' : state.alerts![index].body!),
                           Gap(size.height * 0.01),
@@ -79,7 +79,7 @@ class _AlertsSlideState extends State<AlertsSlide> {
                               alignment: Alignment.centerRight,
                               child: Text(
                                 isEnabled ? 'Time' : state.alerts![index].time!,
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: size.aspectRatio * 7),
+                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                               )),
                         ],
                       ),

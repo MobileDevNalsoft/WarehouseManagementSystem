@@ -23,7 +23,6 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double aspectRatio = size.width / size.height;
     return BlocBuilder<DashboardsBloc, DashboardsState>(
       builder: (context, state) {
         bool isEnabled =
@@ -35,16 +34,16 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
           ),
           children: [
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
-                margin: aspectRatio * 10,
+                height: size.height*0.45,
+                margin: size.height * 0.02,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSCartesianChart(
                       title: 'Vehicle Detention',
-                      titleFontSize: ratio * 13,
-                      xlabelFontSize: ratio * 10,
-                      ylabelFontSize: ratio * 10,
-                      ytitleFontSize: ratio * 12,
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
                       barCount: 1,
                       barColors: [Color.fromRGBO(132, 142, 230, 1)],
                       dataSources: [
@@ -79,15 +78,15 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                       legendVisibility: false);
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
-                margin: aspectRatio * 10,
+                height: size.height*0.45,
+                margin: size.height * 0.02,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSSfCircularChart(
-                    ratio: ratio,
+                    lsize: lsize,
                     series: SeriesName.pieSeries,
                     title: 'Yard Utilization',
-                    titleFontSize: ratio * 13,
+                    titleFontSize: 13,
                     legendVisibility: true,
                     props: Props(dataSource: [
                       PieData(
@@ -116,20 +115,20 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                               : (state.yardDashboardData!.yardUtilization!
                                       .occupied!)
                                   .toString())
-                    ], radius: '${ratio * 70}%', labelFontSize: ratio * 10),
+                    ], labelFontSize: 12),
                   );
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
-                margin: aspectRatio * 10,
+                height: size.height*0.45,
+                margin: size.height * 0.02,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSCartesianChart(
                       title: 'Daywise Yard Utilization',
-                      titleFontSize: ratio * 13,
-                      xlabelFontSize: ratio * 10,
-                      ylabelFontSize: ratio * 10,
-                      ytitleFontSize: ratio * 12,
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
                       barCount: 2,
                       barColors: [
                         const Color.fromARGB(255, 231, 142, 247),
@@ -157,14 +156,14 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                       ]);
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
-                margin: aspectRatio * 10,
+                height: size.height*0.45,
+                margin: size.height * 0.02,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSSfCircularChart(
-                      ratio: ratio,
+                      lsize: lsize,
                       title: "Previous month yard acitvity",
-                      titleFontSize: ratio * 13,
+                      titleFontSize: 13,
                       series: SeriesName.radialBar,
                       legendVisibility: true,
                       props: Props(
@@ -180,7 +179,7 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                                   .previousMonthYardUtilization!.unloadingCount!
                                   .toDouble()),
                         ],
-                        labelFontSize: ratio * 10,
+                        labelFontSize: 12,
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
                             return Color.fromRGBO(132, 211, 86, 1);

@@ -255,7 +255,6 @@ export function addInteractions(scene, model, camera, controls) {
   }
 
   function onMouseUp(e) {
-    console.warn(e.target.classList);
     if ((lastPos.distanceTo(mouse) === 0) & (e.button === 0)) {
       if (e.target.classList.contains("ignoreRaycast")) return;
        
