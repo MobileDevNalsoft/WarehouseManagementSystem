@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:wmssimulator/bloc/authentication/authentication_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
+import 'package:wmssimulator/responsive/responsive.dart';
 
 import '../inits/init.dart';
 import '../navigations/navigator_service.dart';
@@ -35,11 +36,18 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double aspectRatio;
-    if(size.height > size.width){
-      aspectRatio = size.height/size.width;
-    }else{
-      aspectRatio = size.width/size.height;
+    double fontSize;
+    Device device = getDevice(context);
+    switch(device){
+      case Device.mobile:
+        fontSize = 12;
+        break;
+      case Device.tab:
+        fontSize = 14;
+        break;
+      case Device.desktop:
+        fontSize = 16;
+        break;
     }
     
     return Scaffold(
@@ -62,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                         "Digital Warehouse",
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
-                          fontSize: aspectRatio*16, 
+                          fontSize: fontSize+5, 
                         ),
                       ),
                       Gap(size.height*0.1),
@@ -87,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                             hintText: 'password',
                             controller: _passwordController,
                             onFieldSubmitted: (p0) {
-                              _loginSubmitted(size, aspectRatio);
+                              _loginSubmitted(size, fontSize);
                             },
                             prefixIcon: Icon(
                               Icons.key,
@@ -119,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                         size.height * 0.05,
                       ),
                       ElevatedButton(onPressed: (){
-                        _loginSubmitted(size, aspectRatio);
+                        _loginSubmitted(size, fontSize);
                       }, 
                       style: ElevatedButton.styleFrom(
                         fixedSize: Size(size.width*0.2, size.height*0.06),
@@ -128,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
                       ),
-                      child: Text('Login', style: TextStyle(fontSize: aspectRatio*8, fontWeight: FontWeight.bold),))
+                      child: Text('Login', style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),))
                     ],
                   )
                 ],
@@ -145,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _loginSubmitted(Size size,double aspectRatio){
+  void _loginSubmitted(Size size, double fontSize) {
     String? message = (_emailController.text.isEmpty ? "username cannot be empty" : null) ??
                           // this method validates the password according to regex and gives instructions.
                           _passwordValidator(_passwordController.text);
@@ -156,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Icons.error,
                                 color: Colors.black,
                                 size: 35,
-                              ), content: [Text(message, style: TextStyle(fontSize: aspectRatio*8),textAlign: TextAlign.center,)]);
+                              ), content: [Text(message, style: TextStyle(fontSize: fontSize),textAlign: TextAlign.center,)]);
                           } else {
                             // unfocuses all the focused fields
                             FocusManager.instance.primaryFocus?.unfocus();

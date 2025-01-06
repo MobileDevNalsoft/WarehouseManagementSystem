@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:wmssimulator/responsive/responsive.dart';
 
 // ignore: must_be_immutable
 // this custom text form field is used in login button for username and password.
@@ -18,6 +19,19 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    double fontSize;
+    Device device = getDevice(context);
+    switch(device){
+      case Device.mobile:
+        fontSize = 12;
+        break;
+      case Device.tab:
+        fontSize = 14;
+        break;
+      case Device.desktop:
+        fontSize = 16;
+        break;
+    }
     return Container(
       alignment: Alignment.center,
       height: size.height * 0.06,
@@ -29,24 +43,21 @@ class CustomTextFormField extends StatelessWidget {
         ),
       ]),
       child: LayoutBuilder(builder: (context, constraints) {
-        double aspectRatio;
-        if (constraints.maxHeight > constraints.maxWidth) {
-          aspectRatio = constraints.maxHeight / constraints.maxWidth;
-        } else {
-          aspectRatio = constraints.maxWidth / constraints.maxHeight;
-        }
         return TextFormField(
           textAlign: TextAlign.start,
           textAlignVertical: TextAlignVertical.center,
           controller: controller,
-          style: TextStyle(fontSize: constraints.maxWidth*0.048,height: constraints.maxHeight*0.01),
+          style: TextStyle(fontSize: fontSize),
           cursorColor: Colors.black,
           cursorHeight: constraints.maxHeight * 0.5,
           onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(vertical: constraints.maxWidth*0.056,),
-            hintStyle: TextStyle(color: Colors.black26, fontSize: aspectRatio * 2.4),
+            contentPadding:EdgeInsets.only(
+                  bottom: size.height*0.025 / 2,  // HERE THE IMPORTANT PART
+                ),
+            hintStyle: TextStyle(color: Colors.black26, fontSize: fontSize),
+            alignLabelWithHint: true,
             hintText: hintText,
             prefixIcon: prefixIcon != null
                 ? Padding(

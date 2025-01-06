@@ -84,7 +84,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                   Row(
                     children: [
                       Customs.DashboardWidget(
-                          size: Size(size.width * 0.25, size.height * 0.45),
+                          size: Size(size.width * 0.24, size.height * 0.45),
                           margin: aspectRatio * 10,
                           loaderEnabled: isEnabled,
                           chartBuilder: (ratio) {
@@ -107,7 +107,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 ));
                           }),
                       Customs.DashboardWidget(
-                          size: Size(size.width * 0.25, size.height * 0.45),
+                          size: Size(size.width * 0.24, size.height * 0.45),
                           margin: aspectRatio * 10,
                           loaderEnabled: isEnabled,
                           chartBuilder: (ratio) {
@@ -165,7 +165,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 ));
                           }),
                       Customs.DashboardWidget(
-                          size: Size(size.width * 0.25, size.height * 0.45),
+                          size: Size(size.width * 0.24, size.height * 0.45),
                           margin: aspectRatio * 10,
                           loaderEnabled: isEnabled,
                           chartBuilder: (ratio) {
@@ -184,7 +184,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                   Row(
                     children: [
                       Customs.DashboardWidget(
-                          size: Size(size.width * 0.25, size.height * 0.45),
+                          size: Size(size.width * 0.24, size.height * 0.45),
                           margin: aspectRatio * 10,
                           loaderEnabled: isEnabled,
                           chartBuilder: (ratio) {
@@ -205,7 +205,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 barColors: [Colors.deepPurple.shade200]);
                           }),
                       Customs.DashboardWidget(
-                          size: Size(size.width * 0.25, size.height * 0.45),
+                          size: Size(size.width * 0.24, size.height * 0.45),
                           margin: aspectRatio * 10,
                           loaderEnabled: isEnabled,
                           chartBuilder: (ratio) {
@@ -228,7 +228,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 ));
                           }),
                       Customs.DashboardWidget(
-                          size: Size(size.width * 0.25, size.height * 0.45),
+                          size: Size(size.width * 0.24, size.height * 0.45),
                           margin: aspectRatio * 10,
                           loaderEnabled: isEnabled,
                           chartBuilder: (ratio) {
@@ -253,7 +253,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                   Row(
                     children: [
                       Customs.DashboardWidget(
-                          size: Size(size.width * 0.25, size.height * 0.45),
+                          size: Size(size.width * 0.24, size.height * 0.45),
                           margin: aspectRatio * 10,
                           loaderEnabled: isEnabled,
                           chartBuilder: (ratio) {
@@ -274,14 +274,14 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 barColors: [const Color.fromARGB(255, 182, 143, 103)]);
                           }),
                       Customs.DashboardWidget(
-                          size: Size(size.width * 0.52, size.height * 0.45),
+                          size: Size(size.width * 0.51, size.height * 0.45),
                           margin: aspectRatio * 10,
                           loaderEnabled: isEnabled,
                           chartBuilder: (ratio) {
                             return Row(
                               children: [
                                 SizedBox(
-                                  width: ratio * 300,
+                                  width: size.width*0.36,
                                   child: Customs.WMSCartesianChart(
                                       title: 'User Efficiency',
                                       titleFontSize: ratio * 6,

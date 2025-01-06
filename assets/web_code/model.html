@@ -73,53 +73,15 @@
     </div>
   </div>
   <div id="tooltip">Tooltip Data</div>
-    <div id="agvtooltip"><strong>AGV1</strong>
-      <div class="tooltip-content">
-        LPN : IBPAIDL00001618<br>
-        Putaway : 5RB30602<br>
-        LPN : IBPAIDL00001619<br>
-        Putaway : 3RB20602
-      </div>
+  <div id="agvtooltip">
+    <strong style="display: block; text-align: center; margin: 5px;">AGV1</strong>
+    <div class="tooltip-content">
+      LPN : IBPAIDL00001618<br>
+      Putaway : 5RB30602<br>
+      LPN : IBPAIDL00001619<br>
+      Putaway : 3RB20602
+    </div>
   </div>
-  <script>
-    let simpleNoise = `
-      float N (vec2 st) { // https://thebookofshaders.com/10/
-          return fract( sin( dot( st.xy, vec2(12.9898,78.233 ) ) ) *  43758.5453123);
-      }
-      
-      float smoothNoise( vec2 ip ){ // https://www.youtube.com/watch?v=zXsWftRdsvU
-        vec2 lv = fract( ip );
-        vec2 id = floor( ip );
-        
-        lv = lv * lv * ( 3. - 2. * lv );
-        
-        float bl = N( id );
-        float br = N( id + vec2( 1, 0 ));
-        float b = mix( bl, br, lv.x );
-        
-        float tl = N( id + vec2( 0, 1 ));
-        float tr = N( id + vec2( 1, 1 ));
-        float t = mix( tl, tr, lv.x );
-        
-        return mix( b, t, lv.y );
-      }
-    `;
-    
-    let caustic = `
-          vec2 cPos = vPos.xz - (1, 0.25) * vPos.y;
-          vec2 cUv = (cPos - vec2(time * 1.5, 0.));
-  
-          float caustic = abs(smoothNoise(cUv) - 0.5);
-          caustic = pow(smoothstep(0.5, 0., caustic), 2.);
-          float causticFade = smoothNoise(cPos - vec2(time, 0.));
-          caustic *= causticFade;
-  
-          float causticShade = clamp(dot(normalize(vec3(1, 1, 0.25)), vN), 0., 1.);
-          caustic *= causticShade;
-  
-          gl_FragColor.rgb += vec3(caustic) * 0.25;
-    `;
-  </script>
   <script type="module" src="./index.js"></script>
   <div id="arrows-container">
     <button id="arrow-up" class="arrow ignoreRaycast">▲</button>
@@ -132,6 +94,7 @@
   </div>
   <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
   <df-messenger
+    id="wms-bot"
     class="ignoreRaycast"
     intent="WELCOME"
     chat-title="WMS BOT"

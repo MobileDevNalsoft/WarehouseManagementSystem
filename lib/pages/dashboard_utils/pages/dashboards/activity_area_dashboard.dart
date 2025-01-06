@@ -164,7 +164,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
             Row(
               children: [
                 Customs.DashboardWidget(
-                    size: Size(size.width * 0.25, size.height * 0.45),
+                    size: Size(size.width * 0.24, size.height * 0.45),
                     margin: aspectRatio * 10,
                     loaderEnabled: isEnabled,
                     chartBuilder: (ratio) {
@@ -193,7 +193,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           ));
                     }),
                 Customs.DashboardWidget(
-                    size: Size(size.width * 0.25, size.height * 0.45),
+                    size: Size(size.width * 0.24, size.height * 0.45),
                     margin: aspectRatio * 10,
                     loaderEnabled: isEnabled,
                     chartBuilder: (ratio) {
@@ -222,7 +222,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           ));
                     }),
                 Customs.DashboardWidget(
-                    size: Size(size.width * 0.25, size.height * 0.45),
+                    size: Size(size.width * 0.24, size.height * 0.45),
                     margin: aspectRatio * 10,
                     loaderEnabled: isEnabled,
                     chartBuilder: (ratio) {
@@ -255,7 +255,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
             Row(
               children: [
                 Customs.DashboardWidget(
-                    size: Size(size.width * 0.25, size.height * 0.45),
+                    size: Size(size.width * 0.24, size.height * 0.45),
                     margin: aspectRatio * 10,
                     loaderEnabled: isEnabled,
                     chartBuilder: (ratio) {
@@ -276,7 +276,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           barColors: [Color.fromRGBO(78, 72, 161, 0.69)]);
                     }),
                 Customs.DashboardWidget(
-                    size: Size(size.width * 0.25, size.height * 0.45),
+                    size: Size(size.width * 0.24, size.height * 0.45),
                     margin: aspectRatio * 10,
                     loaderEnabled: isEnabled,
                     chartBuilder: (ratio) {
@@ -297,7 +297,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           barColors: [Color.fromRGBO(64, 133, 138, 1)]);
                     }),
                 Customs.DashboardWidget(
-                  size: Size(size.width * 0.25, size.height * 0.45),
+                  size: Size(size.width * 0.24, size.height * 0.45),
                   margin: aspectRatio * 10,
                   loaderEnabled: isEnabled,
                   chartBuilder: (ratio) => Customs.WMSSfCircularChart(
@@ -323,7 +323,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Customs.DashboardWidget(
-                  size: Size(size.width * 0.25, size.height * 0.45),
+                  size: Size(size.width * 0.24, size.height * 0.45),
                   margin: aspectRatio * 10,
                   loaderEnabled: isEnabled,
                   chartBuilder: (ratio) => Customs.WMSSfCircularChart(
@@ -344,14 +344,14 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       )),
                 ),
                 Customs.DashboardWidget(
-                        size: Size(size.width * 0.52, size.height * 0.45),
+                        size: Size(size.width * 0.51, size.height * 0.45),
                         margin: aspectRatio*16,
                         loaderEnabled: isEnabled,
                         chartBuilder: (ratio) {
                         return Row(
                             children: [
                               SizedBox(
-                                width: ratio*300,
+                                width: size.width*0.36,
                                 child: Customs.WMSCartesianChart(
                                     title: 'Avg Time Taken by Employee',
                                     titleFontSize: ratio*6,

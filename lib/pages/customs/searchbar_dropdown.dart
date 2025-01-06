@@ -106,9 +106,6 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
             getIt<JsInteropService>().switchToMainCam("");
             getIt<JsInteropService>().switchToMainCam("storageArea");
             context.read<StorageBloc>().state.pageNum = 0;
-            // context
-            //     .read<StorageBloc>()
-            //     .add(AddStorageAreaData(searchText: _warehouseInteractionBloc.state.searchText ?? ""));
             context.read<StorageBloc>().add(GetBinData(searchText: _warehouseInteractionBloc.state.searchText));
           }
           break;

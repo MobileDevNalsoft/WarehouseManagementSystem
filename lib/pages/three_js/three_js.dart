@@ -111,14 +111,17 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                 width: size.width,
                 color: const Color.fromRGBO(68, 98, 136, 1),
                 alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: size.width * 0.01),
+                child:LayoutBuilder(builder: (context,constraints){
+                  return  Padding(
+                  padding: EdgeInsets.only(left: constraints.maxWidth * 0.01),
                   child: Image.asset(
                     'assets/images/nalsoft_logo_white.png',
-                    scale: size.height * 0.004,
+                    height: constraints.maxHeight*0.8,
+                    width: constraints.maxWidth*0.12,
                     isAntiAlias: true,
                   ),
-                ),
+                );
+                })
               ),
               Stack(
                 alignment: Alignment.center,
@@ -287,8 +290,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           );
         }),
         Positioned(
-          left: size.width * 0.15,
-          top: size.height * 0.013,
+          left: size.width * 0.18,
+          top: size.height * 0.015,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
               return PointerInterceptor(
@@ -310,8 +313,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           ),
         ),
         Positioned(
-          left: size.width * 0.32,
-          top: size.height * 0.013,
+          left: size.width * 0.35,
+          top: size.height * 0.015,
           child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
             builder: (context, state) {
               return PointerInterceptor(

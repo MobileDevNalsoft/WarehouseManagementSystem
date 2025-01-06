@@ -29,8 +29,7 @@ export async function initScene(renderer) {
   const model = gltf.scene;
   scene.add(model);
 
-  const SPEED = 5;
-
+  // Add skydome
   addSkyDome(scene);
 
   // Animation setup
@@ -91,7 +90,7 @@ export async function initScene(renderer) {
       model.rotation.y = -(Math.PI );
       agv.add(model);
       model.name = 'agvModel';
-      console.warn('agv model loaded'+model.name.toString());
+      console.warn('agv model loaded');
     },
     (xhr) => {
       console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
@@ -307,43 +306,8 @@ export async function initScene(renderer) {
   }
    
   });
-  // Create a GSAP timeline for smoother transitions
-  const timeline = gsap.timeline();
-
-  controls.enabled = false;
-  controls.enableDamping = false;
-
-  let warehouse = scene.getObjectByName('warehouse_wall');
-
-  // Animate position and rotation simultaneously
-  timeline
-    .to(camera.position, {
-      duration: 3,
-      x: warehouse.position.x,
-      y: warehouse.position.y+250,
-      z: warehouse.position.z+100,
-      ease: "power3.inOut",
-    })
-    .to(
-      controls.target,
-      {
-        duration: 3,
-        x: warehouse.position.x,
-        y: warehouse.position.y,
-        z: warehouse.position.z,
-        ease: "power3.inOut",
-        onUpdate: function () {
-          camera.lookAt(controls.target); // Smoothly look at the target
-        },
-      },
-      "<"
-    );
-
-  // Callbacks after animation completes
-  timeline.call(() => {
-    controls.enabled = true; 
-    controls.enableDamping = true;
-  });
+  
+  switchCamera(scene, "warehouse_wall", camera, controls);
 
 });
 
@@ -435,43 +399,7 @@ document.getElementById('showPath').addEventListener('click',(e)=>{
          
         });
 
-     // Create a GSAP timeline for smoother transitions
-  const timeline = gsap.timeline();
-
-  controls.enabled = false;
-  controls.enableDamping = false;
-
-  let warehouse = scene.getObjectByName('warehouse_wall');
-
-  // Animate position and rotation simultaneously
-  timeline
-    .to(camera.position, {
-      duration: 3,
-      x: warehouse.position.x,
-      y: warehouse.position.y+250,
-      z: warehouse.position.z+100,
-      ease: "power3.inOut",
-    })
-    .to(
-      controls.target,
-      {
-        duration: 3,
-        x: warehouse.position.x,
-        y: warehouse.position.y,
-        z: warehouse.position.z,
-        ease: "power3.inOut",
-        onUpdate: function () {
-          camera.lookAt(controls.target); // Smoothly look at the target
-        },
-      },
-      "<"
-    );
-
-  // Callbacks after animation completes
-  timeline.call(() => {
-    controls.enabled = true; 
-    controls.enableDamping = true;
-  });
+        switchCamera(scene, "warehouse_wall", camera, controls);
         
 });
 
