@@ -205,7 +205,7 @@ export async function initScene(renderer) {
 
 
       console.warn('box models loaded');
-    },
+    });
     
   //   (xhr) => {
   //     console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
