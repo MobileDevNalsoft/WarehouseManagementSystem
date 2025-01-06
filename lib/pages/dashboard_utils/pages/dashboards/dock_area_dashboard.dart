@@ -51,11 +51,10 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Device device = getDevice(context);
-    double aspectRatio = size.width / size.height;
     return Row(
       children: [
         Expanded(
-          flex: 10,
+          flex: 12,
           child: BlocBuilder<DashboardsBloc, DashboardsState>(
               buildWhen: (previous, current) => previous.getDockDashboardState != current.getDockDashboardState,
               builder: (context, state) {
@@ -65,15 +64,15 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                   children: [
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Stack(
                             children: [
                               Customs.WMSCartesianChart(
                                 title: "Daywise Utilization",
                                 titleFontSize: device == Device.desktop ? 13 : 10,
-                                xlabelFontSize: ratio * 8,
-                                ylabelFontSize: ratio * 8,
+                                xlabelFontSize: 12,
+                                ylabelFontSize: 12,
                                 ytitleFontSize: device == Device.desktop ? 13 : 10,
                                 yAxisTitle: 'Number of Vehicles',
                                 barCount: 2,
@@ -89,7 +88,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                 ],
                               ),
                               // Positioned(
-                              //   right: ratio * 0.08,
+                              //   right: lsize * 0.08,
                               //   child: InkWell(onTap: () {}, child: Icon(Icons.calendar_month_rounded)),
                               // )
                             ],
@@ -97,10 +96,10 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               title: 'Dock-IN Utilization',
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               legendVisibility: true,
@@ -108,6 +107,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                 dataSource: state.dockDashboardData!.dockInUtilization!
                                     .map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156)))
                                     .toList(),
+                                radius: '${lsize.maxWidth*0.13}%',
+                                innerRadius: '${lsize.maxWidth*0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 102, 82, 156);
@@ -119,10 +120,10 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               title: 'Dock-OUT Utilization',
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               legendVisibility: true,
@@ -130,6 +131,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                 dataSource: state.dockDashboardData!.dockOutUtilization!
                                     .map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156)))
                                     .toList(),
+                                radius: '${lsize.maxWidth*0.13}%',
+                                innerRadius: '${lsize.maxWidth*0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 52, 132, 136);
@@ -141,16 +144,18 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               title: "Avg Loading Time",
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               enableAnnotation: true,
                               annotationText: state.dockDashboardData!.avgLoadingTime!,
                               props: Props(
                                 dataSource: chartData1,
+                                radius: '${lsize.maxWidth*0.13}%',
+                                innerRadius: '${lsize.maxWidth*0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 151, 174, 206);
@@ -162,16 +167,18 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               title: "Avg Unloading Time",
                               enableAnnotation: true,
-                              annotationText: state.dockDashboardData!.avgUnloadingTime!,
+                              annotationText: state.dockDashboardData!.avgUnloadingTime!.substring(0, 7),
                               props: Props(
                                 dataSource: chartData1,
+                                radius: '${lsize.maxWidth*0.13}%',
+                                innerRadius: '${lsize.maxWidth*0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 176, 211, 141);
@@ -183,16 +190,18 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               title: "Avg Dock TAT",
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               enableAnnotation: true,
-                              annotationText: state.dockDashboardData!.avgDockTAT!,
+                              annotationText: state.dockDashboardData!.avgDockTAT!.substring(0, 6),
                               props: Props(
                                 dataSource: chartData1,
+                                radius: '${lsize.maxWidth*0.13}%',
+                                innerRadius: '${lsize.maxWidth*0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 196, 141, 204);
@@ -207,7 +216,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
               }),
         ),
         Expanded(
-          flex: 3,
+          flex: 4,
           child: LayoutBuilder(builder: (context, lsize) {
             return BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
               bool isEnabled = state.getAppointmentsState == AppointmentsState.loading;
@@ -230,7 +239,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                             children: [
                               Text(
                                 'Appointments',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.023),
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.026),
                               ),
                               Gap(lsize.maxHeight * 0.01),
                               Row(
@@ -239,7 +248,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                       width: lsize.maxWidth * 0.32,
                                       child: Text(
                                           '${DateFormat('E').format(state.appointmentsDate!)}, ${DateFormat('MMM').format(state.appointmentsDate!)} ${state.appointmentsDate!.day}',
-                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.02))),
+                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.022))),
                                   Spacer(),
                                   Container(
                                     alignment: Alignment.center,

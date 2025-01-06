@@ -54,7 +54,7 @@ class CustomTextFormField extends StatelessWidget {
           decoration: InputDecoration(
             border: InputBorder.none,
             contentPadding:EdgeInsets.only(
-                  bottom: size.height*0.025 / 2,  // HERE THE IMPORTANT PART
+                  bottom: size.height*0.025 / 2.2,  // HERE THE IMPORTANT PART
                 ),
             hintStyle: TextStyle(color: Colors.black26, fontSize: fontSize),
             alignLabelWithHint: true,
