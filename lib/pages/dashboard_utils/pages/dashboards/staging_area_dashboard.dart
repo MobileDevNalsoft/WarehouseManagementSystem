@@ -45,7 +45,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
     // TODO: implement initState
     super.initState();
 
-    rangeSelection = true;
+    rangeSelection = false;
     employeeSuggestionRange = {
       "101-110": [
         "101",
