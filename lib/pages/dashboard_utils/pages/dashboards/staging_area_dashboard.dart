@@ -44,7 +44,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
     // TODO: implement initState
     super.initState();
 
-    rangeSelection = true;
+    rangeSelection = false;
     employeeSuggestionRange = {
       "101-110": [
         "101",
@@ -293,8 +293,9 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                       dataSources: [
                                         isEnabled
                                             ? userEfficiencyGraphData
-                                            : state.stagingDashboardData!.userwiseEfficiency!
-                                                .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
+                                            : 
+                                            selectedUsers
+                                                .map((e) => BarData(xLabel:  e.replaceAll('_', ' '), yValue: state.stagingDashboardData!.userwiseEfficiency!.firstWhere((test) => test.status == e).count!, abbreviation: e))
                                                 .toList()
                                       ],
                                       yAxisTitle: 'Number of Orders',
@@ -342,9 +343,9 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                                 if (rangeSelection) {
                                                   userSuggestions = employeeSuggestionRange.keys.toList();
                                                 } else {
-                                                  for (var empList in employeeSuggestionRange.values) {
+                                                  for (var empList in state.stagingDashboardData!.userwiseEfficiency!) {
                                                     print(empList);
-                                                    userSuggestions.addAll(empList);
+                                                    userSuggestions.add(empList.status.toString());
                                                   }
                                                   print("emp suggestios $userSuggestions");
                                                 }
@@ -439,22 +440,23 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                             ),
                                           ),
                                           // Gap(size.width * 0.01),
-                                          Transform.scale(
-                                            scale: 0.7,
-                                            child: Switch(
-                                              value: rangeSelection,
-                                              onChanged: (value) {
-                                                print(rangeSelection);
-                                                setState(() {
-                                                  rangeSelection = value;
-                                                  suggestionsController.refresh();
-                                                  selectedUserRange = "";
-                                                  selectedUsers = [];
-                                                  userEfficiencyGraphData = [];
-                                                });
-                                              },
-                                            ),
-                                          )
+                                          // Transform.scale(
+                                          //   scale: 0.7,
+                                          //   child: Switch(
+                                          //     value: rangeSelection,
+                                          //     onChanged: (value) {
+                                          //       print(rangeSelection);
+                                          //       setState(() {
+                                          //         rangeSelection = value;
+                                          //         suggestionsController.refresh();
+                                          //         selectedUserRange = "";
+                                          //         selectedUsers = [];
+                                          //         userEfficiencyGraphData = [];
+                                          //       });
+                                          //     },
+                                          //   ),
+                                          // )
+                                        
                                         ],
                                       ),
                                       Gap(size.height * 0.012),
