@@ -51,45 +51,45 @@ class YardDashboard {
 
   YardDashboard.fromJson(Map<String, dynamic> json) {
     yardDetention = json['yard_detention'] != null
-        ? new YardDetention.fromJson(json['yard_detention'])
+        ? YardDetention.fromJson(json['yard_detention'])
         : null;
     yardUtilization = json['yard_utilization'] != null
-        ? new YardUtilization.fromJson(json['yard_utilization'])
+        ? YardUtilization.fromJson(json['yard_utilization'])
         : null;
     if (json['day_wise_yard_utilzation'] != null) {
       dayWiseYardUtilzation = <DayWiseYardUtilzation>[];
       json['day_wise_yard_utilzation'].forEach((v) {
-        dayWiseYardUtilzation!.add(new DayWiseYardUtilzation.fromJson(v));
+        dayWiseYardUtilzation!.add(DayWiseYardUtilzation.fromJson(v));
       });
     }
     previousMonthYardUtilization =
         json['previous_month_yard_utilization'] != null
-            ? new PreviousMonthYardUtilization.fromJson(
+            ? PreviousMonthYardUtilization.fromJson(
                 json['previous_month_yard_utilization'])
             : null;
     averageYardTime = json['average_yard_time'] != null
-        ? new AverageYardTime.fromJson(json['average_yard_time'])
+        ? AverageYardTime.fromJson(json['average_yard_time'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.yardDetention != null) {
-      data['yard_detention'] = this.yardDetention!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (yardDetention != null) {
+      data['yard_detention'] = yardDetention!.toJson();
     }
-    if (this.yardUtilization != null) {
-      data['yard_utilization'] = this.yardUtilization!.toJson();
+    if (yardUtilization != null) {
+      data['yard_utilization'] = yardUtilization!.toJson();
     }
-    if (this.dayWiseYardUtilzation != null) {
+    if (dayWiseYardUtilzation != null) {
       data['day_wise_yard_utilzation'] =
-          this.dayWiseYardUtilzation!.map((v) => v.toJson()).toList();
+          dayWiseYardUtilzation!.map((v) => v.toJson()).toList();
     }
-    if (this.previousMonthYardUtilization != null) {
+    if (previousMonthYardUtilization != null) {
       data['previous_month_yard_utilization'] =
-          this.previousMonthYardUtilization!.toJson();
+          previousMonthYardUtilization!.toJson();
     }
-    if (this.averageYardTime != null) {
-      data['average_yard_time'] = this.averageYardTime!.toJson();
+    if (averageYardTime != null) {
+      data['average_yard_time'] = averageYardTime!.toJson();
     }
     return data;
   }
@@ -110,10 +110,10 @@ class YardDetention {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count_1_to_7_days'] = this.count1To7Days;
-    data['count_greater_than_7_days'] = this.countGreaterThan7Days;
-    data['single_day_count'] = this.singleDayCount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['count_1_to_7_days'] = count1To7Days;
+    data['count_greater_than_7_days'] = countGreaterThan7Days;
+    data['single_day_count'] = singleDayCount;
     return data;
   }
 }
@@ -130,9 +130,9 @@ class YardUtilization {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['occupied'] = this.occupied;
-    data['total_locations'] = this.totalLocations;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['occupied'] = occupied;
+    data['total_locations'] = totalLocations;
     return data;
   }
 }
@@ -151,10 +151,10 @@ class DayWiseYardUtilzation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['check_in_date'] = this.checkInDate;
-    data['loading_cnt'] = this.loadingCnt;
-    data['unloading_cnt'] = this.unloadingCnt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['check_in_date'] = checkInDate;
+    data['loading_cnt'] = loadingCnt;
+    data['unloading_cnt'] = unloadingCnt;
     return data;
   }
 }
@@ -171,9 +171,9 @@ class PreviousMonthYardUtilization {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['loading_count'] = this.loadingCount;
-    data['unloading_count'] = this.unloadingCount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['loading_count'] = loadingCount;
+    data['unloading_count'] = unloadingCount;
     return data;
   }
 }
@@ -188,8 +188,8 @@ class AverageYardTime {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['avg_yard_time'] = this.avgYardTime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['avg_yard_time'] = avgYardTime;
     return data;
   }
 }

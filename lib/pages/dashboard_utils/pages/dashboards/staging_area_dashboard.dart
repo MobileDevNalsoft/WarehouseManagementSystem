@@ -14,7 +14,7 @@ import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dar
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 
 class StagingAreaDashboard extends StatefulWidget {
-  StagingAreaDashboard({super.key});
+  const StagingAreaDashboard({super.key});
 
   @override
   State<StagingAreaDashboard> createState() => _StagingAreaDashboardState();
@@ -105,8 +105,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(child:
-        BlocBuilder<DashboardsBloc, DashboardsState>(
-          builder: (context, state) {
+        BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
       bool isEnabled =
           state.getStagingDashboardState != StagingDashboardState.success;
       return StaggeredGrid.count(
@@ -166,6 +165,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                         } else if (p1 == 4) {
                           return const Color.fromARGB(255, 175, 83, 140);
                         }
+                        return null;
                       },
                       onPointTap: (pointInteractionDetails) {
                         _dashboardsBloc
@@ -246,12 +246,12 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                 return Customs.WMSRadialGuage(
                     title: "Shipping Efficiency",
                     titleFontSize: 15,
-                    annotationHeight: lsize.maxHeight*0.35,
+                    annotationHeight: lsize.maxHeight * 0.35,
                     annotationText:
                         state.stagingDashboardData!.shippingEfficiency!,
                     annotationFontSize: 15,
-                    axisLineColor: Color.fromARGB(255, 189, 187, 64),
-                    radiusFactor: lsize.maxHeight*0.0021,
+                    axisLineColor: const Color.fromARGB(255, 189, 187, 64),
+                    radiusFactor: lsize.maxHeight * 0.0021,
                     markerValue: int.parse(state
                                 .stagingDashboardData!.shippingEfficiency!
                                 .replaceAll('%', ''))
@@ -298,7 +298,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                       dataSource: avgPieData,
                       pointColorMapper: (p0, p1) {
                         if (p1 == 0) {
-                          return Color.fromRGBO(189, 125, 177, 1);
+                          return const Color.fromRGBO(189, 125, 177, 1);
                         } else {
                           return Colors.white;
                         }
@@ -375,16 +375,21 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                             dataSources: [
                               isEnabled
                                   ? userEfficiencyGraphData
-                                  : state
-                                      .stagingDashboardData!.userwiseEfficiency!
+                                  : selectedUsers
                                       .map((e) => BarData(
-                                          xLabel: e.status!.split('_')[0],
-                                          yValue: e.count!,
-                                          abbreviation: e.status!))
+                                          xLabel: e.replaceAll('_', ' '),
+                                          yValue: state.stagingDashboardData!
+                                              .userwiseEfficiency!
+                                              .firstWhere(
+                                                  (test) => test.status == e)
+                                              .count!,
+                                          abbreviation: e))
                                       .toList()
                             ],
                             yAxisTitle: 'Number of Orders',
-                            barColors: [Color.fromRGBO(147, 0, 120, 0.5)]),
+                            barColors: [
+                              const Color.fromRGBO(147, 0, 120, 0.5)
+                            ]),
                       ),
                       Gap(size.width * 0.016),
                       SizedBox(
@@ -394,8 +399,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                             Expanded(
                               child: TypeAheadField(
                                 suggestionsController: suggestionsController,
-                                builder:
-                                    (context, textController, focusNode) {
+                                builder: (context, textController, focusNode) {
                                   typeAheadController = textController;
                                   typeAheadFocusNode = focusNode;
                                   textController = textController;
@@ -410,9 +414,8 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                     onTap: () {},
                                     cursorColor: Colors.black,
                                     decoration: InputDecoration(
-                                      hintText: rangeSelection
-                                          ? 'Choose'
-                                          : "Compare",
+                                      hintText:
+                                          rangeSelection ? 'Choose' : "Compare",
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(24)),
@@ -454,13 +457,12 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                               child: Checkbox(
                                                   visualDensity:
                                                       VisualDensity.compact,
-                                                  shape: OvalBorder(),
+                                                  shape: const OvalBorder(),
                                                   value: rangeSelection
                                                       ? selectedUserRange ==
                                                           suggestion
                                                       : selectedUsers
-                                                          .contains(
-                                                              suggestion),
+                                                          .contains(suggestion),
                                                   onChanged: (value) {
                                                     setState(() {
                                                       if (rangeSelection !=
@@ -468,9 +470,8 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                                         if (selectedUsers
                                                             .contains(
                                                                 suggestion)) {
-                                                          selectedUsers
-                                                              .remove(
-                                                                  suggestion);
+                                                          selectedUsers.remove(
+                                                              suggestion);
                                                           userEfficiencyGraphData
                                                               .removeWhere((data) =>
                                                                   data.xLabel ==
@@ -480,10 +481,10 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                                         } else if (selectedUsers
                                                                 .length <
                                                             10) {
-                                                          selectedUsers.add(
-                                                              suggestion);
-                                                          userEfficiencyGraphData
-                                                              .add(BarData(
+                                                          selectedUsers
+                                                              .add(suggestion);
+                                                          userEfficiencyGraphData.add(
+                                                              BarData(
                                                                   xLabel:
                                                                       suggestion,
                                                                   yValue: random
@@ -500,12 +501,11 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                                         userEfficiencyGraphData =
                                                             [];
                                                         selectedUsers = [];
-                                                        List<String>
-                                                            employees =
+                                                        List<String> employees =
                                                             employeeSuggestionRange[
                                                                 suggestion]!;
-                                                        selectedUsers.addAll(
-                                                            employees);
+                                                        selectedUsers
+                                                            .addAll(employees);
                                                         for (var emp
                                                             in selectedUsers) {
                                                           userEfficiencyGraphData
@@ -543,8 +543,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                               (data) =>
                                                   data.xLabel == suggestion);
                                           suggestionsController.refresh();
-                                        } else if (selectedUsers.length <
-                                            10) {
+                                        } else if (selectedUsers.length < 10) {
                                           selectedUsers.add(suggestion);
                                           userEfficiencyGraphData.add(BarData(
                                               xLabel: suggestion,
@@ -558,11 +557,10 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                     setState(() {
                                       selectedUserRange = suggestion;
                                       List<String> employees =
-                                          employeeSuggestionRange[
-                                              suggestion]!;
+                                          employeeSuggestionRange[suggestion]!;
                                       userEfficiencyGraphData = [];
                                       selectedUsers = [];
-                                        
+
                                       selectedUsers.addAll(employees);
                                       for (var emp in selectedUsers) {
                                         userEfficiencyGraphData.add(BarData(
@@ -580,11 +578,12 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                             Container(
                                 width: size.width * 0.1,
                                 height: size.height * 0.3,
-                                decoration: BoxDecoration(),
+                                decoration: const BoxDecoration(),
                                 child: ListView(
                                   children: selectedUsers
                                       .map((emp) => Container(
-                                          margin: EdgeInsets.only(bottom: 4),
+                                          margin:
+                                              const EdgeInsets.only(bottom: 4),
                                           decoration: BoxDecoration(
                                               shape: BoxShape.rectangle,
                                               borderRadius:
@@ -597,7 +596,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                               Expanded(
                                                   child: Text(
                                                 emp,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 22,
                                                     overflow:
                                                         TextOverflow.ellipsis),
@@ -611,7 +610,8 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                                             data.xLabel == emp);
                                                   });
                                                 },
-                                                icon: Icon(Icons.cancel_rounded),
+                                                icon: const Icon(
+                                                    Icons.cancel_rounded),
                                                 iconSize: size.width * 0.01,
                                                 splashRadius: 5,
                                                 visualDensity:
@@ -633,3 +633,6 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
     }));
   }
 }
+
+
+

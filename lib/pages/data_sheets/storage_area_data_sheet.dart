@@ -9,7 +9,7 @@ import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class StorageAreaDataSheet extends StatefulWidget {
-  StorageAreaDataSheet({super.key});
+  const StorageAreaDataSheet({super.key});
   
 
   @override
@@ -60,8 +60,8 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                 enabled: isEnabled,
                 enableSwitchAnimation: true,
                 child:
-                (state.storageAreaStatus== StorageAreaStatus.success &&  state.storageAisles!.data!.length==0)?
-                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
+                (state.storageAreaStatus== StorageAreaStatus.success &&  state.storageAisles!.data!.isEmpty)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),const Text("Data not found")],)
                        :
                  ListView.builder(
                     controller: _controller,
@@ -93,10 +93,10 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                               Row(
                                 children: [
                                   Text(
-                                    isEnabled ? 'Type Frozen' : '${state.storageAisles!.data![index].locationCategory??""}',
+                                    isEnabled ? 'Type Frozen' : state.storageAisles!.data![index].locationCategory??"",
                                     style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016,fontWeight: FontWeight.bold),
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   Padding(
                                     padding: EdgeInsets.only(right: size.width * 0.008),
                                     child: Image.asset(
@@ -105,7 +105,7 @@ class _StorageAreaDataSheetState extends State<StorageAreaDataSheet> {
                                     ),
                                   ),
                                   Text(
-                                    isEnabled ? '36' : "${state.storageAisles!.data![index].barcode ?? ""}",
+                                    isEnabled ? '36' : state.storageAisles!.data![index].barcode ?? "",
                                     style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016,fontWeight: FontWeight.bold),
                                   )
                                 ],

@@ -30,8 +30,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
       Color? primaryColor,
       Color? secondaryColor,
       List<String>? legendText,
-      bool? isLegendVisible,
-      int? spacing}) {
+      bool? isLegendVisible}) {
     return SfCartesianChart(
         title: ChartTitle(
             text: title,
@@ -44,7 +43,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                 isVisible: isLegendVisible ?? false,
                 isResponsive: true,
                 position: LegendPosition.bottom)
-            : Legend(),
+            : const Legend(),
         onLegendItemRender: (legendRenderArgs) {
           if (legendText != null) {
             legendRenderArgs.text = legendText[legendRenderArgs.seriesIndex!];
@@ -233,6 +232,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           } else if (p1 == 3) {
                             return const Color.fromARGB(255, 159, 177, 80);
                           }
+                          return null;
                         },
                       ));
                 }),
@@ -265,6 +265,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                           } else if (p1 == 3) {
                             return const Color.fromARGB(255, 159, 177, 80);
                           }
+                          return null;
                         },
                       ));
                 }),
@@ -322,7 +323,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       ],
                       yAxisTitle: 'Number of Tasks',
                       legendVisibility: false,
-                      barColors: [Color.fromRGBO(78, 72, 161, 0.69)]);
+                      barColors: [const Color.fromRGBO(78, 72, 161, 0.69)]);
                 }),
             Customs.DashboardWidget(
                 height: size.height * 0.45,
@@ -346,7 +347,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       ],
                       yAxisTitle: 'Number of orders',
                       legendVisibility: false,
-                      barColors: [Color.fromRGBO(64, 133, 138, 1)]);
+                      barColors: [const Color.fromRGBO(64, 133, 138, 1)]);
                 }),
             Customs.DashboardWidget(
               height: size.height * 0.45,
@@ -408,7 +409,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                 ylabelFontSize: 12,
                                 ytitleFontSize: 13,
                                 barCount: 1,
-                                barColors: [Color.fromRGBO(147, 0, 120, 0.5)],
+                                barColors: [const Color.fromRGBO(147, 0, 120, 0.5)],
                                 yAxisTitle: 'Number of Tasks',
                                 dataSources: [
                                   selectedEmployees
@@ -423,7 +424,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                       .toList()
                                 ])),
                         Gap(size.width * 0.016),
-                        Container(
+                        SizedBox(
                           width: size.width * 0.1,
                           child: Column(
                             children: [
@@ -491,7 +492,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                   child: Row(
                                                 children: [
                                                   Checkbox(
-                                                      shape: OvalBorder(),
+                                                      shape: const OvalBorder(),
                                                       value: rangeSelection
                                                           ? selectedEmployeeRange ==
                                                               suggestion
@@ -617,7 +618,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                               Container(
                                   width: size.width * 0.1,
                                   height: size.height * 0.3,
-                                  decoration: BoxDecoration(),
+                                  decoration: const BoxDecoration(),
                                   child:
                                       // rangeSelection
                                       //     ? Text(selectedEmployeeRange)
@@ -625,7 +626,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                       ListView(
                                     children: selectedEmployees
                                         .map((emp) => Container(
-                                            margin: EdgeInsets.only(bottom: 4),
+                                            margin: const EdgeInsets.only(bottom: 4),
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.rectangle,
                                                 borderRadius:
@@ -650,7 +651,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                               data.xLabel == emp);
                                                     });
                                                   },
-                                                  icon: Icon(Icons.cancel_rounded),
+                                                  icon: const Icon(Icons.cancel_rounded),
                                                   iconSize: size.width * 0.01,
                                                   splashRadius: 5,
                                                   visualDensity:

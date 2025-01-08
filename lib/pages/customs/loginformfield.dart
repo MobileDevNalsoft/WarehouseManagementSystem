@@ -14,7 +14,7 @@ class CustomTextFormField extends StatelessWidget {
   void Function(String)? onFieldSubmitted;
 
   CustomTextFormField(
-      {super.key, required this.hintText, this.prefixIcon, this.suffixIcon, this.controller, this.obscureText, this.obscureChar, this.onFieldSubmitted}) {}
+      {super.key, required this.hintText, this.prefixIcon, this.suffixIcon, this.controller, this.obscureText, this.obscureChar, this.onFieldSubmitted});
 
   @override
   Widget build(BuildContext context) {

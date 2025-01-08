@@ -55,8 +55,8 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
               return Expanded(
             child: LayoutBuilder(builder: (context, lsize) {
               return (!isEnabled &&  state.activityAreaItems!.isEmpty)?
-                      Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")],)
-                     : isEnabled ? Center(child: CircularProgressIndicator(),) : ActivityListView(data: state.activityAreaItems!, l1StyleData: L1StyleData(height: 60, width: 400), l2StyleData: L2StyleData(height: lsize.maxHeight*0.13));
+                      Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),const Text("Data not found")],)
+                     : isEnabled ? const Center(child: CircularProgressIndicator(),) : ActivityListView(data: state.activityAreaItems!, l1StyleData: L1StyleData(height: 60, width: 400), l2StyleData: L2StyleData(height: lsize.maxHeight*0.13));
             }),
           );
             },
@@ -112,22 +112,22 @@ class _ActivityListViewState extends State<ActivityListView> {
                     width: widget.l1StyleData.width,
                     color: Colors.transparent,
                     child: Container(
-                      margin: EdgeInsets.only(top: 65, bottom: 5),
+                      margin: const EdgeInsets.only(top: 65, bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.dropDownColor,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.data[oindex].items!.length,
                             itemBuilder: (context, index) {
                               return Container(
-                                                padding: EdgeInsets.all(10),
+                                                padding: const EdgeInsets.all(10),
                                                 height: widget.l2StyleData.height,
-                                                margin: EdgeInsets.only(bottom: 5),
+                                                margin: const EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
                                                   color: widget.l2StyleData.color,
                                                   borderRadius: BorderRadius.circular(15),
@@ -187,8 +187,8 @@ class _ActivityListViewState extends State<ActivityListView> {
                     child: Container(
                       height: widget.l1StyleData.height,
                       width: widget.l1StyleData.width,
-                      padding: EdgeInsets.all(5),
-                      margin: EdgeInsets.only(bottom: 5),
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.color, // Purple background
                         borderRadius: BorderRadius.circular(15),
@@ -203,12 +203,12 @@ class _ActivityListViewState extends State<ActivityListView> {
                             Gap(lsize.maxWidth * 0.01),
                             Text(
                               widget.data[oindex].workOrderType!.replaceAll('"', ''),
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: widget.l1StyleData.height * 0.5,
-                              decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
+                              decoration: BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -221,7 +221,7 @@ class _ActivityListViewState extends State<ActivityListView> {
                                   AnimatedRotation(
                                     turns: turns[oindex],
                                     duration: const Duration(milliseconds: 200),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       size: 20,
                                       color: Colors.white,

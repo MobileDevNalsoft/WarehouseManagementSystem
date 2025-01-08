@@ -1,5 +1,7 @@
-import 'dart:math';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html; // Import the HTML library
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -8,18 +10,13 @@ import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel; // Ensure you have this package
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
-import 'package:another_flushbar/flushbar.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
-import 'package:wmssimulator/models/storage_bin.dart';
 import 'package:wmssimulator/pages/customs/users_builder.dart';
-import 'package:wmssimulator/pages/test_code/warehouse.dart';
-import 'dart:html' as html; // Import the HTML library
-import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel; // Ensure you have this package
-import 'package:path/path.dart'; // For manipulating paths
 
 class Customs {
   static Widget DataSheet({required Size size, required String title, required List<Widget> children, controller, required BuildContext context}) {
@@ -31,7 +28,7 @@ class Customs {
           decoration: BoxDecoration(
               color: const Color.fromRGBO(12, 46, 87, 1),
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 10)]),
+              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.02),
           margin: EdgeInsets.only(top: size.height * 0.02, bottom: size.height * 0.004, right: size.height * 0.01),
           height: size.height * 0.06,
@@ -54,7 +51,7 @@ class Customs {
                             : "compoundArea");
                     getIt<JsInteropService>().resetBoxColors();
 
-                    context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"object": "null"}));
+                    context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: const {"object": "null"}));
 
                     getIt<JsInteropService>().resetTrucks();
                   },
@@ -68,7 +65,7 @@ class Customs {
           decoration: BoxDecoration(
               color: const Color.fromRGBO(12, 46, 87, 1),
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [const BoxShadow(color: Colors.grey, blurRadius: 10)]),
+              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.all(size.height * 0.012),
           child: LayoutBuilder(builder: (context, layout) {
             return Column(
@@ -106,18 +103,18 @@ class Customs {
       required int index,
       required Widget Function(double ratio, DashboardsState state) chartBuilder,
       bool Function(DashboardsState, DashboardsState)? buildWhen}) {
-    DashboardsBloc _dashboardsBloc = context.read<DashboardsBloc>();
+    DashboardsBloc dashboardsBloc = context.read<DashboardsBloc>();
     return Stack(
       children: [
         BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
           return MouseRegion(
             onEnter: (event) {
               state.elevates![index] = true;
-              _dashboardsBloc.add(ElevateDashboard(elevates: state.elevates!));
+              dashboardsBloc.add(ElevateDashboard(elevates: state.elevates!));
             },
             onExit: (event) {
               state.elevates![index] = false;
-              _dashboardsBloc.add(ElevateDashboard(elevates: state.elevates!));
+              dashboardsBloc.add(ElevateDashboard(elevates: state.elevates!));
             },
             child: Container(
               height: size.height,
@@ -501,7 +498,7 @@ class Customs {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                              overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                               onTap: () => onExport(state),
                               child: Image.asset(
                                 'assets/images/export.png',
@@ -520,7 +517,7 @@ class Customs {
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                             onTap: () => Navigator.pop(context),
                             child: CircleAvatar(
                               radius: size.width*0.007,
@@ -562,7 +559,7 @@ class Customs {
                                           alignment: Alignment.center,
                                           child: Text(
                                             dataSources[index].columnName,
-                                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                           ))),
                                 ],
                               )),

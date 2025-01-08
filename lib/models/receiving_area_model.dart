@@ -129,9 +129,9 @@ class DayWiseInboundSummary {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['verified_date'] = this.verifiedDate;
-    data['shipment_count'] = this.shipmentCount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['verified_date'] = verifiedDate;
+    data['shipment_count'] = shipmentCount;
     return data;
   }
 }

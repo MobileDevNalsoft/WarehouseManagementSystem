@@ -50,7 +50,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
                   margin: EdgeInsets.only(top: size.height * 0.035),
                   width: size.width * 0.35,
                   height: size.height * 0.6,
-                  decoration: BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1), borderRadius: BorderRadius.circular(16)),
+                  decoration: BoxDecoration(color: const Color.fromRGBO(192, 208, 230, 1), borderRadius: BorderRadius.circular(16)),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -73,19 +73,19 @@ class _UsersBuilderState extends State<UsersBuilder> {
                               contentPadding: EdgeInsets.symmetric(
                                 vertical: size.height*0.0,
                               ),
-                              hintStyle: TextStyle(color: Colors.black26, fontSize: 15),
+                              hintStyle: const TextStyle(color: Colors.black26, fontSize: 15),
                               hintText: 'Search',
                               prefixIcon: Padding(
                                 padding: EdgeInsets.only(
                                   top: size.height*0.01,
                                 ), // Center icon vertically
-                                child: Icon(Icons.search_rounded),
+                                child: const Icon(Icons.search_rounded),
                               ),
                             ),
                           );
                         }),
                       ),
-                      Divider(
+                      const Divider(
                         color: Color.fromRGBO(148, 166, 187, 1),
                       ),
                       Expanded(
@@ -101,7 +101,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(state.filteredUsers![index].username!, style: TextStyle(fontSize: 15),),
+                                    Text(state.filteredUsers![index].username!, style: const TextStyle(fontSize: 15),),
                                     SizedBox(
                                       height: size.height*0.07,
                                       width: size.width * 0.1,
@@ -134,7 +134,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                   ],
                                 ),
                               ),
-                              separatorBuilder: (context, index) => Divider(
+                              separatorBuilder: (context, index) => const Divider(
                                 color: Color.fromRGBO(148, 166, 187, 1),
                               ),
                             );
@@ -151,26 +151,26 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                 _warehouseInteractionBloc.add(FilterUsers(searchText: ''));
                                 Navigator.pop(context);
                               },
-                              child: Text('Discard'),
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                  backgroundColor: Color.fromRGBO(68, 98, 136, 1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                                  backgroundColor: const Color.fromRGBO(68, 98, 136, 1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                              child: Text('Discard'),
                             ),
                             Gap(size.width*0.005),
                             TextButton(
                               onPressed: () {
                                 _warehouseInteractionBloc.state.filteredUsers!.removeWhere((e) => e.access.toString() == _warehouseInteractionBloc.state.users![_warehouseInteractionBloc.state.filteredUsers!.indexOf(e)].access.toString());
-                                _warehouseInteractionBloc.state.filteredUsers!.forEach((e) {
+                                for (var e in _warehouseInteractionBloc.state.filteredUsers!) {
                                   _warehouseInteractionBloc.state.users!.where((i) => i.username == e.username).first.access = e.access;
-                                });
+                                }
                                 _warehouseInteractionBloc.add(UpdateUserAccess(updatedUsers: _warehouseInteractionBloc.state.filteredUsers!));
                                 print(_warehouseInteractionBloc.state.filteredUsers!.length);
                                 Navigator.pop(context);
                               },
-                              child: Text('Save'),
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
-                                  backgroundColor: Color.fromRGBO(68, 98, 136, 1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                                  backgroundColor: const Color.fromRGBO(68, 98, 136, 1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                              child: Text('Save'),
                             )
                           ],
                         ),
@@ -182,9 +182,9 @@ class _UsersBuilderState extends State<UsersBuilder> {
               ClipPath(
                 clipper: DialogTopClipper(),
                 child: CircleAvatar(
-                  backgroundColor: Color.fromRGBO(192, 208, 230, 1),
+                  backgroundColor: const Color.fromRGBO(192, 208, 230, 1),
                   radius: 35,
-                  child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: Icon(Icons.person_outlined)),
+                  child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: const Icon(Icons.person_outlined)),
                 ),
               )
             ],

@@ -12,7 +12,7 @@ import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dar
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 
 class InspectionAreaDashboard extends StatefulWidget {
-  InspectionAreaDashboard({super.key});
+  const InspectionAreaDashboard({super.key});
 
   @override
   State<InspectionAreaDashboard> createState() =>
@@ -107,7 +107,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       title: "Quality Efficiency",
                       titleFontSize: 15,
                       annotationHeight: lsize.maxHeight*0.35,
-                      axisLineColor: Color.fromARGB(255, 189, 187, 64),
+                      axisLineColor: const Color.fromARGB(255, 189, 187, 64),
                       annotationText:
                           '${state.inspectionDashboardData!.qualityEfficiency!}%',
                       annotationFontSize: 15,
@@ -160,7 +160,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       ],
                       yAxisTitle: 'Quality Enabled LPNs',
                       legendVisibility: false,
-                      barColors: [Color.fromARGB(255, 158, 103, 27)]);
+                      barColors: [const Color.fromARGB(255, 158, 103, 27)]);
                 }),
             Customs.DashboardWidget(
                 height: size.height * 0.45,
@@ -184,7 +184,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       ],
                       yAxisTitle: 'Quality In Percentage',
                       legendVisibility: false,
-                      barColors: [Color.fromARGB(255, 89, 163, 206)]);
+                      barColors: [const Color.fromARGB(255, 89, 163, 206)]);
                 }),
           ],
         );

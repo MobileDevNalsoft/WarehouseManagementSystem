@@ -77,7 +77,7 @@ class _SidebarState extends State<Sidebar> {
                       padding: EdgeInsets.only(left: size.width*0.02),
                       alignment: Alignment.centerLeft,
                       decoration: BoxDecoration(
-                        color: index == state.index ? Colors.white : Color.fromRGBO(12, 46, 87, 1),
+                        color: index == state.index ? Colors.white : const Color.fromRGBO(12, 46, 87, 1),
                         borderRadius: const BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
                       ),
                       child: Text(dashboardTitles[index], style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500, color: index == state.index ? Colors.black : Colors.white),),

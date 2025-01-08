@@ -63,7 +63,7 @@ class _RackDataSheetState extends State<RackDataSheet> {
                   child:  Column(
                     children:
                     (state.storageAreaStatus== StorageAreaStatus.success &&  state.storageArea == null)?
-                        [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),Text("Data not found")]
+                        [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),const Text("Data not found")]
                        :
                     
                      [
@@ -98,7 +98,7 @@ class _RackDataSheetState extends State<RackDataSheet> {
                                       isEnabled ? 'TYPE FROZEN' : 'Type ${state.storageArea!.data!.first.locationCategory!}',
                                       style: TextStyle(fontSize: containerSize.maxWidth*0.048, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                     ),
-                                    Spacer(),
+                                    const Spacer(),
                                     Image.asset(
                                       'assets/images/qty.png',
                                       height: containerSize.maxHeight*0.2, width: containerSize.maxWidth*0.2

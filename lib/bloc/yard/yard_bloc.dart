@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
-import 'package:wmssimulator/models/dashboard_response.dart';
 import 'package:wmssimulator/models/yard_area_model.dart';
 
 import '../../local_network_calls.dart';
