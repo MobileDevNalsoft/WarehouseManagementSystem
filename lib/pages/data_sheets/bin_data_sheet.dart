@@ -278,7 +278,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                           Row(
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.032),
+                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.008, right: containerSize.maxWidth * 0.032),
                                                 child: Image.asset(
                                                   'assets/images/qty.png',
                                                   height: containerSize.maxHeight * 0.09,
@@ -492,7 +492,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                           )))),
                                               const Spacer(),
                                               Padding(
-                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.032),
+                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.008, right: containerSize.maxWidth * 0.032),
                                                 child: Image.asset(
                                                   'assets/images/qty.png',
                                                   height: containerSize.maxHeight * 0.1,
