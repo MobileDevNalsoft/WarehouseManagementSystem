@@ -47,8 +47,8 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
             child: LayoutBuilder(builder: (context, lsize) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: (state.yardAreaStatus== YardAreaStatus.success &&  state.yardAreaItems!.length==0)?
-                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.044),),Text("Data not found")],)
+                child: (state.yardAreaStatus== YardAreaStatus.success &&  state.yardAreaItems!.isEmpty)?
+                        Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.044),),const Text("Data not found")],)
                        :ListView.builder(
                     controller: _controller,
                     itemBuilder: (context, index) => index < state.yardAreaItems!.length
@@ -92,7 +92,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                         state.yardAreaItems![index].vehicleLocation!,
                                         style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       Padding(
                                         padding:EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.001),
                                         child: Image.asset('assets/images/clock.png',height: containerSize.maxHeight*0.32, width: containerSize.maxWidth*0.12,),
@@ -157,7 +157,7 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
                                               'LOCATION',
                                               style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
                                             )),
-                                        Spacer(),
+                                        const Spacer(),
                                           Padding(
                                         padding:EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.001),
                                         child: Image.asset('assets/images/clock.png',height: containerSize.maxHeight*0.32, width: containerSize.maxWidth*0.12,),

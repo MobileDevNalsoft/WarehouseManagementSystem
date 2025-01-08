@@ -57,11 +57,11 @@ class _InspectionAreaDataSheetState extends State<InspectionAreaDataSheet> {
                               : "",
                           style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.048),
                         ),
-                        Text("Data not found")
+                        const Text("Data not found")
                       ],
                     )
                   : isEnabled
-                      ? Center(
+                      ? const Center(
                           child: CircularProgressIndicator(),
                         )
                       : ReceivingListView(
@@ -136,16 +136,16 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                     width: widget.l1StyleData.width,
                     color: Colors.transparent,
                     child: Container(
-                      margin: EdgeInsets.only(top: 65, bottom: 5),
+                      margin: const EdgeInsets.only(top: 65, bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.dropDownColor,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.data[oindex].shipments!.length,
                             itemBuilder: (context, index) {
                               return AnimatedContainer(
@@ -157,8 +157,8 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                       duration: const Duration(milliseconds: 200),
                                       height: innerBottomHeights[oindex][index],
                                       child: Container(
-                                        margin: EdgeInsets.only(top: 65, bottom: 5),
-                                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                        margin: const EdgeInsets.only(top: 65, bottom: 5),
+                                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                                         decoration: BoxDecoration(
                                           color: widget.l2StyleData.dropDownColor,
                                           borderRadius: BorderRadius.circular(15),
@@ -166,12 +166,12 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(15),
                                           child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
+                                            physics: const NeverScrollableScrollPhysics(),
                                             itemCount: widget.data[oindex].shipments![index].items!.length,
                                             itemBuilder: (context, inindex) => Container(
-                                                padding: EdgeInsets.all(10),
+                                                padding: const EdgeInsets.all(10),
                                                 height: widget.l3StyleData.height,
-                                                margin: EdgeInsets.only(bottom: 5),
+                                                margin: const EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
                                                   color: widget.l3StyleData.color,
                                                   borderRadius: BorderRadius.circular(15),
@@ -309,8 +309,8 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                       },
                                       child: Container(
                                         height: widget.l2StyleData.height,
-                                        margin: EdgeInsets.only(bottom: 5),
-                                        padding: EdgeInsets.all(10),
+                                        margin: const EdgeInsets.only(bottom: 5),
+                                        padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                           color: widget.l2StyleData.color,
                                           borderRadius: BorderRadius.circular(15),
@@ -329,7 +329,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                   scrollDirection: Axis.horizontal,
                                                   child: Text(
                                                     widget.data[oindex].shipments![index].shipmentNo!.replaceAll('"', ''),
-                                                    style: TextStyle(color: Colors.white),
+                                                    style: const TextStyle(color: Colors.white),
                                                   ),
                                                 ),
                                               ),
@@ -349,7 +349,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                     AnimatedRotation(
                                                       turns: innerTurns[oindex][index],
                                                       duration: const Duration(milliseconds: 200),
-                                                      child: Icon(
+                                                      child: const Icon(
                                                         Icons.keyboard_arrow_down_rounded,
                                                         size: 20,
                                                       ),
@@ -411,8 +411,8 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                     child: Container(
                       height: widget.l1StyleData.height,
                       width: widget.l1StyleData.width,
-                      padding: EdgeInsets.all(5),
-                      margin: EdgeInsets.only(bottom: 5),
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.color, // Purple background
                         borderRadius: BorderRadius.circular(15),
@@ -427,12 +427,12 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                             Gap(lsize.maxWidth * 0.01),
                             Text(
                               widget.data[oindex].vendorName!,
-                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: widget.l1StyleData.height * 0.5,
-                              decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
+                              decoration: BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -445,7 +445,7 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                   AnimatedRotation(
                                     turns: turns[oindex],
                                     duration: const Duration(milliseconds: 200),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       size: 20,
                                       color: Colors.white,

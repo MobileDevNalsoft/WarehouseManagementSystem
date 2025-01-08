@@ -61,7 +61,7 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
         }
         emit(state.copyWith(storageBinItems: state.storageBinItems, storageBinStatus: StorageBinStatus.success));
            getIt<JsInteropService>().highlightBins("");
-           getIt<JsInteropService>().highlightBins(state.storageBinItems!.map((e)=>"${e.locationKey!.replaceAll('-', '').substring(2)}").toSet().toString());
+           getIt<JsInteropService>().highlightBins(state.storageBinItems!.map((e)=>e.locationKey!.replaceAll('-', '').substring(2)).toSet().toString());
       });
     } catch (e) {
       print("error $e");

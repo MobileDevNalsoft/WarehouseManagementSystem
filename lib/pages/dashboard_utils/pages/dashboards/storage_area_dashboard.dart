@@ -10,7 +10,7 @@ import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 
 class StorageAreaDashboard extends StatefulWidget {
-  StorageAreaDashboard({super.key});
+  const StorageAreaDashboard({super.key});
 
   @override
   State<StorageAreaDashboard> createState() => _StorageAreaDashboardState();
@@ -116,7 +116,7 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                                         onTap: () {},
                                         cursorColor: Colors.black,
                                         cursorHeight: lsize.maxHeight*0.06,
-                                        style: TextStyle(fontSize: 11),
+                                        style: const TextStyle(fontSize: 11),
                                         decoration: InputDecoration(
                                           hintText: 'Choose',
                                           contentPadding: EdgeInsets.only(top: lsize.maxHeight*0.02, left: lsize.maxHeight*0.02, right: lsize.maxWidth * 0.02),

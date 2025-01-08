@@ -113,10 +113,10 @@ class InventoryAging {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count_30_days'] = this.count30Days;
-    data['count_30_to_90_days'] = this.count30To90Days;
-    data['count_greater_than_90_days'] = this.countGreaterThan90Days;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['count_30_days'] = count30Days;
+    data['count_30_to_90_days'] = count30To90Days;
+    data['count_greater_than_90_days'] = countGreaterThan90Days;
     return data;
   }
 }

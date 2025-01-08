@@ -4,7 +4,7 @@ import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 
 class YardAreaDashboard extends StatefulWidget {
-  YardAreaDashboard({super.key});
+  const YardAreaDashboard({super.key});
 
   @override
   State<YardAreaDashboard> createState() => _YardAreaDashboardState();
@@ -45,7 +45,7 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                       ylabelFontSize: 12,
                       ytitleFontSize: 13,
                       barCount: 1,
-                      barColors: [Color.fromRGBO(132, 142, 230, 1)],
+                      barColors: [const Color.fromRGBO(132, 142, 230, 1)],
                       dataSources: [
                         [
                           BarData(
@@ -182,7 +182,7 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                         labelFontSize: 12,
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
-                            return Color.fromRGBO(132, 211, 86, 1);
+                            return const Color.fromRGBO(132, 211, 86, 1);
                           } else {
                             return const Color.fromARGB(255, 215, 221, 124);
                           }

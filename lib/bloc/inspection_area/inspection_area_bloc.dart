@@ -9,7 +9,6 @@ import 'package:wmssimulator/models/receiving_area_model.dart';
 
 import '../../local_network_calls.dart';
 import '../../models/area_response.dart';
-import '../../models/inspection_area_model.dart';
 
 part 'inspection_area_event.dart';
 part 'inspection_area_state.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_event.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_state.dart';

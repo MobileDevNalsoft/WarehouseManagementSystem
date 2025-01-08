@@ -23,20 +23,20 @@ class FacilityModel {
     if (json['results'] != null) {
       results = <FacilityResults>[];
       json['results'].forEach((v) {
-        results!.add(new FacilityResults.fromJson(v));
+        results!.add(FacilityResults.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['result_count'] = this.resultCount;
-    data['page_count'] = this.pageCount;
-    data['page_nbr'] = this.pageNbr;
-    data['next_page'] = this.nextPage;
-    data['previous_page'] = this.previousPage;
-    if (this.results != null) {
-      data['results'] = this.results!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['result_count'] = resultCount;
+    data['page_count'] = pageCount;
+    data['page_nbr'] = pageNbr;
+    data['next_page'] = nextPage;
+    data['previous_page'] = previousPage;
+    if (results != null) {
+      data['results'] = results!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -125,10 +125,10 @@ class FacilityResults {
     modTs = json['mod_ts'];
     code = json['code'];
     facilityTypeId = json['facility_type_id'] != null
-        ? new FacilityTypeId.fromJson(json['facility_type_id'])
+        ? FacilityTypeId.fromJson(json['facility_type_id'])
         : null;
     parentCompanyId = json['parent_company_id'] != null
-        ? new FacilityTypeId.fromJson(json['parent_company_id'])
+        ? FacilityTypeId.fromJson(json['parent_company_id'])
         : null;
     name = json['name'];
     address1 = json['address_1'];
@@ -145,7 +145,7 @@ class FacilityResults {
     lang = json['lang'];
     defaultShipViaCode = json['default_ship_via_code'];
     timeZoneId = json['time_zone_id'] != null
-        ? new FacilityTypeId.fromJson(json['time_zone_id'])
+        ? FacilityTypeId.fromJson(json['time_zone_id'])
         : null;
     bonusAmtPerUser = json['bonus_amt_per_user'];
     priority = json['priority'];
@@ -161,48 +161,48 @@ class FacilityResults {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['url'] = this.url;
-    data['create_user'] = this.createUser;
-    data['create_ts'] = this.createTs;
-    data['mod_user'] = this.modUser;
-    data['mod_ts'] = this.modTs;
-    data['code'] = this.code;
-    if (this.facilityTypeId != null) {
-      data['facility_type_id'] = this.facilityTypeId!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['url'] = url;
+    data['create_user'] = createUser;
+    data['create_ts'] = createTs;
+    data['mod_user'] = modUser;
+    data['mod_ts'] = modTs;
+    data['code'] = code;
+    if (facilityTypeId != null) {
+      data['facility_type_id'] = facilityTypeId!.toJson();
     }
-    if (this.parentCompanyId != null) {
-      data['parent_company_id'] = this.parentCompanyId!.toJson();
+    if (parentCompanyId != null) {
+      data['parent_company_id'] = parentCompanyId!.toJson();
     }
-    data['name'] = this.name;
-    data['address_1'] = this.address1;
-    data['address_2'] = this.address2;
-    data['address_3'] = this.address3;
-    data['locality'] = this.locality;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    data['zip'] = this.zip;
-    data['country'] = this.country;
-    data['phone_nbr'] = this.phoneNbr;
-    data['email'] = this.email;
-    data['contact'] = this.contact;
-    data['lang'] = this.lang;
-    data['default_ship_via_code'] = this.defaultShipViaCode;
-    if (this.timeZoneId != null) {
-      data['time_zone_id'] = this.timeZoneId!.toJson();
+    data['name'] = name;
+    data['address_1'] = address1;
+    data['address_2'] = address2;
+    data['address_3'] = address3;
+    data['locality'] = locality;
+    data['city'] = city;
+    data['state'] = state;
+    data['zip'] = zip;
+    data['country'] = country;
+    data['phone_nbr'] = phoneNbr;
+    data['email'] = email;
+    data['contact'] = contact;
+    data['lang'] = lang;
+    data['default_ship_via_code'] = defaultShipViaCode;
+    if (timeZoneId != null) {
+      data['time_zone_id'] = timeZoneId!.toJson();
     }
-    data['bonus_amt_per_user'] = this.bonusAmtPerUser;
-    data['priority'] = this.priority;
-    data['accept_transfer_shipment_flg'] = this.acceptTransferShipmentFlg;
-    data['wms_managed_flg'] = this.wmsManagedFlg;
-    data['cust_field_1'] = this.custField1;
-    data['cust_field_2'] = this.custField2;
-    data['cust_field_3'] = this.custField3;
-    data['cust_field_4'] = this.custField4;
-    data['cust_field_5'] = this.custField5;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
+    data['bonus_amt_per_user'] = bonusAmtPerUser;
+    data['priority'] = priority;
+    data['accept_transfer_shipment_flg'] = acceptTransferShipmentFlg;
+    data['wms_managed_flg'] = wmsManagedFlg;
+    data['cust_field_1'] = custField1;
+    data['cust_field_2'] = custField2;
+    data['cust_field_3'] = custField3;
+    data['cust_field_4'] = custField4;
+    data['cust_field_5'] = custField5;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
     return data;
   }
 }
@@ -221,10 +221,10 @@ class FacilityTypeId {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['key'] = this.key;
-    data['url'] = this.url;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['key'] = key;
+    data['url'] = url;
     return data;
   }
 }

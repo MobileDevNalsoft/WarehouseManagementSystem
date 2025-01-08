@@ -1,19 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class ReceivingAreaDashboard extends StatefulWidget {
-  ReceivingAreaDashboard({super.key});
+  const ReceivingAreaDashboard({super.key});
 
   @override
   State<ReceivingAreaDashboard> createState() => _ReceivingAreaDashboardState();
@@ -140,7 +132,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       title: "Putaway Accuracy",
                       titleFontSize: 15,
                       annotationHeight: lsize.maxHeight*0.35,
-                      axisLineColor: Color.fromARGB(255, 86, 185, 152),
+                      axisLineColor: const Color.fromARGB(255, 86, 185, 152),
                       annotationText:
                           '${state.receivingDashboardData!.putawayAccuracy!}%',
                       annotationFontSize: 15,
@@ -255,7 +247,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       title: "Receiving Efficiency",
                       titleFontSize: 15,
                       annotationHeight: lsize.maxHeight * 0.35,
-                      axisLineColor: Color.fromARGB(255, 86, 185, 180),
+                      axisLineColor: const Color.fromARGB(255, 86, 185, 180),
                       annotationText:
                           '${state.receivingDashboardData!.receivingEfficiency!}%',
                       annotationFontSize: 15,
