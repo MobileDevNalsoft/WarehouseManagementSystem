@@ -56,39 +56,46 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                       chartBuilder: (lsize) {
                         return Stack(
                           children: [
-                            Customs.WMSSfCircularChart(
-                                lsize: lsize,
-                                title: 'Location Utilization',
-                                titleFontSize: 13,
-                                series: SeriesName.radialBar,
-                                legendVisibility: true,
-                                props: Props(
-                                    dataSource: state.storageDashboardData!.locationUtilization!
-                                        .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
-                                        .first
-                                        .typeUtil!
-                                        .asMap()
-                                        .entries
-                                        .map((e) => PieData(xData: e.value.status!, yData: e.value.count!))
-                                        .toList(),
-                                    labelFontSize: 12,
-                                    maximumValue: state.storageDashboardData!.locationUtilization!
-                                        .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
-                                        .first
-                                        .typeUtil!
-                                        .map((e) => e.count!)
-                                        .toList()
-                                        .reduce((curr, next) => curr > next ? curr : next)
-                                        .toDouble(),
-                                    pointColorMapper: (datum, index) {
-                                      if (index == 0) {
-                                        return const Color.fromRGBO(139, 182, 162, 1);
-                                      } else if (index == 1) {
-                                        return const Color.fromRGBO(232, 212, 162, 1);
-                                      } else {
-                                        return const Color.fromRGBO(255, 116, 106, 1);
-                                      }
-                                    })),
+                            BlocBuilder<DashboardsBloc,DashboardsState>(
+                              buildWhen: (previous, current) {
+                                return previous.selectedLocType != current.selectedLocType;
+                              },
+                              builder: (context,state) {
+                                return Customs.WMSSfCircularChart(
+                                    lsize: lsize,
+                                    title: 'Location Utilization',
+                                    titleFontSize: 13,
+                                    series: SeriesName.radialBar,
+                                    legendVisibility: true,
+                                    props: Props(
+                                        dataSource: state.storageDashboardData!.locationUtilization!
+                                            .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
+                                            .first
+                                            .typeUtil!
+                                            .asMap()
+                                            .entries
+                                            .map((e) => PieData(xData: e.value.status!, yData: e.value.count!))
+                                            .toList(),
+                                        labelFontSize: 12,
+                                        maximumValue: state.storageDashboardData!.locationUtilization!
+                                            .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
+                                            .first
+                                            .typeUtil!
+                                            .map((e) => e.count!)
+                                            .toList()
+                                            .reduce((curr, next) => curr > next ? curr : next)
+                                            .toDouble(),
+                                        pointColorMapper: (datum, index) {
+                                          if (index == 0) {
+                                            return const Color.fromRGBO(139, 182, 162, 1);
+                                          } else if (index == 1) {
+                                            return const Color.fromRGBO(232, 212, 162, 1);
+                                          } else {
+                                            return const Color.fromRGBO(255, 116, 106, 1);
+                                          }
+                                        }));
+                              }
+                            ),
                             Positioned(
                               top: lsize.maxHeight*0.025,
                               right: 0,

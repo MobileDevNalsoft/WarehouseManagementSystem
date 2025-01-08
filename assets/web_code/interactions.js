@@ -255,7 +255,7 @@ export function addInteractions(scene, model, camera, controls) {
   }
 
   function onMouseUp(e) {
-    if ((lastPos.distanceTo(mouse) === 0) & (e.button === 0)) {
+    if ((lastPos.distanceTo(mouse) <= 0.1) & (e.button === 0)) {
       if (e.target.classList.contains("ignoreRaycast")) return;
        
       raycaster.setFromCamera(mouse, camera);
