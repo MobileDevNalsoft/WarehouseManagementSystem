@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +13,6 @@ class SelectWarehouse extends StatefulWidget {
 }
 
 class _SelectWarehouseState extends State<SelectWarehouse> {
-
   // Service to handle navigation within the app
   final NavigatorService navigator = getIt<NavigatorService>();
 
@@ -34,62 +32,62 @@ class _SelectWarehouseState extends State<SelectWarehouse> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/login_decor.png', scale: 1.16,),
-              Gap(size.width*0.1),
+              Image.asset(
+                'assets/images/login_decor.png',
+                scale: 1.16,
+              ),
+              Gap(size.width * 0.1),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Gap(size.height*0.25),
-                  const Text('Select Warehouse',style: TextStyle(
+                  Gap(size.height * 0.25),
+                  const Text(
+                    'Select Warehouse',
+                    style: TextStyle(
                       fontWeight: FontWeight.w900,
-                      fontSize: (20), 
-                    ),),
-                  Gap(size.height*0.01),
-                  DropdownButtonHideUnderline(
-                  child: DropdownButton2<String>(
-                    isExpanded: false,
-                    hint: const SizedBox(),
-                    
-                    items: [
-                      DropdownMenuItem<String>(
-                          value: '0',
-                          onTap: () {
-                            
-                          },
-                          child: const Text(
-                            'warehouse 1',
-                            style: TextStyle(color: Colors.black),
-                          ))
-                    ],
-                    value: '0',
-                    onChanged: (String? value) {
-                      navigator.push('/warehouse');
-                    },
-                    buttonStyleData: ButtonStyleData(
-                      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12), color: Colors.white),
-                      height: size.height * (0.045),
-                      width: size.width * 0.1,
-                      padding: EdgeInsets.only(left: size.width * 0.008, right: size.width * 0.003),
-                    ),
-                    dropdownStyleData: DropdownStyleData(
-                        width: size.width * (0.1),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                        ),
-                        offset: Offset(0, -size.height*0.003)),
-                    menuItemStyleData: MenuItemStyleData(
-                      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                      selectedMenuItemBuilder: (context, child) {
-                        return SizedBox(
-                          height: size.height*0.03,
-                          child: child);
-                      },
+                      fontSize: (20),
                     ),
                   ),
-                )
+                  Gap(size.height * 0.01),
+                  DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      isExpanded: false,
+                      hint: const SizedBox(),
+                      items: [
+                        DropdownMenuItem<String>(
+                            value: '0',
+                            onTap: () {},
+                            child: const Text(
+                              'warehouse 1',
+                              style: TextStyle(color: Colors.black),
+                            ))
+                      ],
+                      value: '0',
+                      onChanged: (String? value) {
+                        navigator.push('/warehouse');
+                      },
+                      buttonStyleData: ButtonStyleData(
+                        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+                        height: size.height * (0.045),
+                        width: size.width * 0.1,
+                        padding: EdgeInsets.only(left: size.width * 0.008, right: size.width * 0.003),
+                      ),
+                      dropdownStyleData: DropdownStyleData(
+                          width: size.width * (0.1),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          offset: Offset(0, -size.height * 0.003)),
+                      menuItemStyleData: MenuItemStyleData(
+                        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                        selectedMenuItemBuilder: (context, child) {
+                          return SizedBox(height: size.height * 0.03, child: child);
+                        },
+                      ),
+                    ),
+                  )
                 ],
               )
             ],
@@ -97,7 +95,6 @@ class _SelectWarehouseState extends State<SelectWarehouse> {
     );
   }
 }
-
 
 /// This function validates a password string.
 ///

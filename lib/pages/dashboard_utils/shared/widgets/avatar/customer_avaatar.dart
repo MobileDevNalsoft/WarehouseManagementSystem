@@ -38,10 +38,7 @@ class _CustomerAvatarState extends State<CustomerAvatar> {
           gapH8,
           Text(
             widget.name,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall!
-                .copyWith(color: isHovered ? AppColors.primary : null),
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(color: isHovered ? AppColors.primary : null),
           )
         ],
       ),

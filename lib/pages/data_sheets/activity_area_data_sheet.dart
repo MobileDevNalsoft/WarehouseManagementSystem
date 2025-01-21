@@ -20,23 +20,23 @@ class ActivityAreaDataSheet extends StatefulWidget {
 class _ActivityAreaDataSheetState extends State<ActivityAreaDataSheet> {
   final ScrollController _controller = ScrollController();
   late ActivityAreaBloc _activityBloc;
-late  WarehouseInteractionBloc _warehouseInteractionBloc ;
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
   @override
   void initState() {
     super.initState();
 
     _activityBloc = context.read<ActivityAreaBloc>();
-     _activityBloc.add( GetActivityAreaData( searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+    _activityBloc.add(GetActivityAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
 
-  
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _controller.addListener(_scrollListener);
   }
 
   void _scrollListener() async {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent && _activityBloc.state.activityAreaItems!.length + 1 > (_activityBloc.state.pageNum! + 1) * 100) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent &&
+        _activityBloc.state.activityAreaItems!.length + 1 > (_activityBloc.state.pageNum! + 1) * 100) {
       _activityBloc.state.pageNum = _activityBloc.state.pageNum! + 1;
-      _activityBloc.add( GetActivityAreaData( searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+      _activityBloc.add(GetActivityAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
     }
   }
 
@@ -44,25 +44,37 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Customs.DataSheet(
-      context: context,
-      size: size,
-      title: 'Activity Area',
-      children: [
-        BlocBuilder<ActivityAreaBloc, ActivityAreaState>(
-            builder: (context, state) {
-              bool isEnabled = state.getDataState != GetDataState.success;
-              return Expanded(
+    return Customs.DataSheet(context: context, size: size, title: 'Activity Area', children: [
+      BlocBuilder<ActivityAreaBloc, ActivityAreaState>(
+        builder: (context, state) {
+          bool isEnabled = state.getDataState != GetDataState.success;
+          return Expanded(
             child: LayoutBuilder(builder: (context, lsize) {
-              return (!isEnabled &&  state.activityAreaItems!.isEmpty)?
-                      Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),const Text("Data not found")],)
-                     : isEnabled ? const Center(child: CircularProgressIndicator(),) : ActivityListView(data: state.activityAreaItems!, l1StyleData: L1StyleData(height: 60, width: 400), l2StyleData: L2StyleData(height: lsize.maxHeight*0.13));
+              return (!isEnabled && state.activityAreaItems!.isEmpty)
+                  ? Column(
+                      children: [
+                        Text(
+                          _warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != ""
+                              ? _warehouseInteractionBloc.state.searchText!
+                              : "",
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.048),
+                        ),
+                        const Text("Data not found")
+                      ],
+                    )
+                  : isEnabled
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ActivityListView(
+                          data: state.activityAreaItems!,
+                          l1StyleData: L1StyleData(height: 60, width: 400),
+                          l2StyleData: L2StyleData(height: lsize.maxHeight * 0.13));
             }),
           );
-            },
-          )
-      ]
-    );
+        },
+      )
+    ]);
   }
 }
 
@@ -125,30 +137,64 @@ class _ActivityListViewState extends State<ActivityListView> {
                             itemCount: widget.data[oindex].items!.length,
                             itemBuilder: (context, index) {
                               return Container(
-                                                padding: const EdgeInsets.all(10),
-                                                height: widget.l2StyleData.height,
-                                                margin: const EdgeInsets.only(bottom: 5),
-                                                decoration: BoxDecoration(
-                                                  color: widget.l2StyleData.color,
-                                                  borderRadius: BorderRadius.circular(15),
-                                                ),
-                                                child: LayoutBuilder(
-                                                  builder: (context, lsize) {
-                                                    return Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('Item', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045, color: Colors.white),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].items![index].item!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold, color: Colors.white),)],
-                                                        ),
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('OD', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045, color: Colors.white),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].items![index].od!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold, color: Colors.white),)],
-                                                        ),
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('QTY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045, color: Colors.white),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].items![index].qty!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold, color: Colors.white),)],
-                                                        )
-                                                      ],
-                                                    );
-                                                  }
-                                                ));
+                                  padding: const EdgeInsets.all(10),
+                                  height: widget.l2StyleData.height,
+                                  margin: const EdgeInsets.only(bottom: 5),
+                                  decoration: BoxDecoration(
+                                    color: widget.l2StyleData.color,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: LayoutBuilder(builder: (context, lsize) {
+                                    return Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                                width: lsize.maxWidth * 0.16,
+                                                child: Text(
+                                                  'Item',
+                                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045, color: Colors.white),
+                                                )),
+                                            Gap(lsize.maxWidth * 0.01),
+                                            Text(
+                                              widget.data[oindex].items![index].item!,
+                                              style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold, color: Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                                width: lsize.maxWidth * 0.16,
+                                                child: Text(
+                                                  'OD',
+                                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045, color: Colors.white),
+                                                )),
+                                            Gap(lsize.maxWidth * 0.01),
+                                            Text(
+                                              widget.data[oindex].items![index].od!,
+                                              style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold, color: Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                                width: lsize.maxWidth * 0.16,
+                                                child: Text(
+                                                  'QTY',
+                                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045, color: Colors.white),
+                                                )),
+                                            Gap(lsize.maxWidth * 0.01),
+                                            Text(
+                                              widget.data[oindex].items![index].qty!,
+                                              style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold, color: Colors.white),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    );
+                                  }));
                             }),
                       ),
                     ),
@@ -163,10 +209,10 @@ class _ActivityListViewState extends State<ActivityListView> {
                         if (outerOpenDropdownIndex == oindex) {
                           // If the same dropdown is tapped, close it
                           heights[oindex] = heights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height+25)
+                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height+25)
+                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
                           outerOpenDropdownIndex = null; // Reset opened index
@@ -178,8 +224,10 @@ class _ActivityListViewState extends State<ActivityListView> {
                             turns[outerOpenDropdownIndex!] = 1;
                           }
                           outerOpenDropdownIndex = oindex; // Set current index as opened
-                          heights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height+25); // Expand current dropdown
-                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height+25); // Expand current bottom height
+                          heights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) +
+                              (widget.l1StyleData.height + 25); // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) +
+                              (widget.l1StyleData.height + 25); // Expand current bottom height
                           turns[oindex] = 0.5;
                         }
                       });

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -16,8 +15,7 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppDefaults.padding, vertical: AppDefaults.padding),
+      padding: const EdgeInsets.symmetric(horizontal: AppDefaults.padding, vertical: AppDefaults.padding),
       color: AppColors.bgSecondayLight,
       child: SafeArea(
         bottom: false,
@@ -51,9 +49,7 @@ class Header extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: "Search...",
                     prefixIcon: Padding(
-                      padding: const EdgeInsets.only(
-                          left: AppDefaults.padding,
-                          right: AppDefaults.padding / 2),
+                      padding: const EdgeInsets.only(left: AppDefaults.padding, right: AppDefaults.padding / 2),
                       child: SvgPicture.asset("assets/icons/search_light.svg"),
                     ),
                     filled: true,
@@ -73,8 +69,7 @@ class Header extends StatelessWidget {
                       onPressed: () {},
                       icon: Badge(
                         isLabelVisible: true,
-                        child:
-                            SvgPicture.asset("assets/icons/message_light.svg"),
+                        child: SvgPicture.asset("assets/icons/message_light.svg"),
                       ),
                     ),
                   if (!Responsive.isMobile(context)) gapW16,
@@ -83,8 +78,7 @@ class Header extends StatelessWidget {
                       onPressed: () {},
                       icon: Badge(
                         isLabelVisible: true,
-                        child: SvgPicture.asset(
-                            "assets/icons/notification_light.svg"),
+                        child: SvgPicture.asset("assets/icons/notification_light.svg"),
                       ),
                     ),
                   if (!Responsive.isMobile(context)) gapW16,
@@ -99,8 +93,7 @@ class Header extends StatelessWidget {
                   TextButton(
                     onPressed: () => context.go('/sign-in'),
                     style: TextButton.styleFrom(
-                      foregroundColor:
-                          Theme.of(context).textTheme.titleLarge!.color,
+                      foregroundColor: Theme.of(context).textTheme.titleLarge!.color,
                       minimumSize: const Size(80, 56),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(

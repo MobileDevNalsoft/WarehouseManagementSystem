@@ -14,7 +14,8 @@ Future<void> init() async {
   getIt.allowReassignment = true;
 
   // Api
-  getIt.registerLazySingleton<NetworkCalls>(() => NetworkCalls(AppConstants.APEX_URL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30,username: AppConstants.APIUSERNAME,password: AppConstants.APIPASSWORD));
+  getIt.registerLazySingleton<NetworkCalls>(() => NetworkCalls(AppConstants.APEX_URL, getIt<Dio>(),
+      connectTimeout: 30, receiveTimeout: 30, username: AppConstants.APIUSERNAME, password: AppConstants.APIPASSWORD));
 
   // Navigator Service
   getIt.registerLazySingleton<NavigatorService>(() => NavigatorService());

@@ -104,8 +104,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                 dataSource: state.dockDashboardData!.dockInUtilization!
                                     .map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156)))
                                     .toList(),
-                                radius: '${lsize.maxWidth*0.13}%',
-                                innerRadius: '${lsize.maxWidth*0.11}%',
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 102, 82, 156);
@@ -128,8 +128,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                 dataSource: state.dockDashboardData!.dockOutUtilization!
                                     .map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156)))
                                     .toList(),
-                                radius: '${lsize.maxWidth*0.13}%',
-                                innerRadius: '${lsize.maxWidth*0.11}%',
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 52, 132, 136);
@@ -151,8 +151,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                               annotationText: state.dockDashboardData!.avgLoadingTime!,
                               props: Props(
                                 dataSource: chartData1,
-                                radius: '${lsize.maxWidth*0.13}%',
-                                innerRadius: '${lsize.maxWidth*0.11}%',
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 151, 174, 206);
@@ -174,8 +174,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                               annotationText: state.dockDashboardData!.avgUnloadingTime!.substring(0, 7),
                               props: Props(
                                 dataSource: chartData1,
-                                radius: '${lsize.maxWidth*0.13}%',
-                                innerRadius: '${lsize.maxWidth*0.11}%',
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 176, 211, 141);
@@ -197,8 +197,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                               annotationText: state.dockDashboardData!.avgDockTAT!.substring(0, 6),
                               props: Props(
                                 dataSource: chartData1,
-                                radius: '${lsize.maxWidth*0.13}%',
-                                innerRadius: '${lsize.maxWidth*0.11}%',
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 196, 141, 204);
@@ -373,7 +373,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                     child: Text(
                                                       isEnabled ? '9:00 AM' : state.appointments![index].startTime!,
                                                       style: TextStyle(
-                                                          color: const Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth * 0.039, fontWeight: FontWeight.bold),
+                                                          color: const Color.fromRGBO(12, 46, 87, 1),
+                                                          fontSize: lsize.maxWidth * 0.039,
+                                                          fontWeight: FontWeight.bold),
                                                     )),
                                                 Gap(lsize.maxHeight * 0.008),
                                                 Skeletonizer(
@@ -401,7 +403,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                     child: Text(
                                                       isEnabled ? 'APDEMODEMO' : state.appointments![index].apptNbr!,
                                                       style: TextStyle(
-                                                          color: const Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth * 0.039, fontWeight: FontWeight.bold),
+                                                          color: const Color.fromRGBO(12, 46, 87, 1),
+                                                          fontSize: lsize.maxWidth * 0.039,
+                                                          fontWeight: FontWeight.bold),
                                                     )),
                                                 Gap(lsize.maxHeight * 0.008),
                                                 Skeletonizer(
@@ -461,8 +465,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                             cellBuilder: (BuildContext context, DateRangePickerCellDetails details) {
                               Color circleColor;
 
-                              circleColor =
-                                  details.date.toString().substring(0, 10) == now.toString().substring(0, 10) ? const Color.fromRGBO(12, 46, 87, 1) : Colors.white;
+                              circleColor = details.date.toString().substring(0, 10) == now.toString().substring(0, 10)
+                                  ? const Color.fromRGBO(12, 46, 87, 1)
+                                  : Colors.white;
 
                               return Padding(
                                 padding: const EdgeInsets.all(4),

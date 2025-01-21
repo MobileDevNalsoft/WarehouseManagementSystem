@@ -132,7 +132,10 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     emit(state.copyWith(getUsersState: GetUsers.loading));
     try {
       await _customApi.get(AppConstants.USERS).then((value) {
-        List<User> usersFromBD = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => User.fromJson(json)).data!.where((e) => e.username != sharedPreferences.getString('username')).toList();
+        List<User> usersFromBD = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => User.fromJson(json))
+            .data!
+            .where((e) => e.username != sharedPreferences.getString('username'))
+            .toList();
         emit(state.copyWith(users: usersFromBD, filteredUsers: usersFromBD, getUsersState: GetUsers.success));
       });
     } catch (e) {
@@ -196,7 +199,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     }
   }
 
-  void _onUpdateTaskId(UpdateTaskId event, Emitter<WarehouseInteractionState> emit){
+  void _onUpdateTaskId(UpdateTaskId event, Emitter<WarehouseInteractionState> emit) {
     emit(state.copyWith(selectedTaskId: event.taskId));
   }
 }

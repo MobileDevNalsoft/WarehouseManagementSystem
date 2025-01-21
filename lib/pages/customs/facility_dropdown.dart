@@ -52,7 +52,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
           turns = 0.5;
         });
         Future.delayed(const Duration(milliseconds: 1200), () {
-          if(height == widget.buttonHeight) {
+          if (height == widget.buttonHeight) {
             // ignore: use_build_context_synchronously
             context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
           }

@@ -11,18 +11,18 @@ class DockAreaItem {
   }
 }
 
-class Vendor{
+class Vendor {
   String? vendorName;
   List<DockItem>? items;
   Vendor({this.vendorName, this.items});
 
-  Vendor.fromJson(Map<String, dynamic> json){
+  Vendor.fromJson(Map<String, dynamic> json) {
     vendorName = json.keys.first;
     items = (json.values.first as List).map((e) => DockItem.fromJson(e)).toList();
   }
 }
 
-class DockItem{
+class DockItem {
   String? dockNbr;
   String? asn;
   String? poNbr;
@@ -30,7 +30,7 @@ class DockItem{
   int? qty;
   DockItem({this.dockNbr, this.asn, this.poNbr, this.checkinTS, this.qty});
 
-  DockItem.fromJson(Map<String, dynamic> json){
+  DockItem.fromJson(Map<String, dynamic> json) {
     dockNbr = json['actual_dock_nbr'];
     asn = json['asn'];
     poNbr = json['po_nbr'];
@@ -39,7 +39,7 @@ class DockItem{
   }
 }
 
-class DockDashboard{
+class DockDashboard {
   List<StatusCount>? dockInUtilization;
   List<StatusCount>? dockOutUtilization;
   List<StatusCount>? daywiseDockInUtilization;
@@ -50,7 +50,7 @@ class DockDashboard{
 
   DockDashboard({this.dockInUtilization, this.dockOutUtilization, this.avgLoadingTime, this.avgUnloadingTime, this.avgDockTAT});
 
-  DockDashboard.fromJson(Map<String, dynamic> json){
+  DockDashboard.fromJson(Map<String, dynamic> json) {
     dockInUtilization = (json['dock_in_utilization'] as List).map((e) => StatusCount.fromJson(e)).toList();
     dockOutUtilization = (json['dock_out_utilization'] as List).map((e) => StatusCount.fromJson(e)).toList();
     daywiseDockInUtilization = (json['daywise_dock_in'] as List).map((e) => StatusCount.fromJson(e)).toList();
@@ -61,7 +61,7 @@ class DockDashboard{
   }
 }
 
-class Appointment{
+class Appointment {
   String? apptNbr;
   String? dockNbr;
   String? startTime;
@@ -69,7 +69,7 @@ class Appointment{
 
   Appointment({this.apptNbr, this.dockNbr, this.startTime, this.endTime});
 
-  Appointment.fromJson(Map<String, dynamic> json){
+  Appointment.fromJson(Map<String, dynamic> json) {
     apptNbr = json['appt_nbr'] ?? 'NA';
     dockNbr = json['dock_nbr'] ?? 'NA';
     startTime = json['start_time'] ?? 'NA';

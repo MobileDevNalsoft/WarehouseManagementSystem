@@ -16,15 +16,14 @@ class UsersBuilder extends StatefulWidget {
 }
 
 class _UsersBuilderState extends State<UsersBuilder> {
-
   TextEditingController textEditingController = TextEditingController();
   late WarehouseInteractionBloc _warehouseInteractionBloc;
   MultiSelectController multiSelectController = MultiSelectController([
-                                            "Dashboard",
-                                            "WMS Cloud",
-                                            "3D Model",
-                                            "Manage Users",
-                                          ]);
+    "Dashboard",
+    "WMS Cloud",
+    "3D Model",
+    "Manage Users",
+  ]);
 
   @override
   void initState() {
@@ -64,20 +63,20 @@ class _UsersBuilderState extends State<UsersBuilder> {
                             textAlignVertical: TextAlignVertical.center,
                             style: TextStyle(fontSize: 15, height: constraints.maxHeight * 0.01),
                             cursorColor: Colors.black,
-                            cursorHeight: size.height*0.03,
+                            cursorHeight: size.height * 0.03,
                             onChanged: (value) {
                               _warehouseInteractionBloc.add(FilterUsers(searchText: value));
                             },
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.symmetric(
-                                vertical: size.height*0.0,
+                                vertical: size.height * 0.0,
                               ),
                               hintStyle: const TextStyle(color: Colors.black26, fontSize: 15),
                               hintText: 'Search',
                               prefixIcon: Padding(
                                 padding: EdgeInsets.only(
-                                  top: size.height*0.01,
+                                  top: size.height * 0.01,
                                 ), // Center icon vertically
                                 child: const Icon(Icons.search_rounded),
                               ),
@@ -89,60 +88,58 @@ class _UsersBuilderState extends State<UsersBuilder> {
                         color: Color.fromRGBO(148, 166, 187, 1),
                       ),
                       Expanded(
-                        child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-                          builder: (context, state) {
-                            return ListView.separated(
-                              itemCount: state.filteredUsers!.length,
-                              itemBuilder: (context, index) => Container(
-                                padding: EdgeInsets.only(
-                                  left: size.width * 0.01,
-                                  right: size.width*0.008
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(state.filteredUsers![index].username!, style: const TextStyle(fontSize: 15),),
-                                    SizedBox(
-                                      height: size.height*0.07,
-                                      width: size.width * 0.1,
-                                      child: Transform.translate(
-                                        offset: Offset(0, size.height*0.002),
-                                        child: CustomDropdown<String>.multiSelect(
-                                          items: const [
-                                            "Dashboard",
-                                            "WMS Cloud",
-                                            "3D Model",
-                                            "Manage Users",
-                                          ],
-                                          initialItems: state.filteredUsers![index].access!,
-                                          hintBuilder: (context, hint, enabled) {
-                                            return const Text('Configure Access');
-                                          },
-                                          decoration: CustomDropdownDecoration(
-                                            closedBorder: Border.all(),
-                                          ),
-                                          hideSelectedFieldWhenExpanded: true,
-                                          onListChanged: (value) {
-                                            if(value.isEmpty){
-                                              value.add('Dashboard');
-                                            }
-                                            state.filteredUsers![index].access = value;
-                                          },
+                        child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
+                          return ListView.separated(
+                            itemCount: state.filteredUsers!.length,
+                            itemBuilder: (context, index) => Container(
+                              padding: EdgeInsets.only(left: size.width * 0.01, right: size.width * 0.008),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    state.filteredUsers![index].username!,
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.07,
+                                    width: size.width * 0.1,
+                                    child: Transform.translate(
+                                      offset: Offset(0, size.height * 0.002),
+                                      child: CustomDropdown<String>.multiSelect(
+                                        items: const [
+                                          "Dashboard",
+                                          "WMS Cloud",
+                                          "3D Model",
+                                          "Manage Users",
+                                        ],
+                                        initialItems: state.filteredUsers![index].access!,
+                                        hintBuilder: (context, hint, enabled) {
+                                          return const Text('Configure Access');
+                                        },
+                                        decoration: CustomDropdownDecoration(
+                                          closedBorder: Border.all(),
                                         ),
+                                        hideSelectedFieldWhenExpanded: true,
+                                        onListChanged: (value) {
+                                          if (value.isEmpty) {
+                                            value.add('Dashboard');
+                                          }
+                                          state.filteredUsers![index].access = value;
+                                        },
                                       ),
-                                    )
-                                  ],
-                                ),
+                                    ),
+                                  )
+                                ],
                               ),
-                              separatorBuilder: (context, index) => const Divider(
-                                color: Color.fromRGBO(148, 166, 187, 1),
-                              ),
-                            );
-                          }
-                        ),
+                            ),
+                            separatorBuilder: (context, index) => const Divider(
+                              color: Color.fromRGBO(148, 166, 187, 1),
+                            ),
+                          );
+                        }),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: size.height*0.01, horizontal: size.height*0.012),
+                        padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.012),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -152,14 +149,17 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                 Navigator.pop(context);
                               },
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                  backgroundColor: const Color.fromRGBO(68, 98, 136, 1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color.fromRGBO(68, 98, 136, 1),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                               child: Text('Discard'),
                             ),
-                            Gap(size.width*0.005),
+                            Gap(size.width * 0.005),
                             TextButton(
                               onPressed: () {
-                                _warehouseInteractionBloc.state.filteredUsers!.removeWhere((e) => e.access.toString() == _warehouseInteractionBloc.state.users![_warehouseInteractionBloc.state.filteredUsers!.indexOf(e)].access.toString());
+                                _warehouseInteractionBloc.state.filteredUsers!.removeWhere((e) =>
+                                    e.access.toString() ==
+                                    _warehouseInteractionBloc.state.users![_warehouseInteractionBloc.state.filteredUsers!.indexOf(e)].access.toString());
                                 for (var e in _warehouseInteractionBloc.state.filteredUsers!) {
                                   _warehouseInteractionBloc.state.users!.where((i) => i.username == e.username).first.access = e.access;
                                 }
@@ -168,8 +168,9 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                 Navigator.pop(context);
                               },
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                  backgroundColor: const Color.fromRGBO(68, 98, 136, 1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color.fromRGBO(68, 98, 136, 1),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                               child: Text('Save'),
                             )
                           ],

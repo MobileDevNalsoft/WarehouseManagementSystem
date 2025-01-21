@@ -473,11 +473,7 @@ class L1StyleData {
   double width;
   Color? color;
   Color? dropDownColor;
-  L1StyleData(
-      {required this.height,
-      required this.width,
-      this.color = Colors.white,
-      this.dropDownColor = Colors.white});
+  L1StyleData({required this.height, required this.width, this.color = Colors.white, this.dropDownColor = Colors.white});
 }
 
 class L2StyleData {

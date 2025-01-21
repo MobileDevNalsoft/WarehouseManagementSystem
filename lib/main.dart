@@ -13,6 +13,7 @@ import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
 import 'package:wmssimulator/bloc/staging/staging_bloc.dart';
 import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
 import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 
@@ -20,7 +21,7 @@ import 'bloc/inspection_area/inspection_area_bloc.dart';
 import 'navigations/navigator_service.dart';
 import 'navigations/route_generator.dart';
 
-final localhostServer = InAppLocalhostServer(documentRoot: 'assets');                           
+final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
 main() async {
   await init();
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,20 +39,20 @@ main() async {
       BlocProvider(create: (_) => DashboardsBloc(customApi: getIt())),
       BlocProvider(create: (_) => ReceivingBloc(customApi: getIt())),
       BlocProvider(create: (_) => StagingBloc(customApi: getIt())),
-      BlocProvider(create: (_) => StorageBloc(customApi: getIt()))
-       
+      BlocProvider(create: (_) => StorageBloc(customApi: getIt())),
+      BlocProvider(create: (_) => WorkflowBloc())
     ],
     child: MaterialApp(
-        navigatorKey: getIt<NavigatorService>().navigatorkey,
-        scrollBehavior: const MaterialScrollBehavior().copyWith(
+      navigatorKey: getIt<NavigatorService>().navigatorkey,
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch, PointerDeviceKind.stylus, PointerDeviceKind.unknown},
-        ),
-        theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
-        debugShowCheckedModeBanner: false,
-        initialRoute: !sharedPreferences.containsKey('username') ? '/login': '/warehouse',
-        onGenerateRoute: RouteGenerator.generateRoute,
-        navigatorObservers: [MyNavigationObserver()],
-        ),
+      ),
+      theme: ThemeData(fontFamily: 'Gilroy', colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.black)),
+      debugShowCheckedModeBanner: false,
+      initialRoute: !sharedPreferences.containsKey('username') ? '/login' : '/warehouse',
+      onGenerateRoute: RouteGenerator.generateRoute,
+      navigatorObservers: [MyNavigationObserver()],
+    ),
   ));
 }
 

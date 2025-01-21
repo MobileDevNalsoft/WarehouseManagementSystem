@@ -13,7 +13,6 @@ class AlertsSlide extends StatefulWidget {
 }
 
 class _AlertsSlideState extends State<AlertsSlide> {
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -44,7 +43,10 @@ class _AlertsSlideState extends State<AlertsSlide> {
                 onTap: () {
                   widget.sliderAnimationController.reverse();
                 },
-                child: const Icon(Icons.cancel, color: Color.fromRGBO(76, 109, 150, 1),),
+                child: const Icon(
+                  Icons.cancel,
+                  color: Color.fromRGBO(76, 109, 150, 1),
+                ),
               ),
             ],
           ),

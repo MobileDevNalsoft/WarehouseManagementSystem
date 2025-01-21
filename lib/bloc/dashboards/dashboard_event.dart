@@ -6,14 +6,13 @@ abstract class DashboardsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class DashboardChanged extends DashboardsEvent{
+class DashboardChanged extends DashboardsEvent {
   int index;
   DashboardChanged({required this.index});
 
   @override
   List<Object> get props => [index];
 }
-
 
 class GetDockAppointments extends DashboardsEvent {
   String date;
@@ -23,7 +22,7 @@ class GetDockAppointments extends DashboardsEvent {
   List<Object> get props => [date];
 }
 
-class GetDockDashboardData extends DashboardsEvent{
+class GetDockDashboardData extends DashboardsEvent {
   int facilityID;
   GetDockDashboardData({required this.facilityID});
 
@@ -31,7 +30,7 @@ class GetDockDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
-class GetYardDashboardData extends DashboardsEvent{
+class GetYardDashboardData extends DashboardsEvent {
   int facilityID;
   GetYardDashboardData({required this.facilityID});
 
@@ -39,7 +38,7 @@ class GetYardDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
-class GetReceivingDashboardData extends DashboardsEvent{
+class GetReceivingDashboardData extends DashboardsEvent {
   int facilityID;
   GetReceivingDashboardData({required this.facilityID});
 
@@ -47,7 +46,7 @@ class GetReceivingDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
-class GetInspectionDashboardData extends DashboardsEvent{
+class GetInspectionDashboardData extends DashboardsEvent {
   int facilityID;
   GetInspectionDashboardData({required this.facilityID});
 
@@ -55,7 +54,7 @@ class GetInspectionDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
-class GetActivityDashboardData extends DashboardsEvent{
+class GetActivityDashboardData extends DashboardsEvent {
   int facilityID;
   GetActivityDashboardData({required this.facilityID});
 
@@ -63,7 +62,7 @@ class GetActivityDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
-class GetStagingDashboardData extends DashboardsEvent{
+class GetStagingDashboardData extends DashboardsEvent {
   int facilityID;
   GetStagingDashboardData({required this.facilityID});
 
@@ -71,7 +70,7 @@ class GetStagingDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
-class GetStagingDrilldownData extends DashboardsEvent{
+class GetStagingDrilldownData extends DashboardsEvent {
   int facilityID;
   GetStagingDrilldownData({required this.facilityID});
 
@@ -79,7 +78,7 @@ class GetStagingDrilldownData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
-class GetStorageDashboardData extends DashboardsEvent{
+class GetStorageDashboardData extends DashboardsEvent {
   int facilityID;
   GetStorageDashboardData({required this.facilityID});
 
@@ -87,7 +86,7 @@ class GetStorageDashboardData extends DashboardsEvent{
   List<Object> get props => [facilityID];
 }
 
-class GetStorageDrilldownData extends DashboardsEvent{
+class GetStorageDrilldownData extends DashboardsEvent {
   int facilityID;
   String flag;
   GetStorageDrilldownData({required this.facilityID, required this.flag});
@@ -96,7 +95,7 @@ class GetStorageDrilldownData extends DashboardsEvent{
   List<Object> get props => [facilityID, flag];
 }
 
-class UpdateDate extends DashboardsEvent{
+class UpdateDate extends DashboardsEvent {
   DateTime date;
   UpdateDate({required this.date});
 
@@ -104,7 +103,7 @@ class UpdateDate extends DashboardsEvent{
   List<Object> get props => [date];
 }
 
-class ToggleCalendar extends DashboardsEvent{
+class ToggleCalendar extends DashboardsEvent {
   bool toggleCalendar;
   ToggleCalendar({required this.toggleCalendar});
 
@@ -112,7 +111,7 @@ class ToggleCalendar extends DashboardsEvent{
   List<Object> get props => [toggleCalendar];
 }
 
-class ToggleDaywiseCalendar extends DashboardsEvent{
+class ToggleDaywiseCalendar extends DashboardsEvent {
   bool toggleDaywiseCalendar;
   ToggleDaywiseCalendar({required this.toggleDaywiseCalendar});
 
@@ -120,7 +119,7 @@ class ToggleDaywiseCalendar extends DashboardsEvent{
   List<Object> get props => [toggleDaywiseCalendar];
 }
 
-class ChangeLocType extends DashboardsEvent{
+class ChangeLocType extends DashboardsEvent {
   String locType;
   ChangeLocType({required this.locType});
 
@@ -128,7 +127,7 @@ class ChangeLocType extends DashboardsEvent{
   List<Object> get props => [locType];
 }
 
-class ElevateDashboard extends DashboardsEvent{
+class ElevateDashboard extends DashboardsEvent {
   List<bool> elevates;
   ElevateDashboard({required this.elevates});
 

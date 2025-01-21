@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 class AppConstants {
-
   // authentication constants
   static const IDCS_URL = "https://idcs-ceca8ff48a7341bebbe31aba04db25b2.identity.oraclecloud.com/";
 
@@ -14,17 +13,15 @@ class AppConstants {
   static const String AUTHENTICATION_USERNAME = 'a07dc2a022db4c458397118abb543e57';
   static const String AUTHENTICATION_PASSWORD = 'bf06245f-33ae-4b6c-9d0e-27fc0d89f514';
 
-
   static const Map<String, String> TOKEN_DATA = {
-      'grant_type': 'client_credentials',
-      'scope': 'urn:opc:idm:__myscopes__',
-    };
+    'grant_type': 'client_credentials',
+    'scope': 'urn:opc:idm:__myscopes__',
+  };
 
   static Map<String, String> TOKEN_METHODHEADERS = {
-      'Authorization':
-          'Basic ${base64.encode(utf8.encode('$AUTHENTICATION_USERNAME:$AUTHENTICATION_PASSWORD'))}',
-      'Content-Type': 'application/x-www-form-urlencoded'
-    };
+    'Authorization': 'Basic ${base64.encode(utf8.encode('$AUTHENTICATION_USERNAME:$AUTHENTICATION_PASSWORD'))}',
+    'Content-Type': 'application/x-www-form-urlencoded'
+  };
 
   // api credentials
   static const String APIUSERNAME = "NALSOFT";
@@ -41,7 +38,7 @@ class AppConstants {
   static const USERINFO = 'user_info';
   static const ALERTS = 'get_alerts';
   static const ARES_OVERVIEW_DATA = 'areas_overview_data';
-   
+
   // methods
   static const ACTIVITY_AREA = 'activity_area';
   static const INSPECTION_AREA = 'inspection_area';
@@ -63,5 +60,3 @@ class AppConstants {
   static const STORAGE_DRILLDOWN = 'storage_drilldown';
   static const STAGING_DRILLDOWN = 'staging_drilldown';
 }
-
- 

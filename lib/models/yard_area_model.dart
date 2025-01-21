@@ -8,15 +8,7 @@ class YardAreaItem {
   String? poNbr;
   String? vendorCode;
 
-  YardAreaItem(
-      {this.id,
-      this.vehicleLocation,
-      this.truckNbr,
-      this.vehicleEntryTime,
-      this.seqNbr,
-      this.shipmentNbr,
-      this.poNbr,
-      this.vendorCode});
+  YardAreaItem({this.id, this.vehicleLocation, this.truckNbr, this.vehicleEntryTime, this.seqNbr, this.shipmentNbr, this.poNbr, this.vendorCode});
 
   YardAreaItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,11 +22,6 @@ class YardAreaItem {
   }
 }
 
-
-
-
-
-
 class YardDashboard {
   YardDetention? yardDetention;
   YardUtilization? yardUtilization;
@@ -42,20 +29,11 @@ class YardDashboard {
   PreviousMonthYardUtilization? previousMonthYardUtilization;
   AverageYardTime? averageYardTime;
 
-  YardDashboard(
-      {this.yardDetention,
-      this.yardUtilization,
-      this.dayWiseYardUtilzation,
-      this.previousMonthYardUtilization,
-      this.averageYardTime});
+  YardDashboard({this.yardDetention, this.yardUtilization, this.dayWiseYardUtilzation, this.previousMonthYardUtilization, this.averageYardTime});
 
   YardDashboard.fromJson(Map<String, dynamic> json) {
-    yardDetention = json['yard_detention'] != null
-        ? YardDetention.fromJson(json['yard_detention'])
-        : null;
-    yardUtilization = json['yard_utilization'] != null
-        ? YardUtilization.fromJson(json['yard_utilization'])
-        : null;
+    yardDetention = json['yard_detention'] != null ? YardDetention.fromJson(json['yard_detention']) : null;
+    yardUtilization = json['yard_utilization'] != null ? YardUtilization.fromJson(json['yard_utilization']) : null;
     if (json['day_wise_yard_utilzation'] != null) {
       dayWiseYardUtilzation = <DayWiseYardUtilzation>[];
       json['day_wise_yard_utilzation'].forEach((v) {
@@ -63,13 +41,8 @@ class YardDashboard {
       });
     }
     previousMonthYardUtilization =
-        json['previous_month_yard_utilization'] != null
-            ? PreviousMonthYardUtilization.fromJson(
-                json['previous_month_yard_utilization'])
-            : null;
-    averageYardTime = json['average_yard_time'] != null
-        ? AverageYardTime.fromJson(json['average_yard_time'])
-        : null;
+        json['previous_month_yard_utilization'] != null ? PreviousMonthYardUtilization.fromJson(json['previous_month_yard_utilization']) : null;
+    averageYardTime = json['average_yard_time'] != null ? AverageYardTime.fromJson(json['average_yard_time']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -81,12 +54,10 @@ class YardDashboard {
       data['yard_utilization'] = yardUtilization!.toJson();
     }
     if (dayWiseYardUtilzation != null) {
-      data['day_wise_yard_utilzation'] =
-          dayWiseYardUtilzation!.map((v) => v.toJson()).toList();
+      data['day_wise_yard_utilzation'] = dayWiseYardUtilzation!.map((v) => v.toJson()).toList();
     }
     if (previousMonthYardUtilization != null) {
-      data['previous_month_yard_utilization'] =
-          previousMonthYardUtilization!.toJson();
+      data['previous_month_yard_utilization'] = previousMonthYardUtilization!.toJson();
     }
     if (averageYardTime != null) {
       data['average_yard_time'] = averageYardTime!.toJson();
@@ -100,8 +71,7 @@ class YardDetention {
   int? countGreaterThan7Days;
   int? singleDayCount;
 
-  YardDetention(
-      {this.count1To7Days, this.countGreaterThan7Days, this.singleDayCount});
+  YardDetention({this.count1To7Days, this.countGreaterThan7Days, this.singleDayCount});
 
   YardDetention.fromJson(Map<String, dynamic> json) {
     count1To7Days = json['count_1_to_7_days'];

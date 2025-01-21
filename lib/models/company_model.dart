@@ -6,13 +6,7 @@ class CompanyModel {
   int? previousPage;
   List<CompanyResults>? results;
 
-  CompanyModel(
-      {this.resultCount,
-      this.pageCount,
-      this.pageNbr,
-      this.nextPage,
-      this.previousPage,  
-      this.results});
+  CompanyModel({this.resultCount, this.pageCount, this.pageNbr, this.nextPage, this.previousPage, this.results});
 
   CompanyModel.fromJson(Map<String, dynamic> json) {
     resultCount = json['result_count'];
@@ -118,13 +112,9 @@ class CompanyResults {
     modUser = json['mod_user'];
     modTs = json['mod_ts'];
     code = json['code'];
-    companyTypeId = json['company_type_id'] != null
-        ? CompanyTypeId.fromJson(json['company_type_id'])
-        : null;
+    companyTypeId = json['company_type_id'] != null ? CompanyTypeId.fromJson(json['company_type_id']) : null;
     activeFlg = json['active_flg'];
-    parentCompanyId = json['parent_company_id'] != null
-        ? CompanyTypeId.fromJson(json['parent_company_id'])
-        : null;
+    parentCompanyId = json['parent_company_id'] != null ? CompanyTypeId.fromJson(json['parent_company_id']) : null;
     name = json['name'];
     address1 = json['address_1'];
     address2 = json['address_2'];
@@ -141,8 +131,7 @@ class CompanyResults {
     ediPartnerNbr = json['edi_partner_nbr'];
     employerNbr = json['employer_nbr'];
     maxAllowedQtyDecimalScale = json['max_allowed_qty_decimal_scale'];
-    maxAllowedWtVolDimDecimalScale =
-        json['max_allowed_wt_vol_dim_decimal_scale'];
+    maxAllowedWtVolDimDecimalScale = json['max_allowed_wt_vol_dim_decimal_scale'];
     custField1 = json['cust_field_1'];
     custField2 = json['cust_field_2'];
     custField3 = json['cust_field_3'];
@@ -182,8 +171,7 @@ class CompanyResults {
     data['edi_partner_nbr'] = ediPartnerNbr;
     data['employer_nbr'] = employerNbr;
     data['max_allowed_qty_decimal_scale'] = maxAllowedQtyDecimalScale;
-    data['max_allowed_wt_vol_dim_decimal_scale'] =
-        maxAllowedWtVolDimDecimalScale;
+    data['max_allowed_wt_vol_dim_decimal_scale'] = maxAllowedWtVolDimDecimalScale;
     data['cust_field_1'] = custField1;
     data['cust_field_2'] = custField2;
     data['cust_field_3'] = custField3;

@@ -14,11 +14,8 @@ final class ActivityAreaState {
     return ActivityAreaState(getDataState: GetDataState.initial, activityAreaItems: [], pageNum: 0);
   }
 
-  ActivityAreaState copyWith({
-    GetDataState? getDataState,
-    List<ActivityAreaItem>? activityAreaItems,
-    int? pageNum
-  }) {
-    return ActivityAreaState(getDataState: getDataState ?? this.getDataState, activityAreaItems: activityAreaItems ?? this.activityAreaItems, pageNum: pageNum ?? this.pageNum);
+  ActivityAreaState copyWith({GetDataState? getDataState, List<ActivityAreaItem>? activityAreaItems, int? pageNum}) {
+    return ActivityAreaState(
+        getDataState: getDataState ?? this.getDataState, activityAreaItems: activityAreaItems ?? this.activityAreaItems, pageNum: pageNum ?? this.pageNum);
   }
 }

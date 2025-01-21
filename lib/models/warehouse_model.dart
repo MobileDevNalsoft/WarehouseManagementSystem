@@ -1,4 +1,3 @@
-
 class WarehouseData {
   List<ZoneData>? zones;
   WarehouseData({this.zones});

@@ -47,121 +47,121 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
             children: [
               BlocBuilder<DashboardsBloc, DashboardsState>(
-                buildWhen: (previous, current) => previous.selectedLocType != current.selectedLocType,
-                builder: (context, state) {
-                  return Customs.DashboardWidget(
-                      height: size.height * 0.45,
-                      margin: size.height * 0.02,
-                      loaderEnabled: isEnabled,
-                      chartBuilder: (lsize) {
-                        return Stack(
-                          children: [
-                            Customs.WMSSfCircularChart(
-                                lsize: lsize,
-                                title: 'Location Utilization',
-                                titleFontSize: 13,
-                                series: SeriesName.radialBar,
-                                legendVisibility: true,
-                                props: Props(
-                                    dataSource: state.storageDashboardData!.locationUtilization!
-                                        .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
-                                        .first
-                                        .typeUtil!
-                                        .asMap()
-                                        .entries
-                                        .map((e) => PieData(xData: e.value.status!, yData: e.value.count!))
-                                        .toList(),
-                                    labelFontSize: 12,
-                                    maximumValue: state.storageDashboardData!.locationUtilization!
-                                        .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
-                                        .first
-                                        .typeUtil!
-                                        .map((e) => e.count!)
-                                        .toList()
-                                        .reduce((curr, next) => curr > next ? curr : next)
-                                        .toDouble(),
-                                    pointColorMapper: (datum, index) {
-                                      if (index == 0) {
-                                        return const Color.fromRGBO(139, 182, 162, 1);
-                                      } else if (index == 1) {
-                                        return const Color.fromRGBO(232, 212, 162, 1);
-                                      } else {
-                                        return const Color.fromRGBO(255, 116, 106, 1);
+                  buildWhen: (previous, current) => previous.selectedLocType != current.selectedLocType,
+                  builder: (context, state) {
+                    return Customs.DashboardWidget(
+                        height: size.height * 0.45,
+                        margin: size.height * 0.02,
+                        loaderEnabled: isEnabled,
+                        chartBuilder: (lsize) {
+                          return Stack(
+                            children: [
+                              Customs.WMSSfCircularChart(
+                                  lsize: lsize,
+                                  title: 'Location Utilization',
+                                  titleFontSize: 13,
+                                  series: SeriesName.radialBar,
+                                  legendVisibility: true,
+                                  props: Props(
+                                      dataSource: state.storageDashboardData!.locationUtilization!
+                                          .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
+                                          .first
+                                          .typeUtil!
+                                          .asMap()
+                                          .entries
+                                          .map((e) => PieData(xData: e.value.status!, yData: e.value.count!))
+                                          .toList(),
+                                      labelFontSize: 12,
+                                      maximumValue: state.storageDashboardData!.locationUtilization!
+                                          .where((e) => e.locType!.replaceAll('"', '').split('/')[1] == state.selectedLocType!)
+                                          .first
+                                          .typeUtil!
+                                          .map((e) => e.count!)
+                                          .toList()
+                                          .reduce((curr, next) => curr > next ? curr : next)
+                                          .toDouble(),
+                                      pointColorMapper: (datum, index) {
+                                        if (index == 0) {
+                                          return const Color.fromRGBO(139, 182, 162, 1);
+                                        } else if (index == 1) {
+                                          return const Color.fromRGBO(232, 212, 162, 1);
+                                        } else {
+                                          return const Color.fromRGBO(255, 116, 106, 1);
+                                        }
+                                      })),
+                              Positioned(
+                                top: lsize.maxHeight * 0.025,
+                                right: 0,
+                                child: TypeAheadField(
+                                  suggestionsController: suggestionsController,
+                                  builder: (context, textController, focusNode) {
+                                    typeAheadController = textController;
+                                    typeAheadFocusNode = focusNode;
+                                    focusNode = focusNode;
+                                    focusNode.addListener(() {
+                                      if (focusNode.hasFocus) {
+                                        textController.clear();
                                       }
-                                    })),
-                            Positioned(
-                              top: lsize.maxHeight*0.025,
-                              right: 0,
-                              child: TypeAheadField(
-                                suggestionsController: suggestionsController,
-                                builder: (context, textController, focusNode) {
-                                  typeAheadController = textController;
-                                  typeAheadFocusNode = focusNode;
-                                  focusNode = focusNode;
-                                  focusNode.addListener(() {
-                                    if (focusNode.hasFocus) {
-                                      textController.clear();
+                                    });
+                                    if (state.selectedLocType != null) {
+                                      textController.text = state.selectedLocType!;
                                     }
-                                  });
-                                  if (state.selectedLocType != null) {
-                                    textController.text = state.selectedLocType!;
-                                  }
-                                  return SizedBox(
-                                    height: lsize.maxHeight*0.08,
-                                    width: lsize.maxWidth * 0.25,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: TextFormField(
-                                        textAlign: TextAlign.center,
-                                        onTap: () {},
-                                        cursorColor: Colors.black,
-                                        cursorHeight: lsize.maxHeight*0.06,
-                                        style: const TextStyle(fontSize: 11),
-                                        decoration: InputDecoration(
-                                          hintText: 'Choose',
-                                          contentPadding: EdgeInsets.only(top: lsize.maxHeight*0.02, left: lsize.maxHeight*0.02, right: lsize.maxWidth * 0.02),
-                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                                          hintStyle: const TextStyle(
-                                            color: Colors.black54,
-                                            fontWeight: FontWeight.normal,
+                                    return SizedBox(
+                                      height: lsize.maxHeight * 0.08,
+                                      width: lsize.maxWidth * 0.25,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: TextFormField(
+                                          textAlign: TextAlign.center,
+                                          onTap: () {},
+                                          cursorColor: Colors.black,
+                                          cursorHeight: lsize.maxHeight * 0.06,
+                                          style: const TextStyle(fontSize: 11),
+                                          decoration: InputDecoration(
+                                            hintText: 'Choose',
+                                            contentPadding:
+                                                EdgeInsets.only(top: lsize.maxHeight * 0.02, left: lsize.maxHeight * 0.02, right: lsize.maxWidth * 0.02),
+                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+                                            hintStyle: const TextStyle(
+                                              color: Colors.black54,
+                                              fontWeight: FontWeight.normal,
+                                            ),
                                           ),
+                                          controller: textController,
+                                          focusNode: focusNode,
                                         ),
-                                        controller: textController,
-                                        focusNode: focusNode,
                                       ),
+                                    );
+                                  },
+                                  suggestionsCallback: (pattern) {
+                                    return state.storageDashboardData!.locationUtilization!
+                                        .map((e) => e.locType!.replaceAll('"', '').split('/')[1])
+                                        .where((e) => e.toLowerCase().contains(pattern.toLowerCase()))
+                                        .toList();
+                                  },
+                                  itemBuilder: (context, suggestion) => Container(
+                                    height: lsize.maxHeight * 0.08,
+                                    width: lsize.maxWidth * 0.2,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      suggestion.toString(),
+                                      style: const TextStyle(overflow: TextOverflow.ellipsis, fontSize: 11),
                                     ),
-                                  );
-                                },
-                                suggestionsCallback: (pattern) {
-                                  return state.storageDashboardData!.locationUtilization!
-                                      .map((e) => e.locType!.replaceAll('"', '').split('/')[1])
-                                      .where((e) => e.toLowerCase().contains(pattern.toLowerCase()))
-                                      .toList();
-                                },
-                                itemBuilder: (context, suggestion) => Container(
-                                  height: lsize.maxHeight*0.08,
-                                  width: lsize.maxWidth*0.2,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    suggestion.toString(),
-                                    style: const TextStyle(overflow: TextOverflow.ellipsis, fontSize: 11),
                                   ),
+                                  onSelected: (suggestion) {
+                                    typeAheadController.clear();
+                                    typeAheadController.text = suggestion.toString();
+                                    _dashboardsBloc.add(ChangeLocType(locType: suggestion.toString()));
+                                    suggestionsController.close();
+                                    suggestionsController.refresh();
+                                  },
+                                  constraints: BoxConstraints(maxHeight: lsize.maxHeight * 0.5, maxWidth: lsize.maxWidth * 0.3),
                                 ),
-                                onSelected: (suggestion) {
-                                  typeAheadController.clear();
-                                  typeAheadController.text = suggestion.toString();
-                                  _dashboardsBloc.add(ChangeLocType(locType: suggestion.toString()));
-                                  suggestionsController.close();
-                                  suggestionsController.refresh();
-                                },
-                                constraints: BoxConstraints(maxHeight: lsize.maxHeight*0.5, maxWidth: lsize.maxWidth*0.3),
-                              ),
-                            )
-                          ],
-                        );
-                      });
-                }
-              ),
+                              )
+                            ],
+                          );
+                        });
+                  }),
               Customs.DashboardWidget(
                   height: size.height * 0.45,
                   margin: size.height * 0.02,
@@ -179,8 +179,8 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                               .map((e) => PieData(xData: e.value.status!, yData: e.value.count!))
                               .toList(),
                           labelFontSize: 12,
-                          radius: '${lsize.maxWidth*0.23}%',
-                          innerRadius: '${lsize.maxWidth*0.12}%',
+                          radius: '${lsize.maxWidth * 0.23}%',
+                          innerRadius: '${lsize.maxWidth * 0.12}%',
                           pointColorMapper: (datum, index) {
                             if (index == 1) {
                               return const Color.fromARGB(255, 102, 82, 156);
@@ -190,18 +190,22 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                           },
                           onPointTap: (pointInteractionDetails) {
                             _dashboardsBloc.add(GetStorageDrilldownData(facilityID: 243, flag: 'WAREHOUSE UTILIZATION'));
-                            Customs.DrillDownDialog(context: context, dataSources: [
-                              DataSource(
-                                  dataGridSourceBuilder: (isEnabled, state) =>
-                                      DrillDownDataSource(data: isEnabled ? dummyData : state.warehouseUtilization!.available!, columnName: 'Available'),
-                                  columnName: 'Available'),
-                              DataSource(
-                                  dataGridSourceBuilder: (isEnabled, state) =>
-                                      DrillDownDataSource(data: isEnabled ? dummyData : state.warehouseUtilization!.occupied!, columnName: 'Occupied'),
-                                  columnName: 'Occupied')
-                                  ,
-                            ],
-                            onExport: (state) => Customs.sendMail(context: context,dashboardName : 'Warehouse Utilization',data : [['Available', ...state.warehouseUtilization!.available!], ['Occupied', ...state.warehouseUtilization!.occupied!]]),
+                            Customs.DrillDownDialog(
+                              context: context,
+                              dataSources: [
+                                DataSource(
+                                    dataGridSourceBuilder: (isEnabled, state) =>
+                                        DrillDownDataSource(data: isEnabled ? dummyData : state.warehouseUtilization!.available!, columnName: 'Available'),
+                                    columnName: 'Available'),
+                                DataSource(
+                                    dataGridSourceBuilder: (isEnabled, state) =>
+                                        DrillDownDataSource(data: isEnabled ? dummyData : state.warehouseUtilization!.occupied!, columnName: 'Occupied'),
+                                    columnName: 'Occupied'),
+                              ],
+                              onExport: (state) => Customs.sendMail(context: context, dashboardName: 'Warehouse Utilization', data: [
+                                ['Available', ...state.warehouseUtilization!.available!],
+                                ['Occupied', ...state.warehouseUtilization!.occupied!]
+                              ]),
                             );
                           },
                         ));
@@ -233,24 +237,30 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                               return const Color.fromARGB(255, 221, 152, 184);
                             }
                           },
-                          radius: '${lsize.maxWidth*0.27}%',
+                          radius: '${lsize.maxWidth * 0.27}%',
                           onPointTap: (pointInteractionDetails) {
                             _dashboardsBloc.add(GetStorageDrilldownData(facilityID: 243, flag: 'INVENTORY SUMMARY'));
-                            Customs.DrillDownDialog(context: context, dataSources: [
-                              DataSource(
-                                  dataGridSourceBuilder: (isEnabled, state) =>
-                                      DrillDownDataSource(data: isEnabled ? dummyData : state.inventorySummary!.inStock!, columnName: 'In Stock'),
-                                  columnName: 'In Stock'),
-                              DataSource(
-                                  dataGridSourceBuilder: (isEnabled, state) =>
-                                      DrillDownDataSource(data: isEnabled ? dummyData : state.inventorySummary!.runningOutOfStock!, columnName: 'Running Out of Stock'),
-                                  columnName: 'Running Out of Stock'),
-                              DataSource(
-                                  dataGridSourceBuilder: (isEnabled, state) =>
-                                      DrillDownDataSource(data: isEnabled ? dummyData : state.inventorySummary!.outOfStock!, columnName: 'Out of Stock'),
-                                  columnName: 'Out of Stock')
-                            ],
-                            onExport: (state) => Customs.sendMail(context: context,dashboardName : 'Inventory Summary',data : [['In Stock', ...state.inventorySummary!.inStock!], ['Running Out of Stock', ...state.inventorySummary!.runningOutOfStock!], ['Out of Stock', ...state.inventorySummary!.outOfStock!]]),
+                            Customs.DrillDownDialog(
+                              context: context,
+                              dataSources: [
+                                DataSource(
+                                    dataGridSourceBuilder: (isEnabled, state) =>
+                                        DrillDownDataSource(data: isEnabled ? dummyData : state.inventorySummary!.inStock!, columnName: 'In Stock'),
+                                    columnName: 'In Stock'),
+                                DataSource(
+                                    dataGridSourceBuilder: (isEnabled, state) => DrillDownDataSource(
+                                        data: isEnabled ? dummyData : state.inventorySummary!.runningOutOfStock!, columnName: 'Running Out of Stock'),
+                                    columnName: 'Running Out of Stock'),
+                                DataSource(
+                                    dataGridSourceBuilder: (isEnabled, state) =>
+                                        DrillDownDataSource(data: isEnabled ? dummyData : state.inventorySummary!.outOfStock!, columnName: 'Out of Stock'),
+                                    columnName: 'Out of Stock')
+                              ],
+                              onExport: (state) => Customs.sendMail(context: context, dashboardName: 'Inventory Summary', data: [
+                                ['In Stock', ...state.inventorySummary!.inStock!],
+                                ['Running Out of Stock', ...state.inventorySummary!.runningOutOfStock!],
+                                ['Out of Stock', ...state.inventorySummary!.outOfStock!]
+                              ]),
                             );
                           },
                         ));
@@ -339,10 +349,10 @@ class _StorageAreaDashboardState extends State<StorageAreaDashboard> {
                     return Customs.WMSRadialGuage(
                         title: "Cycle Count Accuracy",
                         titleFontSize: 15,
-                        annotationHeight: lsize.maxHeight*0.35,
+                        annotationHeight: lsize.maxHeight * 0.35,
                         annotationText: '${state.storageDashboardData!.cycleCountAccuracy!.toStringAsFixed(2)}%',
                         annotationFontSize: 15,
-                        radiusFactor: lsize.maxHeight*0.0021,
+                        radiusFactor: lsize.maxHeight * 0.0021,
                         markerValue: state.storageDashboardData!.cycleCountAccuracy!);
                   }),
             ],

@@ -59,9 +59,7 @@ export function addInteractions(scene, model, camera, controls) {
       // we get the objects from the model as list that are intersected by the casted ray.
 
       if (intersects.length > 0) {
-        intersects.forEach((e) => {console.warn("object name ", e.object.name)});
         const targetObject = intersects[0].object;
-        console.warn("name", targetObject.name);
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area") && globalState.areaFocused == false
@@ -266,7 +264,7 @@ export function addInteractions(scene, model, camera, controls) {
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
-        document.getElementById("wms-bot").style.display = "none";  
+        
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")

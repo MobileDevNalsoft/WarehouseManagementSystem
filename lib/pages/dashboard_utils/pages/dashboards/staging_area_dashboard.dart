@@ -59,42 +59,9 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
         "109",
         "110",
       ],
-      "111-120": [
-        "111",
-        "112",
-        "113",
-        "114",
-        "115",
-        "116",
-        "117",
-        "118",
-        "119",
-        "120"
-      ],
-      "121-130": [
-        "121",
-        "122",
-        "123",
-        "124",
-        "125",
-        "126",
-        "127",
-        "128",
-        "129",
-        "130"
-      ],
-      "131-140": [
-        "131",
-        "132",
-        "133",
-        "134",
-        "135",
-        "136",
-        "137",
-        "138",
-        "139",
-        "140"
-      ],
+      "111-120": ["111", "112", "113", "114", "115", "116", "117", "118", "119", "120"],
+      "121-130": ["121", "122", "123", "124", "125", "126", "127", "128", "129", "130"],
+      "131-140": ["131", "132", "133", "134", "135", "136", "137", "138", "139", "140"],
     };
 
     _dashboardsBloc = context.read<DashboardsBloc>();
@@ -104,10 +71,8 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SingleChildScrollView(child:
-        BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
-      bool isEnabled =
-          state.getStagingDashboardState != StagingDashboardState.success;
+    return SingleChildScrollView(child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+      bool isEnabled = state.getStagingDashboardState != StagingDashboardState.success;
       return StaggeredGrid.count(
         crossAxisCount: 3,
         children: [
@@ -121,8 +86,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                     title: "Avg Lead Time",
                     titleFontSize: 13,
                     enableAnnotation: true,
-                    annotationText:
-                        '${state.stagingDashboardData!.avgLeadTime!}m',
+                    annotationText: '${state.stagingDashboardData!.avgLeadTime!}m',
                     props: Props(
                       dataSource: avgPieData,
                       pointColorMapper: (p0, p1) {
@@ -147,10 +111,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                     series: SeriesName.pieSeries,
                     props: Props(
                       dataSource: state.stagingDashboardData!.todayOrderSummary!
-                          .map((e) => PieData(
-                              xData: e.status!,
-                              yData: e.count!,
-                              text: e.count!.toString()))
+                          .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
                           .toList(),
                       radius: '${lsize.maxWidth * 0.2}%',
                       pointColorMapper: (p0, p1) {
@@ -168,72 +129,38 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                         return null;
                       },
                       onPointTap: (pointInteractionDetails) {
-                        _dashboardsBloc
-                            .add(GetStagingDrilldownData(facilityID: 243));
+                        _dashboardsBloc.add(GetStagingDrilldownData(facilityID: 243));
                         Customs.DrillDownDialog(
                           context: context,
                           dataSources: [
                             DataSource(
                                 dataGridSourceBuilder: (isEnabled, state) =>
-                                    DrillDownDataSource(
-                                        data: isEnabled
-                                            ? dummyData
-                                            : state.todayOrderSummary!.created!,
-                                        columnName: 'Created'),
+                                    DrillDownDataSource(data: isEnabled ? dummyData : state.todayOrderSummary!.created!, columnName: 'Created'),
                                 columnName: 'Created'),
                             DataSource(
                                 dataGridSourceBuilder: (isEnabled, state) =>
-                                    DrillDownDataSource(
-                                        data: isEnabled
-                                            ? dummyData
-                                            : state
-                                                .todayOrderSummary!.allocated!,
-                                        columnName: 'Allocated'),
+                                    DrillDownDataSource(data: isEnabled ? dummyData : state.todayOrderSummary!.allocated!, columnName: 'Allocated'),
                                 columnName: 'Allocated'),
                             DataSource(
                                 dataGridSourceBuilder: (isEnabled, state) =>
-                                    DrillDownDataSource(
-                                        data: isEnabled
-                                            ? dummyData
-                                            : state.todayOrderSummary!.picked!,
-                                        columnName: 'Picked'),
+                                    DrillDownDataSource(data: isEnabled ? dummyData : state.todayOrderSummary!.picked!, columnName: 'Picked'),
                                 columnName: 'Picked'),
                             DataSource(
                                 dataGridSourceBuilder: (isEnabled, state) =>
-                                    DrillDownDataSource(
-                                        data: isEnabled
-                                            ? dummyData
-                                            : state.todayOrderSummary!.loaded!,
-                                        columnName: 'Loaded'),
+                                    DrillDownDataSource(data: isEnabled ? dummyData : state.todayOrderSummary!.loaded!, columnName: 'Loaded'),
                                 columnName: 'Loaded'),
                             DataSource(
                                 dataGridSourceBuilder: (isEnabled, state) =>
-                                    DrillDownDataSource(
-                                        data: isEnabled
-                                            ? dummyData
-                                            : state.todayOrderSummary!.shipped!,
-                                        columnName: 'Shipped'),
+                                    DrillDownDataSource(data: isEnabled ? dummyData : state.todayOrderSummary!.shipped!, columnName: 'Shipped'),
                                 columnName: 'Shipped')
                           ],
-                          onExport: (state) => Customs.sendMail(
-                              context: context,
-                              dashboardName: 'Today Order Summary',
-                              data: [
-                                [
-                                  'Created',
-                                  ...state.todayOrderSummary!.created!
-                                ],
-                                [
-                                  'Allocated',
-                                  ...state.todayOrderSummary!.allocated!
-                                ],
-                                ['Picked', ...state.todayOrderSummary!.picked!],
-                                ['Loaded', ...state.todayOrderSummary!.loaded!],
-                                [
-                                  'Shipped',
-                                  ...state.todayOrderSummary!.shipped!
-                                ]
-                              ]),
+                          onExport: (state) => Customs.sendMail(context: context, dashboardName: 'Today Order Summary', data: [
+                            ['Created', ...state.todayOrderSummary!.created!],
+                            ['Allocated', ...state.todayOrderSummary!.allocated!],
+                            ['Picked', ...state.todayOrderSummary!.picked!],
+                            ['Loaded', ...state.todayOrderSummary!.loaded!],
+                            ['Shipped', ...state.todayOrderSummary!.shipped!]
+                          ]),
                         );
                       },
                     ));
@@ -247,16 +174,11 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                     title: "Shipping Efficiency",
                     titleFontSize: 15,
                     annotationHeight: lsize.maxHeight * 0.35,
-                    annotationText:
-                        state.stagingDashboardData!.shippingEfficiency!,
+                    annotationText: state.stagingDashboardData!.shippingEfficiency!,
                     annotationFontSize: 15,
                     axisLineColor: const Color.fromARGB(255, 189, 187, 64),
                     radiusFactor: lsize.maxHeight * 0.0021,
-                    markerValue: int.parse(state
-                                .stagingDashboardData!.shippingEfficiency!
-                                .replaceAll('%', ''))
-                            .toDouble() +
-                        3);
+                    markerValue: int.parse(state.stagingDashboardData!.shippingEfficiency!.replaceAll('%', '')).toDouble() + 3);
               }),
           Customs.DashboardWidget(
               height: size.height * 0.45,
@@ -271,12 +193,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                     ytitleFontSize: 13,
                     barCount: 1,
                     dataSources: [
-                      state.stagingDashboardData!.orderAging!
-                          .map((e) => BarData(
-                              xLabel: e.status!,
-                              yValue: e.count!,
-                              abbreviation: e.status!))
-                          .toList()
+                      state.stagingDashboardData!.orderAging!.map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!)).toList()
                     ],
                     yAxisTitle: 'Aging time',
                     legendVisibility: false,
@@ -292,8 +209,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                     title: "Fulfilment Time",
                     titleFontSize: 13,
                     enableAnnotation: true,
-                    annotationText:
-                        '${state.stagingDashboardData!.fulfilmentTime!.toString()}h',
+                    annotationText: '${state.stagingDashboardData!.fulfilmentTime!.toString()}h',
                     props: Props(
                       dataSource: avgPieData,
                       pointColorMapper: (p0, p1) {
@@ -319,10 +235,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                     barCount: 1,
                     dataSources: [
                       state.stagingDashboardData!.daywiseOrderSummary!
-                          .map((e) => BarData(
-                              xLabel: e.status!,
-                              yValue: e.count!,
-                              abbreviation: e.status!))
+                          .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
                           .toList()
                     ],
                     yAxisTitle: 'Number of orders',
@@ -343,10 +256,7 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                     barCount: 1,
                     dataSources: [
                       state.stagingDashboardData!.todayChannelSummary!
-                          .map((e) => BarData(
-                              xLabel: e.status!.replaceAll('Order', ''),
-                              yValue: e.count!,
-                              abbreviation: e.status!))
+                          .map((e) => BarData(xLabel: e.status!.replaceAll('Order', ''), yValue: e.count!, abbreviation: e.status!))
                           .toList()
                     ],
                     yAxisTitle: 'Number of orders',
@@ -378,18 +288,12 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                   : selectedUsers
                                       .map((e) => BarData(
                                           xLabel: e.replaceAll('_', ' '),
-                                          yValue: state.stagingDashboardData!
-                                              .userwiseEfficiency!
-                                              .firstWhere(
-                                                  (test) => test.status == e)
-                                              .count!,
+                                          yValue: state.stagingDashboardData!.userwiseEfficiency!.firstWhere((test) => test.status == e).count!,
                                           abbreviation: e))
                                       .toList()
                             ],
                             yAxisTitle: 'Number of Orders',
-                            barColors: [
-                              const Color.fromRGBO(147, 0, 120, 0.5)
-                            ]),
+                            barColors: [const Color.fromRGBO(147, 0, 120, 0.5)]),
                       ),
                       Gap(size.width * 0.016),
                       SizedBox(
@@ -414,11 +318,8 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                     onTap: () {},
                                     cursorColor: Colors.black,
                                     decoration: InputDecoration(
-                                      hintText:
-                                          rangeSelection ? 'Choose' : "Compare",
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(24)),
+                                      hintText: rangeSelection ? 'Choose' : "Compare",
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
                                       hintStyle: const TextStyle(
                                         color: Colors.black54,
                                         fontWeight: FontWeight.normal,
@@ -432,11 +333,9 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 suggestionsCallback: (pattern) {
                                   userSuggestions = [];
                                   if (rangeSelection) {
-                                    userSuggestions =
-                                        employeeSuggestionRange.keys.toList();
+                                    userSuggestions = employeeSuggestionRange.keys.toList();
                                   } else {
-                                    for (var empList
-                                        in employeeSuggestionRange.values) {
+                                    for (var empList in employeeSuggestionRange.values) {
                                       print(empList);
                                       userSuggestions.addAll(empList);
                                     }
@@ -455,67 +354,31 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                             Transform.scale(
                                               scale: 1,
                                               child: Checkbox(
-                                                  visualDensity:
-                                                      VisualDensity.compact,
+                                                  visualDensity: VisualDensity.compact,
                                                   shape: const OvalBorder(),
-                                                  value: rangeSelection
-                                                      ? selectedUserRange ==
-                                                          suggestion
-                                                      : selectedUsers
-                                                          .contains(suggestion),
+                                                  value: rangeSelection ? selectedUserRange == suggestion : selectedUsers.contains(suggestion),
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      if (rangeSelection !=
-                                                          true) {
-                                                        if (selectedUsers
-                                                            .contains(
-                                                                suggestion)) {
-                                                          selectedUsers.remove(
-                                                              suggestion);
+                                                      if (rangeSelection != true) {
+                                                        if (selectedUsers.contains(suggestion)) {
+                                                          selectedUsers.remove(suggestion);
+                                                          userEfficiencyGraphData.removeWhere((data) => data.xLabel == suggestion);
+                                                          suggestionsController.refresh();
+                                                        } else if (selectedUsers.length < 10) {
+                                                          selectedUsers.add(suggestion);
                                                           userEfficiencyGraphData
-                                                              .removeWhere((data) =>
-                                                                  data.xLabel ==
-                                                                  suggestion);
-                                                          suggestionsController
-                                                              .refresh();
-                                                        } else if (selectedUsers
-                                                                .length <
-                                                            10) {
-                                                          selectedUsers
-                                                              .add(suggestion);
-                                                          userEfficiencyGraphData.add(
-                                                              BarData(
-                                                                  xLabel:
-                                                                      suggestion,
-                                                                  yValue: random
-                                                                      .nextInt(
-                                                                          10),
-                                                                  abbreviation:
-                                                                      suggestion));
-                                                          suggestionsController
-                                                              .refresh();
+                                                              .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                          suggestionsController.refresh();
                                                         }
                                                       } else {
-                                                        selectedUserRange =
-                                                            suggestion;
-                                                        userEfficiencyGraphData =
-                                                            [];
+                                                        selectedUserRange = suggestion;
+                                                        userEfficiencyGraphData = [];
                                                         selectedUsers = [];
-                                                        List<String> employees =
-                                                            employeeSuggestionRange[
-                                                                suggestion]!;
-                                                        selectedUsers
-                                                            .addAll(employees);
-                                                        for (var emp
-                                                            in selectedUsers) {
+                                                        List<String> employees = employeeSuggestionRange[suggestion]!;
+                                                        selectedUsers.addAll(employees);
+                                                        for (var emp in selectedUsers) {
                                                           userEfficiencyGraphData
-                                                              .add(BarData(
-                                                                  xLabel: emp,
-                                                                  yValue: random
-                                                                      .nextInt(
-                                                                          10),
-                                                                  abbreviation:
-                                                                      suggestion));
+                                                              .add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
                                                         }
                                                       }
                                                     });
@@ -536,19 +399,13 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                   if (rangeSelection == false) {
                                     setState(
                                       () {
-                                        if (selectedUsers
-                                            .contains(suggestion)) {
+                                        if (selectedUsers.contains(suggestion)) {
                                           selectedUsers.remove(suggestion);
-                                          userEfficiencyGraphData.removeWhere(
-                                              (data) =>
-                                                  data.xLabel == suggestion);
+                                          userEfficiencyGraphData.removeWhere((data) => data.xLabel == suggestion);
                                           suggestionsController.refresh();
                                         } else if (selectedUsers.length < 10) {
                                           selectedUsers.add(suggestion);
-                                          userEfficiencyGraphData.add(BarData(
-                                              xLabel: suggestion,
-                                              yValue: random.nextInt(10),
-                                              abbreviation: suggestion));
+                                          userEfficiencyGraphData.add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
                                           suggestionsController.refresh();
                                         }
                                       },
@@ -556,17 +413,13 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                   } else {
                                     setState(() {
                                       selectedUserRange = suggestion;
-                                      List<String> employees =
-                                          employeeSuggestionRange[suggestion]!;
+                                      List<String> employees = employeeSuggestionRange[suggestion]!;
                                       userEfficiencyGraphData = [];
                                       selectedUsers = [];
 
                                       selectedUsers.addAll(employees);
                                       for (var emp in selectedUsers) {
-                                        userEfficiencyGraphData.add(BarData(
-                                            xLabel: emp,
-                                            yValue: random.nextInt(10),
-                                            abbreviation: suggestion));
+                                        userEfficiencyGraphData.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
                                       }
                                     });
                                   }
@@ -582,13 +435,8 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 child: ListView(
                                   children: selectedUsers
                                       .map((emp) => Container(
-                                          margin:
-                                              const EdgeInsets.only(bottom: 4),
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.rectangle,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              color: Colors.black12),
+                                          margin: const EdgeInsets.only(bottom: 4),
+                                          decoration: BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(12), color: Colors.black12),
                                           child: Row(
                                             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
@@ -596,26 +444,19 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                               Expanded(
                                                   child: Text(
                                                 emp,
-                                                style: const TextStyle(
-                                                    fontSize: 22,
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
+                                                style: const TextStyle(fontSize: 22, overflow: TextOverflow.ellipsis),
                                               )),
                                               IconButton(
                                                 onPressed: () {
                                                   setState(() {
                                                     selectedUsers.remove(emp);
-                                                    userEfficiencyGraphData
-                                                        .removeWhere((data) =>
-                                                            data.xLabel == emp);
+                                                    userEfficiencyGraphData.removeWhere((data) => data.xLabel == emp);
                                                   });
                                                 },
-                                                icon: const Icon(
-                                                    Icons.cancel_rounded),
+                                                icon: const Icon(Icons.cancel_rounded),
                                                 iconSize: size.width * 0.01,
                                                 splashRadius: 5,
-                                                visualDensity:
-                                                    VisualDensity.compact,
+                                                visualDensity: VisualDensity.compact,
                                               ),
                                             ],
                                           )))
@@ -633,6 +474,3 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
     }));
   }
 }
-
-
-

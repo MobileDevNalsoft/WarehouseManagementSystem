@@ -18,9 +18,7 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
   final ScrollController _controller = ScrollController();
   late DockAreaBloc _dockAreaBloc;
 
-
-
-late  WarehouseInteractionBloc _warehouseInteractionBloc ;
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
   @override
   void initState() {
     super.initState();
@@ -35,7 +33,8 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
   }
 
   void _scrollListener() async {
-    if (_controller.position.pixels == _controller.position.maxScrollExtent && _dockAreaBloc.state.dockAreaItems!.length + 1 > (_dockAreaBloc.state.pageNum! + 1) * 100) {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent &&
+        _dockAreaBloc.state.dockAreaItems!.length + 1 > (_dockAreaBloc.state.pageNum! + 1) * 100) {
       _dockAreaBloc.state.pageNum = _dockAreaBloc.state.pageNum! + 1;
       _dockAreaBloc.add(GetDockAreaData(
           searchText: context.read<WarehouseInteractionBloc>().state.searchText,
@@ -53,9 +52,29 @@ late  WarehouseInteractionBloc _warehouseInteractionBloc ;
           bool isEnabled = state.getDataState != GetDataState.success;
           return Expanded(
             child: LayoutBuilder(builder: (context, lsize) {
-              return (state.getDataState== GetDataState.success &&  state.dockAreaItems!.isEmpty)?
-                      Column(children: [Text(_warehouseInteractionBloc.state.searchText!=null&&_warehouseInteractionBloc.state.searchText !=""?_warehouseInteractionBloc.state.searchText!:"",style: TextStyle(fontWeight: FontWeight.w600,fontSize: lsize.maxWidth*0.048),),const Text("Data not found")],)
-                     : isEnabled ? const Center(child: CircularProgressIndicator(),) : ExpandableListView(data: state.dockAreaItems!, l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white), l2StyleData: L2StyleData(height: 60, color: const Color.fromRGBO(43, 79, 122, 1), dropDownColor: const Color.fromRGBO(43, 79, 122, 1)), l3StyleData: L3StyleData(height: lsize.maxHeight*0.152, color: const Color.fromRGBO(127, 161, 202, 1)),);
+              return (state.getDataState == GetDataState.success && state.dockAreaItems!.isEmpty)
+                  ? Column(
+                      children: [
+                        Text(
+                          _warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != ""
+                              ? _warehouseInteractionBloc.state.searchText!
+                              : "",
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.048),
+                        ),
+                        const Text("Data not found")
+                      ],
+                    )
+                  : isEnabled
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : ExpandableListView(
+                          data: state.dockAreaItems!,
+                          l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white),
+                          l2StyleData:
+                              L2StyleData(height: 60, color: const Color.fromRGBO(43, 79, 122, 1), dropDownColor: const Color.fromRGBO(43, 79, 122, 1)),
+                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.152, color: const Color.fromRGBO(127, 161, 202, 1)),
+                        );
             }),
           );
         },

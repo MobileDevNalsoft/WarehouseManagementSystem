@@ -14,8 +14,10 @@ import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel; // Ensure you have this package
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
+import 'package:wmssimulator/models/task_model.dart';
 import 'package:wmssimulator/pages/customs/users_builder.dart';
 
 class Customs {
@@ -78,22 +80,18 @@ class Customs {
   }
 
   static Widget DashboardWidget(
-      {double height = 150,
-      double? margin,
-      Decoration? decoration,
-      bool loaderEnabled = true,
-      required Widget Function(BoxConstraints lsize) chartBuilder}) {
+      {double height = 150, double? margin, Decoration? decoration, bool loaderEnabled = true, required Widget Function(BoxConstraints lsize) chartBuilder}) {
     return Container(
-    margin: EdgeInsets.all(margin ?? 0),
-    height: height,
-    decoration: decoration ??
-        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-    padding: EdgeInsets.all(height * 0.035),
-    alignment: Alignment.center,
-    child: LayoutBuilder(builder: (context, lsize) {
-      return loaderEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(lsize);
-    }),
-          );
+      margin: EdgeInsets.all(margin ?? 0),
+      height: height,
+      decoration: decoration ??
+          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+      padding: EdgeInsets.all(height * 0.035),
+      alignment: Alignment.center,
+      child: LayoutBuilder(builder: (context, lsize) {
+        return loaderEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(lsize);
+      }),
+    );
   }
 
   static Widget ElevatedDashboardWidget(
@@ -178,6 +176,83 @@ class Customs {
               ))
         ],
       ),
+    );
+  }
+
+  static Widget WorkflowLayout(
+      {required Size size, required int buttonIndex, required Widget child, required void Function()? onApproved, required void Function()? onRejected}) {
+    List<String> buttons = ['Pending', 'Completed'];
+
+    return Column(
+      children: [
+        Container(
+          height: size.height * 0.07,
+          width: size.width * 0.18,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(color: Color.fromRGBO(68, 98, 136, 1), borderRadius: BorderRadius.all(Radius.circular(50))),
+          padding: EdgeInsets.all(size.height * 0.01),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: buttons.length,
+            itemBuilder: (context, index) => InkWell(
+              onTap: () {
+                context.read<WorkflowBloc>().add(ButtonClicked(index: index));
+              },
+              child: Container(
+                width: size.width * 0.08,
+                margin: EdgeInsets.symmetric(horizontal: size.width * 0.0028),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: buttonIndex == index ? Colors.white : const Color.fromRGBO(12, 46, 87, 1),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Text(
+                  buttons[index],
+                  style: TextStyle(color: buttonIndex == index ? Colors.black : Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Gap(size.height * 0.02),
+        Expanded(
+          child: Container(
+              decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(30))),
+              padding: EdgeInsets.all(size.height * 0.02),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  if (buttonIndex == 0)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: onApproved,
+                          child: Text('Approve'),
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                        Gap(size.height * 0.01),
+                        TextButton(
+                          onPressed: onRejected,
+                          child: Text('Reject'),
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  Gap(size.height * 0.02),
+                  child,
+                ],
+              )),
+        ),
+      ],
     );
   }
 
@@ -412,8 +487,8 @@ class Customs {
                 onPointTap: props.onPointTap,
                 dataLabelSettings: DataLabelSettings(
                     isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
-                radius: props.radius ?? '${lsize.maxWidth*0.18}%', // Adjust the radius as needed
-                innerRadius: props.innerRadius ?? '${lsize.maxWidth*0.15}%', // Optional: adjust for a thinner ring
+                radius: props.radius ?? '${lsize.maxWidth * 0.18}%', // Adjust the radius as needed
+                innerRadius: props.innerRadius ?? '${lsize.maxWidth * 0.15}%', // Optional: adjust for a thinner ring
                 pointColorMapper: props.pointColorMapper,
               )
             : series == SeriesName.radialBar
@@ -421,8 +496,8 @@ class Customs {
                     dataSource: props!.dataSource,
                     maximumValue: props.maximumValue,
                     cornerStyle: CornerStyle.bothCurve,
-                    radius: props.radius ?? '${lsize.maxWidth*0.2}%', // Adjust the radius as needed
-                    innerRadius: props.innerRadius ?? '${lsize.maxWidth*0.1}%', // Optional: adjust for a thinner ring
+                    radius: props.radius ?? '${lsize.maxWidth * 0.2}%', // Adjust the radius as needed
+                    innerRadius: props.innerRadius ?? '${lsize.maxWidth * 0.1}%', // Optional: adjust for a thinner ring
                     dataLabelSettings: DataLabelSettings(
                         // Renders the data label
                         isVisible: true,
@@ -440,7 +515,7 @@ class Customs {
                         isVisible: true,
                         textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: props.labelFontSize),
                         alignment: ChartAlignment.center),
-                    radius: props.radius ?? '${lsize.maxWidth*0.2}%',
+                    radius: props.radius ?? '${lsize.maxWidth * 0.2}%',
                     pointColorMapper: props.pointColorMapper,
                     onPointTap: props.onPointTap,
                     xValueMapper: (PieData data, _) => data.xData,
@@ -485,52 +560,51 @@ class Customs {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if(!isEnabled)
-                      Tooltip(
-                        message: 'Export',
-                        verticalOffset: -size.height*0.075,
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(8),
+                      if (!isEnabled)
+                        Tooltip(
+                          message: 'Export',
+                          verticalOffset: -size.height * 0.075,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Transform.translate(
+                            offset: Offset(size.width * 0.008, -size.height * 0.01),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                                onTap: () => onExport(state),
+                                child: Image.asset(
+                                  'assets/images/export.png',
+                                  height: size.height * 0.03,
+                                  width: size.width * 0.03,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        child: Transform.translate(
-                          offset: Offset(size.width * 0.008, -size.height * 0.01),
+                      if (!isEnabled) Gap(size.width * 0.01),
+                      if (!isEnabled)
+                        Transform.translate(
+                          offset: Offset(0, -size.height * 0.009),
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
                               overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                              onTap: () => onExport(state),
-                              child: Image.asset(
-                                'assets/images/export.png',
-                                height: size.height * 0.03,
-                                width: size.width * 0.03,
+                              onTap: () => Navigator.pop(context),
+                              child: CircleAvatar(
+                                radius: size.width * 0.007,
+                                backgroundColor: Colors.white,
+                                child: const Icon(
+                                  Icons.close_rounded,
+                                  size: 20,
+                                  weight: 1,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      if(!isEnabled)
-                      Gap(size.width * 0.01),
-                      if(!isEnabled)
-                      Transform.translate(
-                        offset: Offset(0, -size.height * 0.009),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-                            onTap: () => Navigator.pop(context),
-                            child: CircleAvatar(
-                              radius: size.width*0.007,
-                              backgroundColor: Colors.white,
-                              child: const Icon(
-                                Icons.close_rounded,
-                                size: 20,
-                                weight: 1,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                   Container(
@@ -574,16 +648,10 @@ class Customs {
     );
   }
 
-  static void AnimatedDialog({
-    required BuildContext context,
-    required Widget header,
-    required List<Widget> content,
-    Function? onClose
-  }) {
+  static void AnimatedDialog({required BuildContext context, required Widget header, required List<Widget> content, Function? onClose}) {
     Size size = MediaQuery.of(context).size;
     showGeneralDialog(
       context: context,
-      
       barrierColor: Colors.black45,
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         final curvedValue = Curves.bounceInOut.transform(animation.value);
@@ -621,9 +689,11 @@ class Customs {
                           child: PointerInterceptor(
                             child: InkWell(
                               onTap: () {
-                                if(onClose!=null){
-                                onClose();}
-                                Navigator.pop(context);},
+                                if (onClose != null) {
+                                  onClose();
+                                }
+                                Navigator.pop(context);
+                              },
                               child: const Icon(
                                 Icons.close,
                                 size: 20,
@@ -711,9 +781,7 @@ class Customs {
     ).show(context);
   }
 
-  static Future<void> sendMail({required BuildContext context,required String dashboardName,required List<List<String>> data}) async {
-    DateTime now = DateTime.now();
-
+  static Future<void> sendMail({required BuildContext context, required String dashboardName, required List<List<String>> data}) async {
     // Create a new Excel workbook
     final excel.Workbook workbook = excel.Workbook();
     final excel.Worksheet sheet = workbook.worksheets[0];
@@ -724,7 +792,7 @@ class Customs {
     for (int i = 1; i <= data.length; i++) {
       for (int j = 1; j <= data[i - 1].length; j++) {
         sheet.getRangeByIndex(j, i).setText(data[i - 1][j - 1]);
-        if(j == 1) {
+        if (j == 1) {
           sheet.getRangeByIndex(j, i).cellStyle.bold = true;
         }
       }
@@ -900,3 +968,122 @@ class DataSource {
 }
 
 List<String> dummyData = List.generate(10, (index) => 'data $index');
+
+class WorkflowQualityCheckDataSource extends DataGridSource {
+  WorkflowQualityCheckDataSource({required List<QualityCheckTask> data, void Function(bool?, DataGridRow)? onChanged, bool isCompleted = false}) {
+    _onChanged = onChanged;
+    _data = List.generate(
+      data.length,
+      (index) => DataGridRow(cells: [
+        if (!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].status : ''),
+        DataGridCell(columnName: 'Facility', value: index < data.length ? data[index].facility : ''),
+        DataGridCell(columnName: 'LPN Nbr', value: index < data.length ? data[index].lpnNbr : ''),
+        DataGridCell(columnName: 'Status', value: index < data.length ? data[index].status : ''),
+        DataGridCell(columnName: 'QC Status', value: index < data.length ? data[index].qcStatus : ''),
+        DataGridCell(columnName: 'Item Code', value: index < data.length ? data[index].itemCode : ''),
+        DataGridCell(columnName: 'Item Description', value: index < data.length ? data[index].itemDescription : ''),
+        DataGridCell(columnName: 'Curr Qty', value: index < data.length ? data[index].currQty : ''),
+        DataGridCell(columnName: 'UOM', value: index < data.length ? data[index].uom : ''),
+        DataGridCell(columnName: 'Location', value: index < data.length ? data[index].location : ''),
+        DataGridCell(columnName: 'Batch Nbr', value: index < data.length ? data[index].batchNbr : ''),
+        DataGridCell(columnName: 'Expiry Date', value: index < data.length ? data[index].expiryDate : ''),
+        DataGridCell(columnName: 'Manufacture Date', value: index < data.length ? data[index].manufactureDate : ''),
+        DataGridCell(columnName: 'Orig Qty', value: index < data.length ? data[index].origQty : ''),
+        DataGridCell(columnName: 'UOM2', value: index < data.length ? data[index].uom2 : ''),
+        DataGridCell(columnName: 'Received Qty', value: index < data.length ? data[index].receivedQty : ''),
+        DataGridCell(columnName: 'UOM3', value: index < data.length ? data[index].uom3 : ''),
+        DataGridCell(columnName: 'PO Nbr', value: index < data.length ? data[index].poNbr : ''),
+        DataGridCell(columnName: 'Received Shipment', value: index < data.length ? data[index].receivedShipment : ''),
+        DataGridCell(columnName: 'Putaway Type', value: index < data.length ? data[index].putawayType : ''),
+        DataGridCell(columnName: 'Create Timestamp', value: index < data.length ? data[index].createTimestamp : ''),
+        DataGridCell(columnName: 'Receiving User', value: index < data.length ? data[index].receivingUser : ''),
+        DataGridCell(columnName: 'Shipment Type', value: index < data.length ? data[index].shipmentType : ''),
+        DataGridCell(columnName: 'Weight', value: index < data.length ? data[index].weight : ''),
+        DataGridCell(columnName: 'uom_wt', value: index < data.length ? data[index].uomwt : ''),
+        DataGridCell(columnName: 'Volume', value: index < data.length ? data[index].volume : ''),
+        DataGridCell(columnName: 'uom_vol', value: index < data.length ? data[index].uomvol : ''),
+      ]),
+    );
+  }
+
+  List<DataGridRow> _data = [];
+  void Function(bool?, DataGridRow)? _onChanged;
+
+  @override
+  List<DataGridRow> get rows => _data;
+
+  @override
+  DataGridRowAdapter? buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((dataGridCell) {
+      return dataGridCell.columnName != ''
+          ? Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(dataGridCell.value.toString()),
+            )
+          : BlocBuilder<WorkflowBloc, WorkflowState>(builder: (context, state) {
+              return Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Checkbox(
+                    value: state.qualityCheckTasks.where((element) => element.lpnNbr == row.getCells()[2].value).first.isChecked,
+                    onChanged: (value) => _onChanged!(value, row),
+                  ));
+            });
+    }).toList());
+  }
+}
+
+class WorkflowCycleCountDataSource extends DataGridSource {
+  WorkflowCycleCountDataSource({required List<CycleCountTask> data, void Function(bool?, DataGridRow)? onChanged, bool isCompleted = false}) {
+    _onChanged = onChanged;
+    _data = List.generate(
+      data.length,
+      (index) => DataGridRow(cells: [
+        if (!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].status : ''),
+        DataGridCell(columnName: 'Facility', value: index < data.length ? data[index].facility : ''),
+        DataGridCell(columnName: 'Company ID', value: index < data.length ? data[index].companyID : ''),
+        DataGridCell(columnName: 'Group Nbr', value: index < data.length ? data[index].grpNbr : ''),
+        DataGridCell(columnName: 'Task', value: index < data.length ? data[index].task : ''),
+        DataGridCell(columnName: 'Total Expected Qty', value: index < data.length ? data[index].totalExpectedQuantity : ''),
+        DataGridCell(columnName: 'UOM', value: index < data.length ? data[index].uom : ''),
+        DataGridCell(columnName: 'Total Counted Qty', value: index < data.length ? data[index].totalCountedQty : ''),
+        DataGridCell(columnName: 'UOM2', value: index < data.length ? data[index].uom2 : ''),
+        DataGridCell(columnName: 'Total Adjusted Qty', value: index < data.length ? data[index].totalAdjustedQty : ''),
+        DataGridCell(columnName: 'UOM3', value: index < data.length ? data[index].uom3 : ''),
+        DataGridCell(columnName: 'Total Adjusted Cost', value: index < data.length ? data[index].totalAdjustedCost : ''),
+        DataGridCell(columnName: 'Status', value: index < data.length ? data[index].status : ''),
+        DataGridCell(columnName: 'Location', value: index < data.length ? data[index].location : ''),
+        DataGridCell(columnName: 'Create User', value: index < data.length ? data[index].createUser : ''),
+        DataGridCell(columnName: 'Create Timestamp', value: index < data.length ? data[index].createTimestamp : ''),
+      ]),
+    );
+  }
+
+  List<DataGridRow> _data = [];
+  void Function(bool?, DataGridRow)? _onChanged;
+
+  @override
+  List<DataGridRow> get rows => _data;
+
+  @override
+  DataGridRowAdapter? buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((dataGridCell) {
+      return dataGridCell.columnName != ''
+          ? Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(dataGridCell.value.toString()),
+            )
+          : BlocBuilder<WorkflowBloc, WorkflowState>(builder: (context, state) {
+              return Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Checkbox(
+                    value: state.cycleCountTasks.where((element) => element.task == row.getCells()[4].value).first.isChecked,
+                    onChanged: (value) => _onChanged!(value, row),
+                  ));
+            });
+    }).toList());
+  }
+}

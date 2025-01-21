@@ -38,11 +38,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
               fontWeight: FontWeight.bold,
             )),
         legend: isLegendVisible != null
-            ? Legend(
-                alignment: ChartAlignment.near,
-                isVisible: isLegendVisible ?? false,
-                isResponsive: true,
-                position: LegendPosition.bottom)
+            ? Legend(alignment: ChartAlignment.near, isVisible: isLegendVisible ?? false, isResponsive: true, position: LegendPosition.bottom)
             : const Legend(),
         onLegendItemRender: (legendRenderArgs) {
           if (legendText != null) {
@@ -107,10 +103,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
 
   List<BarData> empTaskdata = [];
 
-  final List<PieData> avgTime = [
-    PieData(xData: 'Execution time', yData: 60),
-    PieData(xData: 'Rest', yData: 40)
-  ];
+  final List<PieData> avgTime = [PieData(xData: 'Execution time', yData: 60), PieData(xData: 'Rest', yData: 40)];
   late Map<String, List<String>> employeeSuggestionRange;
   var random = Random();
   late bool rangeSelection;
@@ -137,42 +130,9 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
         "109",
         "110",
       ],
-      "111-120": [
-        "111",
-        "112",
-        "113",
-        "114",
-        "115",
-        "116",
-        "117",
-        "118",
-        "119",
-        "120"
-      ],
-      "121-130": [
-        "121",
-        "122",
-        "123",
-        "124",
-        "125",
-        "126",
-        "127",
-        "128",
-        "129",
-        "130"
-      ],
-      "131-140": [
-        "131",
-        "132",
-        "133",
-        "134",
-        "135",
-        "136",
-        "137",
-        "138",
-        "139",
-        "140"
-      ],
+      "111-120": ["111", "112", "113", "114", "115", "116", "117", "118", "119", "120"],
+      "121-130": ["121", "122", "123", "124", "125", "126", "127", "128", "129", "130"],
+      "131-140": ["131", "132", "133", "134", "135", "136", "137", "138", "139", "140"],
     };
 
     _dashboardsBloc = context.read<DashboardsBloc>();
@@ -192,14 +152,10 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
-      child: BlocBuilder<DashboardsBloc, DashboardsState>(
-          builder: (context, state) {
-        bool isEnabled =
-            state.getActivityDashboardState != ActivityDashboardState.success;
+      child: BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+        bool isEnabled = state.getActivityDashboardState != ActivityDashboardState.success;
         if (state.getActivityDashboardState == ActivityDashboardState.success) {
-          employeeSuggestions = state.activityDashboardData!.empwiseTaskSummary!
-              .map((e) => e.status!)
-              .toList();
+          employeeSuggestions = state.activityDashboardData!.empwiseTaskSummary!.map((e) => e.status!).toList();
         }
         return StaggeredGrid.count(
           crossAxisCount: 3,
@@ -217,10 +173,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       series: SeriesName.pieSeries,
                       props: Props(
                         dataSource: state.activityDashboardData!.todayTaskSummary!
-                            .map((e) => PieData(
-                                xData: e.status!,
-                                yData: e.count!,
-                                text: e.count!.toString()))
+                            .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
                             .toList(),
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
@@ -249,10 +202,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       series: SeriesName.pieSeries,
                       props: Props(
                         dataSource: state.activityDashboardData!.taskTypeSummary!
-                            .map((e) => PieData(
-                                xData: e.status!,
-                                yData: e.count!,
-                                text: e.count!.toString()))
+                            .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
                             .toList(),
                         radius: '${lsize.maxWidth * 0.23}%',
                         pointColorMapper: (p0, p1) {
@@ -281,12 +231,8 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       legendVisibility: true,
                       series: SeriesName.pieSeries,
                       props: Props(
-                        dataSource: state
-                            .activityDashboardData!.todayWorkOrderSummary!
-                            .map((e) => PieData(
-                                xData: e.status!,
-                                yData: e.count!,
-                                text: e.count!.toString()))
+                        dataSource: state.activityDashboardData!.todayWorkOrderSummary!
+                            .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
                             .toList(),
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
@@ -315,10 +261,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       barCount: 1,
                       dataSources: [
                         state.activityDashboardData!.daywiseTaskSummary!
-                            .map((e) => BarData(
-                                xLabel: e.status!,
-                                yValue: e.count!,
-                                abbreviation: e.status!))
+                            .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
                             .toList()
                       ],
                       yAxisTitle: 'Number of Tasks',
@@ -339,10 +282,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                       barCount: 1,
                       dataSources: [
                         state.activityDashboardData!.empwiseTaskSummary!
-                            .map((e) => BarData(
-                                xLabel: e.status!.split('_')[0],
-                                yValue: e.count!,
-                                abbreviation: e.status!))
+                            .map((e) => BarData(xLabel: e.status!.split('_')[0], yValue: e.count!, abbreviation: e.status!))
                             .toList()
                       ],
                       yAxisTitle: 'Number of orders',
@@ -415,11 +355,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                   selectedEmployees
                                       .map((e) => BarData(
                                           xLabel: e.replaceAll('_', ' '),
-                                          yValue: state.activityDashboardData!
-                                              .avgTimeTakenByEmp!
-                                              .firstWhere(
-                                                  (test) => test.status == e)
-                                              .count!,
+                                          yValue: state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test) => test.status == e).count!,
                                           abbreviation: e))
                                       .toList()
                                 ])),
@@ -433,8 +369,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                   Expanded(
                                     child: TypeAheadField(
                                       suggestionsController: suggestionsController,
-                                      builder:
-                                          (context, textController, focusNode) {
+                                      builder: (context, textController, focusNode) {
                                         typeAheadController = textController;
                                         typeAheadFocusNode = focusNode;
                                         textController = textController;
@@ -451,16 +386,12 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                           decoration: InputDecoration(
                                               hintText: "Compare",
                                               // rangeSelection ? 'Choose' : "Compare",
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(24)),
+                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
                                               hintStyle: const TextStyle(
                                                 color: Colors.black54,
                                                 fontWeight: FontWeight.normal,
                                               ),
-                                              suffixIconConstraints:
-                                                  const BoxConstraints(
-                                                      minWidth: 16, minHeight: 8)),
+                                              suffixIconConstraints: const BoxConstraints(minWidth: 16, minHeight: 8)),
                                           controller: textController,
                                           focusNode: focusNode,
                                         );
@@ -468,18 +399,13 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                       suggestionsCallback: (pattern) {
                                         employeeSuggestions = [];
                                         if (rangeSelection) {
-                                          employeeSuggestions =
-                                              employeeSuggestionRange.keys.toList();
+                                          employeeSuggestions = employeeSuggestionRange.keys.toList();
                                         } else {
-                                          for (var empList in state
-                                              .activityDashboardData!
-                                              .empwiseTaskSummary!) {
+                                          for (var empList in state.activityDashboardData!.empwiseTaskSummary!) {
                                             print(empList);
-                                            employeeSuggestions
-                                                .add(empList.status.toString());
+                                            employeeSuggestions.add(empList.status.toString());
                                           }
-                                          print(
-                                              "emp suggestios $employeeSuggestions");
+                                          print("emp suggestios $employeeSuggestions");
                                         }
                                         return employeeSuggestions;
                                       },
@@ -493,68 +419,34 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                 children: [
                                                   Checkbox(
                                                       shape: const OvalBorder(),
-                                                      value: rangeSelection
-                                                          ? selectedEmployeeRange ==
-                                                              suggestion
-                                                          : selectedEmployees
-                                                              .contains(suggestion),
+                                                      value: rangeSelection ? selectedEmployeeRange == suggestion : selectedEmployees.contains(suggestion),
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          if (rangeSelection !=
-                                                              true) {
-                                                            if (selectedEmployees
-                                                                .contains(
-                                                                    suggestion)) {
-                                                              selectedEmployees
-                                                                  .remove(
-                                                                      suggestion);
-                                                              empTaskdata.removeWhere(
-                                                                  (data) =>
-                                                                      data.xLabel ==
-                                                                      suggestion);
-                                                              suggestionsController
-                                                                  .refresh();
-                                                            } else if (selectedEmployees
-                                                                    .length <
-                                                                10) {
-                                                              selectedEmployees
-                                                                  .add(suggestion);
-                                                              empTaskdata.add(BarData(
-                                                                  xLabel:
-                                                                      suggestion,
-                                                                  yValue: random
-                                                                      .nextInt(10),
-                                                                  abbreviation:
-                                                                      suggestion));
-                                                              suggestionsController
-                                                                  .refresh();
+                                                          if (rangeSelection != true) {
+                                                            if (selectedEmployees.contains(suggestion)) {
+                                                              selectedEmployees.remove(suggestion);
+                                                              empTaskdata.removeWhere((data) => data.xLabel == suggestion);
+                                                              suggestionsController.refresh();
+                                                            } else if (selectedEmployees.length < 10) {
+                                                              selectedEmployees.add(suggestion);
+                                                              empTaskdata
+                                                                  .add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
+                                                              suggestionsController.refresh();
                                                             }
                                                           } else {
-                                                            selectedEmployeeRange =
-                                                                suggestion;
+                                                            selectedEmployeeRange = suggestion;
                                                             empTaskdata = [];
                                                             selectedEmployees = [];
-                                                            List<String> employees =
-                                                                employeeSuggestionRange[
-                                                                    suggestion]!;
-                                                            selectedEmployees
-                                                                .addAll(employees);
-                                                            for (var emp
-                                                                in selectedEmployees) {
-                                                              empTaskdata.add(BarData(
-                                                                  xLabel: emp,
-                                                                  yValue: random
-                                                                      .nextInt(10),
-                                                                  abbreviation:
-                                                                      suggestion));
+                                                            List<String> employees = employeeSuggestionRange[suggestion]!;
+                                                            selectedEmployees.addAll(employees);
+                                                            for (var emp in selectedEmployees) {
+                                                              empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
                                                             }
                                                           }
                                                         });
                                                       }),
                                                   Text(
-                                                    suggestion
-                                                        .toString()
-                                                        .replaceAll('_', ' '),
+                                                    suggestion.toString().replaceAll('_', ' '),
                                                     // style: TextStyle(fontSize: ),
                                                     textAlign: TextAlign.justify,
                                                     overflow: TextOverflow.ellipsis,
@@ -569,20 +461,13 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                         if (rangeSelection == false) {
                                           setState(
                                             () {
-                                              if (selectedEmployees
-                                                  .contains(suggestion)) {
-                                                selectedEmployees
-                                                    .remove(suggestion);
-                                                empTaskdata.removeWhere((data) =>
-                                                    data.xLabel == suggestion);
+                                              if (selectedEmployees.contains(suggestion)) {
+                                                selectedEmployees.remove(suggestion);
+                                                empTaskdata.removeWhere((data) => data.xLabel == suggestion);
                                                 suggestionsController.refresh();
-                                              } else if (selectedEmployees.length <
-                                                  10) {
+                                              } else if (selectedEmployees.length < 10) {
                                                 selectedEmployees.add(suggestion);
-                                                empTaskdata.add(BarData(
-                                                    xLabel: suggestion,
-                                                    yValue: random.nextInt(10),
-                                                    abbreviation: suggestion));
+                                                empTaskdata.add(BarData(xLabel: suggestion, yValue: random.nextInt(10), abbreviation: suggestion));
                                                 // typeAheadController.clear();
                                                 // suggestionsController.close();
                                                 suggestionsController.refresh();
@@ -592,18 +477,13 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                         } else {
                                           setState(() {
                                             selectedEmployeeRange = suggestion;
-                                            List<String> employees =
-                                                employeeSuggestionRange[
-                                                    suggestion]!;
+                                            List<String> employees = employeeSuggestionRange[suggestion]!;
                                             empTaskdata = [];
                                             selectedEmployees = [];
-                    
+
                                             selectedEmployees.addAll(employees);
                                             for (var emp in selectedEmployees) {
-                                              empTaskdata.add(BarData(
-                                                  xLabel: emp,
-                                                  yValue: random.nextInt(10),
-                                                  abbreviation: suggestion));
+                                              empTaskdata.add(BarData(xLabel: emp, yValue: random.nextInt(10), abbreviation: suggestion));
                                             }
                                           });
                                         }
@@ -627,11 +507,8 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                     children: selectedEmployees
                                         .map((emp) => Container(
                                             margin: const EdgeInsets.only(bottom: 4),
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                color: Colors.black12),
+                                            decoration:
+                                                BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(12), color: Colors.black12),
                                             child: Row(
                                               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
@@ -639,23 +516,19 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                                 Expanded(
                                                     child: Text(
                                                   emp.replaceAll("_", " "),
-                                                  style: TextStyle(
-                                                      fontSize: size.height * 0.02),
+                                                  style: TextStyle(fontSize: size.height * 0.02),
                                                 )),
                                                 IconButton(
                                                   onPressed: () {
                                                     setState(() {
                                                       selectedEmployees.remove(emp);
-                                                      empTaskdata.removeWhere(
-                                                          (data) =>
-                                                              data.xLabel == emp);
+                                                      empTaskdata.removeWhere((data) => data.xLabel == emp);
                                                     });
                                                   },
                                                   icon: const Icon(Icons.cancel_rounded),
                                                   iconSize: size.width * 0.01,
                                                   splashRadius: 5,
-                                                  visualDensity:
-                                                      VisualDensity.compact,
+                                                  visualDensity: VisualDensity.compact,
                                                 ),
                                               ],
                                             )))

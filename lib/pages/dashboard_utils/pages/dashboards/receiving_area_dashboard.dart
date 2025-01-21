@@ -35,8 +35,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
 
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;
-      bool isMediumScreen =
-          constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
+      bool isMediumScreen = constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
       double horizontalPadding = isWideScreen
           ? AppDefaults.padding * 2
           : isMediumScreen
@@ -47,17 +46,12 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
           : isMediumScreen
               ? constraints.maxWidth * 0.45
               : constraints.maxWidth * 0.9;
-      double containerHeight = isWideScreen || isMediumScreen
-          ? constraints.maxHeight * 1
-          : constraints.maxHeight * 1;
+      double containerHeight = isWideScreen || isMediumScreen ? constraints.maxHeight * 1 : constraints.maxHeight * 1;
 
-      return BlocBuilder<DashboardsBloc, DashboardsState>(
-          builder: (context, state) {
-        bool isEnabled =
-            state.getReceivingDashboardState != ReceivingDashboardState.success;
+      return BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+        bool isEnabled = state.getReceivingDashboardState != ReceivingDashboardState.success;
         return GridView(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
           children: [
             Customs.DashboardWidget(
                 height: size.height * 0.45,
@@ -71,14 +65,10 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       legendVisibility: true,
                       series: SeriesName.pieSeries,
                       props: Props(
-                        dataSource: state
-                            .receivingDashboardData!.todayAsnStatus!
-                            .map((e) => PieData(
-                                xData: e.status!,
-                                yData: e.count!,
-                                text: e.count!.toString()))
+                        dataSource: state.receivingDashboardData!.todayAsnStatus!
+                            .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
                             .toList(),
-                        radius: '${lsize.maxWidth*0.2}%',
+                        radius: '${lsize.maxWidth * 0.2}%',
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
                             return const Color.fromARGB(255, 27, 219, 219);
@@ -104,14 +94,10 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       legendVisibility: true,
                       series: SeriesName.pieSeries,
                       props: Props(
-                        dataSource: state
-                            .receivingDashboardData!.totalInBoundSummary!
-                            .map((e) => PieData(
-                                xData: e.status!,
-                                yData: e.total!,
-                                text: e.total!.toString()))
+                        dataSource: state.receivingDashboardData!.totalInBoundSummary!
+                            .map((e) => PieData(xData: e.status!, yData: e.total!, text: e.total!.toString()))
                             .toList(),
-                        radius: '${lsize.maxWidth*0.2}%',
+                        radius: '${lsize.maxWidth * 0.2}%',
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
                             return const Color.fromARGB(255, 219, 165, 27);
@@ -131,14 +117,12 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                   return Customs.WMSRadialGuage(
                       title: "Putaway Accuracy",
                       titleFontSize: 15,
-                      annotationHeight: lsize.maxHeight*0.35,
+                      annotationHeight: lsize.maxHeight * 0.35,
                       axisLineColor: const Color.fromARGB(255, 86, 185, 152),
-                      annotationText:
-                          '${state.receivingDashboardData!.putawayAccuracy!}%',
+                      annotationText: '${state.receivingDashboardData!.putawayAccuracy!}%',
                       annotationFontSize: 15,
-                      radiusFactor: lsize.maxHeight*0.0022,
-                      markerValue:
-                          state.receivingDashboardData!.putawayAccuracy!);
+                      radiusFactor: lsize.maxHeight * 0.0022,
+                      markerValue: state.receivingDashboardData!.putawayAccuracy!);
                 }),
             Customs.DashboardWidget(
                 height: size.height * 0.45,
@@ -154,10 +138,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       barCount: 1,
                       dataSources: [
                         state.receivingDashboardData!.dayWiseInboundSummary!
-                            .map((e) => BarData(
-                                xLabel: e.status!,
-                                yValue: e.count!,
-                                abbreviation: e.status!))
+                            .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
                             .toList()
                       ],
                       yAxisTitle: 'No of ASNs Received',
@@ -177,13 +158,9 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       ytitleFontSize: 13,
                       barCount: 1,
                       dataSources: [
-                        state
-                            .receivingDashboardData!.supplierwiseInboundSummary!
+                        state.receivingDashboardData!.supplierwiseInboundSummary!
                             .sublist(0, 7)
-                            .map((e) => BarData(
-                                xLabel: e.status!,
-                                yValue: e.count!,
-                                abbreviation: e.status!))
+                            .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
                             .toList()
                       ],
                       yAxisTitle: 'No of ASNs Received',
@@ -205,10 +182,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       dataSources: [
                         state.receivingDashboardData!.userReceivingEfficiency!
                             .map(
-                              (e) => BarData(
-                                  xLabel: e.userName!.split('_')[0],
-                                  yValue: e.count!,
-                                  abbreviation: e.userName!),
+                              (e) => BarData(xLabel: e.userName!.split('_')[0], yValue: e.count!, abbreviation: e.userName!),
                             )
                             .toList()
                       ],
@@ -225,8 +199,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                   title: "Avg Receiving Time",
                   titleFontSize: 13,
                   enableAnnotation: true,
-                  annotationText:
-                      state.receivingDashboardData!.avgReceivingTime!,
+                  annotationText: state.receivingDashboardData!.avgReceivingTime!,
                   props: Props(
                     dataSource: chartData,
                     pointColorMapper: (p0, p1) {
@@ -248,12 +221,10 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       titleFontSize: 15,
                       annotationHeight: lsize.maxHeight * 0.35,
                       axisLineColor: const Color.fromARGB(255, 86, 185, 180),
-                      annotationText:
-                          '${state.receivingDashboardData!.receivingEfficiency!}%',
+                      annotationText: '${state.receivingDashboardData!.receivingEfficiency!}%',
                       annotationFontSize: 15,
                       radiusFactor: lsize.maxHeight * 0.0022,
-                      markerValue:
-                          state.receivingDashboardData!.receivingEfficiency!);
+                      markerValue: state.receivingDashboardData!.receivingEfficiency!);
                 }),
             Customs.DashboardWidget(
               height: size.height * 0.45,

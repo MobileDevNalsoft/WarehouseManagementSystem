@@ -7,16 +7,14 @@ class CustomProgressBar extends StatefulWidget {
   double progress;
   double height;
   double width;
-  CustomProgressBar(
-      {super.key, required this.progress, this.height = 500, this.width = 600});
+  CustomProgressBar({super.key, required this.progress, this.height = 500, this.width = 600});
 
   @override
   // ignore: library_private_types_in_public_api
   _CustomProgressBarState createState() => _CustomProgressBarState();
 }
 
-class _CustomProgressBarState extends State<CustomProgressBar>
-    with SingleTickerProviderStateMixin {
+class _CustomProgressBarState extends State<CustomProgressBar> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,8 +41,7 @@ class _CustomProgressBarState extends State<CustomProgressBar>
             children: [
               Text(
                 'Loading Your Warehouse Experience...',
-                style: TextStyle(
-                    fontWeight: FontWeight.w900, fontSize: fontSize),
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: fontSize),
               ),
               LinearPercentIndicator(
                 padding: EdgeInsets.only(left: lsize.maxWidth * 0.12),
@@ -58,7 +55,7 @@ class _CustomProgressBarState extends State<CustomProgressBar>
                     "${(widget.progress * 100).toString().split('.')[0]}%",
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: fontSize-6,
+                      fontSize: fontSize - 6,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -24,9 +23,7 @@ class TabWithGrowth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppDefaults.padding,
-          vertical: AppDefaults.padding * 0.75),
+      padding: const EdgeInsets.symmetric(horizontal: AppDefaults.padding, vertical: AppDefaults.padding * 0.75),
       width: double.infinity,
       // height: 100,
       child: Row(
@@ -53,43 +50,25 @@ class TabWithGrowth extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w600),
                 ),
                 Text(
                   amount,
                   style: Responsive.isDesktop(context)
-                      ? Theme.of(context)
-                          .textTheme
-                          .headlineLarge!
-                          .copyWith(fontWeight: FontWeight.bold)
-                      : Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .copyWith(fontWeight: FontWeight.bold),
+                      ? Theme.of(context).textTheme.headlineLarge!.copyWith(fontWeight: FontWeight.bold)
+                      : Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.bold),
                 ),
                 if (Responsive.isMobile(context))
                   Column(
                     children: [
                       gapH4,
                       Chip(
-                        backgroundColor: isPositiveGrowth
-                            ? AppColors.success.withOpacity(0.1)
-                            : AppColors.error.withOpacity(0.1),
+                        backgroundColor: isPositiveGrowth ? AppColors.success.withOpacity(0.1) : AppColors.error.withOpacity(0.1),
                         side: BorderSide.none,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: AppDefaults.padding * 0.25,
-                            vertical: AppDefaults.padding * 0.25),
+                        padding: const EdgeInsets.symmetric(horizontal: AppDefaults.padding * 0.25, vertical: AppDefaults.padding * 0.25),
                         label: Text(
-                          isPositiveGrowth
-                              ? "+$growthPercentage"
-                              : "-$growthPercentage",
-                          style: TextStyle(
-                              color: isPositiveGrowth
-                                  ? AppColors.success
-                                  : AppColors.error),
+                          isPositiveGrowth ? "+$growthPercentage" : "-$growthPercentage",
+                          style: TextStyle(color: isPositiveGrowth ? AppColors.success : AppColors.error),
                         ),
                       ),
                     ],
@@ -99,18 +78,12 @@ class TabWithGrowth extends StatelessWidget {
           ),
           if (!Responsive.isMobile(context))
             Chip(
-              backgroundColor: isPositiveGrowth
-                  ? AppColors.success.withOpacity(0.1)
-                  : AppColors.error.withOpacity(0.1),
+              backgroundColor: isPositiveGrowth ? AppColors.success.withOpacity(0.1) : AppColors.error.withOpacity(0.1),
               side: BorderSide.none,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppDefaults.padding * 0.25,
-                  vertical: AppDefaults.padding * 0.25),
+              padding: const EdgeInsets.symmetric(horizontal: AppDefaults.padding * 0.25, vertical: AppDefaults.padding * 0.25),
               label: Text(
                 isPositiveGrowth ? "+$growthPercentage" : "-$growthPercentage",
-                style: TextStyle(
-                    color:
-                        isPositiveGrowth ? AppColors.success : AppColors.error),
+                style: TextStyle(color: isPositiveGrowth ? AppColors.success : AppColors.error),
               ),
             ),
         ],

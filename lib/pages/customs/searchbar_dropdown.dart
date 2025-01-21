@@ -158,7 +158,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                         turns = 1;
                       });
                       Future.delayed(const Duration(milliseconds: 1200), () {
-                        if(height == size.height * 0.08) {
+                        if (height == size.height * 0.08) {
                           context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
                         }
                       });
@@ -319,9 +319,9 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               child: TextField(
                                 controller: TextEditingController(text: _warehouseInteractionBloc.state.searchText),
                                 onSubmitted: (value) {
-                                    if(_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != ""){
-                                  searchData();
-                                }
+                                  if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
+                                    searchData();
+                                  }
                                 },
                                 onChanged: (value) {
                                   if (value.trim() == "") {
@@ -387,11 +387,11 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           Transform.translate(
                             offset: Offset(0, -size.height * 0.005),
                             child: IconButton(
-                              hoverColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
                                 onPressed: () {
-                                   if(_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != ""){
-                                  searchData();
-                                }
+                                  if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
+                                    searchData();
+                                  }
                                 },
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,

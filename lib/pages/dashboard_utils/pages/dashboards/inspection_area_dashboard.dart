@@ -15,8 +15,7 @@ class InspectionAreaDashboard extends StatefulWidget {
   const InspectionAreaDashboard({super.key});
 
   @override
-  State<InspectionAreaDashboard> createState() =>
-      _InspectionAreaDashboardState();
+  State<InspectionAreaDashboard> createState() => _InspectionAreaDashboardState();
 }
 
 class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
@@ -43,8 +42,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
 
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;
-      bool isMediumScreen =
-          constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
+      bool isMediumScreen = constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
       double horizontalPadding = isWideScreen
           ? AppDefaults.padding * 2
           : isMediumScreen
@@ -55,17 +53,12 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
           : isMediumScreen
               ? constraints.maxWidth * 0.45
               : constraints.maxWidth * 0.9;
-      double containerHeight = isWideScreen || isMediumScreen
-          ? constraints.maxHeight * 1
-          : constraints.maxHeight * 1;
+      double containerHeight = isWideScreen || isMediumScreen ? constraints.maxHeight * 1 : constraints.maxHeight * 1;
 
-      return BlocBuilder<DashboardsBloc, DashboardsState>(
-          builder: (context, state) {
-        bool isEnabled = state.getInspectionDashboardState !=
-            InspectionDashboardState.success;
+      return BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+        bool isEnabled = state.getInspectionDashboardState != InspectionDashboardState.success;
         return GridView(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
           children: [
             Customs.DashboardWidget(
                 height: size.height * 0.45,
@@ -79,14 +72,10 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       legendVisibility: true,
                       series: SeriesName.pieSeries,
                       props: Props(
-                        dataSource: state
-                            .inspectionDashboardData!.todayQualityStatus!
-                            .map((e) => PieData(
-                                xData: e.status!,
-                                yData: e.count!,
-                                text: e.count!.toString()))
+                        dataSource: state.inspectionDashboardData!.todayQualityStatus!
+                            .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
                             .toList(),
-                        radius: '${lsize.maxWidth*0.23}%',
+                        radius: '${lsize.maxWidth * 0.23}%',
                         pointColorMapper: (p0, p1) {
                           if (p1 == 1) {
                             return const Color.fromARGB(255, 45, 134, 172);
@@ -106,14 +95,12 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                   return Customs.WMSRadialGuage(
                       title: "Quality Efficiency",
                       titleFontSize: 15,
-                      annotationHeight: lsize.maxHeight*0.35,
+                      annotationHeight: lsize.maxHeight * 0.35,
                       axisLineColor: const Color.fromARGB(255, 189, 187, 64),
-                      annotationText:
-                          '${state.inspectionDashboardData!.qualityEfficiency!}%',
+                      annotationText: '${state.inspectionDashboardData!.qualityEfficiency!}%',
                       annotationFontSize: 15,
-                      radiusFactor: lsize.maxHeight*0.0022,
-                      markerValue:
-                          state.inspectionDashboardData!.qualityEfficiency!);
+                      radiusFactor: lsize.maxHeight * 0.0022,
+                      markerValue: state.inspectionDashboardData!.qualityEfficiency!);
                 }),
             Customs.DashboardWidget(
                 height: size.height * 0.45,
@@ -125,8 +112,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       title: "Material Quality",
                       titleFontSize: 13,
                       enableAnnotation: true,
-                      annotationText:
-                          '${state.inspectionDashboardData!.materialQuality!}%',
+                      annotationText: '${state.inspectionDashboardData!.materialQuality!}%',
                       props: Props(
                         dataSource: chartData,
                         pointColorMapper: (p0, p1) {
@@ -152,10 +138,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       barCount: 1,
                       dataSources: [
                         state.inspectionDashboardData!.daywiseQualitySummary!
-                            .map((e) => BarData(
-                                xLabel: e.status!,
-                                yValue: e.count!,
-                                abbreviation: e.status!))
+                            .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
                             .toList()
                       ],
                       yAxisTitle: 'Quality Enabled LPNs',
@@ -176,10 +159,7 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
                       barCount: 1,
                       dataSources: [
                         state.inspectionDashboardData!.supplierQuality!
-                            .map((e) => BarData(
-                                xLabel: e.supplier!,
-                                yValue: e.quality!.toInt(),
-                                abbreviation: e.supplier!))
+                            .map((e) => BarData(xLabel: e.supplier!, yValue: e.quality!.toInt(), abbreviation: e.supplier!))
                             .toList()
                       ],
                       yAxisTitle: 'Quality In Percentage',

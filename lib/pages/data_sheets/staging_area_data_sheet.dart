@@ -70,10 +70,7 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                           child: CircularProgressIndicator(),
                         )
                       : StagingListView(
-                          data: state.stagingList!,
-                          l1StyleData: L1StyleData(height: 60, width: 400),
-                          l2StyleData: L2StyleData(
-                              height: lsize.maxHeight * 0.13));
+                          data: state.stagingList!, l1StyleData: L1StyleData(height: 60, width: 400), l2StyleData: L2StyleData(height: lsize.maxHeight * 0.13));
             }),
           );
         },
@@ -213,10 +210,10 @@ class _StagingListViewState extends State<StagingListView> {
                         if (outerOpenDropdownIndex == oindex) {
                           // If the same dropdown is tapped, close it
                           heights[oindex] = heights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height + 25)
+                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height + 25)
+                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
                           outerOpenDropdownIndex = null; // Reset opened index
@@ -228,9 +225,9 @@ class _StagingListViewState extends State<StagingListView> {
                             turns[outerOpenDropdownIndex!] = 1;
                           }
                           outerOpenDropdownIndex = oindex; // Set current index as opened
-                          heights[oindex] =
-                              (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height + 25); // Expand current dropdown
-                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) +
+                          heights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) +
+                              (widget.l1StyleData.height + 25); // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) +
                               (widget.l1StyleData.height + 25); // Expand current bottom height
                           turns[oindex] = 0.5;
                         }

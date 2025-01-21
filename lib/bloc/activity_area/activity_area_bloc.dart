@@ -24,17 +24,21 @@ class ActivityAreaBloc extends Bloc<ActivityAreaEvent, ActivityAreaState> {
 
   Future<void> _onGetActivityAreaData(GetActivityAreaData event, Emitter<ActivityAreaState> emit) async {
     try {
-      emit(state.copyWith(getDataState: GetDataState.initial,activityAreaItems: state.pageNum==0?[]:state.activityAreaItems));
-      await _customApi.get( (event.searchText != null && event.searchText!="")? AppConstants.SEARCH :AppConstants.ACTIVITY_AREA, queryParameters: (event.searchText!=null&& event.searchText!="")
-                    ? {"search_text": event.searchText, "search_area": "ACTIVITY", "facility_id": '243', "page_num": state.pageNum}: {"facility_id": 243, "page_num": state.pageNum}).then((apiResponse) {
+      emit(state.copyWith(getDataState: GetDataState.initial, activityAreaItems: state.pageNum == 0 ? [] : state.activityAreaItems));
+      await _customApi
+          .get((event.searchText != null && event.searchText != "") ? AppConstants.SEARCH : AppConstants.ACTIVITY_AREA,
+              queryParameters: (event.searchText != null && event.searchText != "")
+                  ? {"search_text": event.searchText, "search_area": "ACTIVITY", "facility_id": '243', "page_num": state.pageNum}
+                  : {"facility_id": 243, "page_num": state.pageNum})
+          .then((apiResponse) {
         AreaResponse<ActivityAreaItem> activityAreaResponse =
             AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityAreaItem.fromJson(json));
-        if(state.pageNum==0){
-        state.activityAreaItems= activityAreaResponse.data!;  
+        if (state.pageNum == 0) {
+          state.activityAreaItems = activityAreaResponse.data!;
+        } else {
+          state.activityAreaItems!.addAll(activityAreaResponse.data!);
         }
-        else{
-        state.activityAreaItems!.addAll(activityAreaResponse.data!);}
-        
+
         emit(state.copyWith(activityAreaItems: state.activityAreaItems, getDataState: GetDataState.success));
       });
     } catch (e) {

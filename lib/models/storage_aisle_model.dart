@@ -1,4 +1,3 @@
-
 import 'package:wmssimulator/models/inspection_area_model.dart';
 
 class StorageAisle {
@@ -76,14 +75,20 @@ class StorageDashboard {
   double? cycleCountAccuracy;
   double? averageStorageTime;
   StorageDashboard(
-      {this.locationUtilization, this.warehouseUtilization, this.inventorySummary, this.cycleCountAccuracy, this.inventoryAging, this.supplierWiseInventory, this.averageStorageTime});
+      {this.locationUtilization,
+      this.warehouseUtilization,
+      this.inventorySummary,
+      this.cycleCountAccuracy,
+      this.inventoryAging,
+      this.supplierWiseInventory,
+      this.averageStorageTime});
 
   StorageDashboard.fromJson(Map<String, dynamic> json) {
     locationUtilization = (json['location_utilization'] as List).map((e) => LocationUtilization.fromJson(e)).toList();
     warehouseUtilization = (json['warehouse_utilization'] as List).map((e) => StatusCount.fromJson(e)).toList();
     inventorySummary = (json['inventory_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     inventoryAging = (InventoryAging.fromJson(json['inventory_aging']));
-    supplierWiseInventory = (json['supplier_wise_inventory'] as List).map((e)=>SupplierWiseInventory.fromJson(e)).toList();
+    supplierWiseInventory = (json['supplier_wise_inventory'] as List).map((e) => SupplierWiseInventory.fromJson(e)).toList();
     cycleCountAccuracy = json['cycle_count_accuracy'];
     averageStorageTime = json['avg_storage_time'];
   }

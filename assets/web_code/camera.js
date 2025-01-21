@@ -183,6 +183,10 @@ export function getPositionAndTarget(scene, name) {
   let box;
   let view = name.toString().split("_")[0];
 
+  if(!['compoundArea', 'storageArea', 'warehouse'].includes(view)){
+    document.getElementById("wms-bot").style.display = "none";  
+  }
+
   switch (view) {
     case "compoundArea":
       position.set(0, 550, 220);
@@ -191,7 +195,6 @@ export function getPositionAndTarget(scene, name) {
       console.log('{"object":"null"}');
       break;
     case "warehouse":
-      console.warn('name' + name);
       object = scene.getObjectByName(name);
       position.set(object.position.x, object.position.y + 250, object.position.z + 100);
       box = new THREE.Box3().setFromObject(object);
@@ -219,7 +222,7 @@ export function getPositionAndTarget(scene, name) {
       box.getCenter(target);
       break;
     case "activityArea":
-      position.set(-45, 80, -20);
+      position.set(-49, 80, -20);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       

@@ -10,7 +10,7 @@ import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/navigations/navigator_service.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/dashboard_utils/pages/entry_point.dart';
- import 'dart:html' as html;
+import 'dart:html' as html;
 
 class HoverDropdown extends StatefulWidget {
   HoverDropdown({super.key, required this.size, required this.accessTypes});
@@ -22,20 +22,21 @@ class HoverDropdown extends StatefulWidget {
 }
 
 class _HoverDropdownState extends State<HoverDropdown> {
-
   double? height;
   double? bottomHeight;
   double? maxHeight;
   final UrlNavigator urlNavigator = UrlNavigator();
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
-  List<String> localAccessTypes = ["Dashboard","WMS Cloud","Manage Users"];
+  List<String> localAccessTypes = ["Dashboard", "WMS Cloud", "Manage Users"];
 
   @override
   void initState() {
     super.initState();
-    height = widget.size.height*0.08;
-    bottomHeight = widget.size.height*0.08;
-    maxHeight = widget.size.height*0.08 + widget.size.height*(Set.from(localAccessTypes).intersection(Set.from(widget.accessTypes)).length*0.061) + widget.size.height*0.061;
+    height = widget.size.height * 0.08;
+    bottomHeight = widget.size.height * 0.08;
+    maxHeight = widget.size.height * 0.08 +
+        widget.size.height * (Set.from(localAccessTypes).intersection(Set.from(widget.accessTypes)).length * 0.061) +
+        widget.size.height * 0.061 * 2;
   }
 
   @override
@@ -43,16 +44,17 @@ class _HoverDropdownState extends State<HoverDropdown> {
     Size size = MediaQuery.of(context).size;
     return MouseRegion(
       onExit: (value) {
-              setState(() {
-                height = size.height*0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                bottomHeight = size.height*0.08;
-              });
-              Future.delayed(const Duration(milliseconds: 1200), () {
-                if(height == size.height*0.08) {// because intercepting becoming false if i again open dropdown before 1200ms
-                  context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
-                }
-              });
-            },
+        setState(() {
+          height = size.height * 0.08; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+          bottomHeight = size.height * 0.08;
+        });
+        Future.delayed(const Duration(milliseconds: 1200), () {
+          if (height == size.height * 0.08) {
+            // because intercepting becoming false if i again open dropdown before 1200ms
+            context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+          }
+        });
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         height: height,
@@ -71,50 +73,62 @@ class _HoverDropdownState extends State<HoverDropdown> {
                     child: Column(
                       children: [
                         Gap(size.height * 0.08),
-                        if(widget.accessTypes.contains('Dashboard'))
+                        if (widget.accessTypes.contains('Dashboard'))
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  height = height == maxHeight
+                                      ? size.height * 0.08
+                                      : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                  bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
+                                });
+
+                                Navigator.pushNamed(context, '/dashboards'); // it will navigate to the dashboards page
+                              },
+                              child: const ForHover(text: "Dashboards")),
                         InkWell(
                             onTap: () {
                               setState(() {
-                                height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                                bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
+                                height = height == maxHeight
+                                    ? size.height * 0.08
+                                    : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                               });
-                              
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ScreenTypeLayout.builder(
-                                mobile: (p0) => Container(
-                                  height: 100,
-                                  width: 100,
-                                  color: Colors.amber,
-                                ),
-                                desktop: (p0) => EntryPoint(),
-                                tablet: (p0) => EntryPoint(),
-                              ),));
+
+                              Navigator.pushNamed(context, '/workflow'); // it will navigate to the workflow page
                             },
-                            child: const ForHover(text: "Dashboard")),
-                        if(widget.accessTypes.contains('WMS Cloud'))
+                            child: const ForHover(text: "Workflow")),
+                        if (widget.accessTypes.contains('WMS Cloud'))
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  height = height == maxHeight
+                                      ? size.height * 0.08
+                                      : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                  bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
+                                });
+                                urlNavigator.launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
+                              },
+                              child: const ForHover(text: "WMS Cloud")),
+                        if (widget.accessTypes.contains('Manage Users'))
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  height = height == maxHeight
+                                      ? size.height * 0.08
+                                      : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                  bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
+                                });
+                                Customs.UsersDialog(context: context);
+                              },
+                              child: const ForHover(text: "Manage Users")),
                         InkWell(
                             onTap: () {
                               setState(() {
-                                height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                                bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
-                              });
-                               urlNavigator.launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
-                            },
-                            child: const ForHover(text: "WMS Cloud")),
-                        if(widget.accessTypes.contains('Manage Users'))
-                        InkWell(
-                            onTap: () {
-                              setState(() {
-                                height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                                bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
-                              });
-                              Customs.UsersDialog(context: context);
-                            },
-                            child: const ForHover(text: "Manage Users")),
-                        InkWell(
-                            onTap: () {
-                              setState(() {
-                                height = height == maxHeight ? size.height*0.08 : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                                bottomHeight = bottomHeight == maxHeight ? size.height*0.08 : maxHeight;
+                                height = height == maxHeight
+                                    ? size.height * 0.08
+                                    : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                               });
                               getIt<NavigatorService>().pushAndRemoveUntil('/login', '/');
                               sharedPreferences.clear();
@@ -132,9 +146,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
               child: Padding(
                 padding: EdgeInsets.all(size.width * 0.008),
                 child: InkWell(
-                  onTap: () {
-                    
-                  },
+                  onTap: () {},
                   onHover: (data) {
                     context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: true));
                     setState(() {
@@ -143,11 +155,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
                     });
                   },
                   child: SizedBox(
-                    height: widget.size.height*0.045,
-                    child: Image.asset(
-                      'assets/images/menu.png',
-                      fit: BoxFit.fitHeight
-                    ),
+                    height: widget.size.height * 0.045,
+                    child: Image.asset('assets/images/menu.png', fit: BoxFit.fitHeight),
                   ),
                 ),
               ),
@@ -157,9 +166,6 @@ class _HoverDropdownState extends State<HoverDropdown> {
       ),
     );
   }
-
-
-
 }
 
 // Widget that holds hover animation for the text and its background
@@ -194,10 +200,10 @@ class _ForHoverState extends State<ForHover> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        height: size.height*0.06,
+        height: size.height * 0.06,
         width: double.infinity,
         alignment: Alignment.center,
-        margin: EdgeInsets.only(right: size.width*0.01),
+        margin: EdgeInsets.only(right: size.width * 0.01),
         color: hoverColor,
         child: Text(
           widget.text,
@@ -212,7 +218,7 @@ class _ForHoverState extends State<ForHover> {
 }
 
 class UrlNavigator {
-   void launchOrFocusUrl(String url) {
+  void launchOrFocusUrl(String url) {
     // Check if the URL is already stored in local storage
     String? openedUrl = html.window.localStorage['openedUrl'];
 
@@ -220,8 +226,8 @@ class UrlNavigator {
       // If it's already opened, just focus it (this will not work due to browser limitations)
       // There is no direct way to focus an already opened tab.
       // Instead, we can just inform the user or handle it gracefully.
-      
-        html.window.open(url, '_blank'); // Opens in 
+
+      html.window.open(url, '_blank'); // Opens in
     } else {
       // Open the new URL in a new tab and store it
       html.window.localStorage['openedUrl'] = url;

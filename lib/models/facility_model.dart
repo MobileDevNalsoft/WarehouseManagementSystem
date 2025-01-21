@@ -6,13 +6,7 @@ class FacilityModel {
   int? previousPage;
   List<FacilityResults>? results;
 
-  FacilityModel(
-      {this.resultCount,
-      this.pageCount,
-      this.pageNbr,
-      this.nextPage,
-      this.previousPage,
-      this.results});
+  FacilityModel({this.resultCount, this.pageCount, this.pageNbr, this.nextPage, this.previousPage, this.results});
 
   FacilityModel.fromJson(Map<String, dynamic> json) {
     resultCount = json['result_count'];
@@ -124,12 +118,8 @@ class FacilityResults {
     modUser = json['mod_user'];
     modTs = json['mod_ts'];
     code = json['code'];
-    facilityTypeId = json['facility_type_id'] != null
-        ? FacilityTypeId.fromJson(json['facility_type_id'])
-        : null;
-    parentCompanyId = json['parent_company_id'] != null
-        ? FacilityTypeId.fromJson(json['parent_company_id'])
-        : null;
+    facilityTypeId = json['facility_type_id'] != null ? FacilityTypeId.fromJson(json['facility_type_id']) : null;
+    parentCompanyId = json['parent_company_id'] != null ? FacilityTypeId.fromJson(json['parent_company_id']) : null;
     name = json['name'];
     address1 = json['address_1'];
     address2 = json['address_2'];
@@ -144,9 +134,7 @@ class FacilityResults {
     contact = json['contact'];
     lang = json['lang'];
     defaultShipViaCode = json['default_ship_via_code'];
-    timeZoneId = json['time_zone_id'] != null
-        ? FacilityTypeId.fromJson(json['time_zone_id'])
-        : null;
+    timeZoneId = json['time_zone_id'] != null ? FacilityTypeId.fromJson(json['time_zone_id']) : null;
     bonusAmtPerUser = json['bonus_amt_per_user'];
     priority = json['priority'];
     acceptTransferShipmentFlg = json['accept_transfer_shipment_flg'];

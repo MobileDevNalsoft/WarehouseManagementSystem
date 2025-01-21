@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -41,9 +40,7 @@ class TabWithIcon extends StatelessWidget {
           gapW4,
           Text(
             title,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: isSelected ? AppColors.iconBlack : null,
-                fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: isSelected ? AppColors.iconBlack : null, fontWeight: FontWeight.w600),
           ),
         ],
       ),

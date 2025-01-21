@@ -25,16 +25,12 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
     Size size = MediaQuery.of(context).size;
     return BlocBuilder<DashboardsBloc, DashboardsState>(
       builder: (context, state) {
-        bool isEnabled =
-            state.getYardDashboardState != YardDashboardState.success;
+        bool isEnabled = state.getYardDashboardState != YardDashboardState.success;
         return GridView(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisExtent: size.height * 0.5
-          ),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
           children: [
             Customs.DashboardWidget(
-                height: size.height*0.45,
+                height: size.height * 0.45,
                 margin: size.height * 0.02,
                 loaderEnabled: isEnabled,
                 chartBuilder: (lsize) {
@@ -50,27 +46,15 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                         [
                           BarData(
                               xLabel: '<1 day',
-                              yValue: isEnabled
-                                  ? 10
-                                  : state.yardDashboardData!.yardDetention!
-                                      .singleDayCount!
-                                      .toInt(),
+                              yValue: isEnabled ? 10 : state.yardDashboardData!.yardDetention!.singleDayCount!.toInt(),
                               abbreviation: '<1 day'),
                           BarData(
                               xLabel: '1-7 days',
-                              yValue: isEnabled
-                                  ? 6
-                                  : state.yardDashboardData!.yardDetention!
-                                      .count1To7Days!
-                                      .toInt(),
+                              yValue: isEnabled ? 6 : state.yardDashboardData!.yardDetention!.count1To7Days!.toInt(),
                               abbreviation: '1-7 days'),
                           BarData(
                               xLabel: '>7 days',
-                              yValue: isEnabled
-                                  ? 20
-                                  : state.yardDashboardData!.yardDetention!
-                                      .countGreaterThan7Days!
-                                      .toInt(),
+                              yValue: isEnabled ? 20 : state.yardDashboardData!.yardDetention!.countGreaterThan7Days!.toInt(),
                               abbreviation: '>7 days'),
                         ]
                       ],
@@ -78,7 +62,7 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                       legendVisibility: false);
                 }),
             Customs.DashboardWidget(
-                height: size.height*0.45,
+                height: size.height * 0.45,
                 margin: size.height * 0.02,
                 loaderEnabled: isEnabled,
                 chartBuilder: (lsize) {
@@ -93,33 +77,19 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                           xData: "Available",
                           yData: isEnabled
                               ? 10
-                              : (state.yardDashboardData!.yardUtilization!
-                                      .totalLocations! -
-                                  state.yardDashboardData!.yardUtilization!
-                                      .occupied!),
+                              : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!),
                           text: isEnabled
                               ? 'String'
-                              : (state.yardDashboardData!.yardUtilization!
-                                          .totalLocations! -
-                                      state.yardDashboardData!.yardUtilization!
-                                          .occupied!)
-                                  .toString()),
+                              : (state.yardDashboardData!.yardUtilization!.totalLocations! - state.yardDashboardData!.yardUtilization!.occupied!).toString()),
                       PieData(
                           xData: "Occupied",
-                          yData: isEnabled
-                              ? 20
-                              : state.yardDashboardData!.yardUtilization!
-                                  .occupied!,
-                          text: isEnabled
-                              ? 'String'
-                              : (state.yardDashboardData!.yardUtilization!
-                                      .occupied!)
-                                  .toString())
+                          yData: isEnabled ? 20 : state.yardDashboardData!.yardUtilization!.occupied!,
+                          text: isEnabled ? 'String' : (state.yardDashboardData!.yardUtilization!.occupied!).toString())
                     ], labelFontSize: 12),
                   );
                 }),
             Customs.DashboardWidget(
-                height: size.height*0.45,
+                height: size.height * 0.45,
                 margin: size.height * 0.02,
                 loaderEnabled: isEnabled,
                 chartBuilder: (lsize) {
@@ -130,33 +100,24 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                       ylabelFontSize: 12,
                       ytitleFontSize: 13,
                       barCount: 2,
-                      barColors: [
-                        const Color.fromARGB(255, 231, 142, 247),
-                        const Color.fromARGB(255, 194, 162, 103)
-                      ],
+                      barColors: [const Color.fromARGB(255, 231, 142, 247), const Color.fromARGB(255, 194, 162, 103)],
                       legendVisibility: true,
                       yAxisTitle: 'Number of Vehicles',
                       dataSources: [
                         state.yardDashboardData!.dayWiseYardUtilzation!
                             .map(
-                              (e) => BarData(
-                                  xLabel: e.checkInDate!,
-                                  yValue: e.loadingCnt!,
-                                  abbreviation: e.checkInDate!),
+                              (e) => BarData(xLabel: e.checkInDate!, yValue: e.loadingCnt!, abbreviation: e.checkInDate!),
                             )
                             .toList(),
                         state.yardDashboardData!.dayWiseYardUtilzation!
                             .map(
-                              (e) => BarData(
-                                  xLabel: e.checkInDate!,
-                                  yValue: e.unloadingCnt!,
-                                  abbreviation: e.checkInDate!),
+                              (e) => BarData(xLabel: e.checkInDate!, yValue: e.unloadingCnt!, abbreviation: e.checkInDate!),
                             )
                             .toList()
                       ]);
                 }),
             Customs.DashboardWidget(
-                height: size.height*0.45,
+                height: size.height * 0.45,
                 margin: size.height * 0.02,
                 loaderEnabled: isEnabled,
                 chartBuilder: (lsize) {
@@ -168,16 +129,8 @@ class _YardAreaDashboardState extends State<YardAreaDashboard> {
                       legendVisibility: true,
                       props: Props(
                         dataSource: [
-                          PieData(
-                              xData: 'Loading',
-                              yData: state.yardDashboardData!
-                                  .previousMonthYardUtilization!.loadingCount!
-                                  .toDouble()),
-                          PieData(
-                              xData: 'Unloading',
-                              yData: state.yardDashboardData!
-                                  .previousMonthYardUtilization!.unloadingCount!
-                                  .toDouble()),
+                          PieData(xData: 'Loading', yData: state.yardDashboardData!.previousMonthYardUtilization!.loadingCount!.toDouble()),
+                          PieData(xData: 'Unloading', yData: state.yardDashboardData!.previousMonthYardUtilization!.unloadingCount!.toDouble()),
                         ],
                         labelFontSize: 12,
                         pointColorMapper: (p0, p1) {

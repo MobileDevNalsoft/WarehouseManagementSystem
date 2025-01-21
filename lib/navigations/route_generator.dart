@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:wmssimulator/pages/dashboard_utils/pages/entry_point.dart';
 import 'package:wmssimulator/pages/home.dart';
@@ -6,7 +5,6 @@ import 'package:wmssimulator/pages/select_warehouse.dart';
 import 'package:wmssimulator/pages/three_js/three_js.dart';
 
 import '../pages/login.dart';
-
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -75,6 +73,23 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => EntryPoint(),
+          transitionDuration: const Duration(seconds: 1),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
+            final fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+      case '/workflow':
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => EntryPoint(
+            type: 'workflow',
+          ),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {

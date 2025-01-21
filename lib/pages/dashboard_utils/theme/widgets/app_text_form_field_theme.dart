@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../shared/constants/defaults.dart';
@@ -19,8 +18,7 @@ class AppTextFormFieldTheme {
     ).copyWith(color: AppColors.textGrey),
     errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.normal),
 
-    floatingLabelStyle:
-        const TextStyle().copyWith(color: Colors.black.withOpacity(0.8)),
+    floatingLabelStyle: const TextStyle().copyWith(color: Colors.black.withOpacity(0.8)),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(AppDefaults.inputFieldRadius),
       borderSide: BorderSide.none,
@@ -51,8 +49,7 @@ class AppTextFormFieldTheme {
     labelStyle: const TextStyle().copyWith(color: AppColors.titleLight),
     hintStyle: const TextStyle().copyWith(color: AppColors.textGrey),
     errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.normal),
-    floatingLabelStyle:
-        const TextStyle().copyWith(color: Colors.black.withOpacity(0.8)),
+    floatingLabelStyle: const TextStyle().copyWith(color: Colors.black.withOpacity(0.8)),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(AppDefaults.inputFieldRadius),
       borderSide: BorderSide.none,

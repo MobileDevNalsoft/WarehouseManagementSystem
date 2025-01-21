@@ -14,11 +14,10 @@ final class InspectionAreaState {
     return InspectionAreaState(getDataState: GetDataState.initial, inspectionAreaItems: [], pageNum: 0);
   }
 
-  InspectionAreaState copyWith({
-    GetDataState? getDataState,
-    List<ReceivingAreaItem>? inspectionAreaItems,
-    int? pageNum
-  }) {
-    return InspectionAreaState(getDataState: getDataState ?? this.getDataState, inspectionAreaItems: inspectionAreaItems ?? this.inspectionAreaItems, pageNum: pageNum ?? this.pageNum);
+  InspectionAreaState copyWith({GetDataState? getDataState, List<ReceivingAreaItem>? inspectionAreaItems, int? pageNum}) {
+    return InspectionAreaState(
+        getDataState: getDataState ?? this.getDataState,
+        inspectionAreaItems: inspectionAreaItems ?? this.inspectionAreaItems,
+        pageNum: pageNum ?? this.pageNum);
   }
 }
