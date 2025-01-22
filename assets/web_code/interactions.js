@@ -306,7 +306,7 @@ export function addInteractions(scene, model, camera, controls) {
             prevBin.material.color.copy(prevBinColor);
           }
           switchCamera(scene, "compoundArea", camera, controls);
-          if (prevNav.includes("yard")) {
+          if (prevNav.includes("yard") && scene.getObjectByName("truck_Y10")) {
             resetTrucksAnimation(scene);
           }
           prevNav = name;
@@ -317,7 +317,9 @@ export function addInteractions(scene, model, camera, controls) {
       document.getElementById("wms-bot").style.display = "block";  
       globalState.setAreaFocused(false);
       resetAreas(scene);
-      resetTrucksAnimation(scene);
+      if(scene.getObjectByName("truck_Y10")){
+        resetTrucksAnimation(scene);
+      }
     }
   }
 

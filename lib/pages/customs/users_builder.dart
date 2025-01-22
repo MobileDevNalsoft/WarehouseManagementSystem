@@ -21,7 +21,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
   MultiSelectController multiSelectController = MultiSelectController([
     "Dashboard",
     "WMS Cloud",
-    "3D Model",
+    "Warehouse",
     "Manage Users",
   ]);
 
@@ -109,7 +109,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                         items: const [
                                           "Dashboard",
                                           "WMS Cloud",
-                                          "3D Model",
+                                          "Warehouse",
                                           "Manage Users",
                                         ],
                                         initialItems: state.filteredUsers![index].access!,

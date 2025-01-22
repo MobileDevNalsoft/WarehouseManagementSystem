@@ -86,18 +86,19 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 Navigator.pushNamed(context, '/dashboards'); // it will navigate to the dashboards page
                               },
                               child: const ForHover(text: "Dashboards")),
-                        InkWell(
-                            onTap: () {
-                              setState(() {
-                                height = height == maxHeight
-                                    ? size.height * 0.08
-                                    : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                                bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
-                              });
+                        if (widget.accessTypes.contains('Workflow'))
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  height = height == maxHeight
+                                      ? size.height * 0.08
+                                      : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                  bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
+                                });
 
-                              Navigator.pushNamed(context, '/workflow'); // it will navigate to the workflow page
-                            },
-                            child: const ForHover(text: "Workflow")),
+                                Navigator.pushNamed(context, '/workflow'); // it will navigate to the workflow page
+                              },
+                              child: const ForHover(text: "Workflow")),
                         if (widget.accessTypes.contains('WMS Cloud'))
                           InkWell(
                               onTap: () {

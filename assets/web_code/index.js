@@ -27,6 +27,9 @@ function updateTooltip() {
   let truck = scene.getObjectByName('agvModel');
   truck.getWorldPosition(agvPosition);
 
+  // camera.position.set(agvPosition.x,agvPosition.y,agvPosition.z);
+  // camera.lookAt(agvPosition);
+
   // Convert the 3D world position to 2D screen coordinates
   let vector = new THREE.Vector3();
   vector.setFromMatrixPosition(truck.matrixWorld);
@@ -51,6 +54,7 @@ function updateTooltip() {
       animate(renderer, scene, camera);
       if(scene.getObjectByName('agvModel')){
         updateTooltip();
+        
       }
     });
     const delta = clock.getDelta(); // seconds.

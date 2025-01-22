@@ -91,9 +91,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     emit(state.copyWith(getState: GetCompanyDataState.loading));
     try {
       await _companyApi.get(AppConstants.COMPANY).then((value) {
-        print(value.response!.data);
         CompanyModel companyModel = CompanyModel.fromJson(value.response!.data);
-        print(companyModel.results!);
         emit(state.copyWith(
             companyModel: companyModel,
             getState: GetCompanyDataState.success,
@@ -109,9 +107,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     emit(state.copyWith(facilityDataState: GetFacilityDataState.loading));
     try {
       await _companyApi.get(AppConstants.FACILITY, queryParameters: {'parent_company_id': event.company_id}).then((value) {
-        print(value.response!.data);
         FacilityModel facilityModel = FacilityModel.fromJson(value.response!.data);
-        print(facilityModel.results!);
         emit(state.copyWith(
             facilityModel: facilityModel, facilityDataState: GetFacilityDataState.success, selectedFacilityVal: facilityModel.results![0].name!));
       });
@@ -189,7 +185,6 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     try {
       await _customApi.get(AppConstants.ARES_OVERVIEW_DATA, queryParameters: {"facility_id": event.facilityID}).then((apiResponse) {
         OverviewResponse overviewResponse = OverviewResponse.fromJson(jsonDecode(apiResponse.response!.data));
-        print(overviewResponse.data);
         getIt<JsInteropService>().sendOverviewData(overviewResponse.data!);
         emit(state.copyWith(getAreasOveriviewDataState: AreasOverviewDataState.success));
       });

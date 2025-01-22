@@ -10,11 +10,9 @@ export function loadModel() {
         const dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.114.0/examples/js/libs/draco/');
         loader.setDRACOLoader( dracoLoader );
-        console.log(window.localStorage.getItem('facilityData'));
         const data = JSON.parse(window.localStorage.getItem('facilityData'));
-        console.log(data);
         loader.load(
-            getGLB(data.companyID, data.facilityID),
+            getGLB(data.companyID, data.facilityID, data.model),
             function (gltf) {
                 resolve(gltf); // Resolve with the loaded glTF model
             },
@@ -36,15 +34,18 @@ export function loadModel() {
     })
 }
 
-function getGLB(companyID, facilityID){
-    console.warn(facilityID);
-    switch(companyID){
-        case 1: switch(facilityID){
-            case 1: 
-                return  "../glbs/warehouse_0104_1634.glb";
-                
-            case 2:
-                return "../glbs/warehouse_2.glb";
-        }
+function getGLB(companyID, facilityID, model){
+    switch(model){
+        case 'warehouse':
+            switch(companyID){
+                case 1: switch(facilityID){
+                    case 1: 
+                        return  "../glbs/warehouse_0104_1634.glb";
+                    case 2:
+                        return "../glbs/warehouse_2.glb";
+                }
+            }
+        case 'storageArea':
+            return "../glbs/storage_area.glb"
     }
 }

@@ -55,7 +55,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           await _customApi.get(AppConstants.USERINFO, queryParameters: {"username": event.username}).then(
             (value) async {
               emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
-              print(value.response!.data);
               await sharedPreferences.setStringList("access_types", jsonDecode(value.response!.data)['data']['access_types'].split(','));
               await sharedPreferences.setString("username", event.username);
               navigator!.pushReplacement('/warehouse');

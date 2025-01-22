@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {globalState} from "globalState";
 import { highlightArea, resetAreas } from "highlight";
 
+const data = JSON.parse(window.localStorage.getItem("facilityData"));
 export function createCamera() {
   const container = document.getElementById("container");
 
@@ -14,7 +15,12 @@ export function createCamera() {
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   // Set the position of the new camera based on the imported camera's position
-  camera.position.set(0, 600, 500);
+  switch(data.model){
+    case 'warehouse':
+      camera.position.set(0, 600, 500);
+    case 'storageArea':
+      camera.position.set(-83, 50, 0);
+  }
 
   return camera;
 }
@@ -187,6 +193,7 @@ export function getPositionAndTarget(scene, name) {
     document.getElementById("wms-bot").style.display = "none";  
   }
 
+
   switch (view) {
     case "compoundArea":
       position.set(0, 550, 220);
@@ -201,12 +208,18 @@ export function getPositionAndTarget(scene, name) {
       box.getCenter(target);
       break;
     case "storageArea":
-      position.set(-78, 60, 20);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
-      target.y = target.y + 25;
-      target.x = target.x + 5;
+      switch(data.model){
+        case 'warehouse':
+          position.set(-78, 60, 20);
+          target.y = target.y + 25;
+          target.x = target.x + 5;
+        case 'storageArea':
+          position.set(-83, 50, 0);
+          target.y = target.y + 20;
+      }
       // console.log('{"area":"storage"}');
       break;
     case "inspectionArea":

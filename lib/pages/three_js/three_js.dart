@@ -91,7 +91,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
       print("messageFromJS");
     };
     _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
-    getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1}');
+    if (accessTypes.contains('Warehouse') && accessTypes.contains('Storage Area')) {
+      getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"storageArea"}');
+    } else {
+      getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"warehouse"}');
+    }
     // _warehouseInteractionBloc.add(GetCompanyData());
     // just for debugging
     // animationController.forward();
@@ -133,7 +137,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           return SizedBox(
                             height: size.height * 0.92,
                             width: size.width * widthAnimation.value,
-                            child: accessTypes.contains('3D Model')
+                            child: accessTypes.contains('Warehouse')
                                 ? InAppWebView(
                                     initialFile: 'assets/web_code/model.html',
                                     onConsoleMessage: (controller, consoleMessage) {
@@ -475,79 +479,81 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('3D Model'))
-                    Align(
-                        alignment: Alignment.bottomCenter,
-                        child: CustomProgressBar(
-                            height: size.height * 0.92,
-                            width: size.width,
-                            progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isRendered && accessTypes.contains('3D Model'))
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: size.height * 0.92,
-                        width: size.width * widthAnimation.value,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
-                        child: Lottie.asset('assets/lottie/rendering.json'),
-                      ),
-                    ),
+                  // if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse'))
+                  //   Align(
+                  //       alignment: Alignment.bottomCenter,
+                  //       child: CustomProgressBar(
+                  //           height: size.height * 0.92,
+                  //           width: size.width,
+                  //           progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
+                  // if (!context.watch<WarehouseInteractionBloc>().state.isRendered && accessTypes.contains('Warehouse'))
+                  //   Align(
+                  //     alignment: Alignment.bottomCenter,
+                  //     child: Container(
+                  //       height: size.height * 0.92,
+                  //       width: size.width * widthAnimation.value,
+                  //       alignment: Alignment.center,
+                  //       decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
+                  //       child: Lottie.asset('assets/lottie/rendering.json'),
+                  //     ),
+                  //   ),
                 ],
               ),
             ],
           );
         }),
-        Positioned(
-          left: size.width * 0.18,
-          top: size.height * 0.015,
-          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-            builder: (context, state) {
-              return PointerInterceptor(
-                child: FacilityDropdown<CompanyResults>(
-                  dropDownType: 'Company',
-                  buttonHeight: size.height * 0.052,
-                  buttonWidth: size.width * 0.15,
-                  dropDownItemHeight: size.height * 0.05,
-                  dropDownWidth: size.width * 0.15,
-                  dropDownItems: state.companyModel!.results!,
-                  onChanged: (value) {
-                    context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: (value as CompanyResults).name!.toString()));
-                    // context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
-                  },
-                  selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
-                ),
-              );
-            },
+        if (accessTypes.contains('Warehouse') && !accessTypes.contains('Storage Area'))
+          Positioned(
+            left: size.width * 0.18,
+            top: size.height * 0.015,
+            child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+              builder: (context, state) {
+                return PointerInterceptor(
+                  child: FacilityDropdown<CompanyResults>(
+                    dropDownType: 'Company',
+                    buttonHeight: size.height * 0.052,
+                    buttonWidth: size.width * 0.15,
+                    dropDownItemHeight: size.height * 0.05,
+                    dropDownWidth: size.width * 0.15,
+                    dropDownItems: state.companyModel!.results!,
+                    onChanged: (value) {
+                      context.read<WarehouseInteractionBloc>().add(SelectedCompanyValue(comVal: (value as CompanyResults).name!.toString()));
+                      // context.read<WarehouseInteractionBloc>().add(GetFaclityData(company_id: value.id!));
+                    },
+                    selectedValue: _warehouseInteractionBloc.state.selectedCompanyVal!,
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-        Positioned(
-          left: size.width * 0.35,
-          top: size.height * 0.015,
-          child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-            builder: (context, state) {
-              return PointerInterceptor(
-                child: FacilityDropdown<FacilityResults>(
-                  dropDownType: 'Facility',
-                  buttonHeight: size.height * 0.052,
-                  buttonWidth: size.width * 0.15,
-                  dropDownItemHeight: size.height * 0.05,
-                  dropDownWidth: size.width * 0.15,
-                  dropDownItems: state.facilityModel!.results!,
-                  onChanged: (value) {
-                    context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: (value as FacilityResults).name.toString()));
-                    state.dataFromJS['percentComplete'] = "0";
-                    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
-                    getIt<JsInteropService>().changeFacility(
-                        '{"companyID":${state.companyModel!.results!.where((e) => e.name == state.selectedCompanyVal).first.id}, "facilityID":${value.id}}');
-                    _warehouseInteractionBloc.state.inAppWebViewController!.reload();
-                  },
-                  selectedValue: state.selectedFacilityVal,
-                ),
-              );
-            },
+        if (accessTypes.contains('Warehouse') && !accessTypes.contains('Storage Area'))
+          Positioned(
+            left: size.width * 0.35,
+            top: size.height * 0.015,
+            child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+              builder: (context, state) {
+                return PointerInterceptor(
+                  child: FacilityDropdown<FacilityResults>(
+                    dropDownType: 'Facility',
+                    buttonHeight: size.height * 0.052,
+                    buttonWidth: size.width * 0.15,
+                    dropDownItemHeight: size.height * 0.05,
+                    dropDownWidth: size.width * 0.15,
+                    dropDownItems: state.facilityModel!.results!,
+                    onChanged: (value) {
+                      context.read<WarehouseInteractionBloc>().add(SelectedFacilityValue(facilityVal: (value as FacilityResults).name.toString()));
+                      state.dataFromJS['percentComplete'] = "0";
+                      _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
+                      getIt<JsInteropService>().changeFacility(
+                          '{"companyID":${state.companyModel!.results!.where((e) => e.name == state.selectedCompanyVal).first.id}, "facilityID":${value.id}, "model":"warehouse"}');
+                      _warehouseInteractionBloc.state.inAppWebViewController!.reload();
+                    },
+                    selectedValue: state.selectedFacilityVal,
+                  ),
+                );
+              },
+            ),
           ),
-        ),
         Positioned(
           right: 0,
           top: 0,

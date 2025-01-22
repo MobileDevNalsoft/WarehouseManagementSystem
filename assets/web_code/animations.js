@@ -5,7 +5,9 @@ export function animationMixer(gltf) {
   gltf.animations.forEach((clip) => {
     mixer.clipAction(clip).play();
   });
-  resetTrucksAnimation(gltf.scene);
+  if(gltf.scene.getObjectByName("truck_Y10")){
+    resetTrucksAnimation(gltf.scene);
+  }
   return mixer;
 }
 

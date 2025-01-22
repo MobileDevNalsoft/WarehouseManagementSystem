@@ -193,7 +193,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                           Row(
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.008, right: containerSize.maxWidth * 0.06),
+                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.008, right: containerSize.maxWidth * 0.04),
                                                 child: Image.asset(
                                                   'assets/images/location.png',
                                                   height: containerSize.maxHeight * 0.1,
@@ -201,7 +201,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                 ),
                                               ),
                                               Text(
-                                                state.storageBinItems![index].currLocationId ?? "loc1",
+                                                state.storageBinItems![index].locationKey ?? "loc1",
                                                 style: TextStyle(
                                                     fontSize: containerSize.maxWidth * 0.044,
                                                     height: containerSize.maxHeight * 0.0016,
