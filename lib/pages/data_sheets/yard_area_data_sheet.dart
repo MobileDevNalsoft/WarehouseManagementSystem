@@ -57,14 +57,14 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                                 : "",
                             style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.044),
                           ),
-                          const Text("Data not found")
+                          Text("Data not found")
                         ],
                       )
                     : ListView.builder(
                         controller: _controller,
                         itemBuilder: (context, index) => index < state.yardAreaItems!.length
                             ? Container(
-                                height: lsize.maxHeight * 0.12,
+                                height: lsize.maxHeight * 0.16,
                                 width: lsize.maxWidth * 0.96,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -78,59 +78,154 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                                     children: [
                                       Row(
                                         children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.016),
-                                            child: Image.asset(
-                                              'assets/images/truck.png',
-                                              height: containerSize.maxHeight * 0.36,
-                                              width: containerSize.maxWidth * 0.16,
+                                          SizedBox(
+                                            width: containerSize.maxWidth * 0.5,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.004),
+                                                  child: Image.asset(
+                                                    'assets/images/truck.png',
+                                                    height: containerSize.maxHeight * 0.24,
+                                                    width: containerSize.maxWidth * 0.14 ,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: containerSize.maxWidth * 0.24,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection: Axis.horizontal,
+                                                    child: Text(
+                                                      state.yardAreaItems![index].truckNbr!,
+                                                      style: TextStyle(
+                                                          fontSize: containerSize.maxWidth * 0.038,
+                                                          // height: containerSize.maxHeight * 0.0032,
+                                                          fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          Text(
-                                            state.yardAreaItems![index].truckNbr!,
-                                            style: TextStyle(
-                                                fontSize: containerSize.maxWidth * 0.044,
-                                                height: containerSize.maxHeight * 0.0016,
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                          SizedBox(
+                                            width: containerSize.maxWidth * 0.36,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: containerSize.maxWidth * 0.00, ),
+                                                  child: Image.asset(
+                                                    'assets/images/location.png',
+                                                    height: containerSize.maxHeight * 0.24,
+                                                    width: containerSize.maxWidth * 0.14,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  state.yardAreaItems![index].vehicleLocation!,
+                                                  style: TextStyle(
+                                                      fontSize: containerSize.maxWidth * 0.038,
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
                                       Row(
                                         children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.016),
+                                         SizedBox(
+                                          width: containerSize.maxWidth * 0.5,
+                                          child: Row(children: [
+                                           Padding(
+                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.004),
                                             child: Image.asset(
-                                              'assets/images/location.png',
-                                              height: containerSize.maxHeight * 0.28,
-                                              width: containerSize.maxWidth * 0.16,
-                                            ),
-                                          ),
-                                          Text(
-                                            state.yardAreaItems![index].vehicleLocation!,
-                                            style: TextStyle(
-                                                fontSize: containerSize.maxWidth * 0.044,
-                                                height: containerSize.maxHeight * 0.0016,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const Spacer(),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.001),
-                                            child: Image.asset(
-                                              'assets/images/clock.png',
-                                              height: containerSize.maxHeight * 0.32,
-                                              width: containerSize.maxWidth * 0.12,
+                                              'assets/images/shipment.png',
+                                              height: containerSize.maxHeight * 0.24,
+                                              width: containerSize.maxWidth * 0.14
                                             ),
                                           ),
                                           SizedBox(
-                                              width: containerSize.maxWidth * 0.4,
+                                            width: containerSize.maxWidth * 0.32,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
                                               child: Text(
-                                                '${state.yardAreaItems![index].vehicleEntryTime!.split('T')[0]} ${state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5)}',
-                                                textAlign: TextAlign.start,
+                                                state.yardAreaItems![index].shipmentNbr ?? "NA",
                                                 style: TextStyle(
-                                                    fontSize: containerSize.maxWidth * 0.044,
-                                                    height: containerSize.maxHeight * 0.0016,
+                                                    fontSize: containerSize.maxWidth * 0.038,
                                                     fontWeight: FontWeight.bold),
-                                              ))
+                                              ),
+                                            ),
+                                          ),],),
+                                         ),
+                                          SizedBox(
+                                            width: containerSize.maxWidth * 0.5,
+                                            child: Row(children: [Padding(
+                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.001),
+                                            child: Image.asset(
+                                              'assets/images/clock.png',
+                                              height: containerSize.maxHeight * 0.24,
+                                              width: containerSize.maxWidth * 0.14,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                              width: containerSize.maxWidth * 0.32,
+                                              child: SingleChildScrollView(
+                                                child: Text(
+                                                  '${state.yardAreaItems![index].vehicleEntryTime!.split('T')[0]} ${state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5)}',
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                      fontSize: containerSize.maxWidth * 0.038,
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                              ))],),)
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width:  containerSize.maxWidth * 0.5,
+                                            child: Row(children: [Padding(
+                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.004),
+                                            child: Image.asset(
+                                              'assets/images/po.png',
+                                              height: containerSize.maxHeight * 0.14,
+                                              width: containerSize.maxWidth * 0.14,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: containerSize.maxWidth * 0.32,
+                                            child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                              child: Text(
+                                                state.yardAreaItems![index].poNbr ?? "NA",
+                                                style: TextStyle(
+                                                    fontSize: containerSize.maxWidth * 0.038,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),],),
+                                          
+                                          
+                                          ),
+                                         SizedBox(width: containerSize.maxWidth*0.5,
+                                         child: Row(children: [ Padding(
+                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.001),
+                                            child: Image.asset(
+                                              'assets/images/businessman.png',
+                                              height: containerSize.maxHeight * 0.24,
+                                              width: containerSize.maxWidth * 0.14,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: containerSize.maxWidth * 0.32,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Text(
+                                                state.yardAreaItems![index].vendorCode ?? "NA",
+                                                style: TextStyle(
+                                                    fontSize: containerSize.maxWidth * 0.038,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),],),)
                                         ],
                                       ),
                                     ],
