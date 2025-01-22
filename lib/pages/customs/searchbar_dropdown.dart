@@ -13,7 +13,6 @@ import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
-import 'package:wmssimulator/pages/test_code/warehouse.dart';
 
 class SearchBarDropdown extends StatefulWidget {
   SearchBarDropdown({super.key, required this.size});
@@ -114,7 +113,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
           context.read<StorageBloc>().add(GetBinData(searchText: _warehouseInteractionBloc.state.searchText ?? ""));
 
         default:
-          return null;
+          return;
       }
     }
   }
@@ -158,8 +157,8 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                         bottomHeight = size.height * 0.06;
                         turns = 1;
                       });
-                      Future.delayed(Duration(milliseconds: 1200), () {
-                        if(height == size.height * 0.08) {
+                      Future.delayed(const Duration(milliseconds: 1200), () {
+                        if (height == size.height * 0.08) {
                           context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
                         }
                       });
@@ -221,7 +220,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
                               _warehouseInteractionBloc.add(SelectedObject(dataFromJS: const {"object": "bin"}));
                             } else {
-                              _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": "${item.toLowerCase().replaceAll(" ", '')}"}));
+                              _warehouseInteractionBloc.add(SelectedObject(dataFromJS: {"area": item.toLowerCase().replaceAll(" ", '')}));
                             }
 
                             setState(() {
@@ -241,7 +240,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                             child: Text(
                               item,
                               style: TextStyle(
-                                color: item == dropdownValue ? Color.fromRGBO(68, 98, 136, 1) : Colors.black,
+                                color: item == dropdownValue ? const Color.fromRGBO(68, 98, 136, 1) : Colors.black,
                                 fontWeight: FontWeight.w500,
                                 fontSize: size.height * 0.022,
                               ),
@@ -277,7 +276,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
                       decoration: BoxDecoration(
-                        color: Color.fromRGBO(68, 98, 136, 1), // Purple background
+                        color: const Color.fromRGBO(68, 98, 136, 1), // Purple background
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Row(
@@ -320,7 +319,9 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                               child: TextField(
                                 controller: TextEditingController(text: _warehouseInteractionBloc.state.searchText),
                                 onSubmitted: (value) {
-                                  searchData();
+                                  if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
+                                    searchData();
+                                  }
                                 },
                                 onChanged: (value) {
                                   if (value.trim() == "") {
@@ -356,7 +357,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                         context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
                                         break;
                                       default:
-                                        return null;
+                                        return;
                                     }
                                   } else {
                                     _warehouseInteractionBloc.state.searchText = value.trim();
@@ -376,23 +377,30 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                   border: InputBorder.none,
                                 ),
                                 cursorHeight: size.height * 0.03,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Color.fromRGBO(68, 98, 136, 1),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
                           ),
-                          IconButton(
-                            hoverColor: Colors.transparent,
-                              onPressed: () {
-                                searchData();
-                              },
-                              icon: Icon(
-                                Icons.search,
-                                color: Color.fromRGBO(68, 98, 136, 1),
-                                size: size.height * 0.035,
-                              )),
+                          Transform.translate(
+                            offset: Offset(0, -size.height * 0.005),
+                            child: IconButton(
+                                hoverColor: Colors.transparent,
+                                onPressed: () {
+                                  if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
+                                    searchData();
+                                  }
+                                },
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                icon: Icon(
+                                  Icons.search,
+                                  color: const Color.fromRGBO(68, 98, 136, 1),
+                                  size: size.height * 0.035,
+                                )),
+                          ),
                         ],
                       ),
                     ),

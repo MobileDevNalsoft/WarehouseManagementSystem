@@ -1,6 +1,5 @@
 part of 'warehouse_interaction_bloc.dart';
 
-
 abstract class WarehouseInteractionEvent extends Equatable {
   @override
   List<Object> get props => [];
@@ -9,42 +8,42 @@ abstract class WarehouseInteractionEvent extends Equatable {
 class SelectedObject extends WarehouseInteractionEvent {
   final Map<String, dynamic> dataFromJS;
   bool? clearSearchText;
-  SelectedObject({required this.dataFromJS,this.clearSearchText});
+  SelectedObject({required this.dataFromJS, this.clearSearchText});
 
   @override
   List<Object> get props => [dataFromJS];
 }
 
-
-
-class GetCompanyData extends WarehouseInteractionEvent{
-
+class GetCompanyData extends WarehouseInteractionEvent {
   GetCompanyData();
 }
 
-class GetFaclityData extends WarehouseInteractionEvent{
+class GetFaclityData extends WarehouseInteractionEvent {
   final int company_id;
 
   GetFaclityData({required this.company_id});
-    @override
+  @override
   List<Object> get props => [company_id];
 }
+
 class SelectedCompanyValue extends WarehouseInteractionEvent {
   final String comVal;
 
-   SelectedCompanyValue({required this.comVal});
+  SelectedCompanyValue({required this.comVal});
 
   @override
   List<Object> get props => [comVal];
 }
+
 class SelectedFacilityValue extends WarehouseInteractionEvent {
   final String facilityVal;
 
-   SelectedFacilityValue({required this.facilityVal});
+  SelectedFacilityValue({required this.facilityVal});
 
   @override
   List<Object> get props => [facilityVal];
 }
+
 class ModelLoaded extends WarehouseInteractionEvent {
   final bool isLoaded;
   ModelLoaded({required this.isLoaded});
@@ -53,9 +52,9 @@ class ModelLoaded extends WarehouseInteractionEvent {
   List<Object> get props => [isLoaded];
 }
 
-class GetUsersData extends WarehouseInteractionEvent{}
+class GetUsersData extends WarehouseInteractionEvent {}
 
-class FilterUsers extends WarehouseInteractionEvent{
+class FilterUsers extends WarehouseInteractionEvent {
   final String searchText;
   FilterUsers({required this.searchText});
 
@@ -63,7 +62,7 @@ class FilterUsers extends WarehouseInteractionEvent{
   List<Object> get props => [searchText];
 }
 
-class UpdateUserAccess extends WarehouseInteractionEvent{
+class UpdateUserAccess extends WarehouseInteractionEvent {
   final List<User> updatedUsers;
   UpdateUserAccess({required this.updatedUsers});
 
@@ -71,9 +70,9 @@ class UpdateUserAccess extends WarehouseInteractionEvent{
   List<Object> get props => [updatedUsers];
 }
 
-class GetAlerts extends WarehouseInteractionEvent{}
+class GetAlerts extends WarehouseInteractionEvent {}
 
-class GetAreasOverviewData extends WarehouseInteractionEvent{
+class GetAreasOverviewData extends WarehouseInteractionEvent {
   final int facilityID;
   GetAreasOverviewData({required this.facilityID});
 
@@ -81,15 +80,15 @@ class GetAreasOverviewData extends WarehouseInteractionEvent{
   List<Object> get props => [facilityID];
 }
 
-class UpdateTaskId extends WarehouseInteractionEvent{
-   String taskId;
- UpdateTaskId({required this.taskId});
+class UpdateTaskId extends WarehouseInteractionEvent {
+  String taskId;
+  UpdateTaskId({required this.taskId});
 
   @override
   List<Object> get props => [taskId];
 }
 
-class Rendering extends WarehouseInteractionEvent{
+class Rendering extends WarehouseInteractionEvent {
   bool isRendered;
   Rendering({required this.isRendered});
 
@@ -97,7 +96,7 @@ class Rendering extends WarehouseInteractionEvent{
   List<Object> get props => [isRendered];
 }
 
-class Intercepting extends WarehouseInteractionEvent{
+class Intercepting extends WarehouseInteractionEvent {
   final bool intercepting;
   Intercepting({required this.intercepting});
 

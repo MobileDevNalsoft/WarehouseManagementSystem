@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -28,9 +27,7 @@ class MenuTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-          left: isSubmenu ? AppDefaults.padding * 2 : 0,
-          right: isSubmenu ? AppDefaults.padding : 0),
+      padding: EdgeInsets.only(left: isSubmenu ? AppDefaults.padding * 2 : 0, right: isSubmenu ? AppDefaults.padding : 0),
       child: Container(
         decoration: BoxDecoration(
           color: isActive ? const Color.fromARGB(255, 135, 145, 221) : null,
@@ -52,16 +49,11 @@ class MenuTile extends StatelessWidget {
           onTap: onPressed,
           leading: activeIconSrc != null
               ? SvgPicture.asset(
-                  (isActive || inactiveIconSrc == null)
-                      ? activeIconSrc!
-                      : inactiveIconSrc!,
+                  (isActive || inactiveIconSrc == null) ? activeIconSrc! : inactiveIconSrc!,
                   height: 24,
                   width: 24,
-                  colorFilter: ColorFilter.mode(
-                      isActive
-                          ? Theme.of(context).iconTheme.color!
-                          : Theme.of(context).textTheme.bodyMedium!.color!,
-                      BlendMode.srcIn),
+                  colorFilter:
+                      ColorFilter.mode(isActive ? Theme.of(context).iconTheme.color! : Theme.of(context).textTheme.bodyMedium!.color!, BlendMode.srcIn),
                 )
               : null,
           title: Text(
@@ -73,13 +65,10 @@ class MenuTile extends StatelessWidget {
           ),
           trailing: count != null
               ? Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: AppDefaults.padding / 2,
-                      vertical: AppDefaults.padding / 4),
+                  padding: const EdgeInsets.symmetric(horizontal: AppDefaults.padding / 2, vertical: AppDefaults.padding / 4),
                   decoration: BoxDecoration(
                     color: countBg,
-                    borderRadius:
-                        BorderRadius.circular(AppDefaults.borderRadius / 2),
+                    borderRadius: BorderRadius.circular(AppDefaults.borderRadius / 2),
                   ),
                   child: Text(
                     count.toString(),

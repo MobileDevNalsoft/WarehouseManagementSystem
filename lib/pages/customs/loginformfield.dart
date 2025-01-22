@@ -14,14 +14,14 @@ class CustomTextFormField extends StatelessWidget {
   void Function(String)? onFieldSubmitted;
 
   CustomTextFormField(
-      {super.key, required this.hintText, this.prefixIcon, this.suffixIcon, this.controller, this.obscureText, this.obscureChar, this.onFieldSubmitted}) {}
+      {super.key, required this.hintText, this.prefixIcon, this.suffixIcon, this.controller, this.obscureText, this.obscureChar, this.onFieldSubmitted});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double fontSize;
     Device device = getDevice(context);
-    switch(device){
+    switch (device) {
       case Device.mobile:
         fontSize = 12;
         break;
@@ -53,17 +53,16 @@ class CustomTextFormField extends StatelessWidget {
           onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding:EdgeInsets.only(
-                  bottom: size.height*0.025 / 2,  // HERE THE IMPORTANT PART
-                ),
+            contentPadding: EdgeInsets.only(
+              bottom: size.height * 0.025 / 2.2, // HERE THE IMPORTANT PART
+            ),
             hintStyle: TextStyle(color: Colors.black26, fontSize: fontSize),
             alignLabelWithHint: true,
             hintText: hintText,
             prefixIcon: prefixIcon != null
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: constraints.maxHeight*0.06,horizontal:  constraints.maxWidth * 0.04), // Center icon vertically
+                    padding: EdgeInsets.symmetric(vertical: constraints.maxHeight * 0.06, horizontal: constraints.maxWidth * 0.04), // Center icon vertically
                     child: prefixIcon,
-                    
                   )
                 : null,
             suffixIcon: suffixIcon,

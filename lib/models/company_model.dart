@@ -6,13 +6,7 @@ class CompanyModel {
   int? previousPage;
   List<CompanyResults>? results;
 
-  CompanyModel(
-      {this.resultCount,
-      this.pageCount,
-      this.pageNbr,
-      this.nextPage,
-      this.previousPage,  
-      this.results});
+  CompanyModel({this.resultCount, this.pageCount, this.pageNbr, this.nextPage, this.previousPage, this.results});
 
   CompanyModel.fromJson(Map<String, dynamic> json) {
     resultCount = json['result_count'];
@@ -23,20 +17,20 @@ class CompanyModel {
     if (json['results'] != null) {
       results = <CompanyResults>[];
       json['results'].forEach((v) {
-        results!.add(new CompanyResults.fromJson(v));
+        results!.add(CompanyResults.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['result_count'] = this.resultCount;
-    data['page_count'] = this.pageCount;
-    data['page_nbr'] = this.pageNbr;
-    data['next_page'] = this.nextPage;
-    data['previous_page'] = this.previousPage;
-    if (this.results != null) {
-      data['results'] = this.results!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['result_count'] = resultCount;
+    data['page_count'] = pageCount;
+    data['page_nbr'] = pageNbr;
+    data['next_page'] = nextPage;
+    data['previous_page'] = previousPage;
+    if (results != null) {
+      data['results'] = results!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -118,13 +112,9 @@ class CompanyResults {
     modUser = json['mod_user'];
     modTs = json['mod_ts'];
     code = json['code'];
-    companyTypeId = json['company_type_id'] != null
-        ? new CompanyTypeId.fromJson(json['company_type_id'])
-        : null;
+    companyTypeId = json['company_type_id'] != null ? CompanyTypeId.fromJson(json['company_type_id']) : null;
     activeFlg = json['active_flg'];
-    parentCompanyId = json['parent_company_id'] != null
-        ? new CompanyTypeId.fromJson(json['parent_company_id'])
-        : null;
+    parentCompanyId = json['parent_company_id'] != null ? CompanyTypeId.fromJson(json['parent_company_id']) : null;
     name = json['name'];
     address1 = json['address_1'];
     address2 = json['address_2'];
@@ -141,8 +131,7 @@ class CompanyResults {
     ediPartnerNbr = json['edi_partner_nbr'];
     employerNbr = json['employer_nbr'];
     maxAllowedQtyDecimalScale = json['max_allowed_qty_decimal_scale'];
-    maxAllowedWtVolDimDecimalScale =
-        json['max_allowed_wt_vol_dim_decimal_scale'];
+    maxAllowedWtVolDimDecimalScale = json['max_allowed_wt_vol_dim_decimal_scale'];
     custField1 = json['cust_field_1'];
     custField2 = json['cust_field_2'];
     custField3 = json['cust_field_3'];
@@ -151,44 +140,43 @@ class CompanyResults {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['url'] = this.url;
-    data['create_user'] = this.createUser;
-    data['create_ts'] = this.createTs;
-    data['mod_user'] = this.modUser;
-    data['mod_ts'] = this.modTs;
-    data['code'] = this.code;
-    if (this.companyTypeId != null) {
-      data['company_type_id'] = this.companyTypeId!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['url'] = url;
+    data['create_user'] = createUser;
+    data['create_ts'] = createTs;
+    data['mod_user'] = modUser;
+    data['mod_ts'] = modTs;
+    data['code'] = code;
+    if (companyTypeId != null) {
+      data['company_type_id'] = companyTypeId!.toJson();
     }
-    data['active_flg'] = this.activeFlg;
-    if (this.parentCompanyId != null) {
-      data['parent_company_id'] = this.parentCompanyId!.toJson();
+    data['active_flg'] = activeFlg;
+    if (parentCompanyId != null) {
+      data['parent_company_id'] = parentCompanyId!.toJson();
     }
-    data['name'] = this.name;
-    data['address_1'] = this.address1;
-    data['address_2'] = this.address2;
-    data['address_3'] = this.address3;
-    data['locality'] = this.locality;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    data['zip'] = this.zip;
-    data['country'] = this.country;
-    data['phone_nbr'] = this.phoneNbr;
-    data['email'] = this.email;
-    data['contact'] = this.contact;
-    data['univ_id_1'] = this.univId1;
-    data['edi_partner_nbr'] = this.ediPartnerNbr;
-    data['employer_nbr'] = this.employerNbr;
-    data['max_allowed_qty_decimal_scale'] = this.maxAllowedQtyDecimalScale;
-    data['max_allowed_wt_vol_dim_decimal_scale'] =
-        this.maxAllowedWtVolDimDecimalScale;
-    data['cust_field_1'] = this.custField1;
-    data['cust_field_2'] = this.custField2;
-    data['cust_field_3'] = this.custField3;
-    data['cust_field_4'] = this.custField4;
-    data['cust_field_5'] = this.custField5;
+    data['name'] = name;
+    data['address_1'] = address1;
+    data['address_2'] = address2;
+    data['address_3'] = address3;
+    data['locality'] = locality;
+    data['city'] = city;
+    data['state'] = state;
+    data['zip'] = zip;
+    data['country'] = country;
+    data['phone_nbr'] = phoneNbr;
+    data['email'] = email;
+    data['contact'] = contact;
+    data['univ_id_1'] = univId1;
+    data['edi_partner_nbr'] = ediPartnerNbr;
+    data['employer_nbr'] = employerNbr;
+    data['max_allowed_qty_decimal_scale'] = maxAllowedQtyDecimalScale;
+    data['max_allowed_wt_vol_dim_decimal_scale'] = maxAllowedWtVolDimDecimalScale;
+    data['cust_field_1'] = custField1;
+    data['cust_field_2'] = custField2;
+    data['cust_field_3'] = custField3;
+    data['cust_field_4'] = custField4;
+    data['cust_field_5'] = custField5;
     return data;
   }
 }
@@ -207,10 +195,10 @@ class CompanyTypeId {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['key'] = this.key;
-    data['url'] = this.url;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['key'] = key;
+    data['url'] = url;
     return data;
   }
 }

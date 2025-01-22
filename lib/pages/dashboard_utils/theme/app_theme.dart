@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,11 +14,7 @@ class AppTheme {
         surfaceTintColor: AppColors.bgSecondayLight,
       ),
       primaryColor: AppColors.primary,
-      textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme)
-          .apply(
-              bodyColor: AppColors.titleLight,
-              displayColor: AppColors.titleLight)
-          .copyWith(
+      textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme).apply(bodyColor: AppColors.titleLight, displayColor: AppColors.titleLight).copyWith(
             bodyLarge: const TextStyle(color: AppColors.textLight),
             bodyMedium: const TextStyle(color: AppColors.textLight),
             bodySmall: const TextStyle(color: AppColors.textLight),
@@ -47,8 +42,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.titleLight,
           minimumSize: const Size(100, 56),
-          padding: const EdgeInsets.symmetric(
-              horizontal: AppDefaults.padding, vertical: AppDefaults.padding),
+          padding: const EdgeInsets.symmetric(horizontal: AppDefaults.padding, vertical: AppDefaults.padding),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDefaults.borderRadius),
           ),
@@ -56,10 +50,8 @@ class AppTheme {
         ),
       ),
       inputDecorationTheme: AppTextFormFieldTheme.lightInputDecorationTheme,
-      expansionTileTheme:
-          const ExpansionTileThemeData(shape: RoundedRectangleBorder()),
-      badgeTheme:
-          const BadgeThemeData(backgroundColor: AppColors.error, smallSize: 8),
+      expansionTileTheme: const ExpansionTileThemeData(shape: RoundedRectangleBorder()),
+      badgeTheme: const BadgeThemeData(backgroundColor: AppColors.error, smallSize: 8),
     );
   }
 }

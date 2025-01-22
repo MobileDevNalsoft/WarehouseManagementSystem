@@ -54,29 +54,29 @@ class StagingData {
   }
 }
 
-class StagingAreaItem{
+class StagingAreaItem {
   String? customerName;
   List<Item>? items;
   StagingAreaItem({this.customerName, this.items});
-  StagingAreaItem.fromJson(Map<String, dynamic> json){
+  StagingAreaItem.fromJson(Map<String, dynamic> json) {
     customerName = json.keys.first;
     items = (json.values.first as List).map((e) => Item.fromJson(e)).toList();
   }
 }
 
-class Item{
+class Item {
   String? item;
   String? od;
   String? qty;
   Item({this.item, this.od, this.qty});
-  Item.fromJson(Map<String, dynamic> json){
+  Item.fromJson(Map<String, dynamic> json) {
     item = json['item_key'];
     od = json['order_no'];
     qty = json['qty'];
   }
 }
 
-class StagingDashboard{
+class StagingDashboard {
   List<StatusCount>? todayOrderSummary;
   List<StatusCount>? todayChannelSummary;
   List<StatusCount>? daywiseOrderSummary;
@@ -86,9 +86,17 @@ class StagingDashboard{
   int? avgLeadTime;
   double? fulfilmentTime;
 
-  StagingDashboard({this.todayOrderSummary, this.todayChannelSummary, this.daywiseOrderSummary, this.userwiseEfficiency, this.shippingEfficiency, this.avgLeadTime, this.orderAging, this.fulfilmentTime});
+  StagingDashboard(
+      {this.todayOrderSummary,
+      this.todayChannelSummary,
+      this.daywiseOrderSummary,
+      this.userwiseEfficiency,
+      this.shippingEfficiency,
+      this.avgLeadTime,
+      this.orderAging,
+      this.fulfilmentTime});
 
-  StagingDashboard.fromJson(Map<String, dynamic> json){
+  StagingDashboard.fromJson(Map<String, dynamic> json) {
     todayOrderSummary = (json['today_order_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     todayChannelSummary = (json['today_channel_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     daywiseOrderSummary = (json['daywise_order_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
@@ -100,14 +108,14 @@ class StagingDashboard{
   }
 }
 
-class TodayOrderSummary{
+class TodayOrderSummary {
   List<String>? created;
   List<String>? allocated;
   List<String>? picked;
   List<String>? loaded;
   List<String>? shipped;
   TodayOrderSummary({this.created, this.picked, this.allocated, this.shipped, this.loaded});
-  TodayOrderSummary.fromJson(Map<String, dynamic> json){
+  TodayOrderSummary.fromJson(Map<String, dynamic> json) {
     created = ((json['created'] ?? []) as List).map((e) => (e as Map).values.first as String).toList();
     picked = ((json['picked'] ?? []) as List).map((e) => (e as Map).values.first as String).toList();
     allocated = ((json['allocated'] ?? []) as List).map((e) => (e as Map).values.first as String).toList();

@@ -2,7 +2,7 @@ part of 'authentication_bloc.dart';
 
 enum AuthenticationStatus { initial, loading, success, invalidCredentials, accessDenied, failure }
 
-final class AuthenticationState extends Equatable{
+final class AuthenticationState extends Equatable {
   AuthenticationState({this.authenticationStatus, this.obscure});
 
   AuthenticationStatus? authenticationStatus;
@@ -17,8 +17,5 @@ final class AuthenticationState extends Equatable{
   }
 
   @override
-  List<Object?> get props => [
-        authenticationStatus,
-        obscure
-      ];
+  List<Object?> get props => [authenticationStatus, obscure];
 }

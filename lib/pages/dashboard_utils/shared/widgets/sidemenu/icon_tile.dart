@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -58,16 +57,11 @@ class _IconTileState extends State<IconTile> {
         child: widget.activeIconSrc != null
             ? Center(
                 child: SvgPicture.asset(
-                  (widget.isActive || widget.inactiveIconSrc == null)
-                      ? widget.activeIconSrc!
-                      : widget.inactiveIconSrc!,
+                  (widget.isActive || widget.inactiveIconSrc == null) ? widget.activeIconSrc! : widget.inactiveIconSrc!,
                   height: 24,
                   width: 24,
-                  colorFilter: ColorFilter.mode(
-                      widget.isActive
-                          ? Theme.of(context).iconTheme.color!
-                          : Theme.of(context).textTheme.bodyMedium!.color!,
-                      BlendMode.srcIn),
+                  colorFilter:
+                      ColorFilter.mode(widget.isActive ? Theme.of(context).iconTheme.color! : Theme.of(context).textTheme.bodyMedium!.color!, BlendMode.srcIn),
                 ),
               )
             : null,

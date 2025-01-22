@@ -15,4 +15,4 @@ Device getDevice(BuildContext context) {
   if (deviceWidth > Device.tab.size!) return Device.desktop;
   if (deviceWidth > Device.mobile.size!) return Device.tab;
   return Device.mobile;
-} 
+}

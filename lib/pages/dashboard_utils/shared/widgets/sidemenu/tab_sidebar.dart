@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -20,9 +19,7 @@ class TabSidebar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppDefaults.padding,
-                vertical: AppDefaults.padding * 1.5),
+            padding: const EdgeInsets.symmetric(horizontal: AppDefaults.padding, vertical: AppDefaults.padding * 1.5),
             child: SvgPicture.asset(AppConfig.logo),
           ),
           gapH16,

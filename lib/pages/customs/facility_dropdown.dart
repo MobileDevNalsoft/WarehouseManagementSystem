@@ -49,10 +49,10 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
       onExit: (event) {
         setState(() {
           height = widget.buttonHeight;
-          turns = 0.5;
+          turns = 1;
         });
         Future.delayed(const Duration(milliseconds: 1200), () {
-          if(height == widget.buttonHeight) {
+          if (height == widget.buttonHeight) {
             // ignore: use_build_context_synchronously
             context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
           }
@@ -134,7 +134,7 @@ class _FacilityDropdownState extends State<FacilityDropdown> {
                   setState(() {
                     height = dropDownHeight! +
                         (widget.buttonHeight + 5); // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                    turns = 1; // when icon is click and move down it change to opposit direction otherwise as it is
+                    turns = 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
                   });
                 },
                 child: Row(

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -24,8 +23,7 @@ class _ThemeIconTileState extends State<ThemeIconTile> {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color:
-            _isHover ? Colors.white : AppColors.highlightLight.withOpacity(0.5),
+        color: _isHover ? Colors.white : AppColors.highlightLight.withOpacity(0.5),
         shape: BoxShape.circle,
       ),
       padding: const EdgeInsets.all(AppDefaults.padding * 0.25),
@@ -50,9 +48,7 @@ class _ThemeIconTileState extends State<ThemeIconTile> {
           ),
           child: Center(
             child: SvgPicture.asset(
-              widget.isDark
-                  ? 'assets/icons/moon_filled.svg'
-                  : 'assets/icons/sun_filled.svg',
+              widget.isDark ? 'assets/icons/moon_filled.svg' : 'assets/icons/sun_filled.svg',
               height: 24,
               width: 24,
               colorFilter: const ColorFilter.mode(

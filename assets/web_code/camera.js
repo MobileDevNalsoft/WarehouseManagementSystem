@@ -88,7 +88,6 @@ export function switchCamera(scene, name, camera, controls) {
   timeline.call(() => {
     controls.enabled = true; // Re-enable controls after animation
     controls.enableDamping = true; // Re-enable damping after animation
-    console.log(name);
     if(name.includes('compound')){
       globalState.setAreaFocused(false);
     }
@@ -184,15 +183,18 @@ export function getPositionAndTarget(scene, name) {
   let box;
   let view = name.toString().split("_")[0];
 
+  if(!['compoundArea', 'storageArea', 'warehouse'].includes(view)){
+    document.getElementById("wms-bot").style.display = "none";  
+  }
+
   switch (view) {
     case "compoundArea":
-      position.set(0, 550, 200);
+      position.set(0, 550, 220);
       target.set(0, 0, -60);
       target.z = target.z+50;
       console.log('{"object":"null"}');
       break;
     case "warehouse":
-      console.warn('name' + name);
       object = scene.getObjectByName(name);
       position.set(object.position.x, object.position.y + 250, object.position.z + 100);
       box = new THREE.Box3().setFromObject(object);
@@ -208,13 +210,13 @@ export function getPositionAndTarget(scene, name) {
       // console.log('{"area":"storage"}');
       break;
     case "inspectionArea":
-      position.set(18, 50, -50);
+      position.set(21.2, 50, -50);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
       break;
     case "stagingArea":
-      position.set(-114, 80, 0);
+      position.set(-119, 80, 0);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);
@@ -225,10 +227,10 @@ export function getPositionAndTarget(scene, name) {
       box = new THREE.Box3().setFromObject(object);
       
       box.getCenter(target);
-      target.x = target.x+4;
+     
       break;
     case "receivingArea":
-      position.set(21, 80, 0);
+      position.set(20.8, 80, 0);
       object = scene.getObjectByName(view);
       box = new THREE.Box3().setFromObject(object);
       box.getCenter(target);

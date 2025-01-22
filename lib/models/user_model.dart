@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class User {
   String? username;
   List<String>? access;
@@ -10,7 +8,7 @@ class User {
     access = (json.values.first as String).split(',');
   }
 
-  Map<String, dynamic> toJson(){
+  Map<String, dynamic> toJson() {
     Map<String, dynamic> data = {};
     data['username'] = username;
     data['access'] = access!.join(',');
@@ -31,13 +29,13 @@ class User {
   int get hashCode => username.hashCode ^ access.hashCode; // Combine hash codes
 }
 
-class Alert{
+class Alert {
   String? subject;
   String? body;
   String? time;
   Alert({this.subject, this.body, this.time});
 
-  Alert.fromJson(Map<String, dynamic> json){
+  Alert.fromJson(Map<String, dynamic> json) {
     subject = json['subject'];
     body = json['body'];
     time = json['time'];

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
@@ -133,7 +132,10 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     emit(state.copyWith(getUsersState: GetUsers.loading));
     try {
       await _customApi.get(AppConstants.USERS).then((value) {
-        List<User> usersFromBD = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => User.fromJson(json)).data!.where((e) => e.username != sharedPreferences.getString('username')).toList();
+        List<User> usersFromBD = AreaResponse.fromJson(jsonDecode(value.response!.data), (json) => User.fromJson(json))
+            .data!
+            .where((e) => e.username != sharedPreferences.getString('username'))
+            .toList();
         emit(state.copyWith(users: usersFromBD, filteredUsers: usersFromBD, getUsersState: GetUsers.success));
       });
     } catch (e) {
@@ -197,7 +199,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     }
   }
 
-  void _onUpdateTaskId(UpdateTaskId event, Emitter<WarehouseInteractionState> emit){
+  void _onUpdateTaskId(UpdateTaskId event, Emitter<WarehouseInteractionState> emit) {
     emit(state.copyWith(selectedTaskId: event.taskId));
   }
 }

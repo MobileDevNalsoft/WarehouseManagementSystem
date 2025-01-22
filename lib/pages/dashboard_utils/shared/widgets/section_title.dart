@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../responsive.dart';
@@ -25,8 +24,7 @@ class SectionTitle extends StatelessWidget {
           height: 24,
           decoration: BoxDecoration(
             color: color,
-            borderRadius: const BorderRadius.all(
-                Radius.circular(AppDefaults.borderRadius / 3)),
+            borderRadius: const BorderRadius.all(Radius.circular(AppDefaults.borderRadius / 3)),
           ),
         ),
         gapW8,

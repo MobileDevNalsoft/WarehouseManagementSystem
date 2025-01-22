@@ -16,15 +16,14 @@ class UsersBuilder extends StatefulWidget {
 }
 
 class _UsersBuilderState extends State<UsersBuilder> {
-
   TextEditingController textEditingController = TextEditingController();
   late WarehouseInteractionBloc _warehouseInteractionBloc;
   MultiSelectController multiSelectController = MultiSelectController([
-                                            "Dashboard",
-                                            "WMS Cloud",
-                                            "3D Model",
-                                            "Manage Users",
-                                          ]);
+    "Dashboard",
+    "WMS Cloud",
+    "3D Model",
+    "Manage Users",
+  ]);
 
   @override
   void initState() {
@@ -50,7 +49,7 @@ class _UsersBuilderState extends State<UsersBuilder> {
                   margin: EdgeInsets.only(top: size.height * 0.035),
                   width: size.width * 0.35,
                   height: size.height * 0.6,
-                  decoration: BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1), borderRadius: BorderRadius.circular(16)),
+                  decoration: BoxDecoration(color: const Color.fromRGBO(192, 208, 230, 1), borderRadius: BorderRadius.circular(16)),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -58,96 +57,89 @@ class _UsersBuilderState extends State<UsersBuilder> {
                         height: size.height * 0.05,
                         width: size.width * 0.35,
                         child: LayoutBuilder(builder: (context, constraints) {
-                          double aspectRatio;
-                          aspectRatio = constraints.maxWidth / constraints.maxHeight;
                           return TextFormField(
                             controller: textEditingController,
                             textAlign: TextAlign.start,
                             textAlignVertical: TextAlignVertical.center,
-                            style: TextStyle(fontSize: aspectRatio * 1.6, height: constraints.maxHeight * 0.01),
+                            style: TextStyle(fontSize: 15, height: constraints.maxHeight * 0.01),
                             cursorColor: Colors.black,
-                            cursorHeight: aspectRatio * 2,
+                            cursorHeight: size.height * 0.03,
                             onChanged: (value) {
                               _warehouseInteractionBloc.add(FilterUsers(searchText: value));
                             },
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: EdgeInsets.symmetric(
-                                vertical: aspectRatio * 0.03,
+                                vertical: size.height * 0.0,
                               ),
-                              hintStyle: TextStyle(color: Colors.black26, fontSize: aspectRatio * 1.6),
+                              hintStyle: const TextStyle(color: Colors.black26, fontSize: 15),
                               hintText: 'Search',
                               prefixIcon: Padding(
                                 padding: EdgeInsets.only(
-                                  top: aspectRatio * 0.6,
+                                  top: size.height * 0.01,
                                 ), // Center icon vertically
-                                child: Icon(Icons.search_rounded),
+                                child: const Icon(Icons.search_rounded),
                               ),
                             ),
                           );
                         }),
                       ),
-                      Divider(
+                      const Divider(
                         color: Color.fromRGBO(148, 166, 187, 1),
                       ),
                       Expanded(
-                        child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-                          builder: (context, state) {
-                            return ListView.separated(
-                              itemCount: state.filteredUsers!.length,
-                              itemBuilder: (context, index) => Container(
-                                padding: EdgeInsets.only(
-                                  left: size.width * 0.01,
-                                  right: size.width*0.008
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(state.filteredUsers![index].username!, style: TextStyle(fontSize: size.aspectRatio*8),),
-                                    SizedBox(
-                                      height: size.height*0.07,
-                                      width: size.width * 0.1,
-                                      child: Transform.translate(
-                                        offset: Offset(0, size.height*0.01),
-                                        child: CustomDropdown<String>.multiSelect(
-                                          items: const [
-                                            "Dashboard",
-                                            "WMS Cloud",
-                                            "3D Model",
-                                            "Manage Users",
-                                          ],
-                                          initialItems: state.filteredUsers![index].access!,
-                                          hintBuilder: (context, hint, enabled) {
-                                            return const Text('Configure Access');
-                                          },
-                                          decoration: CustomDropdownDecoration(
-                                            closedBorder: Border.all(),
-                                          ),
-                                          hideSelectedFieldWhenExpanded: true,
-                                          onListChanged: (value) {
-                                            if(value.isEmpty){
-                                              print(value);
-                                              value.add('Dashboard');
-                                            }
-                                            state.filteredUsers![index].access = value;
-                                            print(value);
-                                            // _warehouseInteractionBloc.add(FilterUsers(searchText: textEditingController.text));
-                                          },
+                        child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
+                          return ListView.separated(
+                            itemCount: state.filteredUsers!.length,
+                            itemBuilder: (context, index) => Container(
+                              padding: EdgeInsets.only(left: size.width * 0.01, right: size.width * 0.008),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    state.filteredUsers![index].username!,
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.07,
+                                    width: size.width * 0.1,
+                                    child: Transform.translate(
+                                      offset: Offset(0, size.height * 0.002),
+                                      child: CustomDropdown<String>.multiSelect(
+                                        items: const [
+                                          "Dashboard",
+                                          "WMS Cloud",
+                                          "3D Model",
+                                          "Manage Users",
+                                        ],
+                                        initialItems: state.filteredUsers![index].access!,
+                                        hintBuilder: (context, hint, enabled) {
+                                          return const Text('Configure Access');
+                                        },
+                                        decoration: CustomDropdownDecoration(
+                                          closedBorder: Border.all(),
                                         ),
+                                        hideSelectedFieldWhenExpanded: true,
+                                        onListChanged: (value) {
+                                          if (value.isEmpty) {
+                                            value.add('Dashboard');
+                                          }
+                                          state.filteredUsers![index].access = value;
+                                        },
                                       ),
-                                    )
-                                  ],
-                                ),
+                                    ),
+                                  )
+                                ],
                               ),
-                              separatorBuilder: (context, index) => Divider(
-                                color: Color.fromRGBO(148, 166, 187, 1),
-                              ),
-                            );
-                          }
-                        ),
+                            ),
+                            separatorBuilder: (context, index) => const Divider(
+                              color: Color.fromRGBO(148, 166, 187, 1),
+                            ),
+                          );
+                        }),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: size.height*0.01, horizontal: size.height*0.012),
+                        padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.012),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -156,26 +148,30 @@ class _UsersBuilderState extends State<UsersBuilder> {
                                 _warehouseInteractionBloc.add(FilterUsers(searchText: ''));
                                 Navigator.pop(context);
                               },
-                              child: Text('Discard'),
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                  backgroundColor: Color.fromRGBO(68, 98, 136, 1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color.fromRGBO(68, 98, 136, 1),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                              child: Text('Discard'),
                             ),
-                            Gap(size.width*0.005),
+                            Gap(size.width * 0.005),
                             TextButton(
                               onPressed: () {
-                                _warehouseInteractionBloc.state.filteredUsers!.removeWhere((e) => e.access.toString() == _warehouseInteractionBloc.state.users![_warehouseInteractionBloc.state.filteredUsers!.indexOf(e)].access.toString());
-                                _warehouseInteractionBloc.state.filteredUsers!.forEach((e) {
+                                _warehouseInteractionBloc.state.filteredUsers!.removeWhere((e) =>
+                                    e.access.toString() ==
+                                    _warehouseInteractionBloc.state.users![_warehouseInteractionBloc.state.filteredUsers!.indexOf(e)].access.toString());
+                                for (var e in _warehouseInteractionBloc.state.filteredUsers!) {
                                   _warehouseInteractionBloc.state.users!.where((i) => i.username == e.username).first.access = e.access;
-                                });
+                                }
                                 _warehouseInteractionBloc.add(UpdateUserAccess(updatedUsers: _warehouseInteractionBloc.state.filteredUsers!));
                                 print(_warehouseInteractionBloc.state.filteredUsers!.length);
                                 Navigator.pop(context);
                               },
-                              child: Text('Save'),
                               style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                  backgroundColor: Color.fromRGBO(68, 98, 136, 1), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color.fromRGBO(68, 98, 136, 1),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                              child: Text('Save'),
                             )
                           ],
                         ),
@@ -187,9 +183,9 @@ class _UsersBuilderState extends State<UsersBuilder> {
               ClipPath(
                 clipper: DialogTopClipper(),
                 child: CircleAvatar(
-                  backgroundColor: Color.fromRGBO(192, 208, 230, 1),
+                  backgroundColor: const Color.fromRGBO(192, 208, 230, 1),
                   radius: 35,
-                  child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: Icon(Icons.person_outlined)),
+                  child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: const Icon(Icons.person_outlined)),
                 ),
               )
             ],

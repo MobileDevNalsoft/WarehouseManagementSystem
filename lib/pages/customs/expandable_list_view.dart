@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/models/dock_area_model.dart';
 
@@ -72,7 +71,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.data[oindex].vendors!.length,
                             itemBuilder: (context, index) {
                               return AnimatedContainer(
@@ -103,32 +102,81 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                                   color: widget.l3StyleData.color,
                                                   borderRadius: BorderRadius.circular(15),
                                                 ),
-                                                child: LayoutBuilder(
-                                                  builder: (context, lsize) {
-                                                    return Column(
-                                                      children: [
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('DNO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].dockNbr!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
-                                                        ),
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('ASN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].asn!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
-                                                        ),
-                                                        Row(
-                                                          children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('PO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].poNbr!, style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Row(
-                                                              children: [SizedBox(width: lsize.maxWidth*0.16, child: Text('QTY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.045),)), Gap(lsize.maxWidth*0.01), Text(widget.data[oindex].vendors![index].items![inindex].qty!.toString(), style: TextStyle(fontSize: lsize.maxWidth*0.042,fontWeight: FontWeight.bold),)],
-                                                            ),
-                                                            const Spacer(),
-                                                            Text(widget.data[oindex].vendors![index].items![inindex].checkinTS!, style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth*0.04),)
-                                                          ],
-                                                        )
-                                                      ],
-                                                    );
-                                                  }
-                                                )),
+                                                child: LayoutBuilder(builder: (context, lsize) {
+                                                  return Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                              width: lsize.maxWidth * 0.16,
+                                                              child: Text(
+                                                                'DNO',
+                                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                                              )),
+                                                          Gap(lsize.maxWidth * 0.01),
+                                                          Text(
+                                                            widget.data[oindex].vendors![index].items![inindex].dockNbr!,
+                                                            style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                              width: lsize.maxWidth * 0.16,
+                                                              child: Text(
+                                                                'ASN',
+                                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                                              )),
+                                                          Gap(lsize.maxWidth * 0.01),
+                                                          Text(
+                                                            widget.data[oindex].vendors![index].items![inindex].asn!,
+                                                            style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                              width: lsize.maxWidth * 0.16,
+                                                              child: Text(
+                                                                'PO',
+                                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                                              )),
+                                                          Gap(lsize.maxWidth * 0.01),
+                                                          Text(
+                                                            widget.data[oindex].vendors![index].items![inindex].poNbr!,
+                                                            style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                  width: lsize.maxWidth * 0.16,
+                                                                  child: Text(
+                                                                    'QTY',
+                                                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                                                  )),
+                                                              Gap(lsize.maxWidth * 0.01),
+                                                              Text(
+                                                                widget.data[oindex].vendors![index].items![inindex].qty!.toString(),
+                                                                style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          const Spacer(),
+                                                          Text(
+                                                            widget.data[oindex].vendors![index].items![inindex].checkinTS!,
+                                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.04),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  );
+                                                })),
                                           ),
                                         ),
                                       ),
@@ -140,10 +188,12 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                           if (openDropdownIndex == index) {
                                             // If the same dropdown is tapped, close it
                                             innerHeights[oindex][index] = innerHeights[oindex][index] == widget.l2StyleData.height
-                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) + (widget.l2StyleData.height+25)
+                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                    (widget.l2StyleData.height + 25)
                                                 : widget.l2StyleData.height;
                                             innerBottomHeights[oindex][index] = innerBottomHeights[oindex][index] == widget.l2StyleData.height
-                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) + (widget.l2StyleData.height+25)
+                                                ? (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
+                                                    (widget.l2StyleData.height + 25)
                                                 : widget.l2StyleData.height;
                                             innerTurns[oindex][index] = innerTurns[oindex][index] == 0.5 ? 1 : 0.5; // Rotate icon
                                             openDropdownIndex = null; // Reset opened index
@@ -172,7 +222,7 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                             }
                                             openDropdownIndex = index; // Set current index as opened
                                             heights[oindex] = (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
-                                                25 +  
+                                                25 +
                                                 (widget.data[oindex].vendors!.length) * widget.l2StyleData.height +
                                                 (widget.l1StyleData.height + 25);
                                             bottomHeights[oindex] = (widget.data[oindex].vendors![index].items!.length) * (widget.l3StyleData.height + 5) +
@@ -206,7 +256,10 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                                 color: Colors.white,
                                               ),
                                               Gap(lsize.maxWidth * 0.01),
-                                              Text(widget.data[oindex].vendors![index].vendorName!, style: const TextStyle(color: Colors.white),),
+                                              Text(
+                                                widget.data[oindex].vendors![index].vendorName!,
+                                                style: const TextStyle(color: Colors.white),
+                                              ),
                                               const Spacer(),
                                               Container(
                                                 height: widget.l1StyleData.height * 0.5,
@@ -259,10 +312,10 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                         if (outerOpenDropdownIndex == oindex) {
                           // If the same dropdown is tapped, close it
                           heights[oindex] = heights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
+                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25)
+                              ? (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
                           outerOpenDropdownIndex = null; // Reset opened index
@@ -274,8 +327,10 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                             turns[outerOpenDropdownIndex!] = 1;
                           }
                           outerOpenDropdownIndex = oindex; // Set current index as opened
-                          heights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current dropdown
-                          bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height+25); // Expand current bottom height
+                          heights[oindex] =
+                              (widget.data[oindex].vendors!.length) * widget.l2StyleData.height + (widget.l1StyleData.height + 25); // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].vendors!.length) * widget.l2StyleData.height +
+                              (widget.l1StyleData.height + 25); // Expand current bottom height
                           turns[oindex] = 0.5;
                         }
                       });
@@ -345,7 +400,11 @@ class L1StyleData {
   double width;
   Color? color;
   Color? dropDownColor;
-  L1StyleData({required this.height, required this.width, this.color = const Color.fromRGBO(68, 98, 136, 1), this.dropDownColor = const Color.fromRGBO(163, 183, 209, 1)});
+  L1StyleData(
+      {required this.height,
+      required this.width,
+      this.color = const Color.fromRGBO(68, 98, 136, 1),
+      this.dropDownColor = const Color.fromRGBO(163, 183, 209, 1)});
 }
 
 class L2StyleData {

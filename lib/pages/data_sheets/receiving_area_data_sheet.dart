@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_event.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_state.dart';
@@ -70,7 +69,7 @@ class _ReceivingAreaDataSheetState extends State<ReceivingAreaDataSheet> {
                           data: state.receiveList!,
                           l1StyleData: L1StyleData(height: 60, width: 400),
                           l2StyleData: L2StyleData(height: 60),
-                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.115),
+                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.12),
                         );
             }),
           );
@@ -172,7 +171,6 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                             itemCount: widget.data[oindex].shipments![index].items!.length,
                                             itemBuilder: (context, inindex) => Container(
                                                 padding: const EdgeInsets.all(10),
-                                                height: widget.l3StyleData.height,
                                                 margin: const EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
                                                   color: widget.l3StyleData.color,
@@ -312,12 +310,17 @@ class _ReceivingListViewState extends State<ReceivingListView> {
                                                 scale: lsize.maxHeight * 0.06,
                                                 color: Colors.white,
                                               ),
-                                              Gap(lsize.maxWidth * 0.01),
-                                              Text(
-                                                widget.data[oindex].shipments![index].shipmentNo!.replaceAll('"', ''),
-                                                style: const TextStyle(color: Colors.white),
+                                              Gap(lsize.maxWidth * 0.015),
+                                              Expanded(
+                                                child: SingleChildScrollView(
+                                                  scrollDirection: Axis.horizontal,
+                                                  child: Text(
+                                                    widget.data[oindex].shipments![index].shipmentNo!.replaceAll('"', ''),
+                                                    style: const TextStyle(color: Colors.white),
+                                                  ),
+                                                ),
                                               ),
-                                              const Spacer(),
+                                              Gap(lsize.maxWidth * 0.025),
                                               Container(
                                                 height: widget.l1StyleData.height * 0.5,
                                                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
@@ -457,11 +460,7 @@ class L1StyleData {
   double width;
   Color? color;
   Color? dropDownColor;
-  L1StyleData(
-      {required this.height,
-      required this.width,
-      this.color = Colors.white,
-      this.dropDownColor = Colors.white});
+  L1StyleData({required this.height, required this.width, this.color = Colors.white, this.dropDownColor = Colors.white});
 }
 
 class L2StyleData {

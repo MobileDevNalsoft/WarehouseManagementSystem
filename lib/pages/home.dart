@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +25,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
 
-  
     super.initState();
   }
 
@@ -38,7 +36,8 @@ class _HomePageState extends State<HomePage> {
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.blue.shade100, Colors.white], begin: Alignment.centerLeft, end: Alignment.centerRight, stops: const [0.5, 1])),
+            gradient:
+                LinearGradient(colors: [Colors.blue.shade100, Colors.white], begin: Alignment.centerLeft, end: Alignment.centerRight, stops: const [0.5, 1])),
         child: Stack(
           children: [
             Align(
@@ -139,16 +138,18 @@ class _HomePageState extends State<HomePage> {
                                     navigator.push('/warehouse');
                                   } else {
                                     Customs.AnimatedDialog(
-                                      context: context, 
+                                      context: context,
                                       header: const Icon(
                                         Icons.person_2_rounded,
                                         size: 60,
                                       ),
-                                      content: const [Text(
-                                            'Please Login to your account',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 18),
-                                          )],
+                                      content: const [
+                                        Text(
+                                          'Please Login to your account',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 18),
+                                        )
+                                      ],
                                     );
                                   }
                                 },

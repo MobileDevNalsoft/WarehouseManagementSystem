@@ -63,7 +63,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                 child: LayoutBuilder(builder: (context, lsize) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: (state.storageBinStatus == StorageBinStatus.success && state.storageBinItems!.length == 0)
+                    child: (state.storageBinStatus == StorageBinStatus.success && state.storageBinItems!.isEmpty)
                         ? Column(
                             children: [
                               Text(
@@ -72,7 +72,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                     : _warehouseInteractionBloc.state.searchText,
                                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.044, color: Colors.white),
                               ),
-                              Text(
+                              const Text(
                                 "Data not found",
                                 style: TextStyle(color: Colors.white),
                               )
@@ -106,7 +106,6 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                   child: ClipRRect(
                                                     borderRadius: BorderRadius.circular(12),
                                                     child: Image.memory(
-                                                      
                                                       base64Decode(state.storageBinItems![index].image!),
                                                       fit: BoxFit.cover,
                                                     ),
@@ -129,7 +128,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                               //   child: Image.asset('assets/images/bin.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                               // ),
                                               // Text(state.storageBinItems![index].containerNbr??"cnbr", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold,),),
-                                              Spacer(),
+                                              const Spacer(),
                                               if (_warehouseInteractionBloc.state.dataFromJS.containsKey('bin') &&
                                                   _warehouseInteractionBloc.state.searchText != "")
                                                 Transform.rotate(
@@ -169,7 +168,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                             ],
                                           ),
                                           Row(
@@ -213,7 +212,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                               //   child: Image.asset('assets/images/batch_no.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                               // ),
                                               // Text(state.storageBinItems![index].batchNbrID!, style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                              Spacer(),
+                                              const Spacer(),
                                               Padding(
                                                 padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.032),
                                                 child: Image.asset(
@@ -253,7 +252,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              Spacer(),
+                                              const Spacer(),
                                               Padding(
                                                 padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.032),
                                                 child: Image.asset(
@@ -278,7 +277,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                           Row(
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.032),
+                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.008, right: containerSize.maxWidth * 0.032),
                                                 child: Image.asset(
                                                   'assets/images/qty.png',
                                                   height: containerSize.maxHeight * 0.09,
@@ -352,7 +351,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                         height: containerSize.maxHeight * 0.0016,
                                                         fontWeight: FontWeight.bold),
                                                   )),
-                                              Spacer(),
+                                              const Spacer(),
                                             ],
                                           ),
                                           Row(
@@ -400,7 +399,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                               //   child: Image.asset('assets/images/batch_no.png',  height: containerSize.maxHeight*0.1, width: containerSize.maxWidth*0.1,),
                                               // ),
                                               // Text("----------", style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),),
-                                              Spacer(),
+                                              const Spacer(),
                                               Padding(
                                                 padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.032),
                                                 child: Image.asset(
@@ -443,7 +442,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                         height: containerSize.maxHeight * 0.0016,
                                                         fontWeight: FontWeight.bold),
                                                   )),
-                                              Spacer(),
+                                              const Spacer(),
                                               Padding(
                                                 padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.032),
                                                 child: Image.asset(
@@ -490,9 +489,9 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                                 height: containerSize.maxHeight * 0.0016,
                                                                 fontWeight: FontWeight.bold),
                                                           )))),
-                                              Spacer(),
+                                              const Spacer(),
                                               Padding(
-                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.032),
+                                                padding: EdgeInsets.only(left: containerSize.maxWidth * 0.008, right: containerSize.maxWidth * 0.032),
                                                 child: Image.asset(
                                                   'assets/images/qty.png',
                                                   height: containerSize.maxHeight * 0.1,

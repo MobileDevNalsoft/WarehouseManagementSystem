@@ -4,7 +4,6 @@ import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:wmssimulator/network_util.dart';
 
-
 class NetworkCalls extends HttpOverrides {
   final String baseUrl;
   final int connectTimeout;
@@ -36,18 +35,11 @@ class NetworkCalls extends HttpOverrides {
       ..options.headers = headers ?? {};
     dio.interceptors.add(loggingInterceptor);
 
-    
-    
-      (dio.httpClientAdapter as BrowserHttpClientAdapter);
-    
-    
+    (dio.httpClientAdapter as BrowserHttpClientAdapter);
   }
 
   Future<ApiResponse> get(String uri,
-      {Map<String, dynamic>? queryParameters,
-      CancelToken? cancelToken,
-      ProgressCallback? onReceiveProgress,
-      Map<String, dynamic>? methodHeaders}) async {
+      {Map<String, dynamic>? queryParameters, CancelToken? cancelToken, ProgressCallback? onReceiveProgress, Map<String, dynamic>? methodHeaders}) async {
     try {
       Response response = await dio.get(
         uri,
@@ -58,9 +50,8 @@ class NetworkCalls extends HttpOverrides {
                 {
                   'Accept': 'application/json',
                   'Content-type': 'application/json',
-                 'X-Requested-With': 'XMLHttpRequest',
-                  'Authorization':
-                      'Basic ${base64.encode(utf8.encode('$username:$password'))}'
+                  'X-Requested-With': 'XMLHttpRequest',
+                  'Authorization': 'Basic ${base64.encode(utf8.encode('$username:$password'))}'
                 }),
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
@@ -87,13 +78,7 @@ class NetworkCalls extends HttpOverrides {
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: Options(
-            headers: headers ??
-                methodHeaders ??
-                {
-                  'Authorization':
-                      'Basic ${base64.encode(utf8.encode('$username:$password'))}'
-                }),
+        options: Options(headers: headers ?? methodHeaders ?? {'Authorization': 'Basic ${base64.encode(utf8.encode('$username:$password'))}'}),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
@@ -118,13 +103,7 @@ class NetworkCalls extends HttpOverrides {
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: Options(
-            headers: headers ??
-                methodHeaders ??
-                {
-                  'Authorization':
-                      'Basic ${base64.encode(utf8.encode('$username:$password'))}'
-                }),
+        options: Options(headers: headers ?? methodHeaders ?? {'Authorization': 'Basic ${base64.encode(utf8.encode('$username:$password'))}'}),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
@@ -137,23 +116,13 @@ class NetworkCalls extends HttpOverrides {
     }
   }
 
-  Future<ApiResponse> delete(String uri,
-      {data,
-      Map<String, dynamic>? queryParameters,
-      CancelToken? cancelToken,
-      Map<String, dynamic>? methodHeaders}) async {
+  Future<ApiResponse> delete(String uri, {data, Map<String, dynamic>? queryParameters, CancelToken? cancelToken, Map<String, dynamic>? methodHeaders}) async {
     try {
       Response response = await dio.delete(
         uri,
         data: data,
         queryParameters: queryParameters,
-        options: Options(
-            headers: headers ??
-                methodHeaders ??
-                {
-                  'Authorization':
-                      'Basic ${base64.encode(utf8.encode('$username:$password'))}'
-                }),
+        options: Options(headers: headers ?? methodHeaders ?? {'Authorization': 'Basic ${base64.encode(utf8.encode('$username:$password'))}'}),
         cancelToken: cancelToken,
       );
       return ApiResponse.withSuccess(response);

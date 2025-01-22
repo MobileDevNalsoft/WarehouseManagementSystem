@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:wmssimulator/models/staging_area_model.dart';
 
 enum StagingAreaStatus { initial, loading, success, failure }

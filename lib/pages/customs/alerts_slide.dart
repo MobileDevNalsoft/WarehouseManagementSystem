@@ -13,7 +13,6 @@ class AlertsSlide extends StatefulWidget {
 }
 
 class _AlertsSlideState extends State<AlertsSlide> {
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -22,7 +21,7 @@ class _AlertsSlideState extends State<AlertsSlide> {
       height: size.height * 0.98,
       width: size.width * 0.22,
       padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width * 0.006),
-      decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(20), boxShadow: [
+      decoration: BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(20), boxShadow: const [
         BoxShadow(
           color: Colors.white,
           blurRadius: 8,
@@ -35,20 +34,23 @@ class _AlertsSlideState extends State<AlertsSlide> {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-                child: Text(
+                child: const Text(
                   'Notifications',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.aspectRatio * 13, color: Colors.white),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                 ),
               ),
               InkWell(
                 onTap: () {
                   widget.sliderAnimationController.reverse();
                 },
-                child: Icon(Icons.cancel, color: Color.fromRGBO(76, 109, 150, 1),),
+                child: const Icon(
+                  Icons.cancel,
+                  color: Color.fromRGBO(76, 109, 150, 1),
+                ),
               ),
             ],
           ),
-          Divider(
+          const Divider(
             color: Color.fromRGBO(76, 109, 150, 1),
           ),
           Gap(size.height * 0.01),
@@ -71,7 +73,7 @@ class _AlertsSlideState extends State<AlertsSlide> {
                         children: [
                           Text(
                             isEnabled ? 'Subject' : state.alerts![index].subject!,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: size.aspectRatio * 8),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           Text(isEnabled ? 'Body body body body body body body body\n body body body' : state.alerts![index].body!),
                           Gap(size.height * 0.01),
@@ -79,7 +81,7 @@ class _AlertsSlideState extends State<AlertsSlide> {
                               alignment: Alignment.centerRight,
                               child: Text(
                                 isEnabled ? 'Time' : state.alerts![index].time!,
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: size.aspectRatio * 7),
+                                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                               )),
                         ],
                       ),

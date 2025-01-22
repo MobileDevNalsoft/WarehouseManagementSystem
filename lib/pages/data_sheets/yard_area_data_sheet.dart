@@ -48,7 +48,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
             child: LayoutBuilder(builder: (context, lsize) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: (state.yardAreaStatus == YardAreaStatus.success && state.yardAreaItems!.length == 0)
+                child: (state.yardAreaStatus == YardAreaStatus.success && state.yardAreaItems!.isEmpty)
                     ? Column(
                         children: [
                           Text(
@@ -285,7 +285,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                                                     height: containerSize.maxHeight * 0.0016,
                                                     fontWeight: FontWeight.bold),
                                               )),
-                                          Spacer(),
+                                          const Spacer(),
                                           Padding(
                                             padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.001),
                                             child: Image.asset(
@@ -321,23 +321,3 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
     ]);
   }
 }
-
-
-
-
-// Row(
-//                                         children: [
-//                                           Padding(
-//                                             padding:  EdgeInsets.only(left:containerSize.maxWidth*0.006, right: containerSize.maxWidth*0.016),
-//                                             child: Image.asset(
-//                                               'assets/images/shipment.png',
-//                                                 height: containerSize.maxHeight * 0.28,
-//                                                   width: containerSize.maxWidth * 0.24,
-//                                             ),
-//                                           ),
-//                                             Text(
-//                                         state.yardAreaItems![index].vendorCode??"NA",
-//                                         style: TextStyle(fontSize: containerSize.maxWidth*0.044, height: containerSize.maxHeight*0.0016, fontWeight: FontWeight.bold),
-//                                       ),
-//                                         ],
-//                                       ),

@@ -6,12 +6,12 @@ abstract class YardEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetYardData extends YardEvent{
+class GetYardData extends YardEvent {
   String? searchText;
   GetYardData({this.searchText});
 }
 
-class YardTruckExpanded extends YardEvent{
+class YardTruckExpanded extends YardEvent {
   int index;
-   YardTruckExpanded({required this.index});
+  YardTruckExpanded({required this.index});
 }

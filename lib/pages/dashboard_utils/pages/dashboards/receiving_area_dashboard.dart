@@ -1,19 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dart';
 
 class ReceivingAreaDashboard extends StatefulWidget {
-  ReceivingAreaDashboard({super.key});
+  const ReceivingAreaDashboard({super.key});
 
   @override
   State<ReceivingAreaDashboard> createState() => _ReceivingAreaDashboardState();
@@ -43,8 +35,7 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
 
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;
-      bool isMediumScreen =
-          constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
+      bool isMediumScreen = constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
       double horizontalPadding = isWideScreen
           ? AppDefaults.padding * 2
           : isMediumScreen
@@ -55,38 +46,29 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
           : isMediumScreen
               ? constraints.maxWidth * 0.45
               : constraints.maxWidth * 0.9;
-      double containerHeight = isWideScreen || isMediumScreen
-          ? constraints.maxHeight * 1
-          : constraints.maxHeight * 1;
+      double containerHeight = isWideScreen || isMediumScreen ? constraints.maxHeight * 1 : constraints.maxHeight * 1;
 
-      return BlocBuilder<DashboardsBloc, DashboardsState>(
-          builder: (context, state) {
-        bool isEnabled =
-            state.getReceivingDashboardState != ReceivingDashboardState.success;
+      return BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
+        bool isEnabled = state.getReceivingDashboardState != ReceivingDashboardState.success;
         return GridView(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: size.height * 0.5),
           children: [
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSSfCircularChart(
-                      ratio: ratio,
+                      lsize: lsize,
                       title: "Total ASN Status",
-                      titleFontSize: ratio * 13,
+                      titleFontSize: 13,
                       legendVisibility: true,
                       series: SeriesName.pieSeries,
                       props: Props(
-                        dataSource: state
-                            .receivingDashboardData!.todayAsnStatus!
-                            .map((e) => PieData(
-                                xData: e.status!,
-                                yData: e.count!,
-                                text: e.count!.toString()))
+                        dataSource: state.receivingDashboardData!.todayAsnStatus!
+                            .map((e) => PieData(xData: e.status!, yData: e.count!, text: e.count!.toString()))
                             .toList(),
-                        radius: '${ratio * 55}%',
+                        radius: '${lsize.maxWidth * 0.2}%',
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
                             return const Color.fromARGB(255, 27, 219, 219);
@@ -101,25 +83,21 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       ));
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSSfCircularChart(
-                      ratio: ratio,
+                      lsize: lsize,
                       title: "Today Inbound Summary",
-                      titleFontSize: ratio * 13,
+                      titleFontSize: 13,
                       legendVisibility: true,
                       series: SeriesName.pieSeries,
                       props: Props(
-                        dataSource: state
-                            .receivingDashboardData!.totalInBoundSummary!
-                            .map((e) => PieData(
-                                xData: e.status!,
-                                yData: e.total!,
-                                text: e.total!.toString()))
+                        dataSource: state.receivingDashboardData!.totalInBoundSummary!
+                            .map((e) => PieData(xData: e.status!, yData: e.total!, text: e.total!.toString()))
                             .toList(),
-                        radius: '${ratio * 55}%',
+                        radius: '${lsize.maxWidth * 0.2}%',
                         pointColorMapper: (p0, p1) {
                           if (p1 == 0) {
                             return const Color.fromARGB(255, 219, 165, 27);
@@ -132,40 +110,35 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       ));
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 12,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSRadialGuage(
                       title: "Putaway Accuracy",
-                      titleFontSize: ratio * 16,
-                      annotationHeight: ratio * 120,
-                      axisLineColor: Color.fromARGB(255, 86, 185, 152),
-                      annotationText:
-                          '${state.receivingDashboardData!.putawayAccuracy!}%',
-                      annotationFontSize: ratio * 12,
-                      radiusFactor: ratio * 0.55,
-                      markerValue:
-                          state.receivingDashboardData!.putawayAccuracy!);
+                      titleFontSize: 15,
+                      annotationHeight: lsize.maxHeight * 0.35,
+                      axisLineColor: const Color.fromARGB(255, 86, 185, 152),
+                      annotationText: '${state.receivingDashboardData!.putawayAccuracy!}%',
+                      annotationFontSize: 15,
+                      radiusFactor: lsize.maxHeight * 0.0022,
+                      markerValue: state.receivingDashboardData!.putawayAccuracy!);
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSCartesianChart(
                       title: 'Daywise Inbound Summary',
-                      titleFontSize: ratio * 13,
-                      xlabelFontSize: ratio * 10,
-                      ylabelFontSize: ratio * 10,
-                      ytitleFontSize: ratio * 12,
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
                       barCount: 1,
                       dataSources: [
                         state.receivingDashboardData!.dayWiseInboundSummary!
-                            .map((e) => BarData(
-                                xLabel: e.status!,
-                                yValue: e.count!,
-                                abbreviation: e.status!))
+                            .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
                             .toList()
                       ],
                       yAxisTitle: 'No of ASNs Received',
@@ -173,25 +146,21 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       barColors: [const Color.fromARGB(255, 187, 157, 68)]);
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSCartesianChart(
                       title: 'Supplier Wise Inbound Summary',
-                      titleFontSize: ratio * 13,
-                      xlabelFontSize: ratio * 10,
-                      ylabelFontSize: ratio * 10,
-                      ytitleFontSize: ratio * 12,
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
                       barCount: 1,
                       dataSources: [
-                        state
-                            .receivingDashboardData!.supplierwiseInboundSummary!
+                        state.receivingDashboardData!.supplierwiseInboundSummary!
                             .sublist(0, 7)
-                            .map((e) => BarData(
-                                xLabel: e.status!,
-                                yValue: e.count!,
-                                abbreviation: e.status!))
+                            .map((e) => BarData(xLabel: e.status!, yValue: e.count!, abbreviation: e.status!))
                             .toList()
                       ],
                       yAxisTitle: 'No of ASNs Received',
@@ -199,24 +168,21 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       barColors: [const Color.fromARGB(255, 196, 124, 72)]);
                 }),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 10,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSCartesianChart(
                       title: 'User Receiving Efficiency',
-                      titleFontSize: ratio * 13,
-                      xlabelFontSize: ratio * 10,
-                      ylabelFontSize: ratio * 10,
-                      ytitleFontSize: ratio * 12,
+                      titleFontSize: 13,
+                      xlabelFontSize: 12,
+                      ylabelFontSize: 12,
+                      ytitleFontSize: 13,
                       barCount: 1,
                       dataSources: [
                         state.receivingDashboardData!.userReceivingEfficiency!
                             .map(
-                              (e) => BarData(
-                                  xLabel: e.userName!.split('_')[0],
-                                  yValue: e.count!,
-                                  abbreviation: e.userName!),
+                              (e) => BarData(xLabel: e.userName!.split('_')[0], yValue: e.count!, abbreviation: e.userName!),
                             )
                             .toList()
                       ],
@@ -225,16 +191,15 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                       barColors: [const Color.fromARGB(255, 55, 126, 170)]);
                 }),
             Customs.DashboardWidget(
-              size: Size(size.width * 0.25, size.height * 0.45),
+              height: size.height * 0.45,
               margin: aspectRatio * 10,
               loaderEnabled: isEnabled,
-              chartBuilder: (ratio) => Customs.WMSSfCircularChart(
-                  ratio: ratio,
+              chartBuilder: (lsize) => Customs.WMSSfCircularChart(
+                  lsize: lsize,
                   title: "Avg Receiving Time",
-                  titleFontSize: ratio * 13,
+                  titleFontSize: 13,
                   enableAnnotation: true,
-                  annotationText:
-                      state.receivingDashboardData!.avgReceivingTime!,
+                  annotationText: state.receivingDashboardData!.avgReceivingTime!,
                   props: Props(
                     dataSource: chartData,
                     pointColorMapper: (p0, p1) {
@@ -247,30 +212,28 @@ class _ReceivingAreaDashboardState extends State<ReceivingAreaDashboard> {
                   )),
             ),
             Customs.DashboardWidget(
-                size: Size(size.width * 0.25, size.height * 0.45),
+                height: size.height * 0.45,
                 margin: aspectRatio * 12,
                 loaderEnabled: isEnabled,
-                chartBuilder: (ratio) {
+                chartBuilder: (lsize) {
                   return Customs.WMSRadialGuage(
                       title: "Receiving Efficiency",
-                      titleFontSize: ratio * 16,
-                      annotationHeight: ratio * 120,
-                      axisLineColor: Color.fromARGB(255, 86, 185, 180),
-                      annotationText:
-                          '${state.receivingDashboardData!.receivingEfficiency!}%',
-                      annotationFontSize: ratio * 12,
-                      radiusFactor: ratio * 0.55,
-                      markerValue:
-                          state.receivingDashboardData!.receivingEfficiency!);
+                      titleFontSize: 15,
+                      annotationHeight: lsize.maxHeight * 0.35,
+                      axisLineColor: const Color.fromARGB(255, 86, 185, 180),
+                      annotationText: '${state.receivingDashboardData!.receivingEfficiency!}%',
+                      annotationFontSize: 15,
+                      radiusFactor: lsize.maxHeight * 0.0022,
+                      markerValue: state.receivingDashboardData!.receivingEfficiency!);
                 }),
             Customs.DashboardWidget(
-              size: Size(size.width * 0.25, size.height * 0.45),
+              height: size.height * 0.45,
               margin: aspectRatio * 10,
               loaderEnabled: isEnabled,
-              chartBuilder: (ratio) => Customs.WMSSfCircularChart(
-                  ratio: ratio,
+              chartBuilder: (lsize) => Customs.WMSSfCircularChart(
+                  lsize: lsize,
                   title: "Avg PutAway Time",
-                  titleFontSize: ratio * 13,
+                  titleFontSize: 13,
                   enableAnnotation: true,
                   annotationText: state.receivingDashboardData!.avgPutawayTime!,
                   props: Props(

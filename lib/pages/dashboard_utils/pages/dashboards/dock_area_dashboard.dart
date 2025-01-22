@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:lottie/lottie.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
-import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/responsive/responsive.dart';
 
 class DockAreaDashboard extends StatefulWidget {
-  DockAreaDashboard({super.key});
+  const DockAreaDashboard({super.key});
 
   @override
   State<DockAreaDashboard> createState() => _DockAreaDashboardState();
@@ -51,11 +48,10 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Device device = getDevice(context);
-    double aspectRatio = size.width / size.height;
     return Row(
       children: [
         Expanded(
-          flex: 10,
+          flex: 12,
           child: BlocBuilder<DashboardsBloc, DashboardsState>(
               buildWhen: (previous, current) => previous.getDockDashboardState != current.getDockDashboardState,
               builder: (context, state) {
@@ -65,15 +61,15 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                   children: [
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Stack(
                             children: [
                               Customs.WMSCartesianChart(
                                 title: "Daywise Utilization",
                                 titleFontSize: device == Device.desktop ? 13 : 10,
-                                xlabelFontSize: ratio * 8,
-                                ylabelFontSize: ratio * 8,
+                                xlabelFontSize: 12,
+                                ylabelFontSize: 12,
                                 ytitleFontSize: device == Device.desktop ? 13 : 10,
                                 yAxisTitle: 'Number of Vehicles',
                                 barCount: 2,
@@ -89,7 +85,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                 ],
                               ),
                               // Positioned(
-                              //   right: ratio * 0.08,
+                              //   right: lsize * 0.08,
                               //   child: InkWell(onTap: () {}, child: Icon(Icons.calendar_month_rounded)),
                               // )
                             ],
@@ -97,10 +93,10 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               title: 'Dock-IN Utilization',
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               legendVisibility: true,
@@ -108,21 +104,23 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                 dataSource: state.dockDashboardData!.dockInUtilization!
                                     .map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156)))
                                     .toList(),
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 102, 82, 156);
                                   } else {
-                                    return Color.fromARGB(255, 178, 166, 209);
+                                    return const Color.fromARGB(255, 178, 166, 209);
                                   }
                                 },
                               ));
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               title: 'Dock-OUT Utilization',
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               legendVisibility: true,
@@ -130,6 +128,8 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                 dataSource: state.dockDashboardData!.dockOutUtilization!
                                     .map((e) => PieData(xData: e.status!, yData: e.count!, color: const Color.fromARGB(255, 102, 82, 156)))
                                     .toList(),
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 52, 132, 136);
@@ -141,16 +141,18 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               title: "Avg Loading Time",
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               enableAnnotation: true,
                               annotationText: state.dockDashboardData!.avgLoadingTime!,
                               props: Props(
                                 dataSource: chartData1,
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 151, 174, 206);
@@ -162,16 +164,18 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               title: "Avg Unloading Time",
                               enableAnnotation: true,
-                              annotationText: state.dockDashboardData!.avgUnloadingTime!,
+                              annotationText: state.dockDashboardData!.avgUnloadingTime!.substring(0, 7),
                               props: Props(
                                 dataSource: chartData1,
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 176, 211, 141);
@@ -183,16 +187,18 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         }),
                     Customs.DashboardWidget(
                         loaderEnabled: isEnabled,
-                        margin: aspectRatio * 12,
-                        chartBuilder: (ratio) {
+                        margin: size.height * 0.02,
+                        chartBuilder: (lsize) {
                           return Customs.WMSSfCircularChart(
-                              ratio: ratio,
+                              lsize: lsize,
                               title: "Avg Dock TAT",
                               titleFontSize: device == Device.desktop ? 13 : 10,
                               enableAnnotation: true,
-                              annotationText: state.dockDashboardData!.avgDockTAT!,
+                              annotationText: state.dockDashboardData!.avgDockTAT!.substring(0, 6),
                               props: Props(
                                 dataSource: chartData1,
+                                radius: '${lsize.maxWidth * 0.13}%',
+                                innerRadius: '${lsize.maxWidth * 0.11}%',
                                 pointColorMapper: (p0, p1) {
                                   if (p1 == 0) {
                                     return const Color.fromARGB(255, 196, 141, 204);
@@ -207,7 +213,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
               }),
         ),
         Expanded(
-          flex: 3,
+          flex: 4,
           child: LayoutBuilder(builder: (context, lsize) {
             return BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
               bool isEnabled = state.getAppointmentsState == AppointmentsState.loading;
@@ -220,7 +226,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                           height: lsize.maxHeight * 0.125,
                           width: lsize.maxWidth,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(12, 46, 87, 1),
+                            color: const Color.fromRGBO(12, 46, 87, 1),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           margin: EdgeInsets.only(top: lsize.maxHeight * 0.018),
@@ -230,7 +236,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                             children: [
                               Text(
                                 'Appointments',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.023),
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.026),
                               ),
                               Gap(lsize.maxHeight * 0.01),
                               Row(
@@ -239,14 +245,14 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                       width: lsize.maxWidth * 0.32,
                                       child: Text(
                                           '${DateFormat('E').format(state.appointmentsDate!)}, ${DateFormat('MMM').format(state.appointmentsDate!)} ${state.appointmentsDate!.day}',
-                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.02))),
-                                  Spacer(),
+                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.022))),
+                                  const Spacer(),
                                   Container(
                                     alignment: Alignment.center,
                                     height: lsize.maxHeight * 0.03,
                                     width: lsize.maxWidth * 0.22,
                                     decoration: BoxDecoration(
-                                      color: Color.fromRGBO(192, 208, 230, 1),
+                                      color: const Color.fromRGBO(192, 208, 230, 1),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     padding: EdgeInsets.all(lsize.maxHeight * 0.002),
@@ -256,7 +262,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                         InkWell(
                                           onTap: () {
                                             if (state.appointmentsDate!.isAfter(now)) {
-                                              _dashboardsBloc.add(UpdateDate(date: state.appointmentsDate!.subtract(Duration(days: 1))));
+                                              _dashboardsBloc.add(UpdateDate(date: state.appointmentsDate!.subtract(const Duration(days: 1))));
                                               _dashboardsBloc.add(ToggleCalendar(toggleCalendar: false));
                                             }
                                           },
@@ -264,7 +270,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                             alignment: Alignment.center,
                                             height: lsize.maxHeight * 0.03,
                                             width: lsize.maxWidth * 0.1,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               color: Color.fromRGBO(12, 46, 87, 1),
                                               borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
                                             ),
@@ -281,14 +287,14 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                         Gap(lsize.maxWidth * 0.005),
                                         InkWell(
                                           onTap: () {
-                                            _dashboardsBloc.add(UpdateDate(date: state.appointmentsDate!.add(Duration(days: 1))));
+                                            _dashboardsBloc.add(UpdateDate(date: state.appointmentsDate!.add(const Duration(days: 1))));
                                             _dashboardsBloc.add(ToggleCalendar(toggleCalendar: false));
                                           },
                                           child: Container(
                                             alignment: Alignment.center,
                                             height: lsize.maxHeight * 0.03,
                                             width: lsize.maxWidth * 0.1,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               color: Color.fromRGBO(12, 46, 87, 1),
                                               borderRadius: BorderRadius.only(topRight: Radius.circular(20), bottomRight: Radius.circular(20)),
                                             ),
@@ -323,7 +329,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                         child: Container(
                             width: lsize.maxWidth,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(12, 46, 87, 1),
+                              color: const Color.fromRGBO(12, 46, 87, 1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             margin: EdgeInsets.only(top: size.height * 0.01),
@@ -367,7 +373,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                     child: Text(
                                                       isEnabled ? '9:00 AM' : state.appointments![index].startTime!,
                                                       style: TextStyle(
-                                                          color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth * 0.039, fontWeight: FontWeight.bold),
+                                                          color: const Color.fromRGBO(12, 46, 87, 1),
+                                                          fontSize: lsize.maxWidth * 0.039,
+                                                          fontWeight: FontWeight.bold),
                                                     )),
                                                 Gap(lsize.maxHeight * 0.008),
                                                 Skeletonizer(
@@ -375,14 +383,14 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                     enableSwitchAnimation: true,
                                                     child: Text(isEnabled ? '10:00 AM' : state.appointments![index].endTime!,
                                                         style: TextStyle(
-                                                            color: Color.fromRGBO(95, 116, 143, 1),
+                                                            color: const Color.fromRGBO(95, 116, 143, 1),
                                                             fontSize: lsize.maxWidth * 0.035,
                                                             fontWeight: FontWeight.bold)))
                                               ],
                                             ),
                                             Container(
                                               margin: EdgeInsets.symmetric(horizontal: lsize.maxWidth * 0.05),
-                                              decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(500)),
+                                              decoration: BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(500)),
                                               width: lsize.maxHeight * 0.003,
                                             ),
                                             Column(
@@ -395,7 +403,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                     child: Text(
                                                       isEnabled ? 'APDEMODEMO' : state.appointments![index].apptNbr!,
                                                       style: TextStyle(
-                                                          color: Color.fromRGBO(12, 46, 87, 1), fontSize: lsize.maxWidth * 0.039, fontWeight: FontWeight.bold),
+                                                          color: const Color.fromRGBO(12, 46, 87, 1),
+                                                          fontSize: lsize.maxWidth * 0.039,
+                                                          fontWeight: FontWeight.bold),
                                                     )),
                                                 Gap(lsize.maxHeight * 0.008),
                                                 Skeletonizer(
@@ -403,7 +413,7 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                                                     enableSwitchAnimation: true,
                                                     child: Text(isEnabled ? 'DOCK-IN-01' : state.appointments![index].dockNbr!,
                                                         style: TextStyle(
-                                                            color: Color.fromRGBO(95, 116, 143, 1),
+                                                            color: const Color.fromRGBO(95, 116, 143, 1),
                                                             fontSize: lsize.maxWidth * 0.035,
                                                             fontWeight: FontWeight.bold)))
                                               ],
@@ -431,15 +441,15 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                             initialDisplayDate: state.appointmentsDate,
                             initialSelectedDate: state.appointmentsDate,
                             selectionMode: DateRangePickerSelectionMode.single,
-                            backgroundColor: Color.fromRGBO(174, 204, 240, 1),
-                            headerStyle: DateRangePickerHeaderStyle(
+                            backgroundColor: const Color.fromRGBO(174, 204, 240, 1),
+                            headerStyle: const DateRangePickerHeaderStyle(
                               backgroundColor: Color.fromRGBO(12, 46, 87, 1),
                               textStyle: TextStyle(color: Colors.white),
                             ),
                             headerHeight: lsize.maxHeight * 0.05,
                             minDate: DateTime(now.year, 1, 1, 0, 0, 0, 0, 0),
                             maxDate: DateTime(now.year, 12, 31, 23, 59, 0, 0, 0),
-                            selectionColor: Color.fromRGBO(12, 46, 87, 1),
+                            selectionColor: const Color.fromRGBO(12, 46, 87, 1),
                             allowViewNavigation: false,
                             showNavigationArrow: true,
                             selectionShape: DateRangePickerSelectionShape.circle,
@@ -455,8 +465,9 @@ class _DockAreaDashboardState extends State<DockAreaDashboard> {
                             cellBuilder: (BuildContext context, DateRangePickerCellDetails details) {
                               Color circleColor;
 
-                              circleColor =
-                                  details.date.toString().substring(0, 10) == now.toString().substring(0, 10) ? Color.fromRGBO(12, 46, 87, 1) : Colors.white;
+                              circleColor = details.date.toString().substring(0, 10) == now.toString().substring(0, 10)
+                                  ? const Color.fromRGBO(12, 46, 87, 1)
+                                  : Colors.white;
 
                               return Padding(
                                 padding: const EdgeInsets.all(4),

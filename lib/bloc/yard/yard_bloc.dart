@@ -5,7 +5,6 @@ import 'package:equatable/equatable.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
-import 'package:wmssimulator/models/dashboard_response.dart';
 import 'package:wmssimulator/models/yard_area_model.dart';
 
 import '../../local_network_calls.dart';
@@ -26,8 +25,8 @@ class YardBloc extends Bloc<YardEvent, YardState> {
   void _onGetYardData(GetYardData event, Emitter<YardState> emit) async {
     try {
       await _customApi
-          .get((event.searchText != null&& event.searchText!="") ? AppConstants.SEARCH : AppConstants.YARD_AREA,
-              queryParameters: (event.searchText != null && event.searchText!="")
+          .get((event.searchText != null && event.searchText != "") ? AppConstants.SEARCH : AppConstants.YARD_AREA,
+              queryParameters: (event.searchText != null && event.searchText != "")
                   ? {"search_text": event.searchText, "search_area": "YARD", "facility_id": '243', "page_num": state.pageNum}
                   : {"facility_id": 243, "page_num": state.pageNum})
           .then((apiResponse) {
@@ -46,5 +45,4 @@ class YardBloc extends Bloc<YardEvent, YardState> {
       emit(state.copyWith(yardAreaStatus: YardAreaStatus.failure));
     }
   }
-
 }

@@ -5,13 +5,13 @@ class ActivityAreaItem {
   String? workOrderType;
   List<Item>? items;
   ActivityAreaItem({this.workOrderType, this.items});
-  ActivityAreaItem.fromJson(Map<String, dynamic> json){
+  ActivityAreaItem.fromJson(Map<String, dynamic> json) {
     workOrderType = json.keys.first;
     items = (json.values.first as List).map((e) => Item.fromJson(e)).toList();
   }
 }
 
-class ActivityDashboard{
+class ActivityDashboard {
   List<StatusCount>? todayTaskSummary;
   List<StatusCount>? taskTypeSummary;
   List<StatusCount>? todayWorkOrderSummary;
@@ -20,9 +20,17 @@ class ActivityDashboard{
   List<StatusCount>? avgTimeTakenByEmp;
   String? avgTaskExecTime;
   String? avgPickTime;
-  ActivityDashboard({this.todayTaskSummary, this.taskTypeSummary, this.todayWorkOrderSummary, this.daywiseTaskSummary, this.empwiseTaskSummary, this.avgTaskExecTime, this.avgPickTime, this.avgTimeTakenByEmp});
+  ActivityDashboard(
+      {this.todayTaskSummary,
+      this.taskTypeSummary,
+      this.todayWorkOrderSummary,
+      this.daywiseTaskSummary,
+      this.empwiseTaskSummary,
+      this.avgTaskExecTime,
+      this.avgPickTime,
+      this.avgTimeTakenByEmp});
 
-  ActivityDashboard.fromJson(Map<String, dynamic> json){
+  ActivityDashboard.fromJson(Map<String, dynamic> json) {
     todayTaskSummary = (json['today_task_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     taskTypeSummary = (json['task_type_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     todayWorkOrderSummary = (json['today_work_order_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();

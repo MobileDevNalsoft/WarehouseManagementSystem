@@ -62,18 +62,15 @@ class _StagingAreaDataSheetState extends State<StagingAreaDataSheet> {
                               : "",
                           style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.048),
                         ),
-                        Text("Data not found")
+                        const Text("Data not found")
                       ],
                     )
                   : isEnabled
-                      ? Center(
+                      ? const Center(
                           child: CircularProgressIndicator(),
                         )
                       : StagingListView(
-                          data: state.stagingList!,
-                          l1StyleData: L1StyleData(height: 60, width: 400),
-                          l2StyleData: L2StyleData(
-                              height: lsize.maxHeight * 0.13));
+                          data: state.stagingList!, l1StyleData: L1StyleData(height: 60, width: 400), l2StyleData: L2StyleData(height: lsize.maxHeight * 0.13));
             }),
           );
         },
@@ -128,22 +125,22 @@ class _StagingListViewState extends State<StagingListView> {
                     width: widget.l1StyleData.width,
                     color: Colors.transparent,
                     child: Container(
-                      margin: EdgeInsets.only(top: 65, bottom: 5),
+                      margin: const EdgeInsets.only(top: 65, bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.dropDownColor,
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: widget.data[oindex].items!.length,
                             itemBuilder: (context, index) {
                               return Container(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   height: widget.l2StyleData.height,
-                                  margin: EdgeInsets.only(bottom: 5),
+                                  margin: const EdgeInsets.only(bottom: 5),
                                   decoration: BoxDecoration(
                                     color: widget.l2StyleData.color,
                                     borderRadius: BorderRadius.circular(15),
@@ -213,10 +210,10 @@ class _StagingListViewState extends State<StagingListView> {
                         if (outerOpenDropdownIndex == oindex) {
                           // If the same dropdown is tapped, close it
                           heights[oindex] = heights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height + 25)
+                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           bottomHeights[oindex] = bottomHeights[oindex] == widget.l1StyleData.height
-                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height + 25)
+                              ? (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) + (widget.l1StyleData.height + 25)
                               : widget.l1StyleData.height;
                           turns[oindex] = turns[oindex] == 0.5 ? 1 : 0.5; // Rotate icon
                           outerOpenDropdownIndex = null; // Reset opened index
@@ -228,9 +225,9 @@ class _StagingListViewState extends State<StagingListView> {
                             turns[outerOpenDropdownIndex!] = 1;
                           }
                           outerOpenDropdownIndex = oindex; // Set current index as opened
-                          heights[oindex] =
-                              (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) + (widget.l1StyleData.height + 25); // Expand current dropdown
-                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height+5) +
+                          heights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) +
+                              (widget.l1StyleData.height + 25); // Expand current dropdown
+                          bottomHeights[oindex] = (widget.data[oindex].items!.length) * (widget.l2StyleData.height + 5) +
                               (widget.l1StyleData.height + 25); // Expand current bottom height
                           turns[oindex] = 0.5;
                         }
@@ -239,8 +236,8 @@ class _StagingListViewState extends State<StagingListView> {
                     child: Container(
                       height: widget.l1StyleData.height,
                       width: widget.l1StyleData.width,
-                      padding: EdgeInsets.all(5),
-                      margin: EdgeInsets.only(bottom: 5),
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       decoration: BoxDecoration(
                         color: widget.l1StyleData.color, // Purple background
                         borderRadius: BorderRadius.circular(15),
@@ -255,12 +252,12 @@ class _StagingListViewState extends State<StagingListView> {
                             Gap(lsize.maxWidth * 0.01),
                             Text(
                               widget.data[oindex].customerName!.replaceAll('"', ''),
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: widget.l1StyleData.height * 0.5,
-                              decoration: BoxDecoration(color: Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
+                              decoration: BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(10)),
                               child: Row(
                                 children: [
                                   SizedBox(
@@ -273,7 +270,7 @@ class _StagingListViewState extends State<StagingListView> {
                                   AnimatedRotation(
                                     turns: turns[oindex],
                                     duration: const Duration(milliseconds: 200),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.keyboard_arrow_down_rounded,
                                       size: 20,
                                       color: Colors.white,

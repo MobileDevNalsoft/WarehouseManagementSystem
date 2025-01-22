@@ -13,7 +13,7 @@ class ReceivingArea {
     if (json['data'] != null) {
       data = <ReceiveData>[];
       json['data'].forEach((v) {
-        data!.add( ReceiveData.fromJson(v));
+        data!.add(ReceiveData.fromJson(v));
       });
     }
   }
@@ -29,7 +29,7 @@ class ReceivingArea {
   }
 }
 
-class   ReceiveData {
+class ReceiveData {
   String? asn;
   String? poNum;
   String? vendor;
@@ -57,33 +57,33 @@ class   ReceiveData {
   }
 }
 
-class ReceivingAreaItem{
+class ReceivingAreaItem {
   String? vendorName;
   List<Shipment>? shipments;
   ReceivingAreaItem({this.vendorName, this.shipments});
-  ReceivingAreaItem.fromJson(Map<String, dynamic> json){
+  ReceivingAreaItem.fromJson(Map<String, dynamic> json) {
     vendorName = json.keys.first;
     shipments = (json.values.first as List).map((e) => Shipment.fromJson(e)).toList();
   }
 }
 
-class Shipment{
+class Shipment {
   String? shipmentNo;
   List<Item>? items;
   Shipment({this.shipmentNo, this.items});
-  Shipment.fromJson(Map<String, dynamic> json){
+  Shipment.fromJson(Map<String, dynamic> json) {
     shipmentNo = json.keys.first;
     items = (json.values.first as List).map((e) => Item.fromJson(e)).toList();
   }
 }
 
-class Item{
+class Item {
   String? item;
   String? po;
   String? containerNBR;
   String? qty;
   Item({this.item, this.po, this.containerNBR, this.qty});
-  Item.fromJson(Map<String, dynamic> json){
+  Item.fromJson(Map<String, dynamic> json) {
     item = json['item_key'];
     po = json['po'];
     containerNBR = json['container_nbr'];
@@ -91,8 +91,7 @@ class Item{
   }
 }
 
-
-class ReceivingDashboard{
+class ReceivingDashboard {
   List<InBoundSummary>? totalInBoundSummary;
   String? avgPutawayTime;
   String? avgReceivingTime;
@@ -102,15 +101,24 @@ class ReceivingDashboard{
   List<StatusCount>? supplierwiseInboundSummary;
   double? putawayAccuracy;
   List<StatusCount>? dayWiseInboundSummary;
-  ReceivingDashboard({this.totalInBoundSummary, this.avgPutawayTime, this.avgReceivingTime, this.userReceivingEfficiency, this.supplierwiseInboundSummary, this.putawayAccuracy, this.dayWiseInboundSummary,this.todayAsnStatus,this.receivingEfficiency});
+  ReceivingDashboard(
+      {this.totalInBoundSummary,
+      this.avgPutawayTime,
+      this.avgReceivingTime,
+      this.userReceivingEfficiency,
+      this.supplierwiseInboundSummary,
+      this.putawayAccuracy,
+      this.dayWiseInboundSummary,
+      this.todayAsnStatus,
+      this.receivingEfficiency});
 
-  ReceivingDashboard.fromJson(Map<String, dynamic> json){
+  ReceivingDashboard.fromJson(Map<String, dynamic> json) {
     totalInBoundSummary = (json['today_inbound_summary'] as List).map((e) => InBoundSummary.fromJson(e)).toList();
     avgPutawayTime = json['avg_putaway_time'];
     avgReceivingTime = json['avg_receiving_time'];
-    todayAsnStatus = (json['today_asn_status'] as List).map((e)=> StatusCount.fromJson(e) ).toList();
-    receivingEfficiency= json['receiving_efficiency'];
-    dayWiseInboundSummary = (json['day_wise_inbound_summary'] as List).map((e)=> StatusCount.fromJson(e) ).toList();
+    todayAsnStatus = (json['today_asn_status'] as List).map((e) => StatusCount.fromJson(e)).toList();
+    receivingEfficiency = json['receiving_efficiency'];
+    dayWiseInboundSummary = (json['day_wise_inbound_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     userReceivingEfficiency = (json['user_receiving_efficiency'] as List).map((e) => UserCount.fromJson(e)).toList();
     supplierwiseInboundSummary = (json['supplierwise_inbound_summary'] as List).map((e) => StatusCount.fromJson(e)).toList();
     putawayAccuracy = json['putaway_accuracy'];
@@ -129,44 +137,46 @@ class DayWiseInboundSummary {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['verified_date'] = this.verifiedDate;
-    data['shipment_count'] = this.shipmentCount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['verified_date'] = verifiedDate;
+    data['shipment_count'] = shipmentCount;
     return data;
   }
 }
+
 class AsnStatus {
   int? inTransit;
   int? inReceiving;
   int? receivied;
   int? cancelled;
 
-  AsnStatus(
-      {this.inTransit, this.inReceiving, this.receivied, this.cancelled});
+  AsnStatus({this.inTransit, this.inReceiving, this.receivied, this.cancelled});
 
   AsnStatus.fromJson(Map<String, dynamic> json) {
     inTransit = json['in_transit'];
     inReceiving = json['in_receiving'];
     receivied = json['receivied'];
     cancelled = json['cancelled '];
-  }}
-class InBoundSummary{
+  }
+}
+
+class InBoundSummary {
   String? status;
   int? total;
   InBoundSummary({this.status, this.total});
 
-  InBoundSummary.fromJson(Map<String, dynamic> json){
+  InBoundSummary.fromJson(Map<String, dynamic> json) {
     status = json.keys.first;
     total = json.values.first;
   }
 }
 
-class UserCount{
+class UserCount {
   String? userName;
   int? count;
   UserCount({this.userName, this.count});
 
-  UserCount.fromJson(Map<String, dynamic> json){
+  UserCount.fromJson(Map<String, dynamic> json) {
     userName = json.keys.first;
     count = json.values.first;
   }

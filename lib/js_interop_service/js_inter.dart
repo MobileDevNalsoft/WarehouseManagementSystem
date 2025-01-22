@@ -55,12 +55,11 @@ external _getSomeAsyncData();
 external _shareImage(String url, String filename);
 
 class JsInteropService {
-
   changeFacility(String data) {
     _changeFacility(data);
   }
 
-  sendOverviewData(String data){
+  sendOverviewData(String data) {
     _sendOverviewData(data);
   }
 
@@ -72,33 +71,31 @@ class JsInteropService {
     _isRackDataLoaded(value);
   }
 
-  setNumberOfTrucks(message){
+  setNumberOfTrucks(message) {
     _setNumberOfTrucks(message);
   }
 
-  resetTrucks(){
+  resetTrucks() {
     _resetTrucks();
   }
 
- navigateToBin(String message) {
+  navigateToBin(String message) {
     _navigateToBin(message);
   }
 
-   getShoretestPathForTask(String message) {
+  getShoretestPathForTask(String message) {
     _getShoretestPathForTask(message);
   }
 
- resetBoxColors() {
+  resetBoxColors() {
     _resetBoxColors();
   }
-
 
   showAlert(String message) {
     _showAlert(message);
   }
 
-
-  highlightBins(String bins){
+  highlightBins(String bins) {
     _highlightBins(bins);
   }
 
