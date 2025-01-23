@@ -5,7 +5,7 @@ enum StorageAreaStatus { initial, loading, success, failure }
 enum StorageBinStatus { initial, loading, success, failure }
 
 final class StorageState {
-  StorageState({this.storageArea, this.storageAreaStatus, this.storageBinStatus, this.storageAisles, this.pageNum, this.storageBinItems});
+  StorageState({this.storageArea, this.storageAreaStatus, this.storageBinStatus, this.storageAisles, this.pageNum, this.storageBinItems,this.binsStatus});
 
   StorageAisle? storageArea;
   StorageAreaStatus? storageAreaStatus;
@@ -14,6 +14,7 @@ final class StorageState {
   ListOfStorageAisles? storageAisles;
   int? pageNum;
   StorageBinStatus? storageBinStatus;
+  Map<String, dynamic>? binsStatus;
 
   factory StorageState.initial() {
     return StorageState(storageAreaStatus: StorageAreaStatus.initial, storageBinStatus: StorageBinStatus.initial, storageBinItems: [], pageNum: 0);
@@ -24,13 +25,17 @@ final class StorageState {
       List<StorageBinItem>? storageBinItems,
       StorageBinStatus? storageBinStatus,
       int? pageNum,
-      ListOfStorageAisles? storageAisles}) {
+      ListOfStorageAisles? storageAisles,
+      Map<String, dynamic>? binsStatus
+      }) {
     return StorageState(
         storageArea: storageArea ?? this.storageArea,
         storageAreaStatus: storageAreaStatus ?? this.storageAreaStatus,
         storageBinItems: storageBinItems ?? this.storageBinItems,
         storageBinStatus: storageBinStatus ?? this.storageBinStatus,
         pageNum: pageNum ?? this.pageNum,
-        storageAisles: storageAisles ?? this.storageAisles);
+        storageAisles: storageAisles ?? this.storageAisles,
+        binsStatus: binsStatus??this.binsStatus
+        );
   }
 }

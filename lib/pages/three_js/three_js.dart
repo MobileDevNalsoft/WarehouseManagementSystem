@@ -10,6 +10,7 @@ import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
+import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
@@ -165,9 +166,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                   if (isLoaded != null && isLoaded) {
                                                     _warehouseInteractionBloc.add(Rendering(isRendered: true));
                                                     _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
+                                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "binsStatus");
+                                                    context.read<StorageBloc>().add(GetBinsStatus());
                                                     timer.cancel();
                                                   }
                                                 });
+                                                
                                               }
                                             }
                                           }
@@ -630,6 +634,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           case 'dockareaout':
             return const DockAreaDataSheet();
           case 'yardarea':
+           context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+
             return const YardAreaDataSheet();
           // case 'storagearea':
           //   return BinD();

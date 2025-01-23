@@ -343,17 +343,41 @@ export function addInteractions(scene, model, camera, controls) {
           .split(",")
           .forEach((e) => {
             let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
-            scene.getObjectByName(bin).material.color.set(0xfaf3e2);
+
+          let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
+          let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
+          
+            if( redBins.includes(bin) ){
+              
+              scene.getObjectByName(bin).material.color.set(0xcf2020);
+            }
+              else if(orangeBins.includes(bin)  ){
+                scene.getObjectByName(bin).material.color.set(0xfe7e5b);
+              } 
+            // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
             scene.getObjectByName(bin).material.opacity = 0.5;
           });
 
         localStorage.removeItem("highlightBins");
       }
-    } catch (e) {}
+    } catch (e) {
+console.warn("from wheely" +e);
+
+    }
     try {
       if (localStorage.getItem("prevBin")) {
+        let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
+        let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
+
         let bin = localStorage.getItem("prevBin").trim();
-        scene.getObjectByName(bin).material.color.set(0xfaf3e2);
+
+        if( redBins.includes(bin) ){
+          scene.getObjectByName(bin).material.color.set(0xcf2020);
+        }
+          else if(orangeBins.includes(bin)  ){
+            scene.getObjectByName(bin).material.color.set(0xfe7e5b);
+          } 
+        // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
         scene.getObjectByName(bin).material.opacity = 0.5;
         localStorage.removeItem("prevBin");
       }
@@ -408,7 +432,17 @@ export function addInteractions(scene, model, camera, controls) {
 
   function changeColor(object) {
     if (prevBin != null) {
-      prevBin.material.color.set(0xfaf3e2);
+      
+      let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
+      let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
+        if( redBins.includes(prevBin) ){
+          scene.getObjectByName(prevBin).material.color.set(0xcf2020);
+        }
+        else if(orangeBins.includes(prevBin)  ){
+          scene.getObjectByName(prevBin).material.color.set(0xfe7e5b);
+        } 
+
+      // prevBin.material.color.set(0xfaf3e2);
     }
 
 

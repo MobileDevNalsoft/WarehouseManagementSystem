@@ -104,7 +104,7 @@ export function localStorageSetup(scene, camera, controls) {
             scene.getObjectByName("truck_Y" + i).visible = false;
           }
         } catch (e) {}
-        window.localStorage.removeItem("setNumberOfTrucks");
+        // window.localStorage.removeItem("setNumberOfTrucks");
         break;
       case "resetTrucks":
         resetTrucksAnimation(scene);
@@ -114,13 +114,28 @@ export function localStorageSetup(scene, camera, controls) {
         try {
           if(document.getElementById('path').classList.contains('focused')){
             document.querySelector('#path').click();}
+            let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
+            let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
           try {
             highlightedBins.forEach((e) => {
-              scene.getObjectByName(e.trim()).material.color.set(0xfaf3e2);
+                if( redBins.includes(e.trim()) ){
+                  scene.getObjectByName(e.trim()).material.color.set(0xcf2020);
+                }
+                  else if(orangeBins.includes(e.trim())  ){
+                    scene.getObjectByName(e.trim()).material.color.set(0xfe7e5b);
+                  } 
+              // scene.getObjectByName(e.trim()).material.color.set(0xfaf3e2);
             });
             highlightedBins = [];
             if(localStorage.getItem("prevBin")){
-              scene.getObjectByName(localStorage.getItem("prevBin")).material.color.set(0xfaf3e2);
+              if( redBins.includes(localStorage.getItem("prevBin")) ){
+                scene.getObjectByName(localStorage.getItem("prevBin")).material.color.set(0xcf2020);
+              }
+                else if(orangeBins.includes(localStorage.getItem("prevBin"))  ){
+                  scene.getObjectByName(localStorage.getItem("prevBin")).material.color.set(0xfe7e5b);
+                } 
+
+              // scene.getObjectByName(localStorage.getItem("prevBin")).material.color.set(0xfaf3e2);
               localStorage.removeItem("prevBin");
             }
           } catch (e) {}
@@ -148,13 +163,32 @@ export function localStorageSetup(scene, camera, controls) {
 
       case "resetBoxColors":
         localStorage.setItem("resetBoxColors", false);
+        let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
+        let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
+        
         try {
+         
+            
           highlightedBins.forEach((e) => {
-            scene.getObjectByName(e.trim()).material.color.set(0xfaf3e2);
+
+            if( redBins.includes(e.trim()) ){
+              scene.getObjectByName(e.trim()).material.color.set(0xcf2020);
+            }
+            else if(orangeBins.includes(e.trim())  ){
+              scene.getObjectByName(e.trim()).material.color.set(0xfe7e5b);
+            } 
+            // scene.getObjectByName(e.trim()).material.color.set(0xfaf3e2);
           });
           highlightedBins = [];
           if(localStorage.getItem("prevBin")){
-            scene.getObjectByName(localStorage.getItem("prevBin")).material.color.set(0xfaf3e2);
+
+            if( redBins.includes(localStorage.getItem("prevBin")) ){
+              scene.getObjectByName(localStorage.getItem("prevBin")).material.color.set(0xcf2020);
+            }
+              else if(orangeBins.includes(localStorage.getItem("prevBin"))  ){
+                scene.getObjectByName(localStorage.getItem("prevBin")).material.color.set(0xfe7e5b);
+              } 
+            // scene.getObjectByName(localStorage.getItem("prevBin")).material.color.set(0xfaf3e2);
             localStorage.removeItem("prevBin");
           }
         } catch (e) {}
@@ -177,6 +211,24 @@ export function localStorageSetup(scene, camera, controls) {
         } catch (e) {}
         localStorage.removeItem("navigateToBin");
 
+      case "binsStatus":
+        try{
+          console.warn("type of value"+typeof(event.newValue))
+          let redBins = JSON.parse( event.newValue).red;
+          let orangeBins =  JSON.parse( event.newValue).orange
+        for(let bin in redBins){
+          console.warn("bin from loop "+ redBins[bin])
+          scene.getObjectByName(redBins[bin]).material.color.set(0xcf2020);
+        }
+        for(let bin in orangeBins){
+          console.warn("bin from loop "+ orangeBins[bin])
+          scene.getObjectByName(orangeBins[bin]).material.color.set(0xfe7e5b);
+        }
+
+        }
+        catch(e){
+          console.warn("binsStatus"+e);
+        }
       
       default:
         break;

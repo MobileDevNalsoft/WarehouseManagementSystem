@@ -36,6 +36,17 @@ const init = () => {
         window.localStorage.setItem("getShoretestPathForTask", data)
     }
 
+    const redBins=(data)=>{
+        window.localStorage.setItem("redBins", data)
+    }
+    const orangeBins=(data)=>{
+        window.localStorage.setItem("orangeBins", data)
+    }
+
+    const binsStatus=(data)=>{
+        window.localStorage.setItem("binsStatus", data)
+    }
+
     window._switchToMainCam = switchToMainCam;
     window._isRackDataLoaded = isRacksDataLoaded;
     window._setNumberOfTrucks = setNumberOfTrucks;
@@ -46,6 +57,9 @@ const init = () => {
     window._sendOverviewData = sendOverviewData;
     window._changeFacility = changeFacility;
     window._getShoretestPathForTask = getShoretestPathForTask;
+    window._redBins = redBins;
+    window._orangeBins = orangeBins;
+    window._binsStatus = binsStatus;
 }
 
 window.onload = () => {

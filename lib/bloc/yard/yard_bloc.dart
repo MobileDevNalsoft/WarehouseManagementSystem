@@ -38,6 +38,7 @@ class YardBloc extends Bloc<YardEvent, YardState> {
           state.yardAreaItems!.addAll(dockAreaResponse.data!);
         }
         emit(state.copyWith(yardAreaItems: state.yardAreaItems, yardAreaStatus: YardAreaStatus.success));
+        getIt<JsInteropService>().setNumberOfTrucks("0");
         getIt<JsInteropService>().setNumberOfTrucks(state.yardAreaItems!.length.toString());
       });
     } catch (e) {

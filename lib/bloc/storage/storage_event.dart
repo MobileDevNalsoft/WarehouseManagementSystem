@@ -22,3 +22,8 @@ class GetBinData extends StorageEvent {
 //   String searchText;
 //  AddStorageAislesData({required this.searchText});
 // }
+
+
+class GetBinsStatus extends StorageEvent {
+ GetBinsStatus();
+}

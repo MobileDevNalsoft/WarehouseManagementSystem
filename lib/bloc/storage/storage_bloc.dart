@@ -21,7 +21,7 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
         super(StorageState.initial()) {
     on<AddStorageAreaData>(_onAddStorageAreaData);
     on<GetBinData>(_onGetBinData);
-    // on<AddStorageAislesData>(_onAddStorageAislesData);
+    on<GetBinsStatus>(_onGetBinsStatus);
   }
   final NetworkCalls _customApi;
 
@@ -81,4 +81,22 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
   //     print("error $e");
   //   }
   // }
+
+
+
+
+  void _onGetBinsStatus(GetBinsStatus event, Emitter<StorageState> emit) async{
+      try {
+      await _customApi.get(AppConstants.BINS_STATUS, queryParameters: {"facility_id": "243"}).then((value) {
+       
+      print("bins status ${jsonDecode(value.response!.data)["data"]}");
+      emit(state.copyWith(binsStatus: jsonDecode(value.response!.data)["data"],));
+      getIt<JsInteropService>().binsStatus(jsonEncode(state.binsStatus!));
+      // getIt<JsInteropService>().redBins(state.binsStatus!["red"]);
+      // getIt<JsInteropService>().orangeBins(state.binsStatus!["orange"]);
+      });
+    } catch (e) {
+      print("error $e");
+    }
+  }
 }
