@@ -193,6 +193,14 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                   focusNode: focusNode,
                                                   controller: textEditingController,
                                                   suggestionsController: suggestionsController,
+                                                  builder: (context, controller, focusNode) {
+                                                    controller.clear();
+                                                    return TextField(
+                                                        controller: controller,
+                                                        focusNode: focusNode,
+                                                        autofocus: true,
+                                                        decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
+                                                  },
                                                   itemBuilder: (context, value) {
                                                     return ListTile(
                                                       title: Text(
@@ -483,24 +491,24 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  // if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse'))
-                  //   Align(
-                  //       alignment: Alignment.bottomCenter,
-                  //       child: CustomProgressBar(
-                  //           height: size.height * 0.92,
-                  //           width: size.width,
-                  //           progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
-                  // if (!context.watch<WarehouseInteractionBloc>().state.isRendered && accessTypes.contains('Warehouse'))
-                  //   Align(
-                  //     alignment: Alignment.bottomCenter,
-                  //     child: Container(
-                  //       height: size.height * 0.92,
-                  //       width: size.width * widthAnimation.value,
-                  //       alignment: Alignment.center,
-                  //       decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
-                  //       child: Lottie.asset('assets/lottie/rendering.json'),
-                  //     ),
-                  //   ),
+                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse'))
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: CustomProgressBar(
+                            height: size.height * 0.92,
+                            width: size.width,
+                            progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
+                  if (!context.watch<WarehouseInteractionBloc>().state.isRendered && accessTypes.contains('Warehouse'))
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: size.height * 0.92,
+                        width: size.width * widthAnimation.value,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
+                        child: Lottie.asset('assets/lottie/rendering.json'),
+                      ),
+                    ),
                 ],
               ),
             ],

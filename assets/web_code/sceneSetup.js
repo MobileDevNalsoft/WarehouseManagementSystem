@@ -225,64 +225,37 @@ export async function initScene(renderer) {
     });
   }
 
-  //   (xhr) => {
-  //     console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
-  //   },
-  //   (error) => {
-  //     console.warn("An error occurred while loading the model:", error);
-  //   }
-  // )
-
-  // const circleMaterial = new THREE.MeshBasicMaterial({
-  //   color: 0xffff00, // Yellow
-  //   side: THREE.DoubleSide,
-  //   transparent: true,
-  //   opacity: 0.8, // Start opacity
-  // });
-
-  // [
-  // new THREE.Vector3(-125.16835094362332, 6.19, -91),
-  //   new THREE.Vector3(-104.0724984440678, 6.19, -91),
-  //  new THREE.Vector3(-84.20038905146427, 6.19, -91),
-  //  new THREE.Vector3(-48.400711886208356, 6.19, -91),
-  // new THREE.Vector3(-104.0, 6.19, -100.0),
-  //  new THREE.Vector3(-14.035990842471623, 6.19, -91),
-  //  new THREE.Vector3(-14.185505861653581, 6.19 ,-107.84385506088879),
-  //  new THREE.Vector3(-14.114602359858907, 6.19, -131.37753635985396),
-  //  new THREE.Vector3(-14.197195127688875, 6.19, -77.49013059402137),
-  //  new THREE.Vector3(-14.264927005311744, 6.19, -61.64698518320672)
-  // ].forEach((point) => { const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius 2, 32 segments
-  //    const circle = new THREE.Mesh(circleGeometry, circleMaterial);
-
-  //    // Rotate to lie flat on the ground
-  //    circle.rotation.x = -Math.PI / 2;
-
-  //    // Position at the checkpoint
-  //    circle.position.set(point.x, point.y + 0.1, point.z); // Slightly above ground
-  //    scene.add(circle);});
-
   let combinedPath = [];
   let checkpointCircles = [];
   let highlightedBins = [];
   let pathLine;
   let clock;
   let bins = [];
-  let forkLiftbins = [
-    "p4",
-    "4RB30602",
+  let forkLiftbins = data.model === 'storageArea' ? [
+    "p26",
+    "5RB30102",
+    "5RB10102",
+    "5LB30102",
     "4LB30102",
-    "1RB30602",
-    "3RB20602",
-    "2RB10601",
-    "2RB30602",
-    "3RB10102",
-    "2LB20501",
-    "2RB10601",
-    "2LB20201",
-    "stagingArea",
+    "3LB20102",
+    "3LB10102",
+    "4LB20102",
+    "2LB30103",
+    "p80"
+  ] : [
+    "p4",
+    "5RB30102",
+    "5RB10102",
+    "5LB30102",
+    "4LB30102",
+    "3LB20102",
+    "3LB10102",
+    "4LB20102",
+    "2LB30103",
+    "p1"
   ];
 
-  let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(THREE);
+  let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(THREE, scene);
 
   let agvTask = ["receivingArea", "5RB30602", "3RB20602"];
   let digitalTwin = document.getElementById("digitalTwin");
@@ -402,7 +375,7 @@ export async function initScene(renderer) {
       controls,
       forkLift,
       renderer,
-      2000,
+      1500,
       bins[bins.length - 1],
       0xffff00,
       0xcc0066
@@ -418,7 +391,9 @@ export async function initScene(renderer) {
       }
     });
 
-    switchCamera(scene, "warehouse_wall", camera, controls);
+    if(data.model === 'warehouse'){
+      switchCamera(scene, "warehouse_wall", camera, controls);
+    }
   });
 
   document.getElementById("stopAnimation").addEventListener("click", (e) => {

@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "orbitControls";
 
+const data = JSON.parse(window.localStorage.getItem("facilityData"));
 export function addControls(camera, renderer) {
   // Set up OrbitControls with the new camera
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -11,19 +12,30 @@ export function addControls(camera, renderer) {
   controls.panSpeed = 2;
 
   // limiting vertical rotation around x axis
-  controls.minPolarAngle = 0;
+  controls.minPolarAngle = 0.1;
   controls.maxPolarAngle = Math.PI / 2.2;
 
   // limiting horizontal rotation around y axis
   controls.minAzimuthAngle = -Math.PI;
   controls.maxAzimuthAngle = Math.PI;
 
-  // limiting zoom out
-  controls.minDistance = 10;
-  controls.maxDistance = 1000;
+  var minPan;
+  var maxPan;
 
-  var minPan = new THREE.Vector3(-150, -50, -150);
-  var maxPan = new THREE.Vector3(150, 50, 150);
+  switch(data.model){
+    case 'warehouse':
+      controls.minDistance = 10;
+      controls.maxDistance = 1000;
+      minPan = new THREE.Vector3(-150, -50, -150);
+      maxPan = new THREE.Vector3(150, 50, 150);
+      break;
+    case 'storageArea':
+      controls.minDistance = 10;
+      controls.maxDistance = 180;
+      minPan = new THREE.Vector3(-100, -50, -100);
+      maxPan = new THREE.Vector3(100, 50, 100);
+      break;
+  }
 
   // Function to clamp target position
   function clampTarget() {

@@ -53,7 +53,7 @@ class Customs {
                             : "compoundArea");
                     getIt<JsInteropService>().resetBoxColors();
 
-                    context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: const {"object": "null"}));
+                    context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: const {"object": "null"}, clearSearchText: true));
 
                     getIt<JsInteropService>().resetTrucks();
                   },
@@ -667,57 +667,59 @@ class Customs {
       barrierDismissible: true,
       barrierLabel: '',
       pageBuilder: (context, animation, secondaryAnimation) {
-        return Container(
-          margin: EdgeInsets.only(top: size.height * 0.4),
-          alignment: Alignment.topCenter,
-          child: Stack(
+        return PointerInterceptor(
+          child: Container(
+            margin: EdgeInsets.only(top: size.height * 0.4),
             alignment: Alignment.topCenter,
-            children: [
-              Material(
-                color: Colors.transparent,
-                child: Container(
-                  margin: EdgeInsets.only(top: size.height * 0.035),
-                  width: size.width * 0.16,
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
-                          child: PointerInterceptor(
-                            child: InkWell(
-                              onTap: () {
-                                if (onClose != null) {
-                                  onClose();
-                                }
-                                Navigator.pop(context);
-                              },
-                              child: const Icon(
-                                Icons.close,
-                                size: 20,
-                                weight: 1,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    margin: EdgeInsets.only(top: size.height * 0.035),
+                    width: size.width * 0.16,
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
+                            child: PointerInterceptor(
+                              child: InkWell(
+                                onTap: () {
+                                  if (onClose != null) {
+                                    onClose();
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 20,
+                                  weight: 1,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      ...content,
-                      Gap(size.height * 0.01),
-                    ],
+                        ...content,
+                        Gap(size.height * 0.01),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              ClipPath(
-                clipper: DialogTopClipper(),
-                child: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 35,
-                  child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
-                ),
-              )
-            ],
+                ClipPath(
+                  clipper: DialogTopClipper(),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 35,
+                    child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
+                  ),
+                )
+              ],
+            ),
           ),
         );
       },
