@@ -2,11 +2,13 @@ import * as THREE from "three";
 import { createRenderer } from "renderer";
 import { initScene } from "scene";
 
+const data = JSON.parse(window.localStorage.getItem('facilityData'));
 document.addEventListener("DOMContentLoaded", async function () {
   window.localStorage.setItem("isLoaded", false);
   const renderer = createRenderer();
 
-  if(JSON.parse(window.localStorage.getItem('facilityData')).facilityID == 2){
+
+  if(data.facilityID == 2){
     document.getElementById('leftPanel').display = "none";
   }
 
@@ -70,27 +72,10 @@ function updateTooltip() {
 });
 
 function initAfterModelLoaded(){
-
-  const areas = document.getElementById('areas');
- 
-
   const pathButton = document.getElementById('path');
-  // const inputContainer = document.getElementById('inputContainer');
-  // const pathImage = pathButton.querySelector('img');
-  // const pathText = pathButton.querySelector('p');
-  areas.style.display = "flex";
   pathButton.style.display = "flex";
-  // Add a click event listener to toggle the input field
-  // pathButton.addEventListener('click', () => {
-  //     if (inputContainer.style.display === 'none' || inputContainer.style.display === '') {
-  //         inputContainer.style.display = 'block'; // Show the input field
-  //         pathText.style.display = 'none'; // Hide the text
-  //         pathImage.style.width = '0.6vw'; // Reduce the image size
-  //     } else {
-  //         inputContainer.style.display = 'none'; // Hide the input field
-  //         pathText.style.display = 'block'; // Show the text
-  //         pathImage.style.width = '1vw'; // Reset the image size
-  //     }
-  // });
-
+  if(data.model === 'warehouse'){
+    document.getElementById("areas").style.display = "flex";
+    document.getElementById("digitalTwin").style.display = "flex";
+  }
 }

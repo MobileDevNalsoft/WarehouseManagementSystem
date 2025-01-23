@@ -42,8 +42,7 @@ body {
 }
 
 .areaButton {
-  display: flex;
-
+  display: none;
   /* width: 90%; Full width of the expanded panel */
   margin: 1vh auto; /* Space buttons evenly */
   padding: 10px;

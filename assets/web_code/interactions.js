@@ -4,6 +4,7 @@ import { resetTrucksAnimation } from "animations";
 import {globalState} from "globalState";
 import { highlightArea, resetAreas } from "highlight";
 
+const data = JSON.parse(window.localStorage.getItem("facilityData"));
 export function highlightBinsFromSearch(bins) {
   let listOfBins = bins.toString().split(",");
 
@@ -253,18 +254,15 @@ export function addInteractions(scene, model, camera, controls) {
   }
 
   function onMouseUp(e) {
-    if ((lastPos.distanceTo(mouse) <= 0.1) & (e.button === 0)) {
+    if ((lastPos.distanceTo(mouse) <= 0.05) & (e.button === 0)) {
       if (e.target.classList.contains("ignoreRaycast")) return;
        
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
-      // we get the objects from the model as list that are intersected by the casted ray.
-      console.warn("position",  intersects[0].point.x,  intersects[0].point.y, intersects[0].point.z);
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
         const name = targetObject.name.toString().split("_")[0];
-        
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")
@@ -305,7 +303,9 @@ export function addInteractions(scene, model, camera, controls) {
           if (prevBin) {
             prevBin.material.color.copy(prevBinColor);
           }
-          switchCamera(scene, "compoundArea", camera, controls);
+          if(data.model === 'warehouse'){
+            switchCamera(scene, "compoundArea", camera, controls);
+          }
           if (prevNav.includes("yard") && scene.getObjectByName("truck_Y10")) {
             resetTrucksAnimation(scene);
           }

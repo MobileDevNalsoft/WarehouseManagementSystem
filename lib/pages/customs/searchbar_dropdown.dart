@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/bloc/activity_area/activity_area_bloc.dart';
 import 'package:wmssimulator/bloc/dock_area/dock_area_bloc.dart';
 import 'package:wmssimulator/bloc/inspection_area/inspection_area_bloc.dart';
@@ -54,12 +55,8 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
   }
 
   void searchData() {
-    print("selected area ${_warehouseInteractionBloc.state.selectedSearchArea}");
-    print("dataFromJS ${_warehouseInteractionBloc.state.dataFromJS} ");
-
     if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") && !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
       if (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().contains("storage")) {
-        print("search text ${_warehouseInteractionBloc.state.searchText}");
         _warehouseInteractionBloc.add(SelectedObject(dataFromJS: const {"bin": ""}, clearSearchText: false));
         getIt<JsInteropService>().switchToMainCam("");
         getIt<JsInteropService>().switchToMainCam("storageArea");
@@ -69,7 +66,6 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
             clearSearchText: false));
       }
     } else {
-      print("else part ${_warehouseInteractionBloc.state.selectedSearchArea}");
       switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll(' ', '').replaceAll('-', '')) {
         case 'stagingarea':
           context.read<StagingBloc>().state.pageNum = 0;
@@ -168,7 +164,6 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                       children: dropdownItems.map((item) {
                         return InkWell(
                           onTap: () {
-                            print("item selected $item");
                             try {
                               _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "rack_cam");
                             } catch (e) {
@@ -263,44 +258,45 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
               padding: EdgeInsets.only(left: size.width * 0.002, right: size.width * 0.006, top: size.width * 0.002, bottom: size.width * 0.002),
               child: Row(
                 children: [
-                  InkWell(
-                    onTap: () {},
-                    onHover: (value) {
-                      context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: true));
-                      setState(() {
-                        height = size.height * 0.3; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                        bottomHeight = size.height * 0.3;
-                        turns = 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
-                      decoration: BoxDecoration(
-                        color: const Color.fromRGBO(68, 98, 136, 1), // Purple background
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("area").join(" "),
-                            // context.watch<WarehouseInteractionBloc>().state.selectedSearchArea,
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
-                          ),
-                          Gap(size.width * 0.005),
-                          AnimatedRotation(
-                            turns: turns,
-                            duration: const Duration(milliseconds: 200),
-                            child: Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              size: size.height * 0.025,
-                              color: Colors.white,
+                  if (!getIt<SharedPreferences>().getStringList('access_types')!.contains('Storage Area'))
+                    InkWell(
+                      onTap: () {},
+                      onHover: (value) {
+                        context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: true));
+                        setState(() {
+                          height = size.height * 0.3; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                          bottomHeight = size.height * 0.3;
+                          turns = 0.5; // when icon is click and move down it change to opposit direction otherwise as it is
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(68, 98, 136, 1), // Purple background
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("area").join(" "),
+                              // context.watch<WarehouseInteractionBloc>().state.selectedSearchArea,
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
                             ),
-                          ),
-                        ],
+                            Gap(size.width * 0.005),
+                            AnimatedRotation(
+                              turns: turns,
+                              duration: const Duration(milliseconds: 200),
+                              child: Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                size: size.height * 0.025,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
                   // Search Box
                   Expanded(
                     flex: 10,
@@ -316,72 +312,76 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           Expanded(
                             child: Transform.translate(
                               offset: Offset(0, -size.height * 0.005),
-                              child: TextField(
-                                controller: TextEditingController(text: _warehouseInteractionBloc.state.searchText),
-                                onSubmitted: (value) {
-                                  if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
-                                    searchData();
-                                  }
-                                },
-                                onChanged: (value) {
-                                  if (value.trim() == "") {
-                                    _warehouseInteractionBloc.state.searchText = null;
-                                    switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
-                                      case 'stagingarea':
-                                        context.read<StagingBloc>().state.pageNum = 0;
-                                        context.read<StagingBloc>().add(GetStagingData());
-                                        break;
-                                      case 'activityarea':
-                                        context.read<ActivityAreaBloc>().state.pageNum = 0;
-                                        context.read<ActivityAreaBloc>().add(GetActivityAreaData());
-                                        break;
-                                      case 'receivingarea':
-                                        context.read<ReceivingBloc>().state.pageNum = 0;
-                                        context.read<ReceivingBloc>().add(GetReceivingData());
-                                        break;
-                                      case 'inspectionarea':
-                                        context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
-                                        context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
-                                        break;
-                                      case 'dockarea-in':
-                                        context.read<DockAreaBloc>().state.pageNum = 0;
+                              child: BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
+                                  buildWhen: (previous, current) => current.searchText == '',
+                                  builder: (context, state) {
+                                    return TextField(
+                                      controller: TextEditingController(text: _warehouseInteractionBloc.state.searchText),
+                                      onSubmitted: (value) {
+                                        if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
+                                          searchData();
+                                        }
+                                      },
+                                      onChanged: (value) {
+                                        if (value.trim() == "") {
+                                          _warehouseInteractionBloc.state.searchText = null;
+                                          switch (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase()) {
+                                            case 'stagingarea':
+                                              context.read<StagingBloc>().state.pageNum = 0;
+                                              context.read<StagingBloc>().add(GetStagingData());
+                                              break;
+                                            case 'activityarea':
+                                              context.read<ActivityAreaBloc>().state.pageNum = 0;
+                                              context.read<ActivityAreaBloc>().add(GetActivityAreaData());
+                                              break;
+                                            case 'receivingarea':
+                                              context.read<ReceivingBloc>().state.pageNum = 0;
+                                              context.read<ReceivingBloc>().add(GetReceivingData());
+                                              break;
+                                            case 'inspectionarea':
+                                              context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
+                                              context.read<InspectionAreaBloc>().add(GetInspectionAreaData());
+                                              break;
+                                            case 'dockarea-in':
+                                              context.read<DockAreaBloc>().state.pageNum = 0;
 
-                                        context.read<DockAreaBloc>().add(GetDockAreaData());
+                                              context.read<DockAreaBloc>().add(GetDockAreaData());
 
-                                      case 'dockarea-out':
-                                        context.read<DockAreaBloc>().state.pageNum = 0;
+                                            case 'dockarea-out':
+                                              context.read<DockAreaBloc>().state.pageNum = 0;
 
-                                        context.read<DockAreaBloc>().add(GetDockAreaData());
-                                      case 'yardarea':
-                                        context.read<YardBloc>().state.pageNum = 0;
-                                        context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
-                                        break;
-                                      default:
-                                        return;
-                                    }
-                                  } else {
-                                    _warehouseInteractionBloc.state.searchText = value.trim();
-                                  }
-                                },
-                                textAlignVertical: TextAlignVertical.center,
-                                maxLines: 1,
-                                decoration: InputDecoration(
-                                  hintText: placeholderText,
-                                  contentPadding: EdgeInsets.only(left: size.width * 0.008, top: size.height * 0.012),
-                                  isCollapsed: true,
-                                  hintStyle: TextStyle(
-                                    color: Colors.black54, // Purple
-                                    fontSize: size.height * 0.022,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                                cursorHeight: size.height * 0.03,
-                                style: const TextStyle(
-                                  color: Color.fromRGBO(68, 98, 136, 1),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                                              context.read<DockAreaBloc>().add(GetDockAreaData());
+                                            case 'yardarea':
+                                              context.read<YardBloc>().state.pageNum = 0;
+                                              context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
+                                              break;
+                                            default:
+                                              return;
+                                          }
+                                        } else {
+                                          _warehouseInteractionBloc.state.searchText = value.trim();
+                                        }
+                                      },
+                                      textAlignVertical: TextAlignVertical.center,
+                                      maxLines: 1,
+                                      decoration: InputDecoration(
+                                        hintText: placeholderText,
+                                        contentPadding: EdgeInsets.only(left: size.width * 0.008, top: size.height * 0.012),
+                                        isCollapsed: true,
+                                        hintStyle: TextStyle(
+                                          color: Colors.black54, // Purple
+                                          fontSize: size.height * 0.022,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                      cursorHeight: size.height * 0.03,
+                                      style: const TextStyle(
+                                        color: Color.fromRGBO(68, 98, 136, 1),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    );
+                                  }),
                             ),
                           ),
                           Transform.translate(

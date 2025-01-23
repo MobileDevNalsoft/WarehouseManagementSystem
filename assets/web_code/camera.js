@@ -18,8 +18,10 @@ export function createCamera() {
   switch(data.model){
     case 'warehouse':
       camera.position.set(0, 600, 500);
+      break;
     case 'storageArea':
-      camera.position.set(-83, 50, 0);
+      camera.position.set(0, 45, 150);
+      break;
   }
 
   return camera;
@@ -194,145 +196,170 @@ export function getPositionAndTarget(scene, name) {
   }
 
 
-  switch (view) {
-    case "compoundArea":
-      position.set(0, 550, 220);
-      target.set(0, 0, -60);
-      target.z = target.z+50;
-      console.log('{"object":"null"}');
-      break;
-    case "warehouse":
-      object = scene.getObjectByName(name);
-      position.set(object.position.x, object.position.y + 250, object.position.z + 100);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "storageArea":
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      switch(data.model){
-        case 'warehouse':
+  switch(data.model){
+    case 'warehouse':
+      switch (view) {
+        case "compoundArea":
+          position.set(0, 550, 220);
+          target.set(0, 0, -60);
+          target.z = target.z+50;
+          console.log('{"object":"null"}');
+          break;
+        case "warehouse":
+          object = scene.getObjectByName(name);
+          position.set(object.position.x, object.position.y + 250, object.position.z + 100);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "storageArea":
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
           position.set(-78, 60, 20);
           target.y = target.y + 25;
           target.x = target.x + 5;
-        case 'storageArea':
-          position.set(-83, 50, 0);
-          target.y = target.y + 20;
+          // console.log('{"area":"storage"}');
+          break;
+        case "inspectionArea":
+          position.set(21.2, 50, -50);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "stagingArea":
+          position.set(-119, 80, 0);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "activityArea":
+          position.set(-49, 80, -20);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "receivingArea":
+          position.set(20.8, 80, 0);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "yardArea":
+          position.set(50, 270, -34);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "dockArea-IN":
+          position.set(20.9, 120, -2);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          target.z = target.z + 25
+          break;
+        case "dockArea-OUT":
+          position.set(-113.95, 120, -2);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          target.z = target.z + 25;
+          break;
+        // case "rack":
+        //   position.set(-120+(32*(number-1)), 50, -116.9);
+        //   object = scene.getObjectByName(view+number+"r");
+        //   box = new THREE.Box3().setFromObject(object);
+        //   box.getCenter(target);
+        //   break;
+        case "rack5r":
+          position.set(0, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack4r":
+          position.set(-30, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack3r":
+          position.set(-55, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack2r":
+          position.set(-80, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack1r":
+          position.set(-100, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack5l":
+          position.set(-60, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack4l":
+          position.set(-85, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack3l":
+          position.set(-110, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack2l":
+          position.set(-130, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack1l":
+          position.set(-160, 50, -116.9);
+          object = scene.getObjectByName(view);
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
       }
-      // console.log('{"area":"storage"}');
       break;
-    case "inspectionArea":
-      position.set(21.2, 50, -50);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "stagingArea":
-      position.set(-119, 80, 0);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "activityArea":
-      position.set(-49, 80, -20);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      
-      box.getCenter(target);
-     
-      break;
-    case "receivingArea":
-      position.set(20.8, 80, 0);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "yardArea":
-      position.set(50, 270, -34);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "dockArea-IN":
-      position.set(20.9, 120, -2);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      target.z = target.z + 25
-      break;
-    case "dockArea-OUT":
-      position.set(-113.95, 120, -2);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      target.z = target.z + 25;
-      break;
-    // case "rack":
-    //   position.set(-120+(32*(number-1)), 50, -116.9);
-    //   object = scene.getObjectByName(view+number+"r");
-    //   box = new THREE.Box3().setFromObject(object);
-    //   box.getCenter(target);
-    //   break;
-    case "rack5r":
-      position.set(0, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack4r":
-      position.set(-30, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack3r":
-      position.set(-55, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack2r":
-      position.set(-80, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack1r":
-      position.set(-100, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack5l":
-      position.set(-60, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack4l":
-      position.set(-85, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack3l":
-      position.set(-110, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack2l":
-      position.set(-130, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
-      break;
-    case "rack1l":
-      position.set(-160, 50, -116.9);
-      object = scene.getObjectByName(view);
-      box = new THREE.Box3().setFromObject(object);
-      box.getCenter(target);
+    case 'storageArea':
+      switch (view) {
+        case 'storageArea':
+        case 'compoundArea':
+          position.set(0, 45, 150);
+          target.z = 50;
+          break;
+        case "rack5r":
+        case "rack4r":
+        case "rack3r":
+        case "rack2r":
+        case "rack1r":
+          object = scene.getObjectByName(view);
+          position.set(object.position.x+20, object.position.y+24, object.position.z)
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+        case "rack5l":
+        case "rack4l":
+        case "rack3l":
+        case "rack2l":
+        case "rack1l":
+          object = scene.getObjectByName(view);
+          position.set(object.position.x-20, object.position.y+24, object.position.z)
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          break;
+      }
       break;
   }
 
