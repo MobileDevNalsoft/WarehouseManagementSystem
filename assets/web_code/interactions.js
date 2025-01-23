@@ -320,21 +320,7 @@ export function addInteractions(scene, model, camera, controls) {
       if(scene.getObjectByName("truck_Y10")){
         resetTrucksAnimation(scene);
       }
-    }
-  }
-
-  window.addEventListener("mousemove", onMouseMove); // triggered when mouse pointer is moved.
-  window.addEventListener("mousedown", onMouseDown);
-  window.addEventListener("mouseup", onMouseUp); // triggered when mouse pointer is clicked.
-
-  document.addEventListener("wheel", (event) => {
-    // console.log(event.deltaY);
-    // console.log(event.movementX);
-    // console.log(event.movementY);
-
-    //console.log('{"object":"null"}');
-    tooltip.style.display = "none";
-    localStorage.removeItem("resetBoxColors");
+      localStorage.removeItem("resetBoxColors");
     try {
       if (localStorage.getItem("highlightBins")) {
         localStorage
@@ -349,11 +335,14 @@ export function addInteractions(scene, model, camera, controls) {
           
             if( redBins.includes(bin) ){
               
-              scene.getObjectByName(bin).material.color.set(0xcf2020);
+              scene.getObjectByName(bin).material.color.set(parseInt(localStorage.getItem("red"), 16));
             }
               else if(orangeBins.includes(bin)  ){
-                scene.getObjectByName(bin).material.color.set(0xfe7e5b);
+                scene.getObjectByName(bin).material.color.set(parseInt(localStorage.getItem("orange"), 16));
               } 
+              else{
+                scene.getObjectByName(bin).material.color.set(parseInt(localStorage.getItem("green"), 16));
+              }
             // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
             scene.getObjectByName(bin).material.opacity = 0.5;
           });
@@ -372,16 +361,33 @@ console.warn("from wheely" +e);
         let bin = localStorage.getItem("prevBin").trim();
 
         if( redBins.includes(bin) ){
-          scene.getObjectByName(bin).material.color.set(0xcf2020);
+          scene.getObjectByName(bin).material.color.set(parseInt(localStorage.getItem("red"), 16));
         }
           else if(orangeBins.includes(bin)  ){
-            scene.getObjectByName(bin).material.color.set(0xfe7e5b);
-          } 
+            scene.getObjectByName(bin).material.color.set(parseInt(localStorage.getItem("orange"), 16));
+          } else{
+            scene.getObjectByName(bin).material.color.set(parseInt(localStorage.getItem("green"), 16));
+          }
         // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
         scene.getObjectByName(bin).material.opacity = 0.5;
         localStorage.removeItem("prevBin");
       }
     } catch (e) {}
+    }
+  }
+
+  window.addEventListener("mousemove", onMouseMove); // triggered when mouse pointer is moved.
+  window.addEventListener("mousedown", onMouseDown);
+  window.addEventListener("mouseup", onMouseUp); // triggered when mouse pointer is clicked.
+
+  document.addEventListener("wheel", (event) => {
+    // console.log(event.deltaY);
+    // console.log(event.movementX);
+    // console.log(event.movementY);
+
+    //console.log('{"object":"null"}');
+    tooltip.style.display = "none";
+    
   });
 
   // setInterval(() => {
@@ -436,12 +442,14 @@ console.warn("from wheely" +e);
       let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
       let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
         if( redBins.includes(prevBin) ){
-          scene.getObjectByName(prevBin).material.color.set(0xcf2020);
+          prevBin.material.color.set(parseInt(localStorage.getItem("red"), 16));
         }
         else if(orangeBins.includes(prevBin)  ){
-          scene.getObjectByName(prevBin).material.color.set(0xfe7e5b);
+          prevBin.material.color.set(parseInt(localStorage.getItem("orange"), 16));
         } 
-
+        else{
+          prevBin.material.color.set(parseInt(localStorage.getItem("green"), 16));
+        }
       // prevBin.material.color.set(0xfaf3e2);
     }
 

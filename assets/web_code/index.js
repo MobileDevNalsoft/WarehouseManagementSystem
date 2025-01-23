@@ -93,4 +93,8 @@ function initAfterModelLoaded(){
   //     }
   // });
 
+
+  localStorage.setItem("orange","0x5e99ff");
+  localStorage.setItem("red","0xff0000");
+  localStorage.setItem("green","0x10ff04");
 }
