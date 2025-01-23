@@ -28,7 +28,6 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
 
     _controller.addListener(_scrollListener);
   }
-
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent &&
         _yardBloc.state.yardAreaItems!.length + 1 > (_yardBloc.state.pageNum! + 1) * 100) {
@@ -39,6 +38,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
 
   @override
   Widget build(BuildContext context) {
+    print("rebuild");
     Size size = MediaQuery.of(context).size;
     return Customs.DataSheet(context: context, size: size, title: 'Yard Area', children: [
       BlocBuilder<YardBloc, YardState>(

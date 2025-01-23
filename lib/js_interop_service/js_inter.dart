@@ -39,6 +39,14 @@ external _getShoretestPathForTask(String task);
 @JS()
 external _showAlert(String message);
 
+
+@JS()
+external _binsStatus(String bins);
+
+@JS()
+external _orangeBins(List bins);
+
+
 @JS()
 external _requestFullScreen();
 
@@ -98,6 +106,18 @@ class JsInteropService {
   highlightBins(String bins) {
     _highlightBins(bins);
   }
+
+  
+ binsStatus(String bins) {
+    _binsStatus(bins);
+  }
+
+
+ orangeBins(List bins) {
+    _orangeBins(bins);
+  }
+
+
 
   requestFullScreen() {
     _requestFullScreen();
