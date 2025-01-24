@@ -437,14 +437,15 @@ console.warn("from wheely" +e);
   // }, 1000);
 
   function changeColor(object) {
+    let objectName = object.name.toString();
     if (prevBin != null) {
       
       let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
       let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
-        if( redBins.includes(prevBin) ){
+        if( redBins.includes(prevBin.name) ){
           prevBin.material.color.set(parseInt(localStorage.getItem("red"), 16));
         }
-        else if(orangeBins.includes(prevBin)  ){
+        else if(orangeBins.includes(prevBin.name)  ){
           prevBin.material.color.set(parseInt(localStorage.getItem("orange"), 16));
         } 
         else{
@@ -455,7 +456,7 @@ console.warn("from wheely" +e);
 
 
     // prevBinColor = object.material.color.clone();
-    let objectName = object.name.toString();
+    
     localStorage.setItem("prevBin", objectName);
 
     if (prevBin != object) {

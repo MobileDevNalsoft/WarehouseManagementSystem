@@ -802,7 +802,6 @@ export function getShortestPath(
       agentGroup.position.copy(targetPosition);
       combinedPath.shift();
     }
-    console.warn();
     if (isRequierdPoints(combinedPath[0], agentGroup)) {
       waiting = true; // Set waiting flag
       await new Promise((resolve) => setTimeout(resolve, waitPeriodAtPoints));

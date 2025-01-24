@@ -257,16 +257,7 @@ export function localStorageSetup(scene, camera, controls) {
             }
           }
         }
-        //   console.warn("type of value" + typeof (event.newValue))
-        
-        // for (let bin in redBins) {
-        //   console.warn("bin from loop " + redBins[bin])
-        //   scene.getObjectByName(redBins[bin]).material.color.set(parseInt(localStorage.getItem("red"), 16));
-        // }
-        // for (let bin in orangeBins) {
-        //   console.warn("bin from loop " + orangeBins[bin])
-        //   scene.getObjectByName(orangeBins[bin]).material.color.set(parseInt(localStorage.getItem("orange"), 16));
-        // }
+       
 
     }
         catch (e) {

@@ -24,10 +24,22 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
 
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _yardBloc = context.read<YardBloc>();
-    _yardBloc.add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+    // _yardBloc.add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
 
     _controller.addListener(_scrollListener);
   }
+
+
+  @override
+  void didUpdateWidget(covariant YardAreaDataSheet oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+  }
+
+
+
+
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent &&
         _yardBloc.state.yardAreaItems!.length + 1 > (_yardBloc.state.pageNum! + 1) * 100) {
@@ -38,6 +50,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
 
   @override
   Widget build(BuildContext context) {
+   
     print("rebuild");
     Size size = MediaQuery.of(context).size;
     return Customs.DataSheet(context: context, size: size, title: 'Yard Area', children: [
