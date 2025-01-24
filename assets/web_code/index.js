@@ -78,4 +78,7 @@ function initAfterModelLoaded(){
     document.getElementById("areas").style.display = "flex";
     document.getElementById("digitalTwin").style.display = "flex";
   }
+  localStorage.setItem("orange","0x5e99ff");
+  localStorage.setItem("red","0xff0000");
+  localStorage.setItem("green","0x10ff04");
 }

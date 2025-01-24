@@ -446,9 +446,9 @@ export async function initScene(renderer) {
       switchCamera(scene, "compoundArea", camera, controls);
     }
     areas.forEach((area) => {
-      console.warn(isFocused);
+ 
       const obj = scene.getObjectByName(area.name);
-      console.warn(obj);
+    
       if (obj) {
         if (!isFocused) {
           highlightArea(scene, area.name, area.color, area.opacity); // Highlight the area

@@ -24,7 +24,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
 
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _yardBloc = context.read<YardBloc>();
-    _yardBloc.add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
+    // _yardBloc.add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
 
     _controller.addListener(_scrollListener);
   }
