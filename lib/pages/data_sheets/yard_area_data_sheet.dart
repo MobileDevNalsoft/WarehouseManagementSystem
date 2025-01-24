@@ -28,6 +28,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
 
     _controller.addListener(_scrollListener);
   }
+
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent &&
         _yardBloc.state.yardAreaItems!.length + 1 > (_yardBloc.state.pageNum! + 1) * 100) {
@@ -87,7 +88,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                                                   child: Image.asset(
                                                     'assets/images/truck.png',
                                                     height: containerSize.maxHeight * 0.24,
-                                                    width: containerSize.maxWidth * 0.14 ,
+                                                    width: containerSize.maxWidth * 0.14,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -111,7 +112,9 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                                             child: Row(
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.only(left: containerSize.maxWidth * 0.00, ),
+                                                  padding: EdgeInsets.only(
+                                                    left: containerSize.maxWidth * 0.00,
+                                                  ),
                                                   child: Image.asset(
                                                     'assets/images/location.png',
                                                     height: containerSize.maxHeight * 0.24,
@@ -120,9 +123,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                                                 ),
                                                 Text(
                                                   state.yardAreaItems![index].vehicleLocation!,
-                                                  style: TextStyle(
-                                                      fontSize: containerSize.maxWidth * 0.038,
-                                                      fontWeight: FontWeight.bold),
+                                                  style: TextStyle(fontSize: containerSize.maxWidth * 0.038, fontWeight: FontWeight.bold),
                                                 ),
                                               ],
                                             ),
@@ -131,101 +132,106 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                                       ),
                                       Row(
                                         children: [
-                                         SizedBox(
-                                          width: containerSize.maxWidth * 0.5,
-                                          child: Row(children: [
-                                           Padding(
-                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.004),
-                                            child: Image.asset(
-                                              'assets/images/shipment.png',
-                                              height: containerSize.maxHeight * 0.24,
-                                              width: containerSize.maxWidth * 0.14
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: containerSize.maxWidth * 0.32,
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Text(
-                                                state.yardAreaItems![index].shipmentNbr ?? "NA",
-                                                style: TextStyle(
-                                                    fontSize: containerSize.maxWidth * 0.038,
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),],),
-                                         ),
                                           SizedBox(
                                             width: containerSize.maxWidth * 0.5,
-                                            child: Row(children: [Padding(
-                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.001),
-                                            child: Image.asset(
-                                              'assets/images/clock.png',
-                                              height: containerSize.maxHeight * 0.24,
-                                              width: containerSize.maxWidth * 0.14,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.004),
+                                                  child: Image.asset('assets/images/shipment.png',
+                                                      height: containerSize.maxHeight * 0.24, width: containerSize.maxWidth * 0.14),
+                                                ),
+                                                SizedBox(
+                                                  width: containerSize.maxWidth * 0.32,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection: Axis.horizontal,
+                                                    child: Text(
+                                                      state.yardAreaItems![index].shipmentNbr ?? "NA",
+                                                      style: TextStyle(fontSize: containerSize.maxWidth * 0.038, fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                           SizedBox(
-                                              width: containerSize.maxWidth * 0.32,
-                                              child: SingleChildScrollView(
-                                                child: Text(
-                                                  '${state.yardAreaItems![index].vehicleEntryTime!.split('T')[0]} ${state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5)}',
-                                                  textAlign: TextAlign.start,
-                                                  style: TextStyle(
-                                                      fontSize: containerSize.maxWidth * 0.038,
-                                                      fontWeight: FontWeight.bold),
+                                            width: containerSize.maxWidth * 0.5,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.001),
+                                                  child: Image.asset(
+                                                    'assets/images/clock.png',
+                                                    height: containerSize.maxHeight * 0.24,
+                                                    width: containerSize.maxWidth * 0.14,
+                                                  ),
                                                 ),
-                                              ))],),)
+                                                SizedBox(
+                                                    width: containerSize.maxWidth * 0.32,
+                                                    child: SingleChildScrollView(
+                                                      child: Text(
+                                                        '${state.yardAreaItems![index].vehicleEntryTime!.split('T')[0]} ${state.yardAreaItems![index].vehicleEntryTime!.split('T')[1].substring(0, 5)}',
+                                                        textAlign: TextAlign.start,
+                                                        style: TextStyle(fontSize: containerSize.maxWidth * 0.038, fontWeight: FontWeight.bold),
+                                                      ),
+                                                    ))
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
                                       Row(
                                         children: [
                                           SizedBox(
-                                            width:  containerSize.maxWidth * 0.5,
-                                            child: Row(children: [Padding(
-                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.004),
-                                            child: Image.asset(
-                                              'assets/images/po.png',
-                                              height: containerSize.maxHeight * 0.14,
-                                              width: containerSize.maxWidth * 0.14,
+                                            width: containerSize.maxWidth * 0.5,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.004),
+                                                  child: Image.asset(
+                                                    'assets/images/po.png',
+                                                    height: containerSize.maxHeight * 0.14,
+                                                    width: containerSize.maxWidth * 0.14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: containerSize.maxWidth * 0.32,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection: Axis.horizontal,
+                                                    child: Text(
+                                                      state.yardAreaItems![index].poNbr ?? "NA",
+                                                      style: TextStyle(fontSize: containerSize.maxWidth * 0.038, fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                           SizedBox(
-                                            width: containerSize.maxWidth * 0.32,
-                                            child: SingleChildScrollView(
-                                                scrollDirection: Axis.horizontal,
-                                              child: Text(
-                                                state.yardAreaItems![index].poNbr ?? "NA",
-                                                style: TextStyle(
-                                                    fontSize: containerSize.maxWidth * 0.038,
-                                                    fontWeight: FontWeight.bold),
-                                              ),
+                                            width: containerSize.maxWidth * 0.5,
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.001),
+                                                  child: Image.asset(
+                                                    'assets/images/businessman.png',
+                                                    height: containerSize.maxHeight * 0.24,
+                                                    width: containerSize.maxWidth * 0.14,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: containerSize.maxWidth * 0.32,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection: Axis.horizontal,
+                                                    child: Text(
+                                                      state.yardAreaItems![index].vendorCode ?? "NA",
+                                                      style: TextStyle(fontSize: containerSize.maxWidth * 0.038, fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),],),
-                                          
-                                          
-                                          ),
-                                         SizedBox(width: containerSize.maxWidth*0.5,
-                                         child: Row(children: [ Padding(
-                                            padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.001),
-                                            child: Image.asset(
-                                              'assets/images/businessman.png',
-                                              height: containerSize.maxHeight * 0.24,
-                                              width: containerSize.maxWidth * 0.14,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: containerSize.maxWidth * 0.32,
-                                            child: SingleChildScrollView(
-                                              scrollDirection: Axis.horizontal,
-                                              child: Text(
-                                                state.yardAreaItems![index].vendorCode ?? "NA",
-                                                style: TextStyle(
-                                                    fontSize: containerSize.maxWidth * 0.038,
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),],),)
+                                          )
                                         ],
                                       ),
                                     ],

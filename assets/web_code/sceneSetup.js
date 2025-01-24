@@ -114,7 +114,7 @@ export async function initScene(renderer) {
       let box6Model = model.clone();
       let box7Model = model.clone();
 
-      model.name = "box1Area";
+      model.name = "boxA1_";
       scene.add(model);
       model.position.set(
         12.812496810374281,
@@ -124,7 +124,7 @@ export async function initScene(renderer) {
 
       model.traverse((child) => {
         if (child.isMesh) {
-          child.name = "box1Area";
+          child.name = "boxA1_";
           child.material = child.material.clone();
           child.material.transparent = true; // Enable transparency
           child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
@@ -132,7 +132,7 @@ export async function initScene(renderer) {
       });
       box2Model.traverse((child) => {
         if (child.isMesh) {
-          child.name = "box2Area";
+          child.name = "boxA2_";
           child.material = child.material.clone();
           child.material.transparent = true; // Enable transparency
           child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
@@ -140,7 +140,7 @@ export async function initScene(renderer) {
       });
       box3Model.traverse((child) => {
         if (child.isMesh) {
-          child.name = "box3Area";
+          child.name = "boxA3_";
           child.material = child.material.clone();
           child.material.transparent = true; // Enable transparency
           child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
@@ -148,7 +148,7 @@ export async function initScene(renderer) {
       });
       box4Model.traverse((child) => {
         if (child.isMesh) {
-          child.name = "box4Area";
+          child.name = "boxA4_";
           child.material = child.material.clone();
           child.material.transparent = true; // Enable transparency
           child.material.opacity = 1; // Set opacity (0 is fully transparent, 1 is fully opaque)
@@ -157,7 +157,7 @@ export async function initScene(renderer) {
 
       box5Model.traverse((child) => {
         if (child.isMesh) {
-          child.name = "box5Area";
+          child.name = "boxA5_";
           child.material = child.material.clone();
           child.material.transparent = true; // Enable transparency
           child.material.opacity = 1; // Set opacity (0 is fully transparent, 1 is fully opaque)
@@ -166,7 +166,7 @@ export async function initScene(renderer) {
 
       box6Model.traverse((child) => {
         if (child.isMesh) {
-          child.name = "box6Area";
+          child.name = "boxA6_";
           child.material = child.material.clone();
           child.material.transparent = true; // Enable transparency
           child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
@@ -175,7 +175,7 @@ export async function initScene(renderer) {
 
       box7Model.traverse((child) => {
         if (child.isMesh) {
-          child.name = "box7Area";
+          child.name = "boxA7_";
           child.material = child.material.clone();
           child.material.transparent = true; // Enable transparency
           child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
@@ -243,16 +243,18 @@ export async function initScene(renderer) {
     "2LB30103",
     "p80"
   ] : [
-    "p4",
-    "5RB30102",
-    "5RB10102",
-    "5LB30102",
-    "4LB30102",
-    "3LB20102",
-    "3LB10102",
-    "4LB20102",
-    "2LB30103",
-    "p1"
+    'p4',
+    "4RB30602",
+    '4LB30102',
+    "1RB30602",
+    "3RB20602",
+    "2RB10601",
+    "2RB30602",
+    "3RB10102",
+    "2LB20501",
+    "2RB10601",
+    "2LB20201",
+    "stagingArea",
   ];
 
   let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(THREE, scene);

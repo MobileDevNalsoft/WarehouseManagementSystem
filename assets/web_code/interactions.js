@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation } from "animations";
-import {globalState} from "globalState";
+import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
 
 const data = JSON.parse(window.localStorage.getItem("facilityData"));
@@ -21,7 +21,9 @@ export function addInteractions(scene, model, camera, controls) {
   const mouse = new THREE.Vector2();
   const lastPos = new THREE.Vector2();
 
-  let areasOverviewData = JSON.parse(window.localStorage.getItem('areasOverviewData'));
+  let areasOverviewData = JSON.parse(
+    window.localStorage.getItem("areasOverviewData")
+  );
 
   let prevNav = "warehouse";
   let prevBin;
@@ -45,7 +47,6 @@ export function addInteractions(scene, model, camera, controls) {
 
   const tooltip = document.getElementById("tooltip");
   function onMouseMove(e) {
-  
     if (e.target.classList.contains("ignoreRaycast")) {
       return;
     }
@@ -63,10 +64,12 @@ export function addInteractions(scene, model, camera, controls) {
         const targetObject = intersects[0].object;
         if (
           targetObject.name.toString().includes("nav") ||
-          targetObject.name.toString().includes("Area") && globalState.areaFocused == false
+          (targetObject.name.toString().includes("Area") &&
+            globalState.areaFocused == false)
+            || targetObject.name.toString().includes("box")
         ) {
           let name = toCamelCase(targetObject.name);
-         
+          console.warn(name);
           switch (name) {
             case "Yard Area":
               tooltip.style.display = "block";
@@ -111,7 +114,7 @@ export function addInteractions(scene, model, camera, controls) {
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
-              case "Storage Area":
+            case "Storage Area":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
                                         Available bins: 100<br>
@@ -119,9 +122,11 @@ export function addInteractions(scene, model, camera, controls) {
                                     </div>`;
               setToolTipPosition(targetObject, tooltip, camera);
               break;
-              case "Box1 Area":
-                tooltip.style.display = "block";
-                tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+            case "Box A1":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${
+                name
+              }</strong><div class="tooltip-content">
                                           LPN: IBPAIDL00001676	<br>
                                           Status: Received<br>
                                           Item: HP LAPTOP<br>
@@ -129,11 +134,13 @@ export function addInteractions(scene, model, camera, controls) {
                                           Qty: 150 <br>
                                           UOM: units
                                       </div>`;
-                setToolTipPosition(targetObject, tooltip, camera);
-                break;
-                case "Box2 Area":
-                  tooltip.style.display = "block";
-                  tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Box A2":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${
+                name
+              }</strong><div class="tooltip-content">
                                            LPN: IBPAIDL00001677<br>
                                            LPN: Received<br>
                                            Item: ITEM1<br>
@@ -141,11 +148,13 @@ export function addInteractions(scene, model, camera, controls) {
                                            Qty: 500 <br>
                                            UOM: units<br>
                                         </div>`;
-                  setToolTipPosition(targetObject, tooltip, camera);
-                  break;
-                  case "Box3 Area":
-                    tooltip.style.display = "block";
-                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Box A3":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${
+                name
+              }</strong><div class="tooltip-content">
                                              LPN: IBPAIDL00001678<br>
                                              LPN: Received<br>
                                              Item: ROTHSCHILD<br>
@@ -153,11 +162,13 @@ export function addInteractions(scene, model, camera, controls) {
                                              Qty: 450<br>
                                              UOM: units
                                           </div>`;
-                    setToolTipPosition(targetObject, tooltip, camera);
-                    break;
-                    case "Box4 Area":
-                    tooltip.style.display = "block";
-                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Box A4":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${
+                name
+              }</strong><div class="tooltip-content">
                                             LPN Number:IBPAIDL00001674	<br>
                                             LPN Status:Received<br>
                                             Item: ROTHSCHILD<br>
@@ -165,11 +176,13 @@ export function addInteractions(scene, model, camera, controls) {
                                             Qty:45<br>
                                             UOM:units
                                           </div>`;
-                    setToolTipPosition(targetObject, tooltip, camera);
-                    break;
-                    case "Box5 Area":
-                    tooltip.style.display = "block";
-                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Box A5":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${
+                name
+              }</strong><div class="tooltip-content">
                                              LPN Number:IBPAIDL00001673	<br>
                                              LPN Status:Received<br>
                                              Item: ITEM1<br>
@@ -177,23 +190,13 @@ export function addInteractions(scene, model, camera, controls) {
                                              Qty:500 <br>
                                              UOM:units
                                           </div>`;
-                    setToolTipPosition(targetObject, tooltip, camera);
-                    break;
-                    // case "Box5 Area":
-                    // tooltip.style.display = "block";
-                    // tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
-                    //                          LPN: IBPAIDL00001678<br>
-                    //                          LPN: Received<br>
-                    //                          Item: ROTHSCHILD<br>
-                    //                          Description: Chateau Mouton Rothschild 1945<br>
-                    //                          Qty: 450<br>
-                    //                          UOM: units
-                    //                       </div>`;
-                    // setToolTipPosition(targetObject, tooltip, camera);
-                    // break;
-                    case "Box6 Area":
-                    tooltip.style.display = "block";
-                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Box A6":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${
+                name
+              }</strong><div class="tooltip-content">
                                                LPN Number: IBPAIDL00001116	<br>
                                                LPN Status: Quality Check<br>
                                                QC Status: Marked for QC<br>
@@ -202,11 +205,13 @@ export function addInteractions(scene, model, camera, controls) {
                                                Qty: 10 <br>
                                                UOM: units
                                           </div>`;
-                    setToolTipPosition(targetObject, tooltip, camera);
-                    break;
-                    case "Box7 Area":
-                    tooltip.style.display = "block";
-                    tooltip.innerHTML = `<strong>${name.split('A')[0]}</strong><div class="tooltip-content">
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
+            case "Box A7":
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${
+                name
+              }</strong><div class="tooltip-content">
                                             LPN Number:IBPAIDL00001117	<br>
                                             LPN Status:Quality Check<br>
                                             QC Status: Marked for QC<br>
@@ -215,14 +220,44 @@ export function addInteractions(scene, model, camera, controls) {
                                             Qty:5 <br>
                                             UOM:units                                          
                                           </div>`;
-                    setToolTipPosition(targetObject, tooltip, camera);
-                    break;
+              setToolTipPosition(targetObject, tooltip, camera);
+              break;
             default:
               tooltip.style.display = "block";
               tooltip.innerHTML = name.split("A")[0];
               tooltip.style.left = `${e.clientX + 10}px`; // Offset for better visibility
               tooltip.style.top = `${e.clientY + 10}px`;
               tooltip.classList.add("hide-speech-bubble");
+          }
+        } else if (globalState.areaFocused == true) {
+          const trucksData = JSON.parse(
+            window.localStorage.getItem("trucksData")
+          );
+          const name = targetObject.parent.name;
+          if (name.includes("truck_Y")) {
+            for (let i = 1; i <= trucksData.length; i++) {
+              try {
+                const number = name.match(/(\d+)$/)[1];
+              tooltip.style.display = "block";
+              tooltip.innerHTML = `<strong>${
+                "T" +
+                name.split("_")[0].slice(1) +
+                " " +
+                trucksData[number - 1].id
+              }</strong><div class="tooltip-content">
+                                        No:${trucksData[number - 1].truck_nbr}<br>
+                                        LOC:${
+                                          trucksData[number - 1]
+                                            .vehicle_location
+                                        }<br>
+                                      </div>`;
+              setToolTipPosition(targetObject, tooltip, camera);
+              } catch (error) {
+                tooltip.style.display = "none";
+              }
+            }
+          } else {
+            tooltip.style.display = "none";
           }
         } else {
           tooltip.style.display = "none";
@@ -231,7 +266,7 @@ export function addInteractions(scene, model, camera, controls) {
     }
   }
 
-  function setToolTipPosition(targetObject, tooltip, camera){
+  function setToolTipPosition(targetObject, tooltip, camera) {
     // Position tooltip at the mouse location
     const objectPosition = new THREE.Vector3();
     targetObject.getWorldPosition(objectPosition);
@@ -243,20 +278,20 @@ export function addInteractions(scene, model, camera, controls) {
 
     // Position tooltip at the center of the object's position
     tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y-60}px`;
+    tooltip.style.top = `${y - 60}px`;
     tooltip.classList.remove("hide-speech-bubble");
   }
 
   function onMouseDown(e) {
     lastPos.x = (e.clientX / container.clientWidth) * 2 - 1;
     lastPos.y = -(e.clientY / container.clientHeight) * 2 + 1;
-    tooltip.style.display = "none"
+    tooltip.style.display = "none";
   }
 
   function onMouseUp(e) {
     if ((lastPos.distanceTo(mouse) <= 0.05) & (e.button === 0)) {
       if (e.target.classList.contains("ignoreRaycast")) return;
-       
+
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
@@ -268,7 +303,7 @@ export function addInteractions(scene, model, camera, controls) {
           targetObject.name.toString().includes("Area")
         ) {
           globalState.setAreaFocused(true);
-          tooltip.style.display = "none"
+          tooltip.style.display = "none";
           if (name.includes("rack")) {
             console.log(
               '{"rack":"' +
@@ -280,8 +315,10 @@ export function addInteractions(scene, model, camera, controls) {
             console.log('{"area":"' + name + '"}');
             window.localStorage.setItem("rack_cam", "warehouse");
             if (name == "yardArea") {
-              for (let i = 1; i <= 20; i++) {
-                scene.getObjectByName("truck_Y" + i).visible = false;
+              if (globalState.areaFocused == false) {
+                for (let i = 1; i <= 20; i++) {
+                  scene.getObjectByName("truck_Y" + i).visible = false;
+                }
               }
               scene.getObjectByName("truck_A1").visible = false;
               scene.getObjectByName("truck_A2").visible = false;
@@ -303,7 +340,7 @@ export function addInteractions(scene, model, camera, controls) {
           if (prevBin) {
             prevBin.material.color.copy(prevBinColor);
           }
-          if(data.model === 'warehouse'){
+          if (data.model === "warehouse") {
             switchCamera(scene, "compoundArea", camera, controls);
           }
           if (prevNav.includes("yard") && scene.getObjectByName("truck_Y10")) {
@@ -314,10 +351,12 @@ export function addInteractions(scene, model, camera, controls) {
       }
     } else {
       console.log('{"object":"null"}');
-      document.getElementById("wms-bot").style.display = "block";  
+      document.getElementById("wms-bot").style.display = "block";
+      if(globalState.areaFocused == true){
+        resetAreas(scene);
+      }
       globalState.setAreaFocused(false);
-      resetAreas(scene);
-      if(scene.getObjectByName("truck_Y10")){
+      if (scene.getObjectByName("truck_Y10")) {
         resetTrucksAnimation(scene);
       }
     }
@@ -344,16 +383,16 @@ export function addInteractions(scene, model, camera, controls) {
           .forEach((e) => {
             let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
 
-          let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
-          let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
-          
-            if( redBins.includes(bin) ){
-              
+            let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
+            let orangeBins = JSON.parse(
+              localStorage.getItem("binsStatus")
+            ).orange;
+
+            if (redBins.includes(bin)) {
               scene.getObjectByName(bin).material.color.set(0xcf2020);
+            } else if (orangeBins.includes(bin)) {
+              scene.getObjectByName(bin).material.color.set(0xfe7e5b);
             }
-              else if(orangeBins.includes(bin)  ){
-                scene.getObjectByName(bin).material.color.set(0xfe7e5b);
-              } 
             // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
             scene.getObjectByName(bin).material.opacity = 0.5;
           });
@@ -361,22 +400,20 @@ export function addInteractions(scene, model, camera, controls) {
         localStorage.removeItem("highlightBins");
       }
     } catch (e) {
-console.warn("from wheely" +e);
-
+      console.warn("from wheely" + e);
     }
     try {
       if (localStorage.getItem("prevBin")) {
         let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
-        let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
+        let orangeBins = JSON.parse(localStorage.getItem("binsStatus")).orange;
 
         let bin = localStorage.getItem("prevBin").trim();
 
-        if( redBins.includes(bin) ){
+        if (redBins.includes(bin)) {
           scene.getObjectByName(bin).material.color.set(0xcf2020);
+        } else if (orangeBins.includes(bin)) {
+          scene.getObjectByName(bin).material.color.set(0xfe7e5b);
         }
-          else if(orangeBins.includes(bin)  ){
-            scene.getObjectByName(bin).material.color.set(0xfe7e5b);
-          } 
         // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
         scene.getObjectByName(bin).material.opacity = 0.5;
         localStorage.removeItem("prevBin");
@@ -432,19 +469,16 @@ console.warn("from wheely" +e);
 
   function changeColor(object) {
     if (prevBin != null) {
-      
       let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
-      let orangeBins =  JSON.parse( localStorage.getItem("binsStatus")).orange;
-        if( redBins.includes(prevBin) ){
-          scene.getObjectByName(prevBin).material.color.set(0xcf2020);
-        }
-        else if(orangeBins.includes(prevBin)  ){
-          scene.getObjectByName(prevBin).material.color.set(0xfe7e5b);
-        } 
+      let orangeBins = JSON.parse(localStorage.getItem("binsStatus")).orange;
+      if (redBins.includes(prevBin)) {
+        scene.getObjectByName(prevBin).material.color.set(0xcf2020);
+      } else if (orangeBins.includes(prevBin)) {
+        scene.getObjectByName(prevBin).material.color.set(0xfe7e5b);
+      }
 
       // prevBin.material.color.set(0xfaf3e2);
     }
-
 
     // prevBinColor = object.material.color.clone();
     let objectName = object.name.toString();

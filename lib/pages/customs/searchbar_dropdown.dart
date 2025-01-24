@@ -270,7 +270,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                         });
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
+                        padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.008),
                         decoration: BoxDecoration(
                           color: const Color.fromRGBO(68, 98, 136, 1), // Purple background
                           borderRadius: BorderRadius.circular(50),

@@ -166,12 +166,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                   if (isLoaded != null && isLoaded) {
                                                     _warehouseInteractionBloc.add(Rendering(isRendered: true));
                                                     _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
-                                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "binsStatus");
+                                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
+                                                        .removeItem(key: "binsStatus");
                                                     context.read<StorageBloc>().add(GetBinsStatus());
                                                     timer.cancel();
                                                   }
                                                 });
-                                                
                                               }
                                             }
                                           }
@@ -634,8 +634,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           case 'dockareaout':
             return const DockAreaDataSheet();
           case 'yardarea':
-           context.read<YardBloc>().add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-
             return const YardAreaDataSheet();
           // case 'storagearea':
           //   return BinD();

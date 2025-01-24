@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {globalState} from "globalState";
+import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
 
 const data = JSON.parse(window.localStorage.getItem("facilityData"));
@@ -15,11 +15,11 @@ export function createCamera() {
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
   // Set the position of the new camera based on the imported camera's position
-  switch(data.model){
-    case 'warehouse':
+  switch (data.model) {
+    case "warehouse":
       camera.position.set(0, 600, 500);
       break;
-    case 'storageArea':
+    case "storageArea":
       camera.position.set(0, 45, 150);
       break;
   }
@@ -28,39 +28,45 @@ export function createCamera() {
 }
 
 export function switchCamera(scene, name, camera, controls) {
-  if(name == 'storageArea'){
+  if (name == "storageArea") {
     window.localStorage.setItem("rack_cam", "null");
   }
-  const { position, target } = getPositionAndTarget(
-    scene,
-    name
-  );
-   resetAreas(scene);
-   if(document.getElementById('areas').classList.contains('focused')){
-   document.getElementById('areas').classList.toggle('focused');}
-   
-   switch (name.toString().split("_")[0]) {
+  const { position, target } = getPositionAndTarget(scene, name);
+  resetAreas(scene);
+  if (document.getElementById("areas").classList.contains("focused")) {
+    document.getElementById("areas").classList.toggle("focused");
+  }
+
+  switch (name.toString().split("_")[0]) {
     case "storageArea":
-      highlightArea(scene,"storageArea_block", { r: 50, g: 205, b: 50 },0.4);
+      highlightArea(scene, "storageArea_block", { r: 50, g: 205, b: 50 }, 0.4);
       break;
     case "inspectionArea":
-      highlightArea(scene,"inspectionArea_block", { r: 138, g: 46, b: 226 },0.4);
+      highlightArea(
+        scene,
+        "inspectionArea_block",
+        { r: 138, g: 46, b: 226 },
+        0.4
+      );
       break;
     case "stagingArea":
-      highlightArea(scene,"stagingArea_block", { r: 255, g: 214, b: 10 },0.4);
+      highlightArea(scene, "stagingArea_block", { r: 255, g: 214, b: 10 }, 0.4);
       break;
     case "activityArea":
-      highlightArea(scene,"activityArea_block", { r: 0, g: 128, b: 128 },0.4);
+      highlightArea(scene, "activityArea_block", { r: 0, g: 128, b: 128 }, 0.4);
       break;
     case "receivingArea":
-      highlightArea(scene,"receivingArea_block", { r: 166, g: 20, b: 93 },0.4);
+      highlightArea(
+        scene,
+        "receivingArea_block",
+        { r: 166, g: 20, b: 93 },
+        0.4
+      );
       break;
     case "yardArea":
-      highlightArea(scene,"yardArea_block",  { r: 255, g: 99, b: 99 },0.4);
+      highlightArea(scene, "yardArea_block", { r: 255, g: 99, b: 99 }, 0.4);
       break;
-    
   }
-  
 
   // Create a GSAP timeline for smoother transitions
   const timeline = gsap.timeline();
@@ -96,7 +102,7 @@ export function switchCamera(scene, name, camera, controls) {
   timeline.call(() => {
     controls.enabled = true; // Re-enable controls after animation
     controls.enableDamping = true; // Re-enable damping after animation
-    if(name.includes('compound')){
+    if (name.includes("compound")) {
       globalState.setAreaFocused(false);
     }
   });
@@ -107,8 +113,9 @@ export function moveToBin(object, camera, controls) {
   var center = aabb.getCenter(new THREE.Vector3());
   var size = aabb.getSize(new THREE.Vector3());
   const regex = /^[0-9][R]B\d{5}$/;
-  if(document.getElementById('path').classList.contains('focused')){
-  document.querySelector('#path').click();}
+  if (document.getElementById("path").classList.contains("focused")) {
+    document.querySelector("#path").click();
+  }
   // Create a GSAP timeline for smoother transitions
   const timeline = gsap.timeline();
 
@@ -191,23 +198,26 @@ export function getPositionAndTarget(scene, name) {
   let box;
   let view = name.toString().split("_")[0];
 
-  if(!['compoundArea', 'storageArea', 'warehouse'].includes(view)){
-    document.getElementById("wms-bot").style.display = "none";  
+  if (!["compoundArea", "storageArea", "warehouse"].includes(view)) {
+    document.getElementById("wms-bot").style.display = "none";
   }
 
-
-  switch(data.model){
-    case 'warehouse':
+  switch (data.model) {
+    case "warehouse":
       switch (view) {
         case "compoundArea":
           position.set(0, 550, 220);
           target.set(0, 0, -60);
-          target.z = target.z+50;
+          target.z = target.z + 50;
           console.log('{"object":"null"}');
           break;
         case "warehouse":
           object = scene.getObjectByName(name);
-          position.set(object.position.x, object.position.y + 250, object.position.z + 100);
+          position.set(
+            object.position.x,
+            object.position.y + 250,
+            object.position.z + 100
+          );
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
           break;
@@ -218,7 +228,6 @@ export function getPositionAndTarget(scene, name) {
           position.set(-78, 60, 20);
           target.y = target.y + 25;
           target.x = target.x + 5;
-          // console.log('{"area":"storage"}');
           break;
         case "inspectionArea":
           position.set(21.2, 50, -50);
@@ -245,7 +254,7 @@ export function getPositionAndTarget(scene, name) {
           box.getCenter(target);
           break;
         case "yardArea":
-          position.set(50, 270, -34);
+          position.set(50, 300, -34);
           object = scene.getObjectByName(view);
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
@@ -255,7 +264,7 @@ export function getPositionAndTarget(scene, name) {
           object = scene.getObjectByName(view);
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
-          target.z = target.z + 25
+          target.z = target.z + 25;
           break;
         case "dockArea-OUT":
           position.set(-113.95, 120, -2);
@@ -264,78 +273,40 @@ export function getPositionAndTarget(scene, name) {
           box.getCenter(target);
           target.z = target.z + 25;
           break;
-        // case "rack":
-        //   position.set(-120+(32*(number-1)), 50, -116.9);
-        //   object = scene.getObjectByName(view+number+"r");
-        //   box = new THREE.Box3().setFromObject(object);
-        //   box.getCenter(target);
-        //   break;
         case "rack5r":
-          position.set(0, 50, -116.9);
-          object = scene.getObjectByName(view);
-          box = new THREE.Box3().setFromObject(object);
-          box.getCenter(target);
-          break;
         case "rack4r":
-          position.set(-30, 50, -116.9);
-          object = scene.getObjectByName(view);
-          box = new THREE.Box3().setFromObject(object);
-          box.getCenter(target);
-          break;
         case "rack3r":
-          position.set(-55, 50, -116.9);
-          object = scene.getObjectByName(view);
-          box = new THREE.Box3().setFromObject(object);
-          box.getCenter(target);
-          break;
         case "rack2r":
-          position.set(-80, 50, -116.9);
-          object = scene.getObjectByName(view);
-          box = new THREE.Box3().setFromObject(object);
-          box.getCenter(target);
-          break;
         case "rack1r":
-          position.set(-100, 50, -116.9);
           object = scene.getObjectByName(view);
+          position.set(
+            object.position.x + 20,
+            object.position.y + 24,
+            object.position.z
+          );
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
           break;
         case "rack5l":
-          position.set(-60, 50, -116.9);
-          object = scene.getObjectByName(view);
-          box = new THREE.Box3().setFromObject(object);
-          box.getCenter(target);
-          break;
         case "rack4l":
-          position.set(-85, 50, -116.9);
-          object = scene.getObjectByName(view);
-          box = new THREE.Box3().setFromObject(object);
-          box.getCenter(target);
-          break;
         case "rack3l":
-          position.set(-110, 50, -116.9);
-          object = scene.getObjectByName(view);
-          box = new THREE.Box3().setFromObject(object);
-          box.getCenter(target);
-          break;
         case "rack2l":
-          position.set(-130, 50, -116.9);
-          object = scene.getObjectByName(view);
-          box = new THREE.Box3().setFromObject(object);
-          box.getCenter(target);
-          break;
         case "rack1l":
-          position.set(-160, 50, -116.9);
           object = scene.getObjectByName(view);
+          position.set(
+            object.position.x - 20,
+            object.position.y + 24,
+            object.position.z
+          );
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
           break;
       }
       break;
-    case 'storageArea':
+    case "storageArea":
       switch (view) {
-        case 'storageArea':
-        case 'compoundArea':
+        case "storageArea":
+        case "compoundArea":
           position.set(0, 45, 150);
           target.z = 50;
           break;
@@ -345,7 +316,11 @@ export function getPositionAndTarget(scene, name) {
         case "rack2r":
         case "rack1r":
           object = scene.getObjectByName(view);
-          position.set(object.position.x+20, object.position.y+24, object.position.z)
+          position.set(
+            object.position.x + 20,
+            object.position.y + 24,
+            object.position.z
+          );
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
           break;
@@ -355,7 +330,11 @@ export function getPositionAndTarget(scene, name) {
         case "rack2l":
         case "rack1l":
           object = scene.getObjectByName(view);
-          position.set(object.position.x-20, object.position.y+24, object.position.z)
+          position.set(
+            object.position.x - 20,
+            object.position.y + 24,
+            object.position.z
+          );
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
           break;
