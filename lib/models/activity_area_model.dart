@@ -11,6 +11,20 @@ class ActivityAreaItem {
   }
 }
 
+class ActivityTask {
+List<String>? pickingTask;
+  List<String>? cycleCountTask;
+  List<String>? replenishmentTask;
+
+  ActivityTask({this.pickingTask, this.cycleCountTask, this.replenishmentTask});
+
+  ActivityTask.fromJson(Map<String, dynamic> json) {
+    pickingTask = json['picking_task'].cast<String>();
+    cycleCountTask = json['cycle_count_task'].cast<String>();
+    replenishmentTask = json['replenishment_task'].cast<String>();
+  }}
+
+
 class ActivityDashboard {
   List<StatusCount>? todayTaskSummary;
   List<StatusCount>? taskTypeSummary;

@@ -27,6 +27,7 @@ class DockItem {
   String? asn;
   String? poNbr;
   String? checkinTS;
+  String? itemKey;
   int? qty;
   DockItem({this.dockNbr, this.asn, this.poNbr, this.checkinTS, this.qty});
 
@@ -35,6 +36,7 @@ class DockItem {
     asn = json['asn'];
     poNbr = json['po_nbr'];
     checkinTS = json['checkin_ts'];
+    itemKey = json['item_key'];
     qty = json['qty'];
   }
 }

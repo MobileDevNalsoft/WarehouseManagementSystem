@@ -31,8 +31,7 @@ class ActivityAreaBloc extends Bloc<ActivityAreaEvent, ActivityAreaState> {
                   ? {"search_text": event.searchText, "search_area": "ACTIVITY", "facility_id": '243', "page_num": state.pageNum}
                   : {"facility_id": 243, "page_num": state.pageNum})
           .then((apiResponse) {
-        AreaResponse<ActivityAreaItem> activityAreaResponse =
-            AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityAreaItem.fromJson(json));
+        AreaResponse<ActivityAreaItem> activityAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityAreaItem.fromJson(json));
         if (state.pageNum == 0) {
           state.activityAreaItems = activityAreaResponse.data!;
         } else {
@@ -44,6 +43,22 @@ class ActivityAreaBloc extends Bloc<ActivityAreaEvent, ActivityAreaState> {
     } catch (e) {
       Log.e(e.toString());
       emit(state.copyWith(getDataState: GetDataState.failure));
+    }
+
+    try {
+      await _customApi
+          .get((event.searchText != null && event.searchText != "") ? AppConstants.SEARCH : AppConstants.ACTIVITY_AREA_TASKS,
+              queryParameters: (event.searchText != null && event.searchText != "")
+                  ? {"search_text": event.searchText, "search_area": "ACTIVITY", "facility_id": '243'}
+                  : {"facility_id": 243})
+          .then((apiResponse) {
+        AreaResponse<ActivityTask> activityAreaTaskResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityTask.fromJson(json));
+          state.activityTasks = activityAreaTaskResponse.data!;
+          print("bloc ${state.activityTasks!}");
+           emit(state.copyWith(activityTasks:state.activityTasks , getDataState: GetDataState.success));
+      });
+    } catch (e) {print("error $e");
+      
     }
   }
 }

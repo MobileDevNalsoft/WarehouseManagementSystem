@@ -73,7 +73,7 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
                           l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white),
                           l2StyleData:
                               L2StyleData(height: 60, color: const Color.fromRGBO(43, 79, 122, 1), dropDownColor: const Color.fromRGBO(43, 79, 122, 1)),
-                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.152, color: const Color.fromRGBO(127, 161, 202, 1)),
+                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.19, color: const Color.fromRGBO(127, 161, 202, 1)),
                         );
             }),
           );
