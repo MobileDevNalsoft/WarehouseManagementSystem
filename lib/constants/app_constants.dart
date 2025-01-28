@@ -44,6 +44,8 @@ class AppConstants {
   static const ACTIVITY_AREA_TASKS = 'activity_area_tasks';
   static const INSPECTION_AREA = 'inspection_area';
   static const DOCK_AREA = 'dock_area';
+  static const DOCK_AREA_OUT = 'dock_out';
+
   static const YARD_AREA = 'yard_area';
   static const RECEIVING_AREA = 'receiving_area';
   static const STAGING_AREA = 'staging_area';

@@ -11,3 +11,9 @@ class GetDockAreaData extends DockEvent {
   String? searchArea;
   GetDockAreaData({this.searchText, this.searchArea});
 }
+
+class GetDockOutAreaData extends DockEvent {
+  String? searchText;
+  String? searchArea;
+  GetDockOutAreaData({this.searchText, this.searchArea});
+}
