@@ -52,6 +52,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     placeholderText = 'Search';
     dropdownValue = "Area";
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+    _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
   }
 
   void searchData() {
@@ -280,7 +281,6 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           children: [
                             Text(
                               context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("area").join(" "),
-                              // context.watch<WarehouseInteractionBloc>().state.selectedSearchArea,
                               style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
                             ),
                             Gap(size.width * 0.005),

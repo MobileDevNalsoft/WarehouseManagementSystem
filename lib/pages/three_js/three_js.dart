@@ -70,6 +70,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
 
     _warehouseInteractionBloc.add(GetUsersData());
+    _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
     textEditingController = TextEditingController(text: _warehouseInteractionBloc.state.selectedTaskId ?? "");
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
     sliderAnimationController =
@@ -491,7 +492,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse'))
+                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded &&
+                      accessTypes.contains('Warehouse') &&
+                      !accessTypes.contains('Storage Area'))
                     Align(
                         alignment: Alignment.bottomCenter,
                         child: CustomProgressBar(
@@ -578,19 +581,49 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         ),
         Positioned(right: size.width * 0.08, top: size.height * 0.013, child: PointerInterceptor(child: SearchBarDropdown(size: size))),
         Positioned(
-          right: size.width * 0.04,
+          right: size.width * 0.03,
           top: size.height * 0.023,
-          child: InkWell(
-            onTap: () {
-              _warehouseInteractionBloc.add(GetAlerts());
-              sliderAnimationController.forward();
-            },
-            child: Icon(
-              Icons.notifications_none,
-              color: Colors.white,
-              size: size.width * 0.015,
-            ),
-          ),
+          child: StreamBuilder<int>(
+              stream: _warehouseInteractionBloc.alertsCountStream,
+              builder: (context, snapshot) {
+                return InkWell(
+                  onTap: () {
+                    _warehouseInteractionBloc.add(ResetAlertsCount());
+                    sliderAnimationController.forward();
+                  },
+                  child: SizedBox(
+                    height: size.height * 0.08,
+                    width: size.width * 0.028,
+                    child: LayoutBuilder(builder: (context, lsize) {
+                      return Stack(
+                        children: [
+                          Icon(
+                            Icons.notifications_none,
+                            color: Colors.white,
+                            size: size.width * 0.015,
+                          ),
+                          if (snapshot.hasData && snapshot.data != 0)
+                            Positioned(
+                              right: lsize.maxWidth * 0.58,
+                              child: Container(
+                                height: size.height * 0.016,
+                                width: size.width * 0.016,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                                child: Text(
+                                  '',
+                                  // snapshot.data!.toString(),
+                                  style: TextStyle(color: Colors.white, fontSize: 9),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
+                  ),
+                );
+              }),
         ),
         AnimatedBuilder(
             animation: sliderPositionAnimation,

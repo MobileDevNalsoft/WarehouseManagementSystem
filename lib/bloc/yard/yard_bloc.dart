@@ -42,8 +42,8 @@ class YardBloc extends Bloc<YardEvent, YardState> {
           getIt<JsInteropService>().sendTrucksData(jsonEncode(jsonDecode(apiResponse.response!.data)['data']));
         }
         emit(state.copyWith(yardAreaItems: state.yardAreaItems, yardAreaStatus: YardAreaStatus.success));
-        getIt<JsInteropService>().setNumberOfTrucks("0");
-        getIt<JsInteropService>().setNumberOfTrucks(state.yardAreaItems!.length.toString());
+        getIt<JsInteropService>().setNumberOfTrucks("Y_0");
+        getIt<JsInteropService>().setNumberOfTrucks('Y_${state.yardAreaItems!.length.toString()}');
       });
     } catch (e) {
       Log.e(e.toString());
