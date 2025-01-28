@@ -31,14 +31,13 @@ class ActivityAreaBloc extends Bloc<ActivityAreaEvent, ActivityAreaState> {
                   ? {"search_text": event.searchText, "search_area": "ACTIVITY", "facility_id": '243', "page_num": state.pageNum}
                   : {"facility_id": 243, "page_num": state.pageNum})
           .then((apiResponse) {
-        AreaResponse<ActivityAreaItem> activityAreaResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityAreaItem.fromJson(json));
+        AreaResponse<ActivityAreaItem> activityAreaResponse =
+            AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityAreaItem.fromJson(json));
         if (state.pageNum == 0) {
           state.activityAreaItems = activityAreaResponse.data!;
         } else {
           state.activityAreaItems!.addAll(activityAreaResponse.data!);
         }
-
-        emit(state.copyWith(activityAreaItems: state.activityAreaItems, getDataState: GetDataState.success));
       });
     } catch (e) {
       Log.e(e.toString());
@@ -52,13 +51,13 @@ class ActivityAreaBloc extends Bloc<ActivityAreaEvent, ActivityAreaState> {
                   ? {"search_text": event.searchText, "search_area": "ACTIVITY", "facility_id": '243'}
                   : {"facility_id": 243})
           .then((apiResponse) {
-        AreaResponse<ActivityTask> activityAreaTaskResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityTask.fromJson(json));
-          state.activityTasks = activityAreaTaskResponse.data!;
-          print("bloc ${state.activityTasks!}");
-           emit(state.copyWith(activityTasks:state.activityTasks , getDataState: GetDataState.success));
+        AreaResponse<ActivityTaskItem> activityAreaTaskResponse =
+            AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityTaskItem.fromJson(json));
+        emit(state.copyWith(activityTasks: activityAreaTaskResponse.data!, getDataState: GetDataState.success));
       });
-    } catch (e) {print("error $e");
-      
+    } catch (e) {
+      print("error $e");
+      emit(state.copyWith(getDataState: GetDataState.failure));
     }
   }
 }
