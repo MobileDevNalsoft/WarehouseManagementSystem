@@ -47,38 +47,50 @@ export function initNodes(three, scene) {
         },
       };
       intermediatePoints = {
-        "a1" :new THREE.Vector3(-138.0, 6.19, -130.0),
-         "a2" :new THREE.Vector3(-116.0, 6.19, -130.0),
-         "a3" :new THREE.Vector3(-92.4, 6.19, -130.0),
-         "a4" :new THREE.Vector3( -69.2, 6.19, -130.0),
-         "a5" :new THREE.Vector3(-46.4, 6.19, -130.0),
-         "a6" :new THREE.Vector3(-23.6, 6.19, -130.0),
-  
-         "b1" :new THREE.Vector3(-138.0, 6.19, -100.0),
-         "b2" :new THREE.Vector3(-116.0, 6.19, -100.0),
-         "b3" :new THREE.Vector3(-92.4, 6.19, -100.0),
-         "b4" :new THREE.Vector3( -69.2, 6.19, -100.0),
-         "b5" :new THREE.Vector3(-46.4, 6.19, -100.0),
-         "b6" :new THREE.Vector3(-23.6, 6.19, -100.0),
-  
-         "p1": new THREE.Vector3(-125.16835094362332, 6.19, -91),
-         "p2" : new THREE.Vector3(-104.0724984440678, 6.19, -91),
-         "p3":new THREE.Vector3(-84.20038905146427, 6.19, -91),
-         "p4":new THREE.Vector3(-46.4, 6.19, -91),
-  
-         "p5":new THREE.Vector3(-14.035990842471623, 6.19, -91),
-  
-         "p6":new THREE.Vector3(-14.185505861653581, 6.19 ,-107.84385506088879),
-         "p7":new THREE.Vector3(-14.114602359858907, 6.19, -130.0),
-  
-         "p8":new THREE.Vector3(-14.197195127688875, 6.19, -77.49013059402137),
-         "p9":new THREE.Vector3(-14.264927005311744, 6.19, -61.64698518320672),
-         "p10":new THREE.Vector3(-104.0, 6.19, -100.0),
-         "receiving": new THREE.Vector3(0.569215386407393, 6.19, -77.49013059402137),
-         "inspection":new THREE.Vector3(-8, 6.19 -106.89068254045604),
-         "activity":new THREE.Vector3(-24.21696383882049 ,6.19, -60.86146377835111),
-         "staging":new THREE.Vector3(-125.14815693589341 ,6.19, -76.65696617010423),
-        };
+        a1: new THREE.Vector3(-138.0, 6.19, -132.0),
+        a2: new THREE.Vector3(-116.0, 6.19, -132.0),
+        a3: new THREE.Vector3(-92.4, 6.19, -132.0),
+        a4: new THREE.Vector3(-69.2, 6.19, -132.0),
+        a5: new THREE.Vector3(-46.4, 6.19, -132.0),
+        a6: new THREE.Vector3(-23.6, 6.19, -132.0),
+
+        b1: new THREE.Vector3(-138.0, 6.19, -98.0),
+        b2: new THREE.Vector3(-116.0, 6.19, -98.0),
+        b3: new THREE.Vector3(-92.4, 6.19, -98.0),
+        b4: new THREE.Vector3(-69.2, 6.19, -98.0),
+        b5: new THREE.Vector3(-46.4, 6.19, -98.0),
+        b6: new THREE.Vector3(-23.6, 6.19, -98.0),
+
+        p1: new THREE.Vector3(-125.16835094362332, 6.19, -91),
+        p2: new THREE.Vector3(-104.0724984440678, 6.19, -91),
+        p3: new THREE.Vector3(-84.20038905146427, 6.19, -91),
+        p4: new THREE.Vector3(-46.4, 6.19, -91),
+
+        p5: new THREE.Vector3(-14.035990842471623, 6.19, -91),
+
+        p6: new THREE.Vector3(-14.185505861653581, 6.19, -107.84385506088879),
+        p7: new THREE.Vector3(-14.114602359858907, 6.19, -132.0),
+
+        p8: new THREE.Vector3(-14.197195127688875, 6.19, -77.49013059402137),
+        p9: new THREE.Vector3(-14.264927005311744, 6.19, -61.64698518320672),
+        p10: new THREE.Vector3(-104.0, 6.19, -98.0),
+        receiving: new THREE.Vector3(
+          0.569215386407393,
+          6.19,
+          -77.49013059402137
+        ),
+        inspection: new THREE.Vector3(-8, 6.19 - 106.89068254045604),
+        activity: new THREE.Vector3(
+          -24.21696383882049,
+          6.19,
+          -60.86146377835111
+        ),
+        staging: new THREE.Vector3(
+          -125.14815693589341,
+          6.19,
+          -76.65696617010423
+        ),
+      };
 
       adjacencyList = {
         Node_1_1: ["Node_1_2", "Node_b1"],
@@ -629,11 +641,7 @@ export function getShortestPath(
 
     for (let index in binNames) {
       if (!binNames[index].toLowerCase().includes("area")) {
-        if (
-          binNames[index].startsWith("p") ||
-          binNames[index].startsWith("b") ||
-          binNames[index].startsWith("a")
-        ) {
+        if (binNames[index].startsWith("p")) {
           binPoints.push(intermediatePoints[binNames[index]]);
           continue;
         }

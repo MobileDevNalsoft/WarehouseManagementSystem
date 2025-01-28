@@ -20,8 +20,6 @@ enum GetUsers { initial, loading, success, failure }
 
 enum GetUserInfo { initial, loading, success, failure }
 
-enum AlertsStatus { initial, loading, success, failure }
-
 // ignore: must_be_immutable
 final class WarehouseInteractionState {
   WarehouseInteractionState(
@@ -43,11 +41,11 @@ final class WarehouseInteractionState {
       this.userInfo,
       this.users,
       this.filteredUsers,
-      this.getAlertsStatus,
       this.alerts,
       this.getAreasOveriviewDataState,
       this.selectedTaskId,
-      this.taskIds});
+      this.taskIds,
+      this.alertsCount = 0});
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -66,12 +64,12 @@ final class WarehouseInteractionState {
   User? userInfo;
   List<User>? users;
   List<User>? filteredUsers;
-  AlertsStatus? getAlertsStatus;
   List<Alert>? alerts;
   AreasOverviewDataState? getAreasOveriviewDataState;
   String? selectedTaskId;
   List<String>? taskIds;
   bool? intercepting;
+  int alertsCount;
   // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
@@ -100,9 +98,9 @@ final class WarehouseInteractionState {
         getUsersState: GetUsers.initial,
         users: [],
         filteredUsers: [],
-        getAlertsStatus: AlertsStatus.initial,
         alerts: [],
         getAreasOveriviewDataState: AreasOverviewDataState.initial,
+        alertsCount: 0,
         taskIds: ["task1", "task2", "task3", "task4"]);
   }
 
@@ -124,7 +122,6 @@ final class WarehouseInteractionState {
       User? userInfo,
       List<User>? users,
       List<User>? filteredUsers,
-      AlertsStatus? getAlertsStatus,
       List<Alert>? alerts,
       AreasOverviewDataState? getAreasOveriviewDataState,
       String? selectedTaskId}) {
@@ -148,7 +145,6 @@ final class WarehouseInteractionState {
         users: users ?? this.users,
         isRendered: isRendered ?? this.isRendered,
         filteredUsers: filteredUsers ?? this.filteredUsers,
-        getAlertsStatus: getAlertsStatus ?? this.getAlertsStatus,
         alerts: alerts ?? this.alerts,
         getAreasOveriviewDataState: getAreasOveriviewDataState ?? this.getAreasOveriviewDataState,
         selectedTaskId: selectedTaskId ?? this.selectedTaskId);

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
@@ -21,6 +22,10 @@ part 'warehouse_interaction_state.dart';
 
 class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, WarehouseInteractionState> {
   JsInteropService? jsInteropService;
+  final StreamController<List<Alert>> _alertController = StreamController<List<Alert>>();
+  Stream<List<Alert>> get alertStream => _alertController.stream;
+  final StreamController<int> _alertsCountController = StreamController<int>();
+  Stream<int> get alertsCountStream => _alertsCountController.stream;
   WarehouseInteractionBloc({this.jsInteropService, required NetworkCalls customApi})
       : _customApi = customApi,
         super(WarehouseInteractionState.initial()) {
@@ -33,11 +38,15 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<GetUsersData>(_onGetUsersData);
     on<FilterUsers>(_onFilterUsers);
     on<UpdateUserAccess>(_onUpdateUserAccess);
-    on<GetAlerts>(_onGetAlerts);
     on<GetAreasOverviewData>(_onGetAreasOverviewData);
     on<UpdateTaskId>(_onUpdateTaskId);
     on<Rendering>(_onRendering);
     on<Intercepting>(_onIntercepting);
+    on<ResetAlertsCount>(_onClearAlerts);
+    _fetchAlerts(); // Initial fetch'
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      _fetchAlerts(); // Subsequent fetches every 10 seconds
+    });
   }
   final NetworkCalls _customApi;
   final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
@@ -166,18 +175,24 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     }
   }
 
-  Future<void> _onGetAlerts(GetAlerts event, Emitter<WarehouseInteractionState> emit) async {
-    emit(state.copyWith(getAlertsStatus: AlertsStatus.loading));
+  Future<void> _fetchAlerts() async {
     try {
       await _customApi.get(AppConstants.ALERTS).then((apiResponse) {
-        print(apiResponse.response);
         List<Alert> alerts = AreaResponse<Alert>.fromJson(jsonDecode(apiResponse.response!.data), (json) => Alert.fromJson(json)).data!;
-        emit(state.copyWith(alerts: alerts, getAlertsStatus: AlertsStatus.success));
+        _alertController.sink.add(alerts);
+        if (alerts.length > state.alertsCount && state.alertsCount != 0) {
+          _alertsCountController.sink.add(alerts.length - state.alertsCount);
+        } else {
+          state.alertsCount = alerts.length;
+        }
       });
     } catch (e) {
       Log.e(e);
-      emit(state.copyWith(getAlertsStatus: AlertsStatus.failure));
     }
+  }
+
+  void _onClearAlerts(ResetAlertsCount event, Emitter<WarehouseInteractionState> emit) {
+    _alertsCountController.sink.add(0);
   }
 
   Future<void> _onGetAreasOverviewData(GetAreasOverviewData event, Emitter<WarehouseInteractionState> emit) async {
@@ -196,5 +211,11 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
 
   void _onUpdateTaskId(UpdateTaskId event, Emitter<WarehouseInteractionState> emit) {
     emit(state.copyWith(selectedTaskId: event.taskId));
+  }
+
+  @override
+  Future<void> close() {
+    _alertController.close(); // Close the stream controller when bloc is closed
+    return super.close();
   }
 }

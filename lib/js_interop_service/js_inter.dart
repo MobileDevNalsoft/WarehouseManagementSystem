@@ -31,6 +31,9 @@ external _resetBoxColors();
 external _sendOverviewData(String json);
 
 @JS()
+external _sendTrucksData(String json);
+
+@JS()
 external _changeFacility(String json);
 
 @JS()
@@ -39,13 +42,11 @@ external _getShoretestPathForTask(String task);
 @JS()
 external _showAlert(String message);
 
-
 @JS()
 external _binsStatus(String bins);
 
 @JS()
 external _orangeBins(List bins);
-
 
 @JS()
 external _requestFullScreen();
@@ -69,6 +70,10 @@ class JsInteropService {
 
   sendOverviewData(String data) {
     _sendOverviewData(data);
+  }
+
+  sendTrucksData(String data) {
+    _sendTrucksData(data);
   }
 
   switchToMainCam(String camName) {
@@ -107,17 +112,13 @@ class JsInteropService {
     _highlightBins(bins);
   }
 
-  
- binsStatus(String bins) {
+  binsStatus(String bins) {
     _binsStatus(bins);
   }
 
-
- orangeBins(List bins) {
+  orangeBins(List bins) {
     _orangeBins(bins);
   }
-
-
 
   requestFullScreen() {
     _requestFullScreen();

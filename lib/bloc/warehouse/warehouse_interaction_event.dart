@@ -70,7 +70,7 @@ class UpdateUserAccess extends WarehouseInteractionEvent {
   List<Object> get props => [updatedUsers];
 }
 
-class GetAlerts extends WarehouseInteractionEvent {}
+class ResetAlertsCount extends WarehouseInteractionEvent {}
 
 class GetAreasOverviewData extends WarehouseInteractionEvent {
   final int facilityID;

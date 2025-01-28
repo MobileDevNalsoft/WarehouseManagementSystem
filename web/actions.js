@@ -4,6 +4,10 @@ const init = () => {
         window.localStorage.setItem('areasOverviewData', data);
     }
 
+    const sendTrucksData = (data) => {
+        window.localStorage.setItem('trucksData', data);
+    }
+
     const switchToMainCam = (camName) => {
         window.localStorage.setItem("switchToMainCam", camName);
     }
@@ -55,6 +59,7 @@ const init = () => {
     window._navigateToBin = navigateToBin;
     window._resetBoxColors = resetBoxColors;
     window._sendOverviewData = sendOverviewData;
+    window._sendTrucksData = sendTrucksData;
     window._changeFacility = changeFacility;
     window._getShoretestPathForTask = getShoretestPathForTask;
     window._redBins = redBins;

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/models/user_model.dart';
 
 class AlertsSlide extends StatefulWidget {
   AlertsSlide({super.key, required this.sliderAnimationController});
@@ -54,43 +55,50 @@ class _AlertsSlideState extends State<AlertsSlide> {
             color: Color.fromRGBO(76, 109, 150, 1),
           ),
           Gap(size.height * 0.01),
-          BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
-            bool isEnabled = state.getAlertsStatus != AlertsStatus.success;
-            return Expanded(
-              child: Skeletonizer(
-                enabled: isEnabled,
-                enableSwitchAnimation: true,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: ListView.builder(
-                    itemCount: isEnabled ? 15 : state.alerts!.length,
-                    itemBuilder: (context, index) => Container(
-                      margin: EdgeInsets.only(bottom: size.height * 0.01),
-                      padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width * 0.008),
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            isEnabled ? 'Subject' : state.alerts![index].subject!,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          Text(isEnabled ? 'Body body body body body body body body\n body body body' : state.alerts![index].body!),
-                          Gap(size.height * 0.01),
-                          Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                isEnabled ? 'Time' : state.alerts![index].time!,
-                                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                              )),
-                        ],
+          StreamBuilder<List<Alert>>(
+            stream: context.read<WarehouseInteractionBloc>().alertStream,
+            builder: (context, snapshot) {
+              bool isEnabled = snapshot.connectionState == ConnectionState.waiting;
+              List<Alert> alerts = [];
+              if (snapshot.hasData) {
+                alerts = snapshot.data!;
+              }
+              return Expanded(
+                child: Skeletonizer(
+                  enabled: isEnabled,
+                  enableSwitchAnimation: true,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: ListView.builder(
+                      itemCount: isEnabled ? 15 : alerts!.length,
+                      itemBuilder: (context, index) => Container(
+                        margin: EdgeInsets.only(bottom: size.height * 0.01),
+                        padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.width * 0.008),
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isEnabled ? 'Subject' : alerts![index].subject!,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            Text(isEnabled ? 'Body body body body body body body body\n body body body' : alerts![index].body!),
+                            Gap(size.height * 0.01),
+                            Align(
+                                alignment: Alignment.centerRight,
+                                child: Text(
+                                  isEnabled ? 'Time' : alerts![index].time!,
+                                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                                )),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          })
+              );
+            },
+          )
         ],
       ),
     );

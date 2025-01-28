@@ -52,6 +52,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     placeholderText = 'Search';
     dropdownValue = "Area";
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+    _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
   }
 
   void searchData() {
@@ -270,7 +271,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                         });
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.01),
+                        padding: EdgeInsets.symmetric(horizontal: size.width * 0.01, vertical: size.height * 0.008),
                         decoration: BoxDecoration(
                           color: const Color.fromRGBO(68, 98, 136, 1), // Purple background
                           borderRadius: BorderRadius.circular(50),
@@ -280,7 +281,6 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           children: [
                             Text(
                               context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("area").join(" "),
-                              // context.watch<WarehouseInteractionBloc>().state.selectedSearchArea,
                               style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
                             ),
                             Gap(size.width * 0.005),
