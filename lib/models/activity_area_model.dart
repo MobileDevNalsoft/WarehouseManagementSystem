@@ -11,19 +11,17 @@ class ActivityAreaItem {
   }
 }
 
-class ActivityTask {
-List<String>? pickingTask;
-  List<String>? cycleCountTask;
-  List<String>? replenishmentTask;
+class ActivityTaskItem {
+  String? taskType;
+  List<dynamic>? taskIDs;
 
-  ActivityTask({this.pickingTask, this.cycleCountTask, this.replenishmentTask});
+  ActivityTaskItem({this.taskType, this.taskIDs});
 
-  ActivityTask.fromJson(Map<String, dynamic> json) {
-    pickingTask = json['picking_task'].cast<String>();
-    cycleCountTask = json['cycle_count_task'].cast<String>();
-    replenishmentTask = json['replenishment_task'].cast<String>();
-  }}
-
+  ActivityTaskItem.fromJson(Map<String, dynamic> json) {
+    taskType = json.keys.first;
+    taskIDs = json.values.first as List<dynamic>;
+  }
+}
 
 class ActivityDashboard {
   List<StatusCount>? todayTaskSummary;
