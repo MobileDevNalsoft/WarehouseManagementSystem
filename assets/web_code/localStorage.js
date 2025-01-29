@@ -23,7 +23,9 @@ export function localStorageSetup(scene, camera, controls) {
           resetAreas(scene);
           playAnimations();
           trucks.forEach((truck) => {
-            scene.getObjectByName(truck).visible = true;
+            if(scene.getObjectByName(truck)){
+              scene.getObjectByName(truck).visible = true;
+            }
           });
           if (document.getElementById("areas").classList.contains("focused")) {
             document.getElementById("areas").classList.toggle("focused");

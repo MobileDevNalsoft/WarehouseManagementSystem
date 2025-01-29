@@ -51,7 +51,9 @@ class _HoverDropdownState extends State<HoverDropdown> {
         Future.delayed(const Duration(milliseconds: 1200), () {
           if (height == size.height * 0.08) {
             // because intercepting becoming false if i again open dropdown before 1200ms
-            context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+            if (mounted) {
+              context.read<WarehouseInteractionBloc>().add(Intercepting(intercepting: false));
+            }
           }
         });
       },
