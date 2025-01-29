@@ -71,6 +71,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
 
     _warehouseInteractionBloc.add(GetUsersData());
     _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
+    _warehouseInteractionBloc.add(Intercepting(intercepting: false));
     textEditingController = TextEditingController(text: _warehouseInteractionBloc.state.selectedTaskId ?? "");
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
     sliderAnimationController =
@@ -95,6 +96,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
     if (accessTypes.contains('Warehouse') && accessTypes.contains('Storage Area')) {
       getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"storageArea"}');
+      context.read<StorageBloc>().add(GetBinsStatus());
     } else {
       getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"warehouse"}');
     }
@@ -581,7 +583,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         ),
         Positioned(right: size.width * 0.08, top: size.height * 0.013, child: PointerInterceptor(child: SearchBarDropdown(size: size))),
         Positioned(
-          right: size.width * 0.03,
+          right: size.width * 0.04,
           top: size.height * 0.023,
           child: StreamBuilder<int>(
               stream: _warehouseInteractionBloc.alertsCountStream,
@@ -593,7 +595,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   },
                   child: SizedBox(
                     height: size.height * 0.08,
-                    width: size.width * 0.028,
+                    width: size.width * 0.02,
                     child: LayoutBuilder(builder: (context, lsize) {
                       return Stack(
                         children: [

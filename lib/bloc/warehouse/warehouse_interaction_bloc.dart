@@ -22,10 +22,10 @@ part 'warehouse_interaction_state.dart';
 
 class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, WarehouseInteractionState> {
   JsInteropService? jsInteropService;
-  final StreamController<List<Alert>> _alertController = StreamController<List<Alert>>();
-  Stream<List<Alert>> get alertStream => _alertController.stream;
-  final StreamController<int> _alertsCountController = StreamController<int>();
-  Stream<int> get alertsCountStream => _alertsCountController.stream;
+  final StreamController<List<Alert>> _alertController = StreamController<List<Alert>>.broadcast();
+  Stream<List<Alert>> get alertStream => _alertController.stream.asBroadcastStream();
+  final StreamController<int> _alertsCountController = StreamController<int>.broadcast();
+  Stream<int> get alertsCountStream => _alertsCountController.stream.asBroadcastStream();
   WarehouseInteractionBloc({this.jsInteropService, required NetworkCalls customApi})
       : _customApi = customApi,
         super(WarehouseInteractionState.initial()) {
