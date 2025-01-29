@@ -23,6 +23,7 @@ import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/bin_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/dock_area_out_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/inspection_area_data_sheet.dart';
+import 'package:wmssimulator/pages/data_sheets/lpn_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/rack_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/staging_area_data_sheet.dart';
@@ -655,6 +656,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         );
       case 'bin':
         return const BinDataSheet();
+      case 'lpn':
+        return const LPNLifeCycleDataSheet();
       case 'area':
         switch (objectValue.toLowerCase().replaceAll("-", "")) {
           case 'stagingarea':

@@ -4,6 +4,7 @@ import 'dart:html' as html; // Import the HTML library
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
@@ -64,6 +65,7 @@ class Customs {
         Container(
           height: size.height * 0.86,
           width: size.width * 0.22,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
               color: const Color.fromRGBO(12, 46, 87, 1),
               borderRadius: BorderRadius.circular(16),
@@ -644,6 +646,115 @@ class Customs {
             ),
           );
         });
+      },
+    );
+  }
+
+  static void LPNSelection({
+    required BuildContext context,
+  }) {
+    Size size = MediaQuery.of(context).size;
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black45,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.bounceInOut.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        FocusNode focusNode = FocusNode();
+        SuggestionsController suggestionsController = SuggestionsController();
+        TextEditingController textEditingController = TextEditingController();
+        return PointerInterceptor(
+          child: Container(
+            margin: EdgeInsets.only(top: size.height * 0.35),
+            alignment: Alignment.topCenter,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: size.width * 0.16,
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
+                        child: PointerInterceptor(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              size: 20,
+                              weight: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Text("Please select LPN"),
+                    TypeAheadField(
+                      focusNode: focusNode,
+                      controller: textEditingController,
+                      suggestionsController: suggestionsController,
+                      builder: (context, controller, focusNode) {
+                        controller.clear();
+                        return TextField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            autofocus: true,
+                            decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
+                      },
+                      itemBuilder: (context, value) {
+                        return ListTile(
+                          title: Text(
+                            value.toString(),
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        );
+                      },
+                      suggestionsCallback: (pattern) {
+                        return [
+                          "IBLPN12345678901",
+                          "IBLPN12345678902",
+                          "IBLPN12345678903",
+                          "IBLPN12345678904",
+                          "IBLPN12345678905",
+                          "IBLPN12345678906",
+                          "IBLPN12345678907",
+                        ].where((element) => element.contains(pattern)).toList();
+                      },
+                      onSelected: (value) {
+                        textEditingController.text = value;
+                        focusNode.unfocus();
+                      },
+                    ),
+                    Gap(size.height * 0.03),
+                    TextButton(
+                        onPressed: () {
+                          context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"lpn": textEditingController.text}, clearSearchText: true));
+                          getIt<JsInteropService>().lpnLifeCycle(true);
+                          Navigator.pop(context);
+                        },
+                        child: PointerInterceptor(child: const Text("Done")))
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

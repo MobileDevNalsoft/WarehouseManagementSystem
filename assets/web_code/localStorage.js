@@ -2,6 +2,7 @@ import { resetTrucksAnimation, playAnimations, stopAnimationsAndReset } from "an
 import { moveToBin, getPositionAndTarget } from "camera";
 import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
+import { animateLPNLifeCycle, removeLPNLifeCycle } from "lpnLifeCycle";
 
 export function localStorageSetup(scene, camera, controls) {
   // Local Storage Setup
@@ -13,6 +14,7 @@ export function localStorageSetup(scene, camera, controls) {
   const dockOuttrucks = ['truck_D_L1', 'truck_A2', 'truck_D_L3'];
 
   window.addEventListener("storage", (event) => {
+    console.warn('key ' + event.key);
     switch (event.key) {
       case "switchToMainCam":
         if (event.newValue != "") {
@@ -372,7 +374,15 @@ export function localStorageSetup(scene, camera, controls) {
         } catch (e) {
           console.warn("binsStatus" + e);
         }
-
+        break;
+      case 'lpnLifeCycle':
+        console.warn('got into lpn life cycle')
+        if(event.newValue){
+          animateLPNLifeCycle();
+        }else{
+          removeLPNLifeCycle();
+        }
+        break;
       default:
         break;
     }

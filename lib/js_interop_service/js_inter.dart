@@ -10,6 +10,9 @@ import 'package:js/js.dart';
 external _switchToMainCam(String camName);
 
 @JS()
+external _lpnLifeCycle(bool show);
+
+@JS()
 external _isRackDataLoaded(bool value);
 
 @JS()
@@ -66,6 +69,10 @@ external _shareImage(String url, String filename);
 class JsInteropService {
   changeFacility(String data) {
     _changeFacility(data);
+  }
+
+  lpnLifeCycle(bool show) {
+    _lpnLifeCycle(show);
   }
 
   sendOverviewData(String data) {

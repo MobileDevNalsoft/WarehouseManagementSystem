@@ -7,6 +7,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/bloc/activity_area/activity_area_bloc.dart';
 import 'package:wmssimulator/bloc/authentication/authentication_bloc.dart';
+import 'package:wmssimulator/bloc/container_management/container_bloc.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/dock_area/dock_area_bloc.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
@@ -40,7 +41,8 @@ main() async {
       BlocProvider(create: (_) => ReceivingBloc(customApi: getIt())),
       BlocProvider(create: (_) => StagingBloc(customApi: getIt())),
       BlocProvider(create: (_) => StorageBloc(customApi: getIt())),
-      BlocProvider(create: (_) => WorkflowBloc(customApi: getIt()))
+      BlocProvider(create: (_) => WorkflowBloc(customApi: getIt())),
+      BlocProvider(create: (_) => ContainerBloc(customApi: getIt()))
     ],
     child: MaterialApp(
       navigatorKey: getIt<NavigatorService>().navigatorkey,

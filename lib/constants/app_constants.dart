@@ -65,4 +65,5 @@ class AppConstants {
   static const BINS_STATUS = 'bins_status';
   static const QUALITYCHECK_TASKS = 'qualitycheck_tasks';
   static const CYCLECOUNT_TASKS = 'cyclecount_tasks';
+  static const CONTAINERS = 'get_containers';
 }

@@ -46,6 +46,7 @@ class _SidebarState extends State<Sidebar> {
 
     return Container(
       height: size.height,
+      width: size.width * 0.18,
       decoration: const BoxDecoration(color: Color.fromRGBO(68, 98, 136, 1)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +54,7 @@ class _SidebarState extends State<Sidebar> {
           Gap(size.height * 0.05),
           Row(
             children: [
-              Gap(size.width * 0.02),
+              Gap(size.width * 0.01),
               if (widget.title == 'Dashboards')
                 Image.asset(
                   'assets/images/dashboard.png',
