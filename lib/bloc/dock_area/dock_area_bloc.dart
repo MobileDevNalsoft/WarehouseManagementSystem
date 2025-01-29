@@ -20,6 +20,7 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
       : _customApi = customApi,
         super(DockAreaState.initial()) {
     on<GetDockAreaData>(_onGetDockAreaData);
+    on<GetDockOutAreaData>(_onGetDockOutAreaData);
   }
   final NetworkCalls _customApi;
 
@@ -54,4 +55,28 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
       emit(state.copyWith(getDataState: GetDataState.failure));
     }
   }
+
+  Future<void> _onGetDockOutAreaData(GetDockOutAreaData event, Emitter<DockAreaState> emit) async {
+    try {
+      emit(state.copyWith(dockAreaItems: state.pageNum == 0 ? [] : state.dockAreaItems, getDataState: GetDataState.initial));
+      await _customApi
+          .get((event.searchText != null && event.searchText != "") ? AppConstants.SEARCH : AppConstants.DOCK_AREA_OUT,
+              queryParameters: (event.searchText != null && event.searchText != "")
+                  ? {"search_text": event.searchText, "search_area": event.searchArea, "facility_id": '243', "page_num": state.pageNum}
+                  : {"facility_id": 243})
+          .then((apiResponse) {
+        AreaResponse<DockAreaOut> dockAreaOutResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => DockAreaOut.fromJson(json));
+        state.dockAreaOut = dockAreaOutResponse.data!;
+     
+        emit(state.copyWith(dockAreaOut: state.dockAreaOut, getDataState: GetDataState.success));
+     
+      });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getDataState: GetDataState.failure));
+    }
+  }
+
+
+
 }

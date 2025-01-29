@@ -4,18 +4,19 @@ enum GetDataState { initial, loading, success, failure }
 
 // ignore: must_be_immutable
 final class DockAreaState {
-  DockAreaState({this.getDataState, this.dockAreaItems, this.pageNum});
+  DockAreaState({this.getDataState, this.dockAreaItems, this.pageNum, this.dockAreaOut});
 
   GetDataState? getDataState;
 
   List<DockAreaItem>? dockAreaItems;
+  List<DockAreaOut>? dockAreaOut;
   int? pageNum;
 
   factory DockAreaState.initial() {
     return DockAreaState(getDataState: GetDataState.initial, dockAreaItems: [], pageNum: 0);
   }
 
-  DockAreaState copyWith({GetDataState? getDataState, List<DockAreaItem>? dockAreaItems, int? pageNum}) {
-    return DockAreaState(getDataState: getDataState ?? this.getDataState, dockAreaItems: dockAreaItems ?? this.dockAreaItems, pageNum: pageNum ?? this.pageNum);
+  DockAreaState copyWith({GetDataState? getDataState, List<DockAreaItem>? dockAreaItems, int? pageNum, List<DockAreaOut>? dockAreaOut}) {
+    return DockAreaState(getDataState: getDataState ?? this.getDataState, dockAreaItems: dockAreaItems ?? this.dockAreaItems, pageNum: pageNum ?? this.pageNum, dockAreaOut: dockAreaOut ?? this.dockAreaOut);
   }
 }
