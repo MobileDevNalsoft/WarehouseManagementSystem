@@ -268,6 +268,30 @@ export function addInteractions(scene, model, camera, controls) {
                 tooltip.style.display = "none";
               }
             }
+          }else if(name.includes("truck_D") || name.includes("truck_A2")){
+            for (let i = 1; i <= trucksData.length; i++) {
+              try {
+                const number = name.match(/(\d+)$/)[1];
+                tooltip.style.display = "block";
+                tooltip.innerHTML = `<strong>${
+                  "T" +
+                  name.split("_")[0].slice(1) +
+                  " " +
+                  trucksData[number - 1].truck_nbr
+                }</strong><div class="tooltip-content">
+                                        Driver:${
+                                          trucksData[number - 1].driver
+                                        }<br>
+                                        Load:${
+                                          trucksData[number - 1]
+                                            .load_nbr
+                                        }<br>
+                                      </div>`;
+                setToolTipPosition(targetObject, tooltip, camera);
+              } catch (error) {
+                tooltip.style.display = "none";
+              }
+            }
           }
           else {
             tooltip.style.display = "none";
@@ -365,6 +389,9 @@ export function addInteractions(scene, model, camera, controls) {
         resetTrucksAnimation(scene);
         playAnimations();
         ["truck_R1", "truck_R2", "truck_R3"].forEach((truck) => {
+          scene.getObjectByName(truck).visible = true;
+        });
+        ['truck_D_L1', 'truck_A2', 'truck_D_L3'].forEach((truck) => {
           scene.getObjectByName(truck).visible = true;
         });
       }

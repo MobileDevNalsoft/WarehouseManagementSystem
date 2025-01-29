@@ -9,14 +9,14 @@ import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/dock_area_model.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 
-class DockAreaOutDataSheet extends StatefulWidget {
-  const DockAreaOutDataSheet({super.key});
+class DockOutAreaDataSheet extends StatefulWidget {
+  const DockOutAreaDataSheet({super.key});
 
   @override
-  State<DockAreaOutDataSheet> createState() => _DockAreaOutDataSheetState();
+  State<DockOutAreaDataSheet> createState() => _DockOutAreaDataSheetState();
 }
 
-class _DockAreaOutDataSheetState extends State<DockAreaOutDataSheet> {
+class _DockOutAreaDataSheetState extends State<DockOutAreaDataSheet> {
   late DockAreaBloc _dockOutBloc;
   final ScrollController _controller = ScrollController();
   late WarehouseInteractionBloc _warehouseInteractionBloc;
@@ -27,17 +27,7 @@ class _DockAreaOutDataSheetState extends State<DockAreaOutDataSheet> {
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     _dockOutBloc = context.read<DockAreaBloc>();
     _dockOutBloc.add(GetDockOutAreaData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-
-    // _controller.addListener(_scrollListener);
   }
-
-  // void _scrollListener() async {
-  //   if (_controller.position.pixels == _controller.position.maxScrollExtent &&
-  //     _dockOutBloc.state.yardAreaItems!.length + 1 > (_dockOutBloc.state.pageNum! + 1) * 100) {
-  //     _dockOutBloc.state.pageNum = _dockOutBloc.state.pageNum! + 1;
-  //     _dockOutBloc.add(GetYardData(searchText: context.read<WarehouseInteractionBloc>().state.searchText));
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +40,7 @@ class _DockAreaOutDataSheetState extends State<DockAreaOutDataSheet> {
             child: LayoutBuilder(builder: (context, lsize) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: (state == YardAreaStatus.success && state.dockAreaOut!.isEmpty)
+                child: (state.getDataState == GetDataState.success && state.dockOutItems!.isEmpty)
                     ? Column(
                         children: [
                           Text(
@@ -97,11 +87,8 @@ class _DockAreaOutDataSheetState extends State<DockAreaOutDataSheet> {
                                                   child: SingleChildScrollView(
                                                     scrollDirection: Axis.horizontal,
                                                     child: Text(
-                                                      state.dockAreaOut![index].truckNbr!,
-                                                      style: TextStyle(
-                                                          fontSize: containerSize.maxWidth * 0.038,
-                                                          // height: containerSize.maxHeight * 0.0032,
-                                                          fontWeight: FontWeight.bold),
+                                                      state.dockOutItems![index].truckNbr!,
+                                                      style: TextStyle(fontSize: containerSize.maxWidth * 0.038, fontWeight: FontWeight.bold),
                                                     ),
                                                   ),
                                                 ),
@@ -114,7 +101,7 @@ class _DockAreaOutDataSheetState extends State<DockAreaOutDataSheet> {
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsets.only(left: containerSize.maxWidth * 0.006, right: containerSize.maxWidth * 0.004),
-                                                  child: Image.asset('assets/images/shipment.png',
+                                                  child: Image.asset('assets/images/businessman.png',
                                                       height: containerSize.maxHeight * 0.24, width: containerSize.maxWidth * 0.14),
                                                 ),
                                                 SizedBox(
@@ -122,7 +109,7 @@ class _DockAreaOutDataSheetState extends State<DockAreaOutDataSheet> {
                                                   child: SingleChildScrollView(
                                                     scrollDirection: Axis.horizontal,
                                                     child: Text(
-                                                      state.dockAreaOut![index].driver ?? "NA",
+                                                      state.dockOutItems![index].driver ?? "NA",
                                                       style: TextStyle(fontSize: containerSize.maxWidth * 0.038, fontWeight: FontWeight.bold),
                                                     ),
                                                   ),
@@ -134,24 +121,22 @@ class _DockAreaOutDataSheetState extends State<DockAreaOutDataSheet> {
                                       ),
                                       Row(
                                         children: [
-                                           SizedBox(
+                                          SizedBox(
                                             width: containerSize.maxWidth * 0.64,
                                             child: Row(
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsets.only(left: containerSize.maxWidth * 0.05, right: containerSize.maxWidth * 0.032),
-
                                                   child: Text("LD", style: TextStyle(fontSize: containerSize.maxWidth * 0.05, fontWeight: FontWeight.w900)),
                                                 ),
                                                 Text(
-                                                  state.dockAreaOut![index].loadNbr!,
+                                                  state.dockOutItems![index].loadNbr!,
                                                   style: TextStyle(fontSize: containerSize.maxWidth * 0.038, fontWeight: FontWeight.bold),
                                                 ),
                                               ],
                                             ),
                                           )
-                                         
-                                         ],
+                                        ],
                                       ),
                                     ],
                                   );
@@ -201,18 +186,13 @@ class _DockAreaOutDataSheetState extends State<DockAreaOutDataSheet> {
                                               width: containerSize.maxWidth * 0.16,
                                             ),
                                           ),
-                                         
                                         ],
                                       ),
                                     ],
                                   );
                                 }),
                               ),
-                        itemCount: isEnabled
-                            ? 8
-                            : state.dockAreaOut!.length + 1 > (state.pageNum! + 1) * 100
-                                ? state.dockAreaOut!.length + 1
-                                : state.dockAreaOut!.length),
+                        itemCount: isEnabled ? 8 : state.dockOutItems!.length),
               );
             }),
           );

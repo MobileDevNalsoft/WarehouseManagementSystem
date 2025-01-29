@@ -90,7 +90,6 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
           break;
         case 'dockareaout':
           context.read<DockAreaBloc>().state.pageNum = 0;
-
           context.read<DockAreaBloc>().add(GetDockOutAreaData(searchText: _warehouseInteractionBloc.state.searchText, searchArea: "DOCK_OUT"));
           break;
         case 'yardarea':

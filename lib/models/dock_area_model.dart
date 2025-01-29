@@ -10,19 +10,19 @@ class DockAreaItem {
     vendors = (json.values.first as List).map((e) => Vendor.fromJson(e)).toList();
   }
 }
-class DockAreaOut {
+
+class DockOutItem {
   String? truckNbr;
   String? loadNbr;
   String? driver;
 
-  DockAreaOut({this.truckNbr, this.loadNbr, this.driver});
+  DockOutItem({this.truckNbr, this.loadNbr, this.driver});
 
-  DockAreaOut.fromJson(Map<String, dynamic> json) {
+  DockOutItem.fromJson(Map<String, dynamic> json) {
     truckNbr = json['truck_nbr'];
     loadNbr = json['load_nbr'];
     driver = json['driver'];
   }
-
 }
 
 class Vendor {

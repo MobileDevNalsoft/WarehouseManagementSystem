@@ -21,6 +21,7 @@ import 'package:wmssimulator/pages/customs/facility_dropdown.dart';
 import 'package:wmssimulator/pages/customs/searchbar_dropdown.dart';
 import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/bin_data_sheet.dart';
+import 'package:wmssimulator/pages/data_sheets/dock_area_out_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/inspection_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/rack_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/receiving_area_data_sheet.dart';
@@ -68,7 +69,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-
+    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
     _warehouseInteractionBloc.add(GetUsersData());
     _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
     _warehouseInteractionBloc.add(Intercepting(intercepting: false));
@@ -606,10 +607,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                           if (snapshot.hasData && snapshot.data != 0)
                             Positioned(
-                              right: lsize.maxWidth * 0.58,
+                              right: lsize.maxWidth * 0.45,
                               child: Container(
-                                height: size.height * 0.016,
-                                width: size.width * 0.016,
+                                height: size.height * 0.015,
+                                width: size.width * 0.015,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
                                 child: Text(
@@ -667,7 +668,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           case 'dockareain':
             return const DockAreaDataSheet();
           case 'dockareaout':
-            return const DockAreaDataSheet();
+            return const DockOutAreaDataSheet();
           case 'yardarea':
             return const YardAreaDataSheet();
           // case 'storagearea':

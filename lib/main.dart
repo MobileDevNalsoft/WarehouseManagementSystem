@@ -40,7 +40,7 @@ main() async {
       BlocProvider(create: (_) => ReceivingBloc(customApi: getIt())),
       BlocProvider(create: (_) => StagingBloc(customApi: getIt())),
       BlocProvider(create: (_) => StorageBloc(customApi: getIt())),
-      BlocProvider(create: (_) => WorkflowBloc())
+      BlocProvider(create: (_) => WorkflowBloc(customApi: getIt()))
     ],
     child: MaterialApp(
       navigatorKey: getIt<NavigatorService>().navigatorkey,

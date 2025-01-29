@@ -1,12 +1,21 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wmssimulator/constants/app_constants.dart';
+import 'package:wmssimulator/local_network_calls.dart';
+import 'package:wmssimulator/logger/logger.dart';
 import 'package:wmssimulator/models/task_model.dart';
+
+import '../../models/area_response.dart';
 
 part 'workflow_event.dart';
 part 'workflow_state.dart';
 
 class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
-  WorkflowBloc() : super(WorkflowState.initial()) {
+  WorkflowBloc({required NetworkCalls customApi})
+      : _customApi = customApi,
+        super(WorkflowState.initial()) {
     on<QualityCheckStatusUpdated>(_onQualityCheckStatusUpdated);
     on<CycleCountStatusUpdated>(_onCycleCountStatusUpdated);
     on<SelectAllQualityCheckTasks>(_onSelectAllQualityCheckTasks);
@@ -14,7 +23,27 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
     on<ButtonClicked>(_onButtonClicked);
     on<QualityCheckTasksUpdated>(_onQualityCheckTasksUpdated);
     on<CycleCountTasksUpdated>(_onCycleCountTasksUpdated);
+    on<GetQualityCheckTasks>(_onGetQualityCheckTasks);
+    on<GetCycleCountTasks>(_onGetCycleCountTasks);
   }
+
+  final NetworkCalls _customApi;
+
+  Future<void> _onGetQualityCheckTasks(GetQualityCheckTasks event, Emitter<WorkflowState> emit) async {
+    try {
+      emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.initial));
+      await _customApi.get(AppConstants.QUALITYCHECK_TASKS).then((apiResponse) {
+        AreaResponse<QualityCheckTask> dockOutResponse =
+            AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => QualityCheckTask.fromJson(json));
+        emit(state.copyWith(qualityCheckTasks: dockOutResponse.data!, getQualityCheckStatus: QualityCheckStatus.success));
+      });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.failure));
+    }
+  }
+
+  void _onGetCycleCountTasks(GetCycleCountTasks event, Emitter<WorkflowState> emit) {}
 
   void _onQualityCheckStatusUpdated(QualityCheckStatusUpdated event, Emitter<WorkflowState> emit) {
     state.qualityCheckTasks.where((task) => task.lpnNbr == event.lpnNbr).first.isChecked = event.isChecked;

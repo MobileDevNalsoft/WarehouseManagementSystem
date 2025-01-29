@@ -1,4 +1,4 @@
-import { resetTrucksAnimation, playAnimations } from "animations";
+import { resetTrucksAnimation, playAnimations, stopAnimationsAndReset } from "animations";
 import { moveToBin, getPositionAndTarget } from "camera";
 import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
@@ -9,7 +9,8 @@ export function localStorageSetup(scene, camera, controls) {
   let actualBinColor;
   let highlightedBins = [];
   window.localStorage.setItem("switchToMainCam", "null");
-  const trucks = ['truck_R1', 'truck_R2', 'truck_R3'];
+  const dockIntrucks = ['truck_R1', 'truck_R2', 'truck_R3'];
+  const dockOuttrucks = ['truck_D_L1', 'truck_A2', 'truck_D_L3'];
 
   window.addEventListener("storage", (event) => {
     switch (event.key) {
@@ -22,7 +23,12 @@ export function localStorageSetup(scene, camera, controls) {
           );
           resetAreas(scene);
           playAnimations();
-          trucks.forEach((truck) => {
+          dockIntrucks.forEach((truck) => {
+            if(scene.getObjectByName(truck)){
+              scene.getObjectByName(truck).visible = true;
+            }
+          });
+          dockOuttrucks.forEach((truck) => {
             if(scene.getObjectByName(truck)){
               scene.getObjectByName(truck).visible = true;
             }
@@ -132,6 +138,7 @@ export function localStorageSetup(scene, camera, controls) {
           const count = parseInt(event.newValue.split("_")[1]);
           switch (type) {
             case "Y":
+              stopAnimationsAndReset();
               for (let i = 1; i <= count; i++) {
                 scene.getObjectByName("truck_Y" + i).visible = true;
               }
@@ -141,20 +148,31 @@ export function localStorageSetup(scene, camera, controls) {
               scene.getObjectByName("truck_A1").visible = false;
               scene.getObjectByName("truck_A2").visible = false;
               scene.getObjectByName("truck_A3").visible = false;
-              stopAnimationsAndReset();
               break;
-            default:
-              for(let i = 0; i < trucks.length; i++){
-                if(i < count){
-                  scene.getObjectByName(trucks[i]).visible = true;
-                }else{
-                  scene.getObjectByName(trucks[i]).visible = false;
+              case "DI":
+                stopAnimationsAndReset();
+                for(let i = 0; i < dockIntrucks.length; i++){
+                  if(i < count){
+                    scene.getObjectByName(dockIntrucks[i]).visible = true;
+                  }else{
+                    scene.getObjectByName(dockIntrucks[i]).visible = false;
+                  }
                 }
-              }
-              stopAnimationsAndReset();
-              break;
+                break;
+              case "DO":
+                stopAnimationsAndReset();
+                for(let i = 0; i < dockOuttrucks.length; i++){
+                  if(i < count){
+                    scene.getObjectByName(dockOuttrucks[i]).visible = true;
+                  }else{
+                    scene.getObjectByName(dockOuttrucks[i]).visible = false;
+                  }
+                }
+                break;
           }
-        } catch (e) {}
+        } catch (e) {
+          console.warn(e);
+        }
         break;
       case "resetTrucks":
         resetTrucksAnimation(scene);

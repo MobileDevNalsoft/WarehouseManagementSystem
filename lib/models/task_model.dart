@@ -34,7 +34,24 @@ class CycleCountTask {
       this.uom2,
       this.uom3});
 
-  CycleCountTask.fromJson(Map<String, dynamic> json) {}
+  CycleCountTask.fromJson(Map<String, dynamic> json) {
+    isChecked = json['isChecked'];
+    facility = json['facility'];
+    companyID = json['companyID'];
+    grpNbr = json['grpNbr'];
+    task = json['task'];
+    totalExpectedQuantity = json['totalExpectedQuantity'];
+    uom = json['uom'];
+    totalCountedQty = json['totalCountedQty'];
+    uom2 = json['uom2'];
+    totalAdjustedQty = json['totalAdjustedQty'];
+    uom3 = json['uom3'];
+    totalAdjustedCost = json['totalAdjustedCost'];
+    status = json['status'];
+    location = json['location'];
+    createUser = json['createUser'];
+    createTimestamp = json['createTimestamp'];
+  }
 }
 
 class QualityCheckTask {
@@ -95,5 +112,33 @@ class QualityCheckTask {
       this.volume,
       this.weight});
 
-  QualityCheckTask.fromJson(Map<String, dynamic> json) {}
+  QualityCheckTask.fromJson(Map<String, dynamic> json) {
+    isChecked = json['isChecked'];
+    facility = json['facility'];
+    lpnNbr = json['lpnNbr'];
+    status = json['status'];
+    qcStatus = json['qcStatus'];
+    itemCode = json['itemCode'];
+    itemDescription = json['itemDescription'];
+    currQty = json['currQty'];
+    uom = json['uom'];
+    location = json['location'];
+    batchNbr = json['batchNbr'];
+    expiryDate = json['expiryDate'];
+    manufactureDate = json['manufactureDate'];
+    origQty = json['origQty'];
+    uom2 = json['uom2'];
+    receivedQty = json['receivedQty'];
+    uom3 = json['uom3'];
+    poNbr = json['poNbr'];
+    receivedShipment = json['receivedShipment'];
+    putawayType = json['putawayType'];
+    createTimestamp = json['createTimestamp'];
+    receivingUser = json['receivingUser'];
+    shipmentType = json['shipmentType'];
+    weight = json['weight'];
+    uomwt = json['uomwt'];
+    volume = json['volume'];
+    uomvol = json['uomvol'];
+  }
 }

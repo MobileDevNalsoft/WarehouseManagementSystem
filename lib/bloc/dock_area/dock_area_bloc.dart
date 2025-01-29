@@ -65,18 +65,17 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
                   ? {"search_text": event.searchText, "search_area": event.searchArea, "facility_id": '243', "page_num": state.pageNum}
                   : {"facility_id": 243})
           .then((apiResponse) {
-        AreaResponse<DockAreaOut> dockAreaOutResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => DockAreaOut.fromJson(json));
-        state.dockAreaOut = dockAreaOutResponse.data!;
-     
-        emit(state.copyWith(dockAreaOut: state.dockAreaOut, getDataState: GetDataState.success));
-     
+        AreaResponse<DockOutItem> dockOutResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => DockOutItem.fromJson(json));
+        if (apiResponse.response?.data != null) {
+          getIt<JsInteropService>().sendTrucksData(jsonEncode(jsonDecode(apiResponse.response!.data)['data']));
+        }
+        emit(state.copyWith(dockOutItems: dockOutResponse.data!, getDataState: GetDataState.success));
+        getIt<JsInteropService>().setNumberOfTrucks("DO_0");
+        getIt<JsInteropService>().setNumberOfTrucks('DO_${state.dockOutItems!.length.toString()}');
       });
     } catch (e) {
       Log.e(e.toString());
       emit(state.copyWith(getDataState: GetDataState.failure));
     }
   }
-
-
-
 }

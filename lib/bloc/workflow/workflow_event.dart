@@ -5,6 +5,22 @@ abstract class WorkflowEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class GetQualityCheckTasks extends WorkflowEvent {
+  final int facilityID;
+  GetQualityCheckTasks({required this.facilityID});
+
+  @override
+  List<Object> get props => [facilityID];
+}
+
+class GetCycleCountTasks extends WorkflowEvent {
+  final int facilityID;
+  GetCycleCountTasks({required this.facilityID});
+
+  @override
+  List<Object> get props => [facilityID];
+}
+
 class QualityCheckStatusUpdated extends WorkflowEvent {
   final String lpnNbr;
   final bool isChecked;

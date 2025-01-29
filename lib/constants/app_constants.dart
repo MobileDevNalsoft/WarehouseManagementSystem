@@ -63,5 +63,6 @@ class AppConstants {
   static const STORAGE_DRILLDOWN = 'storage_drilldown';
   static const STAGING_DRILLDOWN = 'staging_drilldown';
   static const BINS_STATUS = 'bins_status';
-
+  static const QUALITYCHECK_TASKS = 'qualitycheck_tasks';
+  static const CYCLECOUNT_TASKS = 'cyclecount_tasks';
 }

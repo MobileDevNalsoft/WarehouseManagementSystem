@@ -29,9 +29,12 @@ class _HoverDropdownState extends State<HoverDropdown> {
   SharedPreferences sharedPreferences = getIt<SharedPreferences>();
   List<String> localAccessTypes = ["Dashboard", "WMS Cloud", "Manage Users"];
 
+  late final WarehouseInteractionBloc _warehouseInteractionBloc;
+
   @override
   void initState() {
     super.initState();
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
     height = widget.size.height * 0.08;
     bottomHeight = widget.size.height * 0.08;
     maxHeight = widget.size.height * 0.08 +
@@ -134,7 +137,6 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                               });
                               getIt<NavigatorService>().pushAndRemoveUntil('/login', '/');
-                              sharedPreferences.clear();
                             },
                             child: const ForHover(text: "Log Out")),
                       ],
