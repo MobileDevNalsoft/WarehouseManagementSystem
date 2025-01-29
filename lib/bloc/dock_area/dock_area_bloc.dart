@@ -62,7 +62,7 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
       await _customApi
           .get((event.searchText != null && event.searchText != "") ? AppConstants.SEARCH : AppConstants.DOCK_AREA_OUT,
               queryParameters: (event.searchText != null && event.searchText != "")
-                  ? {"search_text": event.searchText, "search_area": event.searchArea, "facility_id": '243', "page_num": state.pageNum}
+                  ? {"search_text": event.searchText, "search_area": event.searchArea, "facility_id": '243', "page_num": 0}
                   : {"facility_id": 243})
           .then((apiResponse) {
         AreaResponse<DockAreaOut> dockAreaOutResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => DockAreaOut.fromJson(json));
