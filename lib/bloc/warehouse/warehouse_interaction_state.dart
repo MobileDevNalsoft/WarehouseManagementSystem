@@ -45,7 +45,10 @@ final class WarehouseInteractionState {
       this.getAreasOveriviewDataState,
       this.selectedTaskId,
       this.taskIds,
-      this.alertsCount = 0});
+      this.tasksForShoretestPath,
+      this.alertsCount = 0,
+      this.binsForTask
+      });
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -70,6 +73,8 @@ final class WarehouseInteractionState {
   List<String>? taskIds;
   bool? intercepting;
   int alertsCount;
+  List<String>? tasksForShoretestPath;
+  List<String>? binsForTask;
   // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
@@ -101,6 +106,7 @@ final class WarehouseInteractionState {
         alerts: [],
         getAreasOveriviewDataState: AreasOverviewDataState.initial,
         alertsCount: 0,
+        tasksForShoretestPath: [],
         taskIds: ["task1", "task2", "task3", "task4"]);
   }
 
@@ -124,7 +130,10 @@ final class WarehouseInteractionState {
       List<User>? filteredUsers,
       List<Alert>? alerts,
       AreasOverviewDataState? getAreasOveriviewDataState,
-      String? selectedTaskId}) {
+      String? selectedTaskId,
+      List<String>? tasksForShoretestPath,
+      List<String>? binsForTask
+      }) {
     return WarehouseInteractionState(
         dataFromJS: dataFromJS ?? this.dataFromJS,
         isModelLoaded: isModelLoaded ?? this.isModelLoaded,
@@ -147,6 +156,9 @@ final class WarehouseInteractionState {
         filteredUsers: filteredUsers ?? this.filteredUsers,
         alerts: alerts ?? this.alerts,
         getAreasOveriviewDataState: getAreasOveriviewDataState ?? this.getAreasOveriviewDataState,
-        selectedTaskId: selectedTaskId ?? this.selectedTaskId);
+        selectedTaskId: selectedTaskId ?? this.selectedTaskId,
+        tasksForShoretestPath: tasksForShoretestPath ?? this.tasksForShoretestPath,
+        binsForTask: binsForTask ?? this.binsForTask,
+        );
   }
 }

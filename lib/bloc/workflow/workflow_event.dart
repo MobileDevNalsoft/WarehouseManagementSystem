@@ -22,12 +22,12 @@ class GetCycleCountTasks extends WorkflowEvent {
 }
 
 class QualityCheckStatusUpdated extends WorkflowEvent {
-  final String lpnNbr;
-  final bool isChecked;
-  QualityCheckStatusUpdated({required this.lpnNbr, required this.isChecked});
+  final List<String> lpnNbr;
+  bool isChecked;
+  QualityCheckStatusUpdated({required this.lpnNbr,required this.isChecked});
 
   @override
-  List<Object> get props => [lpnNbr, isChecked];
+  List<Object> get props => [lpnNbr,isChecked];
 }
 
 class CycleCountStatusUpdated extends WorkflowEvent {
@@ -79,4 +79,19 @@ class CycleCountTasksUpdated extends WorkflowEvent {
 
   @override
   List<Object> get props => [tasks, ccStatus];
+}
+
+
+class PostQualityCheckTasks extends WorkflowEvent {
+  
+  bool approveStatus;
+  PostQualityCheckTasks({required this.approveStatus});
+
+  @override
+  List<Object> get props => [approveStatus];
+}
+
+class GetCompletedQualityCheckTasks extends WorkflowEvent {
+  GetCompletedQualityCheckTasks();
+
 }

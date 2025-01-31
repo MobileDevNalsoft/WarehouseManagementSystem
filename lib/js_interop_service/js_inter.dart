@@ -37,7 +37,7 @@ external _sendTrucksData(String json);
 external _changeFacility(String json);
 
 @JS()
-external _getShoretestPathForTask(String task);
+external _getShoretestPathForTask(List task);
 
 @JS()
 external _showAlert(String message);
@@ -96,7 +96,7 @@ class JsInteropService {
     _navigateToBin(message);
   }
 
-  getShoretestPathForTask(String message) {
+  getShoretestPathForTask(List message) {
     _getShoretestPathForTask(message);
   }
 

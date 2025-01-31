@@ -62,31 +62,33 @@ class QualityCheckTask {
   String? qcStatus;
   String? itemCode;
   String? itemDescription;
-  int? currQty;
+  String? currQty;
   String? uom;
   String? location;
-  int? batchNbr;
+  String? batchNbr;
   String? expiryDate;
   String? manufactureDate;
-  int? origQty;
+  String? origQty;
   String? uom2;
-  int? receivedQty;
+  String? receivedQty;
   String? uom3;
   String? poNbr;
   String? receivedShipment;
   String? putawayType;
-  String? createTimestamp;
-  String? receivingUser;
+  String? modUser;
+  String? modTs;
+  String? receivedUser;
   String? shipmentType;
-  double? weight;
+  String? weight;
   String? uomwt;
-  double? volume;
+  String? volume;
   String? uomvol;
 
   QualityCheckTask(
       {this.isChecked = false,
       this.batchNbr,
-      this.createTimestamp,
+      this.modUser,
+      this.modTs,
       this.currQty,
       this.expiryDate,
       this.facility,
@@ -101,7 +103,7 @@ class QualityCheckTask {
       this.qcStatus,
       this.receivedQty,
       this.receivedShipment,
-      this.receivingUser,
+      this.receivedUser,
       this.shipmentType,
       this.status,
       this.uom,
@@ -113,8 +115,10 @@ class QualityCheckTask {
       this.weight});
 
   QualityCheckTask.fromJson(Map<String, dynamic> json) {
-    isChecked = json['isChecked'];
+    isChecked = false;
     facility = json['facility'];
+    modUser = json['modUser'];
+    modTs = json['modTs'];
     lpnNbr = json['lpnNbr'];
     status = json['status'];
     qcStatus = json['qcStatus'];
@@ -133,8 +137,7 @@ class QualityCheckTask {
     poNbr = json['poNbr'];
     receivedShipment = json['receivedShipment'];
     putawayType = json['putawayType'];
-    createTimestamp = json['createTimestamp'];
-    receivingUser = json['receivingUser'];
+    receivedUser = json['receivedUser'];
     shipmentType = json['shipmentType'];
     weight = json['weight'];
     uomwt = json['uomwt'];

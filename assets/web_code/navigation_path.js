@@ -399,7 +399,8 @@ export function getShortestPath(
   waitPeriodAtPoints,
   endBin,
   color,
-  lineColor
+  lineColor,
+  pathButtonId
 ) {
   const THREE = three;
   let finalPath = [];
@@ -423,7 +424,7 @@ export function getShortestPath(
     distMatrix,
     pathMatrix,
     nodesToVisit[0],
-    endpoints[0]
+    nodesToVisit[nodesToVisit.length - 1],
   );
   console.warn("Shortest Path Distance:", minDist, path, pathMatrix);
 
@@ -837,11 +838,14 @@ export function getShortestPath(
   const clock = new THREE.Clock();
   const delta = clock.getDelta();
   const gameLoop = () => {
+    if(!document.getElementById(pathButtonId).classList.contains("focused")){
+      return;
+    }
+
     move(clock.getDelta(), waitPeriodAtPoints);
     animateCircles(delta);
     controls.update();
     renderer.render(scene, camera);
-    //  requestAnimationFrame(gameLoop);
     requestAnimationFrame(gameLoop);
   };
   gameLoop();

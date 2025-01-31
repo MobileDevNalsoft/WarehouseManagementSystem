@@ -977,7 +977,7 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
     _data = List.generate(
       data.length,
       (index) => DataGridRow(cells: [
-        if (!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].status : ''),
+        if(!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].isChecked : ''),
         DataGridCell(columnName: 'Facility', value: index < data.length ? data[index].facility : ''),
         DataGridCell(columnName: 'LPN Nbr', value: index < data.length ? data[index].lpnNbr : ''),
         DataGridCell(columnName: 'Status', value: index < data.length ? data[index].status : ''),
@@ -997,13 +997,14 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
         DataGridCell(columnName: 'PO Nbr', value: index < data.length ? data[index].poNbr : ''),
         DataGridCell(columnName: 'Received Shipment', value: index < data.length ? data[index].receivedShipment : ''),
         DataGridCell(columnName: 'Putaway Type', value: index < data.length ? data[index].putawayType : ''),
-        DataGridCell(columnName: 'Create Timestamp', value: index < data.length ? data[index].createTimestamp : ''),
-        DataGridCell(columnName: 'Receiving User', value: index < data.length ? data[index].receivingUser : ''),
+        DataGridCell(columnName: 'Receiving User', value: index < data.length ? data[index].receivedUser : ''),
         DataGridCell(columnName: 'Shipment Type', value: index < data.length ? data[index].shipmentType : ''),
         DataGridCell(columnName: 'Weight', value: index < data.length ? data[index].weight : ''),
         DataGridCell(columnName: 'uom_wt', value: index < data.length ? data[index].uomwt : ''),
         DataGridCell(columnName: 'Volume', value: index < data.length ? data[index].volume : ''),
         DataGridCell(columnName: 'uom_vol', value: index < data.length ? data[index].uomvol : ''),
+        DataGridCell(columnName:(!isCompleted)? 'Submitted by':'Updated by', value: index < data.length ? data[index].modUser : ''),
+        DataGridCell(columnName:(!isCompleted)? 'Submitted timestamp': 'Updated timestamp', value: index < data.length ? data[index].modTs : ''),
       ]),
     );
   }
@@ -1018,6 +1019,7 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
+          
       return dataGridCell.columnName != ''
           ? Container(
               padding: const EdgeInsets.all(16.0),
@@ -1028,7 +1030,7 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Checkbox(
-                    value: state.qualityCheckTasks.where((element) => element.lpnNbr == row.getCells()[2].value).first.isChecked,
+                    value: state.selectedQaulityCheckTasks!.contains(row.getCells()[2].value),
                     onChanged: (value) => _onChanged!(value, row),
                   ));
             });

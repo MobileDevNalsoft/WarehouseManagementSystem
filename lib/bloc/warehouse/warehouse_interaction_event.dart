@@ -103,3 +103,15 @@ class Intercepting extends WarehouseInteractionEvent {
   @override
   List<Object> get props => [intercepting];
 }
+
+class GetTasks extends WarehouseInteractionEvent {
+  GetTasks();
+}
+
+class GetBinsForTask extends WarehouseInteractionEvent {
+  String taskNbr;
+  GetBinsForTask({required this.taskNbr});
+
+  @override
+  List<Object> get props => [taskNbr];
+}

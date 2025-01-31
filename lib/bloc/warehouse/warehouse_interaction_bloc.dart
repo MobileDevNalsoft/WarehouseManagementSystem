@@ -47,10 +47,12 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     Timer.periodic(const Duration(seconds: 5), (timer) {
       _fetchAlerts(); // Subsequent fetches every 10 seconds
     });
+    on<GetTasks>(_onGetTasks);
+    on<GetBinsForTask>(_onGetBinsForTask);
   }
   final NetworkCalls _customApi;
-  final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
-      connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5, username: 'nalsoft_adm', password: 'P@s\$w0rd2024');
+  final NetworkCalls _companyApi =
+      NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5, username: 'nalsoft_adm', password: 'P@s\$w0rd2024');
   final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
   void _onSelectedObject(SelectedObject event, Emitter<WarehouseInteractionState> emit) {
@@ -102,9 +104,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       await _companyApi.get(AppConstants.COMPANY).then((value) {
         CompanyModel companyModel = CompanyModel.fromJson(value.response!.data);
         emit(state.copyWith(
-            companyModel: companyModel,
-            getState: GetCompanyDataState.success,
-            selectedCompanyVal: companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
+            companyModel: companyModel, getState: GetCompanyDataState.success, selectedCompanyVal: companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
         // add(GetFaclityData(company_id: companyModel.results!.where((e) => e.name! == 'M10 Company').first.id!));
       });
     } catch (e) {
@@ -117,8 +117,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     try {
       await _companyApi.get(AppConstants.FACILITY, queryParameters: {'parent_company_id': event.company_id}).then((value) {
         FacilityModel facilityModel = FacilityModel.fromJson(value.response!.data);
-        emit(state.copyWith(
-            facilityModel: facilityModel, facilityDataState: GetFacilityDataState.success, selectedFacilityVal: facilityModel.results![0].name!));
+        emit(state.copyWith(facilityModel: facilityModel, facilityDataState: GetFacilityDataState.success, selectedFacilityVal: facilityModel.results![0].name!));
       });
     } catch (e) {
       print("error $e");
@@ -157,8 +156,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       newFilteredUsers = state.users!.map((user) => user.copy()).toList();
     } else {
       // Filter and create a new list with copies of the filtered users
-      newFilteredUsers =
-          state.users!.where((user) => user.username!.toLowerCase().contains(event.searchText.toLowerCase())).map((user) => user.copy()).toList();
+      newFilteredUsers = state.users!.where((user) => user.username!.toLowerCase().contains(event.searchText.toLowerCase())).map((user) => user.copy()).toList();
     }
     emit(state.copyWith(filteredUsers: newFilteredUsers));
   }
@@ -218,4 +216,39 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     _alertController.close(); // Close the stream controller when bloc is closed
     return super.close();
   }
+
+  Future<void> _onGetTasks(GetTasks event, Emitter<WarehouseInteractionState> emit) async {
+    try {
+      await _customApi
+          .get(
+        AppConstants.SHORTESTPATH_TASKS,).then((apiResponse) {
+       emit(state.copyWith(tasksForShoretestPath: List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["taskNbrs"])));
+        print("shortest path task  ${state.tasksForShoretestPath}");
+      });
+    } catch (e) {
+      print("error in shoretest path $e");
+      Log.e(e);
+      // emit(state.copyWith(getUsersState: GetUsers.failure));
+    }
+  }
+
+  Future<void> _onGetBinsForTask(GetBinsForTask event, Emitter<WarehouseInteractionState> emit) async {
+    try {
+      await _customApi
+          .get(
+        AppConstants.BINS_FOR_TASK,queryParameters: {"facility_id":"243","task_nbr":event.taskNbr}).then((apiResponse) {
+          List<String> bins = List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["bins"]);
+       emit(state.copyWith(binsForTask:bins ));
+        print("bin for task  ${state.binsForTask}");
+        state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
+        getIt<JsInteropService>().getShoretestPathForTask(state.binsForTask!);
+      });
+    } catch (e) {
+      print("error in bin for task $e");
+      Log.e(e);
+      // emit(state.copyWith(getUsersState: GetUsers.failure));
+    }
+  }
+
+
 }
