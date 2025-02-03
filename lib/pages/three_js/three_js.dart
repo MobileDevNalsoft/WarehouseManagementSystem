@@ -491,7 +491,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse'))
+                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse') && !accessTypes.contains('Storage Area'))
                     Align(
                         alignment: Alignment.bottomCenter,
                         child: CustomProgressBar(
