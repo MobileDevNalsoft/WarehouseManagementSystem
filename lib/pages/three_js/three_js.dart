@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,14 +76,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _warehouseInteractionBloc.add(GetTasks());
     textEditingController = TextEditingController(text: _warehouseInteractionBloc.state.selectedTaskId ?? "");
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
-    sliderAnimationController =
-        AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 100), vsync: this);
-    widthAnimation =
-        Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-    positionAnimation =
-        Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-    sliderPositionAnimation = Tween<double>(begin: -450, end: 10)
-        .animate(CurvedAnimation(parent: sliderAnimationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    sliderAnimationController = AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 100), vsync: this);
+    widthAnimation = Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    positionAnimation = Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    sliderPositionAnimation =
+        Tween<double>(begin: -450, end: 10).animate(CurvedAnimation(parent: sliderAnimationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
     // Listen for changes in the state
     _warehouseInteractionBloc.stream.listen((state) {
       if (!state.dataFromJS.keys.contains('object') && state.dataFromJS.keys.first != 'percentComplete') {
@@ -112,8 +110,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     return Scaffold(
         body: Stack(
       children: [
-        BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(
-          
+        BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(
+          listener: (context, state) {
+            print("from listener ${state.getBinsForTaskStatus}");
+          },
           builder: (context, state) {
           return Column(
             children: [
@@ -144,10 +144,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           return SizedBox(
                             height: size.height * 0.92,
                             width: size.width * widthAnimation.value,
-                            child: 
-                            accessTypes.contains('Warehouse')
-                                ?
-                                 InAppWebView(
+                            child: accessTypes.contains('Warehouse')
+                                ? InAppWebView(
                                     initialFile: 'assets/web_code/model.html',
                                     onConsoleMessage: (controller, consoleMessage) {
                                       try {
@@ -156,8 +154,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           bool clearSearchText = true;
                                           if (message.containsKey("area")) {
                                             message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
-                                            clearSearchText =
-                                                _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll('-', '') != message["area"];
+                                            clearSearchText = _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll('-', '') != message["area"];
                                           } else if (message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
                                             context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
                                           }
@@ -169,13 +166,11 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                 _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
                                                 _warehouseInteractionBloc.add(Rendering(isRendered: false));
                                                 Timer.periodic(const Duration(milliseconds: 500), (timer) async {
-                                                  bool? isLoaded = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
-                                                      .getItem(key: "isLoaded");
+                                                  bool? isLoaded = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
                                                   if (isLoaded != null && isLoaded) {
                                                     _warehouseInteractionBloc.add(Rendering(isRendered: true));
                                                     _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
-                                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
-                                                        .removeItem(key: "binsStatus");
+                                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "binsStatus");
                                                     context.read<StorageBloc>().add(GetBinsStatus());
                                                     timer.cancel();
                                                   }
@@ -183,7 +178,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                               }
                                             }
                                           }
-                                          if (message.containsKey("openPathDialog") && message['openPathDialog'] == "true") {
+                                          if (message.containsKey("openPathDialog") && message['openPathDialog'] == "true" ) {
                                             Customs.AnimatedDialog(
                                               context: context,
                                               header: IconButton(
@@ -197,56 +192,63 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                               },
                                               content: [
                                                 const Text("Please enter task Id"),
-                                                BlocBuilder<WarehouseInteractionBloc,WarehouseInteractionState>(
-                                                  builder: (context,state) {
+                                                BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(listener: (context, state) {
                                                   
-                                                    return TypeAheadField(
-                                                      focusNode: focusNode,
-                                                      controller: textEditingController,
-                                                      suggestionsController: suggestionsController,
-                                                      builder: (context, controller, focusNode) {
-                                                        print("taks ${state.tasksForShoretestPath}"); 
-                                                        controller.clear();
-                                                        return TextField(
-                                                            controller: controller,
-                                                            focusNode: focusNode,
-                                                            autofocus: true,
-                                                            decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
-                                                      },
-                                                      itemBuilder: (context, value) {
-                                                        return ListTile(
-                                                          title: Text(
-                                                            value.toString(),
-                                                            style: const TextStyle(fontSize: 14),
-                                                          ),
-                                                        );
-                                                      },
-                                                      suggestionsCallback: (pattern) {
-
-                                                      return  state.tasksForShoretestPath!.where((element) => element.toLowerCase().contains(pattern.toLowerCase())).toList();
-                                                          
-                                                        },
-                                                      
-                                                      onSelected: (value) {
-                                                        state.selectedTaskId= value.toString();
-                                                        textEditingController.text = value;
-                                                        suggestionsController.refresh();
-                                                        focusNode.unfocus();
-                                                      },
-                                                    );
-                                                  }
-                                                ),
-                                                TextButton(
-                                                    onPressed: () {
-
-                                                      if(textEditingController.text.trim().isNotEmpty){
-                                                        
-                                                       _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim())); 
-                                                       
-                                                      }
-                                                      Navigator.pop(context);
+                                                }, builder: (context, state) {
+                                                  return TypeAheadField(
+                                                    focusNode: focusNode,
+                                                    controller: textEditingController,
+                                                    
+                                                    suggestionsController: suggestionsController,
+                                                    builder: (context, controller, focusNode) {
+                                                      print("taks ${state.tasksForShoretestPath}");
+                                                      // controller.clear();
+                                                      return TextField(
+                                                          controller: controller,
+                                                          focusNode: focusNode,
+                                                          // autofocus: true,
+                                                          decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
                                                     },
-                                                    child: PointerInterceptor(child: const Text("Done")))
+                                                    itemBuilder: (context, value) {
+                                                      return ListTile(
+                                                        title: Text(
+                                                          value.toString(),
+                                                          style: const TextStyle(fontSize: 14),
+                                                        ),
+                                                      );
+                                                    },
+                                                    suggestionsCallback: (pattern) {
+                                                      return state.tasksForShoretestPath!.where((element) => element.toLowerCase().contains(pattern.toLowerCase())).toList();
+                                                    },
+                                                    onSelected: (value) {
+                                                      state.selectedTaskId = value.toString();
+                                                      textEditingController.text = value;
+                                                      suggestionsController.refresh();
+                                                      focusNode.unfocus();
+                                                    },
+                                                  );
+                                                }),
+                                                StatefulBuilder(
+                                                  builder: (context,stfSetState) {
+                                                    return TextButton(
+                                                        onPressed: () {
+                                                    
+                                                          if (textEditingController.text.trim().isNotEmpty) {
+                                                            
+                                                            _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
+                                                            
+                                                          }
+                                                          Navigator.pop(context);
+                                                          {
+                                                            stfSetState(() {
+                                                              _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
+                                                            });
+                                                          // _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
+                                                          }
+                                                        },
+                                                        child: PointerInterceptor(child: const Text("Done")));
+                                                  }
+                                                )
                                               ],
                                             );
                                           }
@@ -262,9 +264,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                         (timer) async {
                                           // ignore: prefer_conditional_assignment
                                           if (objectNames.isEmpty) {
-                                            objectNames = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
-                                                    .getItem(key: "modelObjectNames") ??
-                                                [];
+                                            objectNames =
+                                                await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "modelObjectNames") ?? [];
                                           }
                                           timer.cancel();
                                         },
@@ -308,9 +309,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded &&
-                      accessTypes.contains('Warehouse') &&
-                      !accessTypes.contains('Storage Area'))
+                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse') && !accessTypes.contains('Storage Area'))
                     Align(
                         alignment: Alignment.bottomCenter,
                         child: CustomProgressBar(
@@ -452,6 +451,17 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     sliderAnimationController: sliderAnimationController,
                   )));
             }),
+        if(context.watch<WarehouseInteractionBloc>().state.getBinsForTaskStatus == GetBinsForTaskStatus.loading)
+          Positioned(
+            top: size.height * 0.1,
+            child: Center(
+              child: Container(
+                color: Colors.green,
+                  width: 50,
+                  height: 50,
+                  child: Lottie.asset('assets/lottie/path.json')),
+            ),
+          ),
       ],
     ));
   }

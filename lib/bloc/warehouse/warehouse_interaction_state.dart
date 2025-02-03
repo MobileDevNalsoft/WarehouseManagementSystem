@@ -20,6 +20,9 @@ enum GetUsers { initial, loading, success, failure }
 
 enum GetUserInfo { initial, loading, success, failure }
 
+enum GetBinsForTaskStatus { initial, loading, success, failure }
+
+
 // ignore: must_be_immutable
 final class WarehouseInteractionState {
   WarehouseInteractionState(
@@ -47,7 +50,8 @@ final class WarehouseInteractionState {
       this.taskIds,
       this.tasksForShoretestPath,
       this.alertsCount = 0,
-      this.binsForTask
+      this.binsForTask,
+      getBinsForTaskStatus,
       });
 
   Map<String, dynamic> dataFromJS;
@@ -75,6 +79,7 @@ final class WarehouseInteractionState {
   int alertsCount;
   List<String>? tasksForShoretestPath;
   List<String>? binsForTask;
+  GetBinsForTaskStatus? getBinsForTaskStatus;
   // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
@@ -107,7 +112,11 @@ final class WarehouseInteractionState {
         getAreasOveriviewDataState: AreasOverviewDataState.initial,
         alertsCount: 0,
         tasksForShoretestPath: [],
-        taskIds: ["task1", "task2", "task3", "task4"]);
+        binsForTask: [],  
+        taskIds: ["task1", "task2", "task3", "task4"],
+        getBinsForTaskStatus: GetBinsForTaskStatus.initial,
+        );
+
   }
 
   WarehouseInteractionState copyWith(
@@ -132,8 +141,10 @@ final class WarehouseInteractionState {
       AreasOverviewDataState? getAreasOveriviewDataState,
       String? selectedTaskId,
       List<String>? tasksForShoretestPath,
-      List<String>? binsForTask
+      List<String>? binsForTask,
+      GetBinsForTaskStatus? getBinsForTaskStatus
       }) {
+        print("inside copywith ${getBinsForTaskStatus}");
     return WarehouseInteractionState(
         dataFromJS: dataFromJS ?? this.dataFromJS,
         isModelLoaded: isModelLoaded ?? this.isModelLoaded,
@@ -159,6 +170,7 @@ final class WarehouseInteractionState {
         selectedTaskId: selectedTaskId ?? this.selectedTaskId,
         tasksForShoretestPath: tasksForShoretestPath ?? this.tasksForShoretestPath,
         binsForTask: binsForTask ?? this.binsForTask,
+        getBinsForTaskStatus: getBinsForTaskStatus ?? this.getBinsForTaskStatus,
         );
   }
 }

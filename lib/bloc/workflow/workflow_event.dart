@@ -7,7 +7,8 @@ abstract class WorkflowEvent extends Equatable {
 
 class GetQualityCheckTasks extends WorkflowEvent {
   final int facilityID;
-  GetQualityCheckTasks({required this.facilityID});
+  int page;
+  GetQualityCheckTasks({required this.facilityID,required this.page});
 
   @override
   List<Object> get props => [facilityID];
@@ -92,6 +93,7 @@ class PostQualityCheckTasks extends WorkflowEvent {
 }
 
 class GetCompletedQualityCheckTasks extends WorkflowEvent {
-  GetCompletedQualityCheckTasks();
+  int page;
+  GetCompletedQualityCheckTasks({required this.page});
 
 }

@@ -17,6 +17,8 @@ class WorkflowState {
   int? buttonIndex;
   Set<String>? selectedQaulityCheckTasks ;
   PostQualityCheckStatus? postQualityCheckStatus;
+  int? pendingQualityCheckPageCount;
+  int? completedQualityCheckPageCount;
 
   WorkflowState(
       {this.getQualityCheckStatus,
@@ -28,7 +30,9 @@ class WorkflowState {
       this.selectedQaulityCheckTasks,
       this.buttonIndex,
       this.postQualityCheckStatus,
-      this.completedQualityChecks
+      this.completedQualityChecks,
+      this.pendingQualityCheckPageCount,
+      this.completedQualityCheckPageCount,
       });
 
   factory WorkflowState.initial() {
@@ -615,6 +619,8 @@ class WorkflowState {
     Set<String>? selectedQaulityCheckTasks,
     PostQualityCheckStatus? postQualityCheckStatus,
     List<QualityCheckTask>? completedQualityChecks,
+    int? pendingQualityCheckPageCount,
+    int? completedQualityCheckPageCount,
   }) {
     return WorkflowState(
       getQualityCheckStatus: getQualityCheckStatus ?? this.getQualityCheckStatus,
@@ -627,6 +633,8 @@ class WorkflowState {
       selectedQaulityCheckTasks: selectedQaulityCheckTasks ?? this.selectedQaulityCheckTasks,
         postQualityCheckStatus: postQualityCheckStatus ?? this.postQualityCheckStatus,
         completedQualityChecks: completedQualityChecks ?? this.completedQualityChecks,
+        pendingQualityCheckPageCount: pendingQualityCheckPageCount ?? this.pendingQualityCheckPageCount, 
+        completedQualityCheckPageCount: completedQualityCheckPageCount ?? this.completedQualityCheckPageCount,
     );
   }
 }
