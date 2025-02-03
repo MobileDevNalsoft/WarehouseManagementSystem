@@ -113,3 +113,15 @@ class GetLPNLifeCycle extends WarehouseInteractionEvent {
   @override
   List<Object> get props => [facilityID, companyID, lpnNbr];
 }
+
+class GetTasks extends WarehouseInteractionEvent {
+  GetTasks();
+}
+
+class GetBinsForTask extends WarehouseInteractionEvent {
+  String taskNbr;
+  GetBinsForTask({required this.taskNbr});
+
+  @override
+  List<Object> get props => [taskNbr];
+}

@@ -201,7 +201,7 @@ export function localStorageSetup(scene, camera, controls) {
                 scene
                   .getObjectByName(e.trim())
                   .material.color.set(
-                    parseInt(localStorage.getItem("orange"), 16)
+                    0xfaf3e2
                   );
               } else {
                 scene
@@ -224,7 +224,7 @@ export function localStorageSetup(scene, camera, controls) {
                 scene
                   .getObjectByName(localStorage.getItem("prevBin"))
                   .material.color.set(
-                    parseInt(localStorage.getItem("orange"), 16)
+                    0xfaf3e2
                   );
               } else {
                 scene
@@ -278,7 +278,7 @@ export function localStorageSetup(scene, camera, controls) {
               scene
                 .getObjectByName(e.trim())
                 .material.color.set(
-                  parseInt(localStorage.getItem("orange"), 16)
+                  0xfaf3e2
                 );
             } else {
               scene
@@ -299,7 +299,7 @@ export function localStorageSetup(scene, camera, controls) {
               scene
                 .getObjectByName(localStorage.getItem("prevBin"))
                 .material.color.set(
-                  parseInt(localStorage.getItem("orange"), 16)
+                  0xfaf3e2
                 );
             } else {
               scene
@@ -314,11 +314,13 @@ export function localStorageSetup(scene, camera, controls) {
         } catch (e) {}
         break;
       case "getShoretestPathForTask":
-        if (event.newValue != "" && event.newValue != null) {
+        document.querySelector("#stopAnimation").click();
+        if (event.newValue != [] && event.newValue != null) {
           document.querySelector("#showPath").click();
         } else {
-          document.querySelector("#stopAnimation").click();
+          if(document.querySelector("#path").classList.contains("focused")){
           document.querySelector("#path").classList.toggle("focused");
+        }
         }
         break;
 

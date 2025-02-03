@@ -21,7 +21,7 @@ export async function loadModel() {
             },
             (xhr) => {
                 if(xhr.lengthComputable){
-                    let percentComplete = (xhr.loaded/xhr.total)*100;
+                    let percentComplete = (xhr.loaded/xhr.total)*99;
 
                     console.log('{"percentComplete":"' +
                          Math.round(percentComplete)

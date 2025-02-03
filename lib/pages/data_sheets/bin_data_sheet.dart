@@ -106,7 +106,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                   child: ClipRRect(
                                                     borderRadius: BorderRadius.circular(12),
                                                     child: Image.memory(
-                                                      base64Decode(state.storageBinItems![index].image!),
+                                                      base64Decode((state.storageBinItems![index].image!.contains("data:image"))?state.storageBinItems![index].image!.substring(22): state.storageBinItems![index].image!),
                                                       fit: BoxFit.cover,
                                                     ),
                                                   ),

@@ -28,7 +28,6 @@ export async function initScene(renderer) {
   const gltf = await loadModel(renderer, scene);
   const model = gltf.scene;
   scene.add(model);
-
   const data = JSON.parse(window.localStorage.getItem("facilityData"));
 
   // Animation setup
@@ -59,7 +58,6 @@ export async function initScene(renderer) {
   const box3 = new THREE.Group();
 
   const loader = new GLTFLoader.GLTFLoader();
-
   //fork lift model
   loader.load(
     "../glbs/forkLift_final_pro.glb",
@@ -293,7 +291,8 @@ export async function initScene(renderer) {
       2000,
       agvTask[agvTask.length - 1],
       0xffff00,
-      0x0099ff
+      0x0099ff,
+      "digitalTwin"
     ));
     bins.forEach((bin) => {
       if (!bin.toLowerCase().includes("area")) {
@@ -310,11 +309,11 @@ export async function initScene(renderer) {
 
   console.warn("nodes", nodes);
 
-  const pathButton = document.getElementById("path");
-
+  const pathButton = document.getElementById("path");  
   const areasButton = document.getElementById("areas");
+  const digitalTwinButton = document.getElementById("digitalTwin");
 
-  document.getElementById("path").addEventListener("click", (e) => {
+  document.getElementById("path").addEventListener("click", (e) =>  {
     console.warn("got inside path click");
     if (areasButton.classList.contains("focused")) {
       areasButton.classList.remove("focused");
@@ -325,32 +324,49 @@ export async function initScene(renderer) {
         }
       });
     }
+    if( digitalTwin.classList.contains("focused")){
+      digitalTwin.classList.toggle("focused");
+    }
+
 
     // Toggle the visibility of the input field and text
     if (!pathButton.classList.contains("focused")) {
       if (combinedPath.length != 0) {
-        stopAnimation();
+       stopAnimation();
       }
       console.log('{"openPathDialog":"true","object":"null"}');
-      console.warn(bins.toString());
     } else {
       stopAnimation();
+      pathButton.classList.remove("focused");
     }
-    pathButton.classList.toggle("focused");
+    // pathButton.classList.toggle("focused");
   });
 
   function stopAnimation() {
     combinedPath = [];
     checkpointCircles.forEach((circle) => scene.remove(circle));
+    
     try {
       pathLine.forEach((line) => scene.remove(line));
     } catch (e) {
       console.warn("error in removing path line");
     }
-    // scene.remove(pathLine);
+
+   try{
     scene.remove(forkLift);
+   }
+   catch(e){
+    console.warn("error in removing fork lift");
+   }
+   try{
     scene.remove(agv);
+   }
+   catch(e){
+    console.warn("error in removing agv");
+   }
+
     document.getElementById("agvtooltip").style.display = "none";
+
     try {
       bins.forEach((e) => {
         if (
@@ -366,30 +382,46 @@ export async function initScene(renderer) {
     if (clock) {
       clock.stop();
     }
+    return 
   }
 
   document.getElementById("showPath").addEventListener("click", (e) => {
-    digitalTwin.classList.remove("focused");
-    bins = forkLiftbins;
-    localStorage.setItem("highlightBins", bins.toString());
-    ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
-      bins,
-      nodeMap,
-      nodes,
-      aisleBayPoints,
-      intermediatePoints,
-      THREE,
-      scene,
-      camera,
-      controls,
-      forkLift,
-      renderer,
-      1500,
-      bins[bins.length - 1],
-      0xffff00,
-      0xcc0066
-    ));
-
+    try{
+      if(!pathButton.classList.contains("focused")){
+        
+        pathButton.classList.add("focused");
+      }
+      digitalTwin.classList.remove("focused");
+      
+      console.warn( localStorage.getItem("getShoretestPathForTask"));
+     
+      bins=["p4",...localStorage.getItem("getShoretestPathForTask").split(","),"p1"];
+      
+      localStorage.setItem("highlightBins", bins.toString());
+      
+      ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
+        bins,
+        nodeMap,
+        nodes,
+        aisleBayPoints,
+        intermediatePoints,
+        THREE,
+        scene,
+        camera,
+        controls,
+        forkLift,
+        renderer,
+        1500,
+        bins[bins.length - 1],
+        0xffff00,
+        0xcc0066,
+        "path"
+      ));
+  
+    }catch(e){
+      console.warn("error in removing fork lift");
+    }
+   
     bins.forEach((bin) => {
       if (!bin.toLowerCase().includes("area")) {
         try {

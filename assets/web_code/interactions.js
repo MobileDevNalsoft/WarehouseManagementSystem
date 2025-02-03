@@ -398,6 +398,8 @@ export function addInteractions(scene, model, camera, controls) {
       localStorage.removeItem("resetBoxColors");
       try {
         if (localStorage.getItem("highlightBins")) {
+          let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
+          let orangeBins = JSON.parse(localStorage.getItem("binsStatus")).orange;
           localStorage
             .getItem("highlightBins")
             .toString()
@@ -405,32 +407,28 @@ export function addInteractions(scene, model, camera, controls) {
             .forEach((e) => {
               let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
 
-              let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
-              let orangeBins = JSON.parse(
-                localStorage.getItem("binsStatus")
-              ).orange;
-
-              if (redBins.includes(bin)) {
+              try{ if (redBins.includes(bin)) {
                 scene
                   .getObjectByName(bin)
                   .material.color.set(
                     parseInt(localStorage.getItem("red"), 16)
                   );
               } else if (orangeBins.includes(bin)) {
-                scene
-                  .getObjectByName(bin)
-                  .material.color.set(
-                    parseInt(localStorage.getItem("orange"), 16)
-                  );
-              } else {
-                scene
-                  .getObjectByName(bin)
-                  .material.color.set(
-                    parseInt(localStorage.getItem("green"), 16)
-                  );
-              }
+                scene.getObjectByName(bin).material.color.set(0xfaf3e2);
+                // scene
+                //   .getObjectByName(bin)
+                //   .material.color.set(
+                //     parseInt(localStorage.getItem("orange"), 16)
+                //   );
+              } 
+              
               // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
-              scene.getObjectByName(bin).material.opacity = 0.5;
+              // scene.getObjectByName(bin).material.opacity = 0.5;
+              }catch(e){
+                console.warn("error inside the "+e);
+              }
+
+             
             });
 
           localStorage.removeItem("highlightBins");
@@ -454,12 +452,8 @@ export function addInteractions(scene, model, camera, controls) {
           } else if (orangeBins.includes(bin)) {
             scene
               .getObjectByName(bin)
-              .material.color.set(parseInt(localStorage.getItem("orange"), 16));
-          } else {
-            scene
-              .getObjectByName(bin)
-              .material.color.set(parseInt(localStorage.getItem("green"), 16));
-          }
+              .material.color.set(0xfaf3e2);
+          } 
           // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
           scene.getObjectByName(bin).material.opacity = 0.5;
           localStorage.removeItem("prevBin");
@@ -536,11 +530,9 @@ export function addInteractions(scene, model, camera, controls) {
         prevBin.material.color.set(parseInt(localStorage.getItem("red"), 16));
       } else if (orangeBins.includes(prevBin.name)) {
         prevBin.material.color.set(
-          parseInt(localStorage.getItem("orange"), 16)
+          0xfaf3e2
         );
-      } else {
-        prevBin.material.color.set(parseInt(localStorage.getItem("green"), 16));
-      }
+      } 
       // prevBin.material.color.set(0xfaf3e2);
     }
 

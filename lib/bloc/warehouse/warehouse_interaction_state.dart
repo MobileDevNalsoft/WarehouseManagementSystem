@@ -49,7 +49,9 @@ final class WarehouseInteractionState {
       this.getAreasOveriviewDataState,
       this.selectedTaskId,
       this.taskIds,
-      this.alertsCount = 0});
+      this.tasksForShoretestPath,
+      this.alertsCount = 0,
+      this.binsForTask});
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -76,6 +78,8 @@ final class WarehouseInteractionState {
   List<String>? taskIds;
   bool? intercepting;
   int alertsCount;
+  List<String>? tasksForShoretestPath;
+  List<String>? binsForTask;
   // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
@@ -140,7 +144,8 @@ final class WarehouseInteractionState {
               status: 'Shipped',
               user: 'User 9',
               date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-31T19:01:36.653880-04:00').toLocal())),
-        ]);
+        ],
+        tasksForShoretestPath: []);
   }
 
   WarehouseInteractionState copyWith(
@@ -165,31 +170,36 @@ final class WarehouseInteractionState {
       List<Alert>? alerts,
       AreasOverviewDataState? getAreasOveriviewDataState,
       String? selectedTaskId,
-      LPNLifeCycleStatus? getLpnLifeCycleStatus}) {
+      LPNLifeCycleStatus? getLpnLifeCycleStatus,
+      List<String>? tasksForShoretestPath,
+      List<String>? binsForTask}) {
     return WarehouseInteractionState(
-        dataFromJS: dataFromJS ?? this.dataFromJS,
-        isModelLoaded: isModelLoaded ?? this.isModelLoaded,
-        intercepting: intercepting ?? this.intercepting,
-        inAppWebViewController: inAppWebViewController,
-        selectedSearchArea: selectedSearchArea ?? this.selectedSearchArea,
-        searchText: searchText ?? this.searchText,
-        // searchController: searchController,
-        getState: getState ?? this.getState,
-        companyModel: companyModel ?? this.companyModel,
-        lpnLifeCycle: lpnLifeCycle ?? this.lpnLifeCycle,
-        selectedCompanyVal: selectedCompanyVal ?? this.selectedCompanyVal,
-        facilityModel: facilityModel ?? this.facilityModel,
-        facilityDataState: facilityDataState ?? this.facilityDataState,
-        selectedFacilityVal: selectedFacilityVal ?? this.selectedFacilityVal,
-        getUserInfoState: getUserInfoState ?? this.getUserInfoState,
-        getUsersState: getUsersState ?? this.getUsersState,
-        userInfo: userInfo ?? this.userInfo,
-        users: users ?? this.users,
-        getLpnLifeCycleStatus: getLpnLifeCycleStatus ?? this.getLpnLifeCycleStatus,
-        isRendered: isRendered ?? this.isRendered,
-        filteredUsers: filteredUsers ?? this.filteredUsers,
-        alerts: alerts ?? this.alerts,
-        getAreasOveriviewDataState: getAreasOveriviewDataState ?? this.getAreasOveriviewDataState,
-        selectedTaskId: selectedTaskId ?? this.selectedTaskId);
+      dataFromJS: dataFromJS ?? this.dataFromJS,
+      isModelLoaded: isModelLoaded ?? this.isModelLoaded,
+      intercepting: intercepting ?? this.intercepting,
+      inAppWebViewController: inAppWebViewController,
+      selectedSearchArea: selectedSearchArea ?? this.selectedSearchArea,
+      searchText: searchText ?? this.searchText,
+      // searchController: searchController,
+      getState: getState ?? this.getState,
+      companyModel: companyModel ?? this.companyModel,
+      lpnLifeCycle: lpnLifeCycle ?? this.lpnLifeCycle,
+      selectedCompanyVal: selectedCompanyVal ?? this.selectedCompanyVal,
+      facilityModel: facilityModel ?? this.facilityModel,
+      facilityDataState: facilityDataState ?? this.facilityDataState,
+      selectedFacilityVal: selectedFacilityVal ?? this.selectedFacilityVal,
+      getUserInfoState: getUserInfoState ?? this.getUserInfoState,
+      getUsersState: getUsersState ?? this.getUsersState,
+      userInfo: userInfo ?? this.userInfo,
+      users: users ?? this.users,
+      getLpnLifeCycleStatus: getLpnLifeCycleStatus ?? this.getLpnLifeCycleStatus,
+      isRendered: isRendered ?? this.isRendered,
+      filteredUsers: filteredUsers ?? this.filteredUsers,
+      alerts: alerts ?? this.alerts,
+      getAreasOveriviewDataState: getAreasOveriviewDataState ?? this.getAreasOveriviewDataState,
+      selectedTaskId: selectedTaskId ?? this.selectedTaskId,
+      tasksForShoretestPath: tasksForShoretestPath ?? this.tasksForShoretestPath,
+      binsForTask: binsForTask ?? this.binsForTask,
+    );
   }
 }

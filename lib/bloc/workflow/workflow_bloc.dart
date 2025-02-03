@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
+import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/local_network_calls.dart';
 import 'package:wmssimulator/logger/logger.dart';
 import 'package:wmssimulator/models/task_model.dart';
@@ -17,6 +20,8 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
       : _customApi = customApi,
         super(WorkflowState.initial()) {
     on<QualityCheckStatusUpdated>(_onQualityCheckStatusUpdated);
+    
+    on<GetCompletedQualityCheckTasks>(_onGetCompletedQualityCheckTasks);
     on<CycleCountStatusUpdated>(_onCycleCountStatusUpdated);
     on<SelectAllQualityCheckTasks>(_onSelectAllQualityCheckTasks);
     on<SelectAllCycleCountTasks>(_onSelectAllCycleCountTasks);
@@ -25,17 +30,19 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
     on<CycleCountTasksUpdated>(_onCycleCountTasksUpdated);
     on<GetQualityCheckTasks>(_onGetQualityCheckTasks);
     on<GetCycleCountTasks>(_onGetCycleCountTasks);
+    on<PostQualityCheckTasks>(_onPostQualityCheckTasks);
   }
 
   final NetworkCalls _customApi;
-
+  final NetworkCalls _wmsCustomApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
+      connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5, username: 'nalsoft_adm', password: 'P@s\$w0rd2024');
   Future<void> _onGetQualityCheckTasks(GetQualityCheckTasks event, Emitter<WorkflowState> emit) async {
     try {
       emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.initial));
-      await _customApi.get(AppConstants.QUALITYCHECK_TASKS).then((apiResponse) {
-        AreaResponse<QualityCheckTask> dockOutResponse =
-            AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => QualityCheckTask.fromJson(json));
-        emit(state.copyWith(qualityCheckTasks: dockOutResponse.data!, getQualityCheckStatus: QualityCheckStatus.success));
+      await _customApi.get(AppConstants.QUALITYCHECK_TASKS, queryParameters: {'facility_id': '243'}).then((apiResponse) {
+        AreaResponse<QualityCheckTask> qualityCheckResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => QualityCheckTask.fromJson(json));
+
+        emit(state.copyWith(qualityCheckTasks: qualityCheckResponse.data!, getQualityCheckStatus: QualityCheckStatus.success));
       });
     } catch (e) {
       Log.e(e.toString());
@@ -43,11 +50,31 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
     }
   }
 
+    Future<void> _onGetCompletedQualityCheckTasks(GetCompletedQualityCheckTasks event, Emitter<WorkflowState> emit) async {
+    try {
+      emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.initial));
+      await _customApi.get(AppConstants.QUALITYCHECK_COMPLETED_TASKS, queryParameters: {'facility_id': '243'}).then((apiResponse) {
+        AreaResponse<QualityCheckTask> qualityCheckResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => QualityCheckTask.fromJson(json));
+        emit(state.copyWith(completedQualityChecks: qualityCheckResponse.data!, getQualityCheckStatus: QualityCheckStatus.success));
+      });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.failure));
+    }
+  }
+
+
   void _onGetCycleCountTasks(GetCycleCountTasks event, Emitter<WorkflowState> emit) {}
 
   void _onQualityCheckStatusUpdated(QualityCheckStatusUpdated event, Emitter<WorkflowState> emit) {
-    state.qualityCheckTasks.where((task) => task.lpnNbr == event.lpnNbr).first.isChecked = event.isChecked;
-    emit(state.copyWith(qualityCheckTasks: state.qualityCheckTasks));
+    if (event.isChecked) {
+      state.selectedQaulityCheckTasks!.addAll(event.lpnNbr);
+    } else {
+      for (var element in event.lpnNbr) {
+        state.selectedQaulityCheckTasks!.remove(element);
+      }
+    }
+    emit(state.copyWith(selectedQaulityCheckTasks: state.selectedQaulityCheckTasks));
   }
 
   void _onCycleCountStatusUpdated(CycleCountStatusUpdated event, Emitter<WorkflowState> emit) {
@@ -70,6 +97,12 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
   }
 
   void _onButtonClicked(ButtonClicked event, Emitter<WorkflowState> emit) {
+    if(event.index==0){
+      add(GetQualityCheckTasks(facilityID: 243));
+    }
+    else{
+      add(GetCompletedQualityCheckTasks());
+    }
     emit(state.copyWith(buttonIndex: event.index));
   }
 
@@ -81,9 +114,39 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
   }
 
   void _onCycleCountTasksUpdated(CycleCountTasksUpdated event, Emitter<WorkflowState> emit) {
+    // _customApi.post(AppConstants.POST, data: jsonEncode(event.tasks)).then((apiResponse) {
+    //   emit(state.copyWith(cycleCountTasks: state.cycleCountTasks));
+    // });
+
     for (int i = 0; i < event.tasks.length; i++) {
       state.cycleCountTasks.where((task) => task.task == event.tasks[i]).first.status = event.ccStatus;
     }
     emit(state.copyWith(cycleCountTasks: state.cycleCountTasks));
+  }
+
+  void _onPostQualityCheckTasks(PostQualityCheckTasks event, Emitter<WorkflowState> emit) async{
+    try{
+      emit(state.copyWith(postQualityCheckStatus: PostQualityCheckStatus.loading));
+        await _wmsCustomApi.post(event.approveStatus == true ? AppConstants.QUALITYCHECK_BULK_APPROVE : AppConstants.QUALITYCHECK_BULK_REJECT,
+        data:{"parameters": {"facility_id": 243, "company_id": 399, "container_nbr__in": state.selectedQaulityCheckTasks!.toList()}},
+       ).then((apiResponse) {
+        if (apiResponse.response!.statusCode==200){
+          // if(state.selectedQaulityCheckTasks!.isNotEmpty){
+          // // state.qualityCheckTasks.removeWhere((element) => state.selectedQaulityCheckTasks!.contains(element.lpnNbr));
+          // }
+          emit(state.copyWith(selectedQaulityCheckTasks: {},postQualityCheckStatus: PostQualityCheckStatus.success));  
+          // add(GetQualityCheckTasks(facilityID: 243));
+        }
+        else{
+          emit(state.copyWith(postQualityCheckStatus: PostQualityCheckStatus.failure));  
+        }
+    }).catchError((e){
+      emit(state.copyWith(postQualityCheckStatus: PostQualityCheckStatus.failure));  
+    });
+
+    }catch(e){
+      emit(state.copyWith(postQualityCheckStatus: PostQualityCheckStatus.failure));  
+    }
+     emit(state.copyWith(postQualityCheckStatus: PostQualityCheckStatus.initial,getQualityCheckStatus: QualityCheckStatus.initial));
   }
 }
