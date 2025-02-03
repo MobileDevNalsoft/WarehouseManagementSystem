@@ -397,7 +397,7 @@ export function addInteractions(scene, model, camera, controls) {
       }
       localStorage.removeItem("resetBoxColors");
       try {
-        if (localStorage.getItem("highlightBins")) {
+        if (localStorage.getItem("highlightBins") && !document.getElementById("path").classList.contains("focused") && !document.getElementById("digitalTwin").classList.contains("focused") ) {
           let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
           let orangeBins = JSON.parse(localStorage.getItem("binsStatus")).orange;
           localStorage

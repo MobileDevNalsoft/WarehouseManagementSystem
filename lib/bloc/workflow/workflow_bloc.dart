@@ -38,11 +38,11 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
       connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5, username: 'nalsoft_adm', password: 'P@s\$w0rd2024');
   Future<void> _onGetQualityCheckTasks(GetQualityCheckTasks event, Emitter<WorkflowState> emit) async {
     try {
-      emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.initial));
-      await _customApi.get(AppConstants.QUALITYCHECK_TASKS, queryParameters: {'facility_id': '243'}).then((apiResponse) {
+      emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.initial,pendingQualityCheckPageCount: event.page));
+      await _customApi.get(AppConstants.QUALITYCHECK_TASKS, queryParameters: {'facility_id': '243','page_num':event.page}).then((apiResponse) {
         AreaResponse<QualityCheckTask> qualityCheckResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => QualityCheckTask.fromJson(json));
 
-        emit(state.copyWith(qualityCheckTasks: qualityCheckResponse.data!, getQualityCheckStatus: QualityCheckStatus.success));
+        emit(state.copyWith(qualityCheckTasks:event.page==0?qualityCheckResponse.data: [...state.qualityCheckTasks,...qualityCheckResponse.data!], getQualityCheckStatus: QualityCheckStatus.success));
       });
     } catch (e) {
       Log.e(e.toString());
@@ -52,10 +52,12 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
 
     Future<void> _onGetCompletedQualityCheckTasks(GetCompletedQualityCheckTasks event, Emitter<WorkflowState> emit) async {
     try {
-      emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.initial));
-      await _customApi.get(AppConstants.QUALITYCHECK_COMPLETED_TASKS, queryParameters: {'facility_id': '243'}).then((apiResponse) {
+      emit(state.copyWith(getQualityCheckStatus: QualityCheckStatus.initial,completedQualityCheckPageCount: event.page));
+      await _customApi.get(AppConstants.QUALITYCHECK_COMPLETED_TASKS, queryParameters: {'facility_id': '243','page_num':event.page}).then((apiResponse) {
         AreaResponse<QualityCheckTask> qualityCheckResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => QualityCheckTask.fromJson(json));
-        emit(state.copyWith(completedQualityChecks: qualityCheckResponse.data!, getQualityCheckStatus: QualityCheckStatus.success));
+
+        emit(state.copyWith(completedQualityChecks: event.page==0?qualityCheckResponse.data:[...state.completedQualityChecks!, ...qualityCheckResponse.data!], getQualityCheckStatus: QualityCheckStatus.success));
+        print("comp length ${state.completedQualityChecks!.length}");
       });
     } catch (e) {
       Log.e(e.toString());
@@ -98,10 +100,10 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
 
   void _onButtonClicked(ButtonClicked event, Emitter<WorkflowState> emit) {
     if(event.index==0){
-      add(GetQualityCheckTasks(facilityID: 243));
+      add(GetQualityCheckTasks(facilityID: 243,page:0));
     }
     else{
-      add(GetCompletedQualityCheckTasks());
+      add(GetCompletedQualityCheckTasks(page:0));
     }
     emit(state.copyWith(buttonIndex: event.index));
   }
@@ -132,7 +134,7 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
        ).then((apiResponse) {
         if (apiResponse.response!.statusCode==200){
           // if(state.selectedQaulityCheckTasks!.isNotEmpty){
-          // // state.qualityCheckTasks.removeWhere((element) => state.selectedQaulityCheckTasks!.contains(element.lpnNbr));
+          state.qualityCheckTasks.removeWhere((element) => state.selectedQaulityCheckTasks!.contains(element.lpnNbr));
           // }
           emit(state.copyWith(selectedQaulityCheckTasks: {},postQualityCheckStatus: PostQualityCheckStatus.success));  
           // add(GetQualityCheckTasks(facilityID: 243));

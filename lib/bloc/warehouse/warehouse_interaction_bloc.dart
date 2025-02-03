@@ -237,8 +237,10 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     try {
       await _customApi
           .get(
-        AppConstants.SHORTESTPATH_TASKS,).then((apiResponse) {
-       emit(state.copyWith(tasksForShoretestPath: List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["taskNbrs"])));
+        AppConstants.SHORTESTPATH_TASKS,
+      )
+          .then((apiResponse) {
+        emit(state.copyWith(tasksForShoretestPath: List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["taskNbrs"])));
         print("shortest path task  ${state.tasksForShoretestPath}");
       });
     } catch (e) {
@@ -249,22 +251,31 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
   }
 
   Future<void> _onGetBinsForTask(GetBinsForTask event, Emitter<WarehouseInteractionState> emit) async {
+    emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.loading));
+   
     try {
-      await _customApi
-          .get(
-        AppConstants.BINS_FOR_TASK,queryParameters: {"facility_id":"243","task_nbr":event.taskNbr}).then((apiResponse) {
+      await 
+      
+      Future.delayed(Duration(seconds: 2),() async =>{
+      await _customApi.get(AppConstants.BINS_FOR_TASK, queryParameters: {"facility_id": "243", "task_nbr": event.taskNbr}).then((apiResponse) {
+        if (apiResponse.response!.statusCode == 200) {
           List<String> bins = List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["bins"]);
-       emit(state.copyWith(binsForTask:bins ));
-        print("bin for task  ${state.binsForTask}");
-        state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
-        getIt<JsInteropService>().getShoretestPathForTask(state.binsForTask!);
-      });
+          emit(state.copyWith(binsForTask: bins, getBinsForTaskStatus: GetBinsForTaskStatus.success));
+          print("bins for task  ${state.binsForTask}");
+
+          state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
+          getIt<JsInteropService>().getShoretestPathForTask(state.binsForTask!);
+        }
+        else{
+          emit(state.copyWith(binsForTask: [],  getBinsForTaskStatus: GetBinsForTaskStatus.failure));
+          
+        }
+      })});
     } catch (e) {
       print("error in bin for task $e");
       Log.e(e);
-      // emit(state.copyWith(getUsersState: GetUsers.failure));
+      emit(state.copyWith(binsForTask: [],  getBinsForTaskStatus: GetBinsForTaskStatus.failure));
     }
+    emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.initial));
   }
-
-
 }

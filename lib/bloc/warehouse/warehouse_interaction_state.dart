@@ -22,36 +22,40 @@ enum GetUserInfo { initial, loading, success, failure }
 
 enum LPNLifeCycleStatus { initial, loading, success, failure }
 
+enum GetBinsForTaskStatus { initial, loading, success, failure }
+
 // ignore: must_be_immutable
 final class WarehouseInteractionState {
-  WarehouseInteractionState(
-      {required this.dataFromJS,
-      this.inAppWebViewController,
-      this.isModelLoaded = false,
-      this.intercepting = true,
-      this.isRendered = true,
-      this.selectedSearchArea = "Storagearea",
-      this.searchText,
-      this.getState = GetCompanyDataState.initial,
-      this.companyModel,
-      this.selectedCompanyVal,
-      this.facilityModel,
-      this.facilityDataState = GetFacilityDataState.initial,
-      this.selectedFacilityVal,
-      this.lpnLifeCycle,
-      this.getUserInfoState,
-      this.getUsersState,
-      this.getLpnLifeCycleStatus,
-      this.userInfo,
-      this.users,
-      this.filteredUsers,
-      this.alerts,
-      this.getAreasOveriviewDataState,
-      this.selectedTaskId,
-      this.taskIds,
-      this.tasksForShoretestPath,
-      this.alertsCount = 0,
-      this.binsForTask});
+  WarehouseInteractionState({
+    required this.dataFromJS,
+    this.inAppWebViewController,
+    this.isModelLoaded = false,
+    this.intercepting = true,
+    this.isRendered = true,
+    this.selectedSearchArea = "Storagearea",
+    this.searchText,
+    this.getState = GetCompanyDataState.initial,
+    this.companyModel,
+    this.selectedCompanyVal,
+    this.facilityModel,
+    this.facilityDataState = GetFacilityDataState.initial,
+    this.selectedFacilityVal,
+    this.lpnLifeCycle,
+    this.getUserInfoState,
+    this.getUsersState,
+    this.getLpnLifeCycleStatus,
+    this.userInfo,
+    this.users,
+    this.filteredUsers,
+    this.alerts,
+    this.getAreasOveriviewDataState,
+    this.selectedTaskId,
+    this.taskIds,
+    this.tasksForShoretestPath,
+    this.alertsCount = 0,
+    this.binsForTask,
+    getBinsForTaskStatus,
+  });
 
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
@@ -80,72 +84,68 @@ final class WarehouseInteractionState {
   int alertsCount;
   List<String>? tasksForShoretestPath;
   List<String>? binsForTask;
+  GetBinsForTaskStatus? getBinsForTaskStatus;
   // TextEditingController searchController;
   factory WarehouseInteractionState.initial() {
     return WarehouseInteractionState(
-        dataFromJS: {"object": "null"},
-        isModelLoaded: false,
-        intercepting: false,
-        getState: GetCompanyDataState.initial,
-        facilityDataState: GetFacilityDataState.initial,
-        companyModel: CompanyModel(
-          results: [
-            CompanyResults(name: "M10 Company", id: 1),
-            CompanyResults(name: "Demo", id: 2),
-            CompanyResults(name: "Demo Customer1", id: 3),
-            CompanyResults(name: "Demo Customer2"),
-            CompanyResults(name: "SUM Compnay", id: 4),
-            CompanyResults(name: "VIM Company", id: 5)
-          ],
-        ),
-        selectedCompanyVal: "M10 Company",
-        facilityModel: FacilityModel(results: [
-          FacilityResults(name: "Duty-Paid Warehouse", id: 1),
-          FacilityResults(name: "Duty-Free Warehouse", id: 2),
-        ]),
-        selectedFacilityVal: "Duty-Paid Warehouse",
-        getUserInfoState: GetUserInfo.initial,
-        getUsersState: GetUsers.initial,
-        users: [],
-        filteredUsers: [],
-        alerts: [],
-        getAreasOveriviewDataState: AreasOverviewDataState.initial,
-        alertsCount: 0,
-        taskIds: ["task1", "task2", "task3", "task4"],
-        getLpnLifeCycleStatus: LPNLifeCycleStatus.initial,
-        lpnLifeCycle: [
-          LPNStatus(
-              status: 'Created',
-              user: 'User 1',
-              date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-24T12:45:36.653880-04:00').toLocal())),
-          LPNStatus(
-              status: 'Quality Check',
-              user: 'User 2',
-              date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-25T04:00:36.653880-04:00').toLocal())),
-          LPNStatus(
-              status: 'Received',
-              user: 'User 3',
-              date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-26T09:31:36.653880-04:00').toLocal())),
-          LPNStatus(
-              status: 'Located',
-              user: 'User 4',
-              date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-27T13:45:36.653880-04:00').toLocal())),
-          LPNStatus(
-              status: 'Allocated',
-              user: 'User 5',
-              date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-27T17:42:36.653880-04:00').toLocal())),
-          LPNStatus(
-              status: 'Picked', user: 'User 6', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-28T10:55:36.653880-04:00').toLocal())),
-          LPNStatus(
-              status: 'Packed', user: 'User 7', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-29T11:09:36.653880-04:00').toLocal())),
-          LPNStatus(
-              status: 'Loaded', user: 'User 8', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-30T15:15:36.653880-04:00').toLocal())),
-          LPNStatus(
-              status: 'Shipped',
-              user: 'User 9',
-              date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-31T19:01:36.653880-04:00').toLocal())),
+      dataFromJS: {"object": "null"},
+      isModelLoaded: false,
+      intercepting: false,
+      getState: GetCompanyDataState.initial,
+      facilityDataState: GetFacilityDataState.initial,
+      companyModel: CompanyModel(
+        results: [
+          CompanyResults(name: "M10 Company", id: 1),
+          CompanyResults(name: "Demo", id: 2),
+          CompanyResults(name: "Demo Customer1", id: 3),
+          CompanyResults(name: "Demo Customer2"),
+          CompanyResults(name: "SUM Compnay", id: 4),
+          CompanyResults(name: "VIM Company", id: 5)
         ],
-        tasksForShoretestPath: []);
+      ),
+      selectedCompanyVal: "M10 Company",
+      facilityModel: FacilityModel(results: [
+        FacilityResults(name: "Duty-Paid Warehouse", id: 1),
+        FacilityResults(name: "Duty-Free Warehouse", id: 2),
+      ]),
+      selectedFacilityVal: "Duty-Paid Warehouse",
+      getUserInfoState: GetUserInfo.initial,
+      getUsersState: GetUsers.initial,
+      users: [],
+      filteredUsers: [],
+      alerts: [],
+      getAreasOveriviewDataState: AreasOverviewDataState.initial,
+      alertsCount: 0,
+      taskIds: ["task1", "task2", "task3", "task4"],
+      getLpnLifeCycleStatus: LPNLifeCycleStatus.initial,
+      lpnLifeCycle: [
+        LPNStatus(
+            status: 'Created', user: 'User 1', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-24T12:45:36.653880-04:00').toLocal())),
+        LPNStatus(
+            status: 'Quality Check',
+            user: 'User 2',
+            date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-25T04:00:36.653880-04:00').toLocal())),
+        LPNStatus(
+            status: 'Received', user: 'User 3', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-26T09:31:36.653880-04:00').toLocal())),
+        LPNStatus(
+            status: 'Located', user: 'User 4', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-27T13:45:36.653880-04:00').toLocal())),
+        LPNStatus(
+            status: 'Allocated',
+            user: 'User 5',
+            date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-27T17:42:36.653880-04:00').toLocal())),
+        LPNStatus(
+            status: 'Picked', user: 'User 6', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-28T10:55:36.653880-04:00').toLocal())),
+        LPNStatus(
+            status: 'Packed', user: 'User 7', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-29T11:09:36.653880-04:00').toLocal())),
+        LPNStatus(
+            status: 'Loaded', user: 'User 8', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-30T15:15:36.653880-04:00').toLocal())),
+        LPNStatus(
+            status: 'Shipped', user: 'User 9', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-31T19:01:36.653880-04:00').toLocal())),
+      ],
+      tasksForShoretestPath: [],
+      binsForTask: [],
+      getBinsForTaskStatus: GetBinsForTaskStatus.initial,
+    );
   }
 
   WarehouseInteractionState copyWith(
@@ -172,7 +172,8 @@ final class WarehouseInteractionState {
       String? selectedTaskId,
       LPNLifeCycleStatus? getLpnLifeCycleStatus,
       List<String>? tasksForShoretestPath,
-      List<String>? binsForTask}) {
+      List<String>? binsForTask,
+      GetBinsForTaskStatus? getBinsForTaskStatus}) {
     return WarehouseInteractionState(
       dataFromJS: dataFromJS ?? this.dataFromJS,
       isModelLoaded: isModelLoaded ?? this.isModelLoaded,
@@ -183,7 +184,6 @@ final class WarehouseInteractionState {
       // searchController: searchController,
       getState: getState ?? this.getState,
       companyModel: companyModel ?? this.companyModel,
-      lpnLifeCycle: lpnLifeCycle ?? this.lpnLifeCycle,
       selectedCompanyVal: selectedCompanyVal ?? this.selectedCompanyVal,
       facilityModel: facilityModel ?? this.facilityModel,
       facilityDataState: facilityDataState ?? this.facilityDataState,
@@ -192,7 +192,6 @@ final class WarehouseInteractionState {
       getUsersState: getUsersState ?? this.getUsersState,
       userInfo: userInfo ?? this.userInfo,
       users: users ?? this.users,
-      getLpnLifeCycleStatus: getLpnLifeCycleStatus ?? this.getLpnLifeCycleStatus,
       isRendered: isRendered ?? this.isRendered,
       filteredUsers: filteredUsers ?? this.filteredUsers,
       alerts: alerts ?? this.alerts,
@@ -200,6 +199,7 @@ final class WarehouseInteractionState {
       selectedTaskId: selectedTaskId ?? this.selectedTaskId,
       tasksForShoretestPath: tasksForShoretestPath ?? this.tasksForShoretestPath,
       binsForTask: binsForTask ?? this.binsForTask,
+      getBinsForTaskStatus: getBinsForTaskStatus ?? this.getBinsForTaskStatus,
     );
   }
 }
