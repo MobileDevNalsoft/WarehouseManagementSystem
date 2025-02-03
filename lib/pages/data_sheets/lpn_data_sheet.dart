@@ -73,7 +73,7 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
                     context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: const {"object": "null"}, clearSearchText: true));
 
                     getIt<JsInteropService>().resetTrucks();
-                    getIt<JsInteropService>().lpnLifeCycle(false);
+                    getIt<JsInteropService>().lpnLifeCycle('false');
                   },
                   child: const Icon(Icons.cancel_rounded, color: Colors.white))
             ],
@@ -135,11 +135,16 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
                                               width: lsize.maxHeight * 0.06,
                                               color: Colors.white,
                                             ),
+                                            afterLineStyle: LineStyle(color: const Color.fromRGBO(68, 98, 136, 1)),
+                                            beforeLineStyle: LineStyle(color: const Color.fromRGBO(68, 98, 136, 1)),
                                             startChild: index % 2 != 0
                                                 ? Container(
                                                     margin: EdgeInsets.only(right: lsize.maxHeight * 0.015),
                                                     padding: EdgeInsets.all(lsize.maxHeight * 0.02),
-                                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                                                    decoration: BoxDecoration(
+                                                        color: const Color.fromRGBO(192, 208, 230, 1),
+                                                        borderRadius: BorderRadius.circular(15),
+                                                        border: Border.all(color: Colors.white, width: 3)),
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.end,
                                                       children: [
@@ -163,7 +168,10 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
                                                 ? Container(
                                                     margin: EdgeInsets.only(left: lsize.maxHeight * 0.015),
                                                     padding: EdgeInsets.all(lsize.maxHeight * 0.02),
-                                                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                                                    decoration: BoxDecoration(
+                                                        color: const Color.fromRGBO(192, 208, 230, 1),
+                                                        borderRadius: BorderRadius.circular(15),
+                                                        border: Border.all(color: Colors.white, width: 3)),
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
@@ -188,10 +196,14 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
                                             height: lsize.maxHeight * 0.08,
                                             width: lsize.maxWidth * 0.08,
                                             decoration: BoxDecoration(
+                                              color: const Color.fromRGBO(68, 98, 136, 1),
                                               shape: BoxShape.circle,
                                             ),
                                             padding: EdgeInsets.all(lsize.maxHeight * 0.01),
-                                            child: Image.asset('assets/images/${icons[index]}.png'),
+                                            child: Image.asset(
+                                              'assets/images/${icons[index]}.png',
+                                              color: Colors.white,
+                                            ),
                                           )
                                         ],
                                       );

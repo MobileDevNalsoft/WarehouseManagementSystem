@@ -10,7 +10,7 @@ import 'package:js/js.dart';
 external _switchToMainCam(String camName);
 
 @JS()
-external _lpnLifeCycle(bool show);
+external _lpnLifeCycle(String show);
 
 @JS()
 external _isRackDataLoaded(bool value);
@@ -71,7 +71,7 @@ class JsInteropService {
     _changeFacility(data);
   }
 
-  lpnLifeCycle(bool show) {
+  lpnLifeCycle(String show) {
     _lpnLifeCycle(show);
   }
 

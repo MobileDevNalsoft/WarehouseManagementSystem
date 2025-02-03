@@ -741,14 +741,16 @@ class Customs {
                         focusNode.unfocus();
                       },
                     ),
-                    Gap(size.height * 0.03),
+                    Gap(size.height * 0.01),
                     TextButton(
                         onPressed: () {
                           context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"lpn": textEditingController.text}, clearSearchText: true));
-                          getIt<JsInteropService>().lpnLifeCycle(true);
+                          context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.removeItem(key: 'lpnLifeCycle');
+                          getIt<JsInteropService>().lpnLifeCycle('true');
                           Navigator.pop(context);
                         },
-                        child: PointerInterceptor(child: const Text("Done")))
+                        child: PointerInterceptor(child: const Text("Done"))),
+                    Gap(size.height * 0.01),
                   ],
                 ),
               ),
@@ -778,61 +780,61 @@ class Customs {
       barrierDismissible: true,
       barrierLabel: '',
       pageBuilder: (context, animation, secondaryAnimation) {
-            return PointerInterceptor(
-              child: Container(
-                margin: EdgeInsets.only(top: size.height * 0.4),
-                alignment: Alignment.topCenter,
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        margin: EdgeInsets.only(top: size.height * 0.035),
-                        width: size.width * 0.16,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
-                                child: PointerInterceptor(
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (onClose != null) {
-                                        onClose();
-                                      }
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Icon(
-                                      Icons.close,
-                                      size: 20,
-                                      weight: 1,
-                                    ),
-                                  ),
+        return PointerInterceptor(
+          child: Container(
+            margin: EdgeInsets.only(top: size.height * 0.4),
+            alignment: Alignment.topCenter,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    margin: EdgeInsets.only(top: size.height * 0.035),
+                    width: size.width * 0.16,
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
+                            child: PointerInterceptor(
+                              child: InkWell(
+                                onTap: () {
+                                  if (onClose != null) {
+                                    onClose();
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 20,
+                                  weight: 1,
                                 ),
                               ),
                             ),
-                            ...content,
-                            Gap(size.height * 0.01),
-                          ],
+                          ),
                         ),
-                      ),
+                        ...content,
+                        Gap(size.height * 0.01),
+                      ],
                     ),
-                    ClipPath(
-                      clipper: DialogTopClipper(),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 35,
-                        child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            );
+                ClipPath(
+                  clipper: DialogTopClipper(),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 35,
+                    child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
       },
     );
   }
@@ -1088,11 +1090,19 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
     _data = List.generate(
       data.length,
       (index) => DataGridRow(cells: [
-        if(!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].isChecked : ''),
+        if (!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].isChecked : ''),
         DataGridCell(columnName: 'Facility', value: index < data.length ? data[index].facility : ''),
         DataGridCell(columnName: 'LPN Nbr', value: index < data.length ? data[index].lpnNbr : ''),
         DataGridCell(columnName: 'Status', value: index < data.length ? data[index].status : ''),
-        DataGridCell(columnName: 'QC Status', value: index < data.length ? data[index].qcStatus=='20'?"Accepted" :data[index].qcStatus=='30'? "Rejected": "Pending" : ''),
+        DataGridCell(
+            columnName: 'QC Status',
+            value: index < data.length
+                ? data[index].qcStatus == '20'
+                    ? "Accepted"
+                    : data[index].qcStatus == '30'
+                        ? "Rejected"
+                        : "Pending"
+                : ''),
         DataGridCell(columnName: 'Item Code', value: index < data.length ? data[index].itemCode : ''),
         DataGridCell(columnName: 'Item Description', value: index < data.length ? data[index].itemDescription : ''),
         DataGridCell(columnName: 'Curr Qty', value: index < data.length ? data[index].currQty : ''),
@@ -1112,8 +1122,8 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
         // DataGridCell(columnName: 'uom_wt', value: index < data.length ? data[index].uomwt : ''),
         DataGridCell(columnName: 'Volume', value: index < data.length ? data[index].volume : ''),
         // DataGridCell(columnName: 'uom_vol', value: index < data.length ? data[index].uomvol : ''),
-        DataGridCell(columnName:(!isCompleted)? 'Submitted by':'Updated by', value: index < data.length ? data[index].modUser : ''),
-        DataGridCell(columnName:(!isCompleted)? 'Submitted timestamp': 'Updated timestamp', value: index < data.length ? data[index].modTs : ''),
+        DataGridCell(columnName: (!isCompleted) ? 'Submitted by' : 'Updated by', value: index < data.length ? data[index].modUser : ''),
+        DataGridCell(columnName: (!isCompleted) ? 'Submitted timestamp' : 'Updated timestamp', value: index < data.length ? data[index].modTs : ''),
       ]),
     );
   }
@@ -1128,7 +1138,6 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
-          
       return dataGridCell.columnName != ''
           ? Container(
               padding: const EdgeInsets.all(16.0),
@@ -1145,7 +1154,6 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
             });
     }).toList());
   }
-
 }
 
 class WorkflowCycleCountDataSource extends DataGridSource {
@@ -1199,7 +1207,6 @@ class WorkflowCycleCountDataSource extends DataGridSource {
                   ));
             });
     }).toList());
-
   }
   // @override
   // handleLoadMoreRows() async {

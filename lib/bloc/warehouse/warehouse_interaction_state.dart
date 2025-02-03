@@ -190,6 +190,8 @@ final class WarehouseInteractionState {
       selectedFacilityVal: selectedFacilityVal ?? this.selectedFacilityVal,
       getUserInfoState: getUserInfoState ?? this.getUserInfoState,
       getUsersState: getUsersState ?? this.getUsersState,
+      getLpnLifeCycleStatus: getLpnLifeCycleStatus ?? this.getLpnLifeCycleStatus,
+      lpnLifeCycle: lpnLifeCycle ?? this.lpnLifeCycle,
       userInfo: userInfo ?? this.userInfo,
       users: users ?? this.users,
       isRendered: isRendered ?? this.isRendered,
