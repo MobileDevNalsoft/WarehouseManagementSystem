@@ -5,13 +5,30 @@ abstract class WorkflowEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class QualityCheckStatusUpdated extends WorkflowEvent {
-  final String lpnNbr;
-  final bool isChecked;
-  QualityCheckStatusUpdated({required this.lpnNbr, required this.isChecked});
+class GetQualityCheckTasks extends WorkflowEvent {
+  final int facilityID;
+  int page;
+  GetQualityCheckTasks({required this.facilityID,required this.page});
 
   @override
-  List<Object> get props => [lpnNbr, isChecked];
+  List<Object> get props => [facilityID];
+}
+
+class GetCycleCountTasks extends WorkflowEvent {
+  final int facilityID;
+  GetCycleCountTasks({required this.facilityID});
+
+  @override
+  List<Object> get props => [facilityID];
+}
+
+class QualityCheckStatusUpdated extends WorkflowEvent {
+  final List<String> lpnNbr;
+  bool isChecked;
+  QualityCheckStatusUpdated({required this.lpnNbr,required this.isChecked});
+
+  @override
+  List<Object> get props => [lpnNbr,isChecked];
 }
 
 class CycleCountStatusUpdated extends WorkflowEvent {
@@ -63,4 +80,20 @@ class CycleCountTasksUpdated extends WorkflowEvent {
 
   @override
   List<Object> get props => [tasks, ccStatus];
+}
+
+
+class PostQualityCheckTasks extends WorkflowEvent {
+  
+  bool approveStatus;
+  PostQualityCheckTasks({required this.approveStatus});
+
+  @override
+  List<Object> get props => [approveStatus];
+}
+
+class GetCompletedQualityCheckTasks extends WorkflowEvent {
+  int page;
+  GetCompletedQualityCheckTasks({required this.page});
+
 }

@@ -34,7 +34,24 @@ class CycleCountTask {
       this.uom2,
       this.uom3});
 
-  CycleCountTask.fromJson(Map<String, dynamic> json) {}
+  CycleCountTask.fromJson(Map<String, dynamic> json) {
+    isChecked = json['isChecked'];
+    facility = json['facility'];
+    companyID = json['companyID'];
+    grpNbr = json['grpNbr'];
+    task = json['task'];
+    totalExpectedQuantity = json['totalExpectedQuantity'];
+    uom = json['uom'];
+    totalCountedQty = json['totalCountedQty'];
+    uom2 = json['uom2'];
+    totalAdjustedQty = json['totalAdjustedQty'];
+    uom3 = json['uom3'];
+    totalAdjustedCost = json['totalAdjustedCost'];
+    status = json['status'];
+    location = json['location'];
+    createUser = json['createUser'];
+    createTimestamp = json['createTimestamp'];
+  }
 }
 
 class QualityCheckTask {
@@ -45,31 +62,33 @@ class QualityCheckTask {
   String? qcStatus;
   String? itemCode;
   String? itemDescription;
-  int? currQty;
+  String? currQty;
   String? uom;
   String? location;
-  int? batchNbr;
+  String? batchNbr;
   String? expiryDate;
   String? manufactureDate;
-  int? origQty;
+  String? origQty;
   String? uom2;
-  int? receivedQty;
+  String? receivedQty;
   String? uom3;
   String? poNbr;
   String? receivedShipment;
   String? putawayType;
-  String? createTimestamp;
-  String? receivingUser;
+  String? modUser;
+  String? modTs;
+  String? receivedUser;
   String? shipmentType;
-  double? weight;
+  String? weight;
   String? uomwt;
-  double? volume;
+  String? volume;
   String? uomvol;
 
   QualityCheckTask(
       {this.isChecked = false,
       this.batchNbr,
-      this.createTimestamp,
+      this.modUser,
+      this.modTs,
       this.currQty,
       this.expiryDate,
       this.facility,
@@ -84,7 +103,7 @@ class QualityCheckTask {
       this.qcStatus,
       this.receivedQty,
       this.receivedShipment,
-      this.receivingUser,
+      this.receivedUser,
       this.shipmentType,
       this.status,
       this.uom,
@@ -95,5 +114,34 @@ class QualityCheckTask {
       this.volume,
       this.weight});
 
-  QualityCheckTask.fromJson(Map<String, dynamic> json) {}
+  QualityCheckTask.fromJson(Map<String, dynamic> json) {
+    isChecked = false;
+    facility = json['facility'];
+    modUser = json['modUser'];
+    modTs = json['modTs'];
+    lpnNbr = json['lpnNbr'];
+    status = json['status'];
+    qcStatus = json['qcStatus'];
+    itemCode = json['itemCode'];
+    itemDescription = json['itemDescription'];
+    currQty = json['currQty'];
+    uom = json['uom'];
+    location = json['location'];
+    batchNbr = json['batchNbr'];
+    expiryDate = json['expiryDate'];
+    manufactureDate = json['manufactureDate'];
+    origQty = json['origQty'];
+    uom2 = json['uom2'];
+    receivedQty = json['receivedQty'];
+    uom3 = json['uom3'];
+    poNbr = json['poNbr'];
+    receivedShipment = json['receivedShipment'];
+    putawayType = json['putawayType'];
+    receivedUser = json['receivedUser'];
+    shipmentType = json['shipmentType'];
+    weight = json['weight'];
+    uomwt = json['uomwt'];
+    volume = json['volume'];
+    uomvol = json['uomvol'];
+  }
 }

@@ -38,11 +38,25 @@ class ActivityAreaBloc extends Bloc<ActivityAreaEvent, ActivityAreaState> {
         } else {
           state.activityAreaItems!.addAll(activityAreaResponse.data!);
         }
-
-        emit(state.copyWith(activityAreaItems: state.activityAreaItems, getDataState: GetDataState.success));
       });
     } catch (e) {
       Log.e(e.toString());
+      emit(state.copyWith(getDataState: GetDataState.failure));
+    }
+
+    try {
+      await _customApi
+          .get((event.searchText != null && event.searchText != "") ? AppConstants.SEARCH : AppConstants.ACTIVITY_AREA_TASKS,
+              queryParameters: (event.searchText != null && event.searchText != "")
+                  ? {"search_text": event.searchText, "search_area": "ACTIVITY", "facility_id": '243'}
+                  : {"facility_id": 243})
+          .then((apiResponse) {
+        AreaResponse<ActivityTaskItem> activityAreaTaskResponse =
+            AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => ActivityTaskItem.fromJson(json));
+        emit(state.copyWith(activityTasks: activityAreaTaskResponse.data!, getDataState: GetDataState.success));
+      });
+    } catch (e) {
+      print("error $e");
       emit(state.copyWith(getDataState: GetDataState.failure));
     }
   }

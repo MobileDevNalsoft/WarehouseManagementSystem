@@ -70,7 +70,7 @@ class UpdateUserAccess extends WarehouseInteractionEvent {
   List<Object> get props => [updatedUsers];
 }
 
-class GetAlerts extends WarehouseInteractionEvent {}
+class ResetAlertsCount extends WarehouseInteractionEvent {}
 
 class GetAreasOverviewData extends WarehouseInteractionEvent {
   final int facilityID;
@@ -102,4 +102,26 @@ class Intercepting extends WarehouseInteractionEvent {
 
   @override
   List<Object> get props => [intercepting];
+}
+
+class GetLPNLifeCycle extends WarehouseInteractionEvent {
+  int facilityID;
+  int companyID;
+  String lpnNbr;
+  GetLPNLifeCycle({required this.facilityID, required this.companyID, required this.lpnNbr});
+
+  @override
+  List<Object> get props => [facilityID, companyID, lpnNbr];
+}
+
+class GetTasks extends WarehouseInteractionEvent {
+  GetTasks();
+}
+
+class GetBinsForTask extends WarehouseInteractionEvent {
+  String taskNbr;
+  GetBinsForTask({required this.taskNbr});
+
+  @override
+  List<Object> get props => [taskNbr];
 }

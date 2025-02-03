@@ -27,6 +27,9 @@ class AppConstants {
   static const String APIUSERNAME = "NALSOFT";
   static const String APIPASSWORD = "Nalsoft@123";
 
+  // api credentials
+  static const String WMSUSERNAME = "nalsoft_adm";
+  static const String WMSPASSWORD = 'P@s\$w0rd2024';
   // urls
   static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxwms/wms/';
 
@@ -41,8 +44,11 @@ class AppConstants {
 
   // methods
   static const ACTIVITY_AREA = 'activity_area';
+  static const ACTIVITY_AREA_TASKS = 'activity_area_tasks';
   static const INSPECTION_AREA = 'inspection_area';
   static const DOCK_AREA = 'dock_area';
+  static const DOCK_AREA_OUT = 'dock_out';
+
   static const YARD_AREA = 'yard_area';
   static const RECEIVING_AREA = 'receiving_area';
   static const STAGING_AREA = 'staging_area';
@@ -60,5 +66,13 @@ class AppConstants {
   static const STORAGE_DRILLDOWN = 'storage_drilldown';
   static const STAGING_DRILLDOWN = 'staging_drilldown';
   static const BINS_STATUS = 'bins_status';
+  static const QUALITYCHECK_TASKS = 'get_lpns_for_quality_check';
 
+  static const QUALITYCHECK_COMPLETED_TASKS = 'get_completed_quality_check_lpns';
+  static const CYCLECOUNT_TASKS = 'cyclecount_tasks';
+  static const CONTAINERS = 'get_containers';
+  static const QUALITYCHECK_BULK_APPROVE = 'iblpn/bulk_qc_approve';
+  static const QUALITYCHECK_BULK_REJECT = 'iblpn/bulk_qc_reject';
+  static const SHORTESTPATH_TASKS = 'shortest_path_tasks';
+  static const BINS_FOR_TASK = 'get_bins_for_task';
 }

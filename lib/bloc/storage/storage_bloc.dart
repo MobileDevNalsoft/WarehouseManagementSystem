@@ -30,7 +30,6 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
     try {
       await _customApi.get(AppConstants.STORAGE_AISLE, queryParameters: {"facility_id": "243", "aisle": event.selectedRack, "page_num": 0}).then((value) {
         StorageAisle storageArea = StorageAisle.fromJson(jsonDecode(value.response!.data));
-        print(storageArea.data);
         emit(state.copyWith(storageArea: storageArea, storageAreaStatus: StorageAreaStatus.success));
       });
     } catch (e) {
@@ -82,18 +81,16 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
   //   }
   // }
 
-
-
-
-  void _onGetBinsStatus(GetBinsStatus event, Emitter<StorageState> emit) async{
-      try {
+  void _onGetBinsStatus(GetBinsStatus event, Emitter<StorageState> emit) async {
+    try {
       await _customApi.get(AppConstants.BINS_STATUS, queryParameters: {"facility_id": "243"}).then((value) {
-       
-      print("bins status ${jsonDecode(value.response!.data)["data"]}");
-      emit(state.copyWith(binsStatus: jsonDecode(value.response!.data)["data"],));
-      getIt<JsInteropService>().binsStatus(jsonEncode(state.binsStatus!));
-      // getIt<JsInteropService>().redBins(state.binsStatus!["red"]);
-      // getIt<JsInteropService>().orangeBins(state.binsStatus!["orange"]);
+        print("bins status ${jsonDecode(value.response!.data)["data"]}");
+        emit(state.copyWith(
+          binsStatus: jsonDecode(value.response!.data)["data"],
+        ));
+        getIt<JsInteropService>().binsStatus(jsonEncode(state.binsStatus!));
+        // getIt<JsInteropService>().redBins(state.binsStatus!["red"]);
+        // getIt<JsInteropService>().orangeBins(state.binsStatus!["orange"]);
       });
     } catch (e) {
       print("error $e");

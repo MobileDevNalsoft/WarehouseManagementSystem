@@ -4,6 +4,7 @@ import 'dart:html' as html; // Import the HTML library
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
@@ -64,6 +65,7 @@ class Customs {
         Container(
           height: size.height * 0.86,
           width: size.width * 0.22,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
               color: const Color.fromRGBO(12, 46, 87, 1),
               borderRadius: BorderRadius.circular(16),
@@ -648,6 +650,117 @@ class Customs {
     );
   }
 
+  static void LPNSelection({
+    required BuildContext context,
+  }) {
+    Size size = MediaQuery.of(context).size;
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black45,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.bounceInOut.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        FocusNode focusNode = FocusNode();
+        SuggestionsController suggestionsController = SuggestionsController();
+        TextEditingController textEditingController = TextEditingController();
+        return PointerInterceptor(
+          child: Container(
+            margin: EdgeInsets.only(top: size.height * 0.35),
+            alignment: Alignment.topCenter,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: size.width * 0.16,
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
+                        child: PointerInterceptor(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              size: 20,
+                              weight: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Text("Please select LPN"),
+                    TypeAheadField(
+                      focusNode: focusNode,
+                      controller: textEditingController,
+                      suggestionsController: suggestionsController,
+                      builder: (context, controller, focusNode) {
+                        controller.clear();
+                        return TextField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            autofocus: true,
+                            decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
+                      },
+                      itemBuilder: (context, value) {
+                        return ListTile(
+                          title: Text(
+                            value.toString(),
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        );
+                      },
+                      suggestionsCallback: (pattern) {
+                        return [
+                          "IBLPN12345678901",
+                          "IBLPN12345678902",
+                          "IBLPN12345678903",
+                          "IBLPN12345678904",
+                          "IBLPN12345678905",
+                          "IBLPN12345678906",
+                          "IBLPN12345678907",
+                        ].where((element) => element.contains(pattern)).toList();
+                      },
+                      onSelected: (value) {
+                        textEditingController.text = value;
+                        focusNode.unfocus();
+                      },
+                    ),
+                    Gap(size.height * 0.01),
+                    TextButton(
+                        onPressed: () {
+                          context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"lpn": textEditingController.text}, clearSearchText: true));
+                          context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.removeItem(key: 'lpnLifeCycle');
+                          getIt<JsInteropService>().lpnLifeCycle('true');
+                          Navigator.pop(context);
+                        },
+                        child: PointerInterceptor(child: const Text("Done"))),
+                    Gap(size.height * 0.01),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   static void AnimatedDialog({required BuildContext context, required Widget header, required List<Widget> content, Function? onClose}) {
     Size size = MediaQuery.of(context).size;
     showGeneralDialog(
@@ -977,11 +1090,19 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
     _data = List.generate(
       data.length,
       (index) => DataGridRow(cells: [
-        if (!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].status : ''),
+        if (!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].isChecked : ''),
         DataGridCell(columnName: 'Facility', value: index < data.length ? data[index].facility : ''),
         DataGridCell(columnName: 'LPN Nbr', value: index < data.length ? data[index].lpnNbr : ''),
         DataGridCell(columnName: 'Status', value: index < data.length ? data[index].status : ''),
-        DataGridCell(columnName: 'QC Status', value: index < data.length ? data[index].qcStatus : ''),
+        DataGridCell(
+            columnName: 'QC Status',
+            value: index < data.length
+                ? data[index].qcStatus == '20'
+                    ? "Accepted"
+                    : data[index].qcStatus == '30'
+                        ? "Rejected"
+                        : "Pending"
+                : ''),
         DataGridCell(columnName: 'Item Code', value: index < data.length ? data[index].itemCode : ''),
         DataGridCell(columnName: 'Item Description', value: index < data.length ? data[index].itemDescription : ''),
         DataGridCell(columnName: 'Curr Qty', value: index < data.length ? data[index].currQty : ''),
@@ -991,19 +1112,18 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
         DataGridCell(columnName: 'Expiry Date', value: index < data.length ? data[index].expiryDate : ''),
         DataGridCell(columnName: 'Manufacture Date', value: index < data.length ? data[index].manufactureDate : ''),
         DataGridCell(columnName: 'Orig Qty', value: index < data.length ? data[index].origQty : ''),
-        DataGridCell(columnName: 'UOM2', value: index < data.length ? data[index].uom2 : ''),
         DataGridCell(columnName: 'Received Qty', value: index < data.length ? data[index].receivedQty : ''),
-        DataGridCell(columnName: 'UOM3', value: index < data.length ? data[index].uom3 : ''),
         DataGridCell(columnName: 'PO Nbr', value: index < data.length ? data[index].poNbr : ''),
         DataGridCell(columnName: 'Received Shipment', value: index < data.length ? data[index].receivedShipment : ''),
         DataGridCell(columnName: 'Putaway Type', value: index < data.length ? data[index].putawayType : ''),
-        DataGridCell(columnName: 'Create Timestamp', value: index < data.length ? data[index].createTimestamp : ''),
-        DataGridCell(columnName: 'Receiving User', value: index < data.length ? data[index].receivingUser : ''),
+        DataGridCell(columnName: 'Receiving User', value: index < data.length ? data[index].receivedUser : ''),
         DataGridCell(columnName: 'Shipment Type', value: index < data.length ? data[index].shipmentType : ''),
         DataGridCell(columnName: 'Weight', value: index < data.length ? data[index].weight : ''),
-        DataGridCell(columnName: 'uom_wt', value: index < data.length ? data[index].uomwt : ''),
+        // DataGridCell(columnName: 'uom_wt', value: index < data.length ? data[index].uomwt : ''),
         DataGridCell(columnName: 'Volume', value: index < data.length ? data[index].volume : ''),
-        DataGridCell(columnName: 'uom_vol', value: index < data.length ? data[index].uomvol : ''),
+        // DataGridCell(columnName: 'uom_vol', value: index < data.length ? data[index].uomvol : ''),
+        DataGridCell(columnName: (!isCompleted) ? 'Submitted by' : 'Updated by', value: index < data.length ? data[index].modUser : ''),
+        DataGridCell(columnName: (!isCompleted) ? 'Submitted timestamp' : 'Updated timestamp', value: index < data.length ? data[index].modTs : ''),
       ]),
     );
   }
@@ -1028,7 +1148,7 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Checkbox(
-                    value: state.qualityCheckTasks.where((element) => element.lpnNbr == row.getCells()[2].value).first.isChecked,
+                    value: state.selectedQaulityCheckTasks!.contains(row.getCells()[2].value),
                     onChanged: (value) => _onChanged!(value, row),
                   ));
             });
@@ -1088,4 +1208,8 @@ class WorkflowCycleCountDataSource extends DataGridSource {
             });
     }).toList());
   }
+  // @override
+  // handleLoadMoreRows() async {
+  //   if
+  // }
 }

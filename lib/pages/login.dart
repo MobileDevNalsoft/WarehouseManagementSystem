@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _authBloc = context.read<AuthenticationBloc>();
+    _authBloc.state.obscure = true;
   }
 
   @override

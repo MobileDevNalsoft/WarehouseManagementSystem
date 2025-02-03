@@ -11,6 +11,20 @@ class DockAreaItem {
   }
 }
 
+class DockOutItem {
+  String? truckNbr;
+  String? loadNbr;
+  String? driver;
+
+  DockOutItem({this.truckNbr, this.loadNbr, this.driver});
+
+  DockOutItem.fromJson(Map<String, dynamic> json) {
+    truckNbr = json['truck_nbr'];
+    loadNbr = json['load_nbr'];
+    driver = json['driver'];
+  }
+}
+
 class Vendor {
   String? vendorName;
   List<DockItem>? items;
@@ -27,6 +41,7 @@ class DockItem {
   String? asn;
   String? poNbr;
   String? checkinTS;
+  String? itemKey;
   int? qty;
   DockItem({this.dockNbr, this.asn, this.poNbr, this.checkinTS, this.qty});
 
@@ -35,6 +50,7 @@ class DockItem {
     asn = json['asn'];
     poNbr = json['po_nbr'];
     checkinTS = json['checkin_ts'];
+    itemKey = json['item_key'];
     qty = json['qty'];
   }
 }

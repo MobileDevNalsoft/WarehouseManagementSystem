@@ -10,6 +10,9 @@ import 'package:js/js.dart';
 external _switchToMainCam(String camName);
 
 @JS()
+external _lpnLifeCycle(String show);
+
+@JS()
 external _isRackDataLoaded(bool value);
 
 @JS()
@@ -37,7 +40,7 @@ external _sendTrucksData(String json);
 external _changeFacility(String json);
 
 @JS()
-external _getShoretestPathForTask(String task);
+external _getShoretestPathForTask(List task);
 
 @JS()
 external _showAlert(String message);
@@ -68,6 +71,10 @@ class JsInteropService {
     _changeFacility(data);
   }
 
+  lpnLifeCycle(String show) {
+    _lpnLifeCycle(show);
+  }
+
   sendOverviewData(String data) {
     _sendOverviewData(data);
   }
@@ -96,7 +103,7 @@ class JsInteropService {
     _navigateToBin(message);
   }
 
-  getShoretestPathForTask(String message) {
+  getShoretestPathForTask(List message) {
     _getShoretestPathForTask(message);
   }
 

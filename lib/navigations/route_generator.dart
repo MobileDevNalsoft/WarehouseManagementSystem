@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:wmssimulator/pages/container_management/layout.dart';
+import 'package:wmssimulator/pages/container_management/statistics.dart';
+import 'package:wmssimulator/pages/customs/hover_dialog.dart';
+import 'package:wmssimulator/pages/lpn_lifecycle/lpn_lifecycle.dart';
+import 'package:wmssimulator/pages/workflow/cyclecount.dart';
+import 'package:wmssimulator/pages/workflow/qualitycheck.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/activity_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/dock_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/inspection_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/receiving_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/staging_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/storage_area_dashboard.dart';
+import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/yard_area_dashboard.dart';
 import 'package:wmssimulator/pages/dashboard_utils/pages/entry_point.dart';
-import 'package:wmssimulator/pages/home.dart';
-import 'package:wmssimulator/pages/select_warehouse.dart';
 import 'package:wmssimulator/pages/three_js/three_js.dart';
 
 import '../pages/login.dart';
@@ -9,35 +20,10 @@ import '../pages/login.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/home':
-        return PageRouteBuilder(
-          settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) => const HomePage(),
-          transitionDuration: const Duration(seconds: 1),
-          reverseTransitionDuration: const Duration(milliseconds: 500),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
-            final fadeAnimation = animation.drive(tween);
-            return FadeTransition(
-              opacity: fadeAnimation,
-              child: child,
-            );
-          },
-        );
       case '/login':
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => const LoginPage(),
-          transitionDuration: const Duration(seconds: 1),
-          reverseTransitionDuration: const Duration(milliseconds: 500),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
-            final fadeAnimation = animation.drive(tween);
-            return FadeTransition(
-              opacity: fadeAnimation,
-              child: child,
-            );
-          },
         );
       case '/warehouse':
         return PageRouteBuilder(
@@ -54,25 +40,22 @@ class RouteGenerator {
             );
           },
         );
-      case '/selectWarehouse':
-        return PageRouteBuilder(
-          settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) => const SelectWarehouse(),
-          transitionDuration: const Duration(seconds: 1),
-          reverseTransitionDuration: const Duration(milliseconds: 500),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
-            final fadeAnimation = animation.drive(tween);
-            return FadeTransition(
-              opacity: fadeAnimation,
-              child: child,
-            );
-          },
-        );
       case '/dashboards':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) => EntryPoint(),
+          pageBuilder: (context, animation, secondaryAnimation) => EntryPoint(
+            title: 'Dashboards',
+            titles: const ['Dock', 'Storage', 'Yard', 'Staging', 'Activity', 'Receiving', 'Inspection'],
+            tabs: const [
+              DockAreaDashboard(),
+              StorageAreaDashboard(),
+              YardAreaDashboard(),
+              StagingAreaDashboard(),
+              ActivityAreaDashboard(),
+              ReceivingAreaDashboard(),
+              InspectionAreaDashboard(),
+            ],
+          ),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -87,8 +70,33 @@ class RouteGenerator {
       case '/workflow':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) => EntryPoint(
-            type: 'workflow',
+          pageBuilder: (context, animation, secondaryAnimation) => HoverOverlay(
+            child: EntryPoint(
+              title: 'Workflow',
+              titles: const ['Quality Check', 'Cycle Count', 'Containers'],
+              tabs: const [QualityCheck(), Cyclecount(), ContainerLayout()],
+            ),
+          ),
+          transitionDuration: const Duration(seconds: 1),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
+            final fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+      case '/containerManagement':
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => HoverOverlay(
+            child: EntryPoint(
+              title: 'Container Management',
+              titles: const ['Layout', 'Statistics'],
+              tabs: const [ContainerLayout(), ContainerStatistics()],
+            ),
           ),
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),

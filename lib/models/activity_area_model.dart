@@ -11,6 +11,18 @@ class ActivityAreaItem {
   }
 }
 
+class ActivityTaskItem {
+  String? taskType;
+  List<dynamic>? taskIDs;
+
+  ActivityTaskItem({this.taskType, this.taskIDs});
+
+  ActivityTaskItem.fromJson(Map<String, dynamic> json) {
+    taskType = json.keys.first;
+    taskIDs = json.values.first as List<dynamic>;
+  }
+}
+
 class ActivityDashboard {
   List<StatusCount>? todayTaskSummary;
   List<StatusCount>? taskTypeSummary;

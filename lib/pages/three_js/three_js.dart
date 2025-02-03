@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +23,7 @@ import 'package:wmssimulator/pages/customs/searchbar_dropdown.dart';
 import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/bin_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/inspection_area_data_sheet.dart';
+import 'package:wmssimulator/pages/data_sheets/lpn_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/rack_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/staging_area_data_sheet.dart';
@@ -70,6 +72,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
 
     _warehouseInteractionBloc.add(GetUsersData());
+    _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
+    _warehouseInteractionBloc.add(Intercepting(intercepting: false));
+    _warehouseInteractionBloc.add(GetTasks());
     textEditingController = TextEditingController(text: _warehouseInteractionBloc.state.selectedTaskId ?? "");
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
     sliderAnimationController =
@@ -94,6 +99,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
     if (accessTypes.contains('Warehouse') && accessTypes.contains('Storage Area')) {
       getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"storageArea"}');
+      context.read<StorageBloc>().add(GetBinsStatus());
     } else {
       getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"warehouse"}');
     }
@@ -185,251 +191,63 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                   onPressed: () {}),
                                               onClose: () {
                                                 controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
-                                                getIt<JsInteropService>().getShoretestPathForTask("");
+                                                getIt<JsInteropService>().getShoretestPathForTask([]);
                                               },
                                               content: [
                                                 const Text("Please enter task Id"),
-                                                TypeAheadField(
-                                                  focusNode: focusNode,
-                                                  controller: textEditingController,
-                                                  suggestionsController: suggestionsController,
-                                                  builder: (context, controller, focusNode) {
-                                                    controller.clear();
-                                                    return TextField(
-                                                        controller: controller,
+                                                BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(
+                                                    listener: (context, state) {},
+                                                    builder: (context, state) {
+                                                      return TypeAheadField(
                                                         focusNode: focusNode,
-                                                        autofocus: true,
-                                                        decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
-                                                  },
-                                                  itemBuilder: (context, value) {
-                                                    return ListTile(
-                                                      title: Text(
-                                                        value.toString(),
-                                                        style: const TextStyle(fontSize: 14),
-                                                      ),
-                                                    );
-                                                  },
-                                                  suggestionsCallback: (pattern) {
-                                                    return [
-                                                      "TSDEMODEMOWH100000001",
-                                                      "TSDEMODEMOWH100000021",
-                                                      "TSDEMODEMOWH100000041",
-                                                      "TSDEMODEMOWH100000061",
-                                                      "TSDEMODEMOWH100000081",
-                                                      "TSDEMODEMOWH100000101",
-                                                      "TSDEMODEMOWH100000121",
-                                                      "TSDEMODEMOWH100000141",
-                                                      "TSDEMODEMOWH100000161",
-                                                      "TSDEMODUTY-PAID00000181",
-                                                      "TSDEMODUTY-PAID00000182",
-                                                      "TSPAID00000201",
-                                                      "TSPAID00000221",
-                                                      "TSPAID00000241",
-                                                      "TSPAID00000261",
-                                                      "TSPAID00000281",
-                                                      "TSPAID00000301",
-                                                      "TSPAID00000341",
-                                                      "TSPAID00000342",
-                                                      "TSPAID00000343",
-                                                      "TSPAID00000345",
-                                                      "TSPAID00000346",
-                                                      "TSPAID00000347",
-                                                      "TSPAID00000348",
-                                                      "TSPAID00000350",
-                                                      "TSPAID00000351",
-                                                      "TSPAID00000352",
-                                                      "TSPAID00000354",
-                                                      "TSPAID00000355",
-                                                      "TSPAID00000356",
-                                                      "TSPAID00000357",
-                                                      "TSPAID00000359",
-                                                      "TSPAID00001377",
-                                                      "TSPAID00001378",
-                                                      "TSPAID00001379",
-                                                      "TSPAID00001380",
-                                                      "TSPAID00001381",
-                                                      "TSPAID00001394",
-                                                      "TSPAID00001414",
-                                                      "TSPAID00001434",
-                                                      "TSPAID00001454",
-                                                      "TSPAID00001455",
-                                                      "TSPAID00001456",
-                                                      "TSPAID00001457",
-                                                      "TSPAID00001477",
-                                                      "TSPAID00001494",
-                                                      "TSPAID00001514",
-                                                      "TSPAID00001534",
-                                                      "TSPAID00001554",
-                                                      "TSPAID00001574",
-                                                      "TSPAID00001594",
-                                                      "TSPAID00001595",
-                                                      "TSPAID00001614",
-                                                      "TSPAID00001634",
-                                                      "TSPAID00001655",
-                                                      "TSPAID00001656",
-                                                      "TSPAID00001676",
-                                                      "TSPAID00001696",
-                                                      "TSPAID00001716",
-                                                      "TSPAID00001736",
-                                                      "TSPAID00001756",
-                                                      "TSPAID00000360",
-                                                      "TSPAID00000361",
-                                                      "TSPAID00000362",
-                                                      "TSPAID00000363",
-                                                      "TSPAID00000364",
-                                                      "TSPAID00000365",
-                                                      "TSPAID00000366",
-                                                      "TSPAID00000367",
-                                                      "TSPAID00000368",
-                                                      "TSPAID00000369",
-                                                      "TSPAID00000370",
-                                                      "TSPAID00000371",
-                                                      "TSPAID00000372",
-                                                      "TSPAID00000373",
-                                                      "TSPAID00000374",
-                                                      "TSPAID00000375",
-                                                      "TSPAID00000377",
-                                                      "TSPAID00000378",
-                                                      "TSPAID00000379",
-                                                      "TSPAID00000514",
-                                                      "TSPAID00000515",
-                                                      "TSPAID00000536",
-                                                      "TSPAID00000556",
-                                                      "TSPAID00000557",
-                                                      "TSPAID00000574",
-                                                      "TSPAID00000614",
-                                                      "TSPAID00000634",
-                                                      "TSPAID00000654",
-                                                      "TSPAID00000674",
-                                                      "TSPAID00000714",
-                                                      "TSPAID00000734",
-                                                      "TSPAID00000754",
-                                                      "TSPAID00000794",
-                                                      "TSPAID00000814",
-                                                      "TSPAID00000834",
-                                                      "TSPAID00000854",
-                                                      "TSPAID00000874",
-                                                      "TSPAID00000875",
-                                                      "TSPAID00000895",
-                                                      "TSPAID00000896",
-                                                      "TSPAID00000897",
-                                                      "TSPAID00000898",
-                                                      "TSPAID00000899",
-                                                      "TSPAID00000919",
-                                                      "TSPAID00000939",
-                                                      "TSPAID00000959",
-                                                      "TSPAID00000979",
-                                                      "TSPAID00000999",
-                                                      "TSPAID00001019",
-                                                      "TSPAID00001039",
-                                                      "TSPAID00001059",
-                                                      "TSPAID00001079",
-                                                      "TSPAID00001080",
-                                                      "TSPAID00001099",
-                                                      "TSPAID00001119",
-                                                      "TSPAID00001139",
-                                                      "TSPAID00001776",
-                                                      "TSPAID00001159",
-                                                      "TSPAID00001179",
-                                                      "TSPAID00001796",
-                                                      "TSPAID00001816",
-                                                      "TSPAID00001836",
-                                                      "TSPAID00001654",
-                                                      "TSPAID00001959",
-                                                      "TSPAID00001963",
-                                                      "TSPAID00002047",
-                                                      "TSPAID00002228",
-                                                      "TSPAID00000321",
-                                                      "TSPAID00000344",
-                                                      "TSPAID00000349",
-                                                      "TSPAID00000353",
-                                                      "TSPAID00000358",
-                                                      "TSPAID00000376",
-                                                      "TSPAID00000516",
-                                                      "TSPAID00000594",
-                                                      "TSPAID00000694",
-                                                      "TSPAID00000774",
-                                                      "TSPAID00001199",
-                                                      "TSPAID00001219",
-                                                      "TSPAID00001239",
-                                                      "TSPAID00001240",
-                                                      "TSPAID00001241",
-                                                      "TSPAID00001261",
-                                                      "TSPAID00001281",
-                                                      "TSPAID00001301",
-                                                      "TSPAID00001321",
-                                                      "TSPAID00001341",
-                                                      "TSPAID00001374",
-                                                      "TSPAID00001375",
-                                                      "TSPAID00001376",
-                                                      "TSPAID00002006",
-                                                      "TSPAID00002008",
-                                                      "TSPAID00002046",
-                                                      "TSPAID00002209",
-                                                      "TSPAID00002216",
-                                                      "TSPAID00002221",
-                                                      "TSPAID00002222",
-                                                      "TSPAID00002223",
-                                                      "TSPAID00002227",
-                                                      "TSPAID00002248",
-                                                      "TSPAID00002249",
-                                                      "TSPAID00002269",
-                                                      "TSPAID00002289",
-                                                      "TSPAID00002309",
-                                                      "TSPAID00002310",
-                                                      "TSPAID00002330",
-                                                      "TSPAID00002331",
-                                                      "TSPAID00002351",
-                                                      "TSPAID00002371",
-                                                      "TSPAID00002391",
-                                                      "TSPAID00002411",
-                                                      "TSPAID00002431",
-                                                      "TSPAID00002468",
-                                                      "TSPAID00002488",
-                                                      "TSPAID00001856",
-                                                      "TSPAID00001857",
-                                                      "TSPAID00001877",
-                                                      "TSPAID00001897",
-                                                      "TSPAID00001917",
-                                                      "TSPAID00001937",
-                                                      "TSPAID00001958",
-                                                      "TSPAID00001971",
-                                                      "TSPAID00001972",
-                                                      "TSPAID00001974",
-                                                      "TSPAID00001975",
-                                                      "TSPAID00001980",
-                                                      "TSPAID00001981",
-                                                      "TSPAID00001984",
-                                                      "TSPAID00001985",
-                                                      "TSPAID00001987",
-                                                      "TSPAID00001988",
-                                                      "TSPAID00001989",
-                                                      "TSPAID00001990",
-                                                      "TSPAID00001991",
-                                                      "TSPAID00001994",
-                                                      "TSPAID00001995",
-                                                      "TSPAID00001997",
-                                                      "TSPAID00001999",
-                                                      "TSPAID00002001",
-                                                      "TSPAID00002003",
-                                                      "TSPAID00002004",
-                                                      "TSPAID00002005"
-                                                    ].where((element) => element.contains(pattern)).toList();
-                                                  },
-                                                  onSelected: (value) {
-                                                    _warehouseInteractionBloc.add(UpdateTaskId(taskId: value.toString()));
-                                                    textEditingController.text = value;
-                                                    suggestionsController.refresh();
-                                                    focusNode.unfocus();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
-                                                      getIt<JsInteropService>().getShoretestPathForTask(_warehouseInteractionBloc.state.selectedTaskId ?? "");
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: PointerInterceptor(child: const Text("Done")))
+                                                        controller: textEditingController,
+                                                        suggestionsController: suggestionsController,
+                                                        builder: (context, controller, focusNode) {
+                                                          print("taks ${state.tasksForShoretestPath}");
+                                                          // controller.clear();
+                                                          return TextField(
+                                                              controller: controller,
+                                                              focusNode: focusNode,
+                                                              // autofocus: true,
+                                                              decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
+                                                        },
+                                                        itemBuilder: (context, value) {
+                                                          return ListTile(
+                                                            title: Text(
+                                                              value.toString(),
+                                                              style: const TextStyle(fontSize: 14),
+                                                            ),
+                                                          );
+                                                        },
+                                                        suggestionsCallback: (pattern) {
+                                                          return state.tasksForShoretestPath!
+                                                              .where((element) => element.toLowerCase().contains(pattern.toLowerCase()))
+                                                              .toList();
+                                                        },
+                                                        onSelected: (value) {
+                                                          state.selectedTaskId = value.toString();
+                                                          textEditingController.text = value;
+                                                          suggestionsController.refresh();
+                                                          focusNode.unfocus();
+                                                        },
+                                                      );
+                                                    }),
+                                                StatefulBuilder(builder: (context, stfSetState) {
+                                                  return TextButton(
+                                                      onPressed: () {
+                                                        if (textEditingController.text.trim().isNotEmpty) {
+                                                          _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
+                                                        }
+                                                        Navigator.pop(context);
+                                                        {
+                                                          stfSetState(() {
+                                                            _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
+                                                          });
+                                                          // _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
+                                                        }
+                                                      },
+                                                      child: PointerInterceptor(child: const Text("Done")));
+                                                })
                                               ],
                                             );
                                           }
@@ -491,7 +309,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse') && !accessTypes.contains('Storage Area'))
+                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded &&
+                      accessTypes.contains('Warehouse') &&
+                      !accessTypes.contains('Storage Area'))
                     Align(
                         alignment: Alignment.bottomCenter,
                         child: CustomProgressBar(
@@ -580,17 +400,47 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         Positioned(
           right: size.width * 0.04,
           top: size.height * 0.023,
-          child: InkWell(
-            onTap: () {
-              _warehouseInteractionBloc.add(GetAlerts());
-              sliderAnimationController.forward();
-            },
-            child: Icon(
-              Icons.notifications_none,
-              color: Colors.white,
-              size: size.width * 0.015,
-            ),
-          ),
+          child: StreamBuilder<int>(
+              stream: _warehouseInteractionBloc.alertsCountStream,
+              builder: (context, snapshot) {
+                return InkWell(
+                  onTap: () {
+                    _warehouseInteractionBloc.add(ResetAlertsCount());
+                    sliderAnimationController.forward();
+                  },
+                  child: SizedBox(
+                    height: size.height * 0.08,
+                    width: size.width * 0.02,
+                    child: LayoutBuilder(builder: (context, lsize) {
+                      return Stack(
+                        children: [
+                          Icon(
+                            Icons.notifications_none,
+                            color: Colors.white,
+                            size: size.width * 0.015,
+                          ),
+                          if (snapshot.hasData && snapshot.data != 0)
+                            Positioned(
+                              right: lsize.maxWidth * 0.45,
+                              child: Container(
+                                height: size.height * 0.015,
+                                width: size.width * 0.015,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                                child: Text(
+                                  '',
+                                  // snapshot.data!.toString(),
+                                  style: TextStyle(color: Colors.white, fontSize: 9),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    }),
+                  ),
+                );
+              }),
         ),
         AnimatedBuilder(
             animation: sliderPositionAnimation,
@@ -603,6 +453,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     sliderAnimationController: sliderAnimationController,
                   )));
             }),
+        if (context.watch<WarehouseInteractionBloc>().state.getBinsForTaskStatus == GetBinsForTaskStatus.loading)
+          Positioned(
+            top: size.height * 0.1,
+            child: Center(
+              child: Container(color: Colors.green, width: 50, height: 50, child: Lottie.asset('assets/lottie/path.json')),
+            ),
+          ),
       ],
     ));
   }
@@ -619,6 +476,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         );
       case 'bin':
         return const BinDataSheet();
+      case 'lpn':
+        return const LPNLifeCycleDataSheet();
       case 'area':
         switch (objectValue.toLowerCase().replaceAll("-", "")) {
           case 'stagingarea':

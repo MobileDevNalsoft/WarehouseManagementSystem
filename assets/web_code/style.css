@@ -85,26 +85,28 @@ body {
   padding-left: 4px;
 }
 
-#tooltip, #agvtooltip {
-    position: absolute;
-    display: none;
-    /* Initially hidden */
-    background-color: #333;
-    color: #fff;
-    padding: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    border: 1px solid #fff;
-    opacity: 0.9;
-    font-size: 12px;
+#tooltip,
+#agvtooltip {
+  position: absolute;
+  display: none;
+  /* Initially hidden */
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #fff;
+  opacity: 0.9;
+  font-size: 12px;
     z-index: 1000;
-    width: auto;
-    letter-spacing: 1px;
-    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.2);
-    /* High enough to appear above other elements */
+  width: auto;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.2);
+  /* High enough to appear above other elements */
 
   animation: bounceIn 0.5s ease forwards; /* Apply animation when visible */
   transform-origin: center bottom; /* Anchor point for bounce */
+  z-index: 2;
 }
 
 #area_tooltip {
@@ -122,6 +124,7 @@ body {
   transform: translateX(-50%);
   opacity: 0.75;
 }
+
 #shortestPath_tooltip {
   visibility: hidden;
   width: auto;

@@ -2,7 +2,7 @@ import * as GLTFLoader from "gltfLoader";
 import * as THREE from "three";
 import {DRACOLoader} from "draco";
 
-export function loadModel() {
+export async function loadModel() {
     const loader = new GLTFLoader.GLTFLoader();
 
     return new Promise((resolve, reject) => {
@@ -14,7 +14,10 @@ export function loadModel() {
         loader.load(
             getGLB(data.companyID, data.facilityID, data.model),
             function (gltf) {
+
                 resolve(gltf); // Resolve with the loaded glTF model
+                console.log('{"percentComplete":"100"}');
+                // return gltf;
             },
             (xhr) => {
                 if(xhr.lengthComputable){
@@ -40,7 +43,7 @@ function getGLB(companyID, facilityID, model){
             switch(companyID){
                 case 1: switch(facilityID){
                     case 1: 
-                        return  "../glbs/warehouse_0104_1634.glb";
+                        return  "../glbs/warehouse_2901_1018.glb";
                     case 2:
                         return "../glbs/warehouse_2.glb";
                 }

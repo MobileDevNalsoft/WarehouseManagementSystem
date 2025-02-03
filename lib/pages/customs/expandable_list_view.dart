@@ -157,6 +157,25 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                                               SizedBox(
                                                                   width: lsize.maxWidth * 0.16,
                                                                   child: Text(
+                                                                    'ITEM',
+                                                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                                                  )),
+                                                              Gap(lsize.maxWidth * 0.01),
+                                                              Text(
+                                                                widget.data[oindex].vendors![index].items![inindex].itemKey!.toString(),
+                                                                style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              SizedBox(
+                                                                  width: lsize.maxWidth * 0.16,
+                                                                  child: Text(
                                                                     'QTY',
                                                                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
                                                                   )),
@@ -173,7 +192,8 @@ class _ExpandableListViewState extends State<ExpandableListView> {
                                                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.04),
                                                           )
                                                         ],
-                                                      )
+                                                      ),
+                                                      
                                                     ],
                                                   );
                                                 })),

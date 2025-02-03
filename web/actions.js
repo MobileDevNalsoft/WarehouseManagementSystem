@@ -4,6 +4,10 @@ const init = () => {
         window.localStorage.setItem('areasOverviewData', data);
     }
 
+    const lpnLifeCycle = (show) => {
+        window.localStorage.setItem('lpnLifeCycle', show);
+    }
+
     const sendTrucksData = (data) => {
         window.localStorage.setItem('trucksData', data);
     }
@@ -52,6 +56,7 @@ const init = () => {
     }
 
     window._switchToMainCam = switchToMainCam;
+    window._lpnLifeCycle = lpnLifeCycle;
     window._isRackDataLoaded = isRacksDataLoaded;
     window._setNumberOfTrucks = setNumberOfTrucks;
     window._resetTrucks = resetTrucks;

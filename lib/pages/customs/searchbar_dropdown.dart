@@ -52,6 +52,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     placeholderText = 'Search';
     dropdownValue = "Area";
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+    _warehouseInteractionBloc.state.selectedSearchArea = "Storage";
   }
 
   void searchData() {
@@ -85,13 +86,11 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
           break;
         case 'dockareain':
           context.read<DockAreaBloc>().state.pageNum = 0;
-
           context.read<DockAreaBloc>().add(GetDockAreaData(searchText: _warehouseInteractionBloc.state.searchText, searchArea: "DOCK_IN"));
           break;
         case 'dockareaout':
           context.read<DockAreaBloc>().state.pageNum = 0;
-
-          context.read<DockAreaBloc>().add(GetDockAreaData(searchText: _warehouseInteractionBloc.state.searchText, searchArea: "DOCK_OUT"));
+          context.read<DockAreaBloc>().add(GetDockOutAreaData(searchText: _warehouseInteractionBloc.state.searchText, searchArea: "DOCK_OUT"));
           break;
         case 'yardarea':
           context.read<YardBloc>().state.pageNum = 0;
@@ -280,7 +279,6 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                           children: [
                             Text(
                               context.watch<WarehouseInteractionBloc>().state.selectedSearchArea.split("area").join(" "),
-                              // context.watch<WarehouseInteractionBloc>().state.selectedSearchArea,
                               style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: size.height * 0.022),
                             ),
                             Gap(size.width * 0.005),
@@ -350,7 +348,7 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                                             case 'dockarea-out':
                                               context.read<DockAreaBloc>().state.pageNum = 0;
 
-                                              context.read<DockAreaBloc>().add(GetDockAreaData());
+                                              context.read<DockAreaBloc>().add(GetDockOutAreaData());
                                             case 'yardarea':
                                               context.read<YardBloc>().state.pageNum = 0;
                                               context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
