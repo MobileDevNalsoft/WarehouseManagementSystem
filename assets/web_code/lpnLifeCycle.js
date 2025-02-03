@@ -4,29 +4,30 @@ import { LineMaterial } from "https://cdn.jsdelivr.net/npm/three@latest/examples
 import { LineGeometry } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/lines/LineGeometry.js";
 
 let lines = [];
+let animations = [];
 
-export function animateLPNLifeCycle() {
+export function animateLPNLifeCycle(scene) {
   // Define a list of points
   const points = [
-    new THREE.Vector3(-50, 10, 0), // Start Point
-    new THREE.Vector3(-50, 10, 0), // Mid Point (will animate)
-    new THREE.Vector3(-50, 10, 0), // End Point (will animate)
-    new THREE.Vector3(-50, 10, 0), // Final Point (will animate)
-    new THREE.Vector3(-50, 10, 0),
+    new THREE.Vector3(10, 6.19, -60), // Start Point
+    new THREE.Vector3(10, 6.19, -60), // Mid Point (will animate)
+    new THREE.Vector3(10, 6.19, -60), // End Point (will animate)
+    new THREE.Vector3(10, 6.19, -60), // Final Point (will animate)
+    new THREE.Vector3(10, 6.19, -60),
   ];
 
   // Define target positions for animation
   const targetPositions = [
-    new THREE.Vector3(-30, 10, 0), // Mid Point target
-    new THREE.Vector3(-10, 10, -25), // End Point target
-    new THREE.Vector3(10, 10, 50), // Final Point target
-    new THREE.Vector3(50, 10, -100),
+    new THREE.Vector3(10, 6.19, - 120), // Mid Point target
+    new THREE.Vector3(-92.4, 6.19, -123.48706235353588), // End Point target
+    // new THREE.Vector3(-24.21696383882049, 6.19, -60.86146377835111), // Final Point target
+    new THREE.Vector3(-125.14815693589341, 6.19, -60),
   ];
 
   // LineMaterial for all lines
   const lineMaterial = new LineMaterial({
-    color: 0xff0000,
-    linewidth: 5,
+    color: 0x7cfc00,
+    linewidth: 2,
     resolution: new THREE.Vector2(window.innerWidth, window.innerHeight),
   });
 
@@ -52,11 +53,11 @@ export function animateLPNLifeCycle() {
     scene.add(line);
 
     // Animate the end point to its target position
-    gsap.to(endPoint, {
+    let animation = gsap.to(endPoint, {
       x: target.x,
       y: target.y,
       z: target.z,
-      duration: 5,
+      duration: 3,
       ease: "power1.out",
       onUpdate: () => {
         line.geometry.setPositions([
@@ -77,6 +78,8 @@ export function animateLPNLifeCycle() {
         animateSegment(index + 1);
       },
     });
+
+    animations.push(animation);
   }
 
   // Start the animation sequence
@@ -84,6 +87,8 @@ export function animateLPNLifeCycle() {
 }
 
 export function removeLPNLifeCycle(scene) {
+  animations.forEach(animation => animation.kill()); // Stop all animations
+  animations = []; // Clear animations array
   lines.forEach((line) => {
     scene.remove(line); // Remove from scene
     line.geometry.dispose(); // Free up memory

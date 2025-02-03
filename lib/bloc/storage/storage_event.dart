@@ -18,12 +18,6 @@ class GetBinData extends StorageEvent {
   GetBinData({this.selectedBin, this.searchText});
 }
 
-// class AddStorageAislesData extends StorageEvent{
-//   String searchText;
-//  AddStorageAislesData({required this.searchText});
-// }
-
-
 class GetBinsStatus extends StorageEvent {
- GetBinsStatus();
+  GetBinsStatus();
 }

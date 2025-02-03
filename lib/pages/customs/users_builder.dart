@@ -99,19 +99,19 @@ class _UsersBuilderState extends State<UsersBuilder> {
                     height: lsize.maxHeight * 0.05,
                     width: double.infinity,
                     margin: EdgeInsets.symmetric(vertical: lsize.maxHeight * 0.02),
-                    decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: const Color.fromRGBO(68, 98, 136, 1), borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
                         Padding(
                           padding: EdgeInsets.only(left: lsize.maxWidth * 0.01, right: lsize.maxWidth * 0.196),
                           child: Text(
                             'Username',
-                            style: TextStyle(color: Colors.black54),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                         Text(
                           'Access',
-                          style: TextStyle(color: Colors.black54),
+                          style: TextStyle(color: Colors.white),
                         )
                       ],
                     ),

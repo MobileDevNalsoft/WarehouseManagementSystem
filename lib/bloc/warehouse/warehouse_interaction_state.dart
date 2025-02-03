@@ -172,6 +172,7 @@ final class WarehouseInteractionState {
       String? selectedTaskId,
       LPNLifeCycleStatus? getLpnLifeCycleStatus,
       List<String>? tasksForShoretestPath,
+      int? alertsCount,
       List<String>? binsForTask,
       GetBinsForTaskStatus? getBinsForTaskStatus}) {
     return WarehouseInteractionState(
@@ -190,6 +191,8 @@ final class WarehouseInteractionState {
       selectedFacilityVal: selectedFacilityVal ?? this.selectedFacilityVal,
       getUserInfoState: getUserInfoState ?? this.getUserInfoState,
       getUsersState: getUsersState ?? this.getUsersState,
+      getLpnLifeCycleStatus: getLpnLifeCycleStatus ?? this.getLpnLifeCycleStatus,
+      lpnLifeCycle: lpnLifeCycle ?? this.lpnLifeCycle,
       userInfo: userInfo ?? this.userInfo,
       users: users ?? this.users,
       isRendered: isRendered ?? this.isRendered,
@@ -197,6 +200,7 @@ final class WarehouseInteractionState {
       alerts: alerts ?? this.alerts,
       getAreasOveriviewDataState: getAreasOveriviewDataState ?? this.getAreasOveriviewDataState,
       selectedTaskId: selectedTaskId ?? this.selectedTaskId,
+      alertsCount: alertsCount ?? this.alertsCount,
       tasksForShoretestPath: tasksForShoretestPath ?? this.tasksForShoretestPath,
       binsForTask: binsForTask ?? this.binsForTask,
       getBinsForTaskStatus: getBinsForTaskStatus ?? this.getBinsForTaskStatus,

@@ -3,6 +3,7 @@ import { switchCamera, moveToBin } from "camera";
 import { resetTrucksAnimation, playAnimations } from "animations";
 import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
+import { removeLPNLifeCycle } from "lpnLifeCycle";
 
 const data = JSON.parse(window.localStorage.getItem("facilityData"));
 export function highlightBinsFromSearch(bins) {
@@ -229,10 +230,10 @@ export function addInteractions(scene, model, camera, controls) {
                   "T" +
                   name.split("_")[0].slice(1) +
                   " " +
-                  trucksData[number - 1].id
+                  trucksData[number - 1].truck_nbr
                 }</strong><div class="tooltip-content">
-                                        No:${
-                                          trucksData[number - 1].truck_nbr
+                                        Vendor:${
+                                          trucksData[number - 1].vendor_code
                                         }<br>
                                         LOC:${
                                           trucksData[number - 1]
@@ -244,7 +245,7 @@ export function addInteractions(scene, model, camera, controls) {
                 tooltip.style.display = "none";
               }
             }
-          } else if(name.includes("truck_R")){
+          } else if (name.includes("truck_R")) {
             for (let i = 1; i <= trucksData.length; i++) {
               try {
                 const number = name.match(/(\d+)$/)[1];
@@ -258,17 +259,14 @@ export function addInteractions(scene, model, camera, controls) {
                                         Vendor:${
                                           trucksData[number - 1].vendor
                                         }<br>
-                                        ASN:${
-                                          trucksData[number - 1]
-                                            .asn
-                                        }<br>
+                                        ASN:${trucksData[number - 1].asn}<br>
                                       </div>`;
                 setToolTipPosition(targetObject, tooltip, camera);
               } catch (error) {
                 tooltip.style.display = "none";
               }
             }
-          }else if(name.includes("truck_D") || name.includes("truck_A2")){
+          } else if (name.includes("truck_D") || name.includes("truck_A2")) {
             for (let i = 1; i <= trucksData.length; i++) {
               try {
                 const number = name.match(/(\d+)$/)[1];
@@ -283,8 +281,7 @@ export function addInteractions(scene, model, camera, controls) {
                                           trucksData[number - 1].driver
                                         }<br>
                                         Load:${
-                                          trucksData[number - 1]
-                                            .load_nbr
+                                          trucksData[number - 1].load_nbr
                                         }<br>
                                       </div>`;
                 setToolTipPosition(targetObject, tooltip, camera);
@@ -292,8 +289,7 @@ export function addInteractions(scene, model, camera, controls) {
                 tooltip.style.display = "none";
               }
             }
-          }
-          else {
+          } else {
             tooltip.style.display = "none";
           }
         } else {
@@ -340,6 +336,7 @@ export function addInteractions(scene, model, camera, controls) {
           targetObject.name.toString().includes("Area")
         ) {
           globalState.setAreaFocused(true);
+          removeLPNLifeCycle(scene);
           tooltip.style.display = "none";
           if (name.includes("rack")) {
             console.log(
@@ -377,12 +374,11 @@ export function addInteractions(scene, model, camera, controls) {
           prevNav = name;
         }
       }
-    } else if (e.button === 1) {
     } else {
-      console.log('{"object":"null"}');
       document.getElementById("wms-bot").style.display = "block";
       if (globalState.areaFocused == true) {
         resetAreas(scene);
+        console.log('{"object":"null"}');
       }
       globalState.setAreaFocused(false);
       if (scene.getObjectByName("truck_Y10")) {
@@ -391,15 +387,21 @@ export function addInteractions(scene, model, camera, controls) {
         ["truck_R1", "truck_R2", "truck_R3"].forEach((truck) => {
           scene.getObjectByName(truck).visible = true;
         });
-        ['truck_D_L1', 'truck_A2', 'truck_D_L3'].forEach((truck) => {
+        ["truck_D_L1", "truck_A2", "truck_D_L3"].forEach((truck) => {
           scene.getObjectByName(truck).visible = true;
         });
       }
       localStorage.removeItem("resetBoxColors");
       try {
-        if (localStorage.getItem("highlightBins") && !document.getElementById("path").classList.contains("focused") && !document.getElementById("digitalTwin").classList.contains("focused") ) {
+        if (
+          localStorage.getItem("highlightBins") &&
+          !document.getElementById("path").classList.contains("focused") &&
+          !document.getElementById("digitalTwin").classList.contains("focused")
+        ) {
           let redBins = JSON.parse(localStorage.getItem("binsStatus")).red;
-          let orangeBins = JSON.parse(localStorage.getItem("binsStatus")).orange;
+          let orangeBins = JSON.parse(
+            localStorage.getItem("binsStatus")
+          ).orange;
           localStorage
             .getItem("highlightBins")
             .toString()
@@ -407,28 +409,19 @@ export function addInteractions(scene, model, camera, controls) {
             .forEach((e) => {
               let bin = e.replaceAll("{", "").replaceAll("}", "").trim();
 
-              try{ if (redBins.includes(bin)) {
-                scene
-                  .getObjectByName(bin)
-                  .material.color.set(
-                    parseInt(localStorage.getItem("red"), 16)
-                  );
-              } else if (orangeBins.includes(bin)) {
-                scene.getObjectByName(bin).material.color.set(0xfaf3e2);
-                // scene
-                //   .getObjectByName(bin)
-                //   .material.color.set(
-                //     parseInt(localStorage.getItem("orange"), 16)
-                //   );
-              } 
-              
-              // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
-              // scene.getObjectByName(bin).material.opacity = 0.5;
-              }catch(e){
-                console.warn("error inside the "+e);
+              try {
+                if (redBins.includes(bin)) {
+                  scene
+                    .getObjectByName(bin)
+                    .material.color.set(
+                      parseInt(localStorage.getItem("red"), 16)
+                    );
+                } else if (orangeBins.includes(bin)) {
+                  scene.getObjectByName(bin).material.color.set(0xfaf3e2);
+                }
+              } catch (e) {
+                console.warn("error inside the " + e);
               }
-
-             
             });
 
           localStorage.removeItem("highlightBins");
@@ -450,10 +443,8 @@ export function addInteractions(scene, model, camera, controls) {
               .getObjectByName(bin)
               .material.color.set(parseInt(localStorage.getItem("red"), 16));
           } else if (orangeBins.includes(bin)) {
-            scene
-              .getObjectByName(bin)
-              .material.color.set(0xfaf3e2);
-          } 
+            scene.getObjectByName(bin).material.color.set(0xfaf3e2);
+          }
           // scene.getObjectByName(bin).material.color.set(0xfaf3e2);
           scene.getObjectByName(bin).material.opacity = 0.5;
           localStorage.removeItem("prevBin");
@@ -529,10 +520,8 @@ export function addInteractions(scene, model, camera, controls) {
       if (redBins.includes(prevBin.name)) {
         prevBin.material.color.set(parseInt(localStorage.getItem("red"), 16));
       } else if (orangeBins.includes(prevBin.name)) {
-        prevBin.material.color.set(
-          0xfaf3e2
-        );
-      } 
+        prevBin.material.color.set(0xfaf3e2);
+      }
       // prevBin.material.color.set(0xfaf3e2);
     }
 
