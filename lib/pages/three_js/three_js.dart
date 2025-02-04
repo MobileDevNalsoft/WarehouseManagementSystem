@@ -107,7 +107,6 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print("from build ${context.watch<WarehouseInteractionBloc>().state.getBinsForTaskStatus}");
     return Scaffold(
         body: Stack(
       children: [
