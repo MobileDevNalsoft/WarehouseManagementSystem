@@ -779,7 +779,7 @@ export function getShortestPath(
 
   let waiting = false;
   async function move(delta, waitPeriodAtPoints) {
-    let SPEED = 8;
+    let SPEED = 5;
     if (!combinedPath || combinedPath.length <= 0 || waiting) {
       // console.warn("No combinedPath available for agent motion.");
       return;

@@ -254,7 +254,7 @@ export function getPositionAndTarget(scene, name) {
           box.getCenter(target);
           break;
         case "yardArea":
-          position.set(50, 300, -34);
+          position.set(50, 320, -34);
           object = scene.getObjectByName(view);
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
