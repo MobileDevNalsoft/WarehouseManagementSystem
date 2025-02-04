@@ -39,7 +39,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
     bottomHeight = widget.size.height * 0.08;
     maxHeight = widget.size.height * 0.08 +
         widget.size.height * (Set.from(localAccessTypes).intersection(Set.from(widget.accessTypes)).length * 0.061) +
-        widget.size.height * 0.061 * 3;
+        widget.size.height * 0.061 * 4;
   }
 
   @override
@@ -104,6 +104,19 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 Navigator.pushNamed(context, '/workflow'); // it will navigate to the workflow page
                               },
                               child: const ForHover(text: "Workflow")),
+                        if (widget.accessTypes.contains('Containers'))
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  height = height == maxHeight
+                                      ? size.height * 0.08
+                                      : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                  bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
+                                });
+
+                                Navigator.pushNamed(context, '/containerManagement'); // it will navigate to the workflow page
+                              },
+                              child: const ForHover(text: "Containers")),
                         InkWell(
                             onTap: () {
                               setState(() {

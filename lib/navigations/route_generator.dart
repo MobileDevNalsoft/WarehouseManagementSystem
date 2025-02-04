@@ -73,8 +73,8 @@ class RouteGenerator {
           pageBuilder: (context, animation, secondaryAnimation) => HoverOverlay(
             child: EntryPoint(
               title: 'Workflow',
-              titles: const ['Quality Check', 'Cycle Count', 'Containers'],
-              tabs: const [QualityCheck(), Cyclecount(), ContainerLayout()],
+              titles: const ['Quality Check', 'Cycle Count'],
+              tabs: const [QualityCheck(), Cyclecount()],
             ),
           ),
           transitionDuration: const Duration(seconds: 1),
@@ -94,8 +94,8 @@ class RouteGenerator {
           pageBuilder: (context, animation, secondaryAnimation) => HoverOverlay(
             child: EntryPoint(
               title: 'Container Management',
-              titles: const ['Layout', 'Statistics'],
-              tabs: const [ContainerLayout(), ContainerStatistics()],
+              titles: const ['Layout'],
+              tabs: const [ContainerLayout()],
             ),
           ),
           transitionDuration: const Duration(seconds: 1),

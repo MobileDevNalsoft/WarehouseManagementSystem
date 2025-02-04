@@ -135,11 +135,11 @@ class _QualityCheckState extends State<QualityCheck> {
                             }
                            
                           }
-                           return Container(
-                              height: 60,
-                              alignment: Alignment.center,
-                              child: const CircularProgressIndicator(),
-                            );
+                          //  return Container(
+                          //     height: 60,
+                          //     alignment: Alignment.center,
+                          //     child: const CircularProgressIndicator(),
+                          //   );
                           
                         // } else {
                         //   if (state.completedQualityCheckPageCount != null) {
