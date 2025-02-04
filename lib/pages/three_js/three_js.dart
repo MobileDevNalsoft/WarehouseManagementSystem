@@ -22,7 +22,9 @@ import 'package:wmssimulator/pages/customs/facility_dropdown.dart';
 import 'package:wmssimulator/pages/customs/searchbar_dropdown.dart';
 import 'package:wmssimulator/pages/data_sheets/activity_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/bin_data_sheet.dart';
+import 'package:wmssimulator/pages/data_sheets/dock_area_out_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/inspection_area_data_sheet.dart';
+import 'package:wmssimulator/pages/data_sheets/lpn_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/rack_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/receiving_area_data_sheet.dart';
 import 'package:wmssimulator/pages/data_sheets/staging_area_data_sheet.dart';
@@ -76,11 +78,14 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     _warehouseInteractionBloc.add(GetTasks());
     textEditingController = TextEditingController(text: _warehouseInteractionBloc.state.selectedTaskId ?? "");
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
-    sliderAnimationController = AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 100), vsync: this);
-    widthAnimation = Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-    positionAnimation = Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-    sliderPositionAnimation =
-        Tween<double>(begin: -450, end: 10).animate(CurvedAnimation(parent: sliderAnimationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    sliderAnimationController =
+        AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 100), vsync: this);
+    widthAnimation =
+        Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    positionAnimation =
+        Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    sliderPositionAnimation = Tween<double>(begin: -450, end: 10)
+        .animate(CurvedAnimation(parent: sliderAnimationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
     // Listen for changes in the state
     _warehouseInteractionBloc.stream.listen((state) {
       if (!state.dataFromJS.keys.contains('object') && state.dataFromJS.keys.first != 'percentComplete') {
@@ -153,7 +158,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           bool clearSearchText = true;
                                           if (message.containsKey("area")) {
                                             message["area"] = message["area"].toString().toLowerCase().replaceAll('-', '');
-                                            clearSearchText = _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll('-', '') != message["area"];
+                                            clearSearchText =
+                                                _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll('-', '') != message["area"];
                                           } else if (message.containsKey("bin") && _warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
                                             context.read<StorageBloc>().add(GetBinData(selectedBin: "RC${message['bin']}"));
                                           }
@@ -165,11 +171,13 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                 _warehouseInteractionBloc.add(ModelLoaded(isLoaded: true));
                                                 _warehouseInteractionBloc.add(Rendering(isRendered: false));
                                                 Timer.periodic(const Duration(milliseconds: 500), (timer) async {
-                                                  bool? isLoaded = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "isLoaded");
+                                                  bool? isLoaded = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
+                                                      .getItem(key: "isLoaded");
                                                   if (isLoaded != null && isLoaded) {
                                                     _warehouseInteractionBloc.add(Rendering(isRendered: true));
                                                     _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "isLoaded");
-                                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "binsStatus");
+                                                    _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
+                                                        .removeItem(key: "binsStatus");
                                                     context.read<StorageBloc>().add(GetBinsStatus());
                                                     timer.cancel();
                                                   }
@@ -277,8 +285,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                         (timer) async {
                                           // ignore: prefer_conditional_assignment
                                           if (objectNames.isEmpty) {
-                                            objectNames =
-                                                await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.getItem(key: "modelObjectNames") ?? [];
+                                            objectNames = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
+                                                    .getItem(key: "modelObjectNames") ??
+                                                [];
                                           }
                                           timer.cancel();
                                         },
@@ -322,7 +331,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                         );
                       }),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded && accessTypes.contains('Warehouse') && !accessTypes.contains('Storage Area'))
+                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded &&
+                      accessTypes.contains('Warehouse') &&
+                      !accessTypes.contains('Storage Area'))
                     Align(
                         alignment: Alignment.bottomCenter,
                         child: CustomProgressBar(
@@ -416,8 +427,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
               builder: (context, snapshot) {
                 return InkWell(
                   onTap: () {
-                    _warehouseInteractionBloc.add(ResetAlertsCount());
                     sliderAnimationController.forward();
+                    _warehouseInteractionBloc.add(ResetAlertsCount());
                   },
                   child: SizedBox(
                     height: size.height * 0.08,
@@ -432,10 +443,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           ),
                           if (snapshot.hasData && snapshot.data != 0)
                             Positioned(
-                              right: lsize.maxWidth * 0.58,
+                              right: lsize.maxWidth * 0.45,
                               child: Container(
-                                height: size.height * 0.016,
-                                width: size.width * 0.016,
+                                height: size.height * 0.015,
+                                width: size.width * 0.015,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
                                 child: Text(
@@ -492,6 +503,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         );
       case 'bin':
         return const BinDataSheet();
+      case 'lpn':
+        return const LPNLifeCycleDataSheet();
       case 'area':
         switch (objectValue.toLowerCase().replaceAll("-", "")) {
           case 'stagingarea':
@@ -505,7 +518,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
           case 'dockareain':
             return const DockAreaDataSheet();
           case 'dockareaout':
-            return const DockAreaDataSheet();
+            return const DockOutAreaDataSheet();
           case 'yardarea':
             return const YardAreaDataSheet();
           // case 'storagearea':

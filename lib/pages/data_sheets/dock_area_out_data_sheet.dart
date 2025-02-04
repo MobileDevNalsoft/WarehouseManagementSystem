@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:wmssimulator/bloc/dock_area/dock_area_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
-import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
-import 'package:wmssimulator/js_interop_service/js_inter.dart';
-import 'package:wmssimulator/models/dock_area_model.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 
 class DockOutAreaDataSheet extends StatefulWidget {

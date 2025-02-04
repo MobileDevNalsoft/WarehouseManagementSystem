@@ -13,8 +13,11 @@ export async function loadModel() {
         const data = JSON.parse(window.localStorage.getItem('facilityData'));
         loader.load(
             getGLB(data.companyID, data.facilityID, data.model),
-            function (gltf) {                resolve(gltf); // Resolve with the loaded glTF model
+            function (gltf) {
+
+                resolve(gltf); // Resolve with the loaded glTF model
                 console.log('{"percentComplete":"100"}');
+                // return gltf;
             },
             (xhr) => {
                 if(xhr.lengthComputable){

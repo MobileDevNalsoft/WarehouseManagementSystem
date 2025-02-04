@@ -8,7 +8,6 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
-import 'package:wmssimulator/pages/dashboard_utils/shared/constants/defaults.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 
 class InspectionAreaDashboard extends StatefulWidget {
@@ -43,17 +42,6 @@ class _InspectionAreaDashboardState extends State<InspectionAreaDashboard> {
     return LayoutBuilder(builder: (context, constraints) {
       bool isWideScreen = constraints.maxWidth > 1200;
       bool isMediumScreen = constraints.maxWidth > 800 && constraints.maxWidth <= 1200;
-      double horizontalPadding = isWideScreen
-          ? AppDefaults.padding * 2
-          : isMediumScreen
-              ? AppDefaults.padding * 1.5
-              : AppDefaults.padding;
-      double containerWidth = isWideScreen
-          ? constraints.maxWidth * 0.6
-          : isMediumScreen
-              ? constraints.maxWidth * 0.45
-              : constraints.maxWidth * 0.9;
-      double containerHeight = isWideScreen || isMediumScreen ? constraints.maxHeight * 1 : constraints.maxHeight * 1;
 
       return BlocBuilder<DashboardsBloc, DashboardsState>(builder: (context, state) {
         bool isEnabled = state.getInspectionDashboardState != InspectionDashboardState.success;

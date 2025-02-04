@@ -254,7 +254,7 @@ export function getPositionAndTarget(scene, name) {
           box.getCenter(target);
           break;
         case "yardArea":
-          position.set(50, 300, -34);
+          position.set(50, 320, -34);
           object = scene.getObjectByName(view);
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
@@ -300,6 +300,17 @@ export function getPositionAndTarget(scene, name) {
           );
           box = new THREE.Box3().setFromObject(object);
           box.getCenter(target);
+          break;
+        case 'lpnLifeCycle':
+          object = scene.getObjectByName('warehouse_wall');
+          position.set(
+            object.position.x+20,
+            object.position.y + 250,
+            object.position.z + 100
+          );
+          box = new THREE.Box3().setFromObject(object);
+          box.getCenter(target);
+          target.x = target.x + 20;
           break;
       }
       break;

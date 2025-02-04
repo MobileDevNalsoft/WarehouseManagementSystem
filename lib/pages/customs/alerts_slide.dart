@@ -14,6 +14,14 @@ class AlertsSlide extends StatefulWidget {
 }
 
 class _AlertsSlideState extends State<AlertsSlide> {
+  late final WarehouseInteractionBloc _warehouseInteractionBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -43,6 +51,7 @@ class _AlertsSlideState extends State<AlertsSlide> {
               InkWell(
                 onTap: () {
                   widget.sliderAnimationController.reverse();
+                  _warehouseInteractionBloc.add(ResetAlertsCount());
                 },
                 child: const Icon(
                   Icons.cancel,
@@ -56,7 +65,7 @@ class _AlertsSlideState extends State<AlertsSlide> {
           ),
           Gap(size.height * 0.01),
           StreamBuilder<List<Alert>>(
-            stream: context.read<WarehouseInteractionBloc>().alertStream,
+            stream: _warehouseInteractionBloc.alertStream,
             builder: (context, snapshot) {
               bool isEnabled = snapshot.connectionState == ConnectionState.waiting;
               List<Alert> alerts = [];

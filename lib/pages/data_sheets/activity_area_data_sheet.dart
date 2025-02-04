@@ -8,7 +8,6 @@ import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/activity_area_model.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
-import 'package:wmssimulator/pages/dashboard_utils/shared/constants/ghaps.dart';
 
 class ActivityAreaDataSheet extends StatefulWidget {
   const ActivityAreaDataSheet({super.key});

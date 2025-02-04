@@ -229,33 +229,39 @@ export async function initScene(renderer) {
   let pathLine;
   let clock;
   let bins = [];
-  let forkLiftbins = data.model === 'storageArea' ? [
-    "p26",
-    "5RB30102",
-    "5RB10102",
-    "5LB30102",
-    "4LB30102",
-    "3LB20102",
-    "3LB10102",
-    "4LB20102",
-    "2LB30103",
-    "p80"
-  ] : [
-    'p4',
-    "4RB30602",
-    '4LB30102',
-    "1RB30602",
-    "3RB20602",
-    "2RB10601",
-    "2RB30602",
-    "3RB10102",
-    "2LB20501",
-    "2RB10601",
-    "2LB20201",
-    "stagingArea",
-  ];
+  let forkLiftbins =
+    data.model === "storageArea"
+      ? [
+          "p26",
+          "5RB30102",
+          "5RB10102",
+          "5LB30102",
+          "4LB30102",
+          "3LB20102",
+          "3LB10102",
+          "4LB20102",
+          "2LB30103",
+          "p80",
+        ]
+      : [
+          "p4",
+          "4RB30602",
+          "4LB30102",
+          "1RB30602",
+          "3RB20602",
+          "2RB10601",
+          "2RB30602",
+          "3RB10102",
+          "2LB20501",
+          "2RB10601",
+          "2LB20201",
+          "stagingArea",
+        ];
 
-  let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(THREE, scene);
+  let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(
+    THREE,
+    scene
+  );
 
   let agvTask = ["receivingArea", "5RB30602", "3RB20602"];
   let digitalTwin = document.getElementById("digitalTwin");
@@ -266,6 +272,7 @@ export async function initScene(renderer) {
       return;
     }
     digitalTwin.classList.add("focused");
+
     stopAnimation();
     document.getElementById("path").classList.remove("focused");
     bins = agvTask;
@@ -425,7 +432,7 @@ export async function initScene(renderer) {
       }
     });
 
-    if(data.model === 'warehouse'){
+    if (data.model === "warehouse") {
       switchCamera(scene, "warehouse_wall", camera, controls);
     }
   });
@@ -478,9 +485,8 @@ export async function initScene(renderer) {
       switchCamera(scene, "compoundArea", camera, controls);
     }
     areas.forEach((area) => {
- 
       const obj = scene.getObjectByName(area.name);
-    
+
       if (obj) {
         if (!isFocused) {
           highlightArea(scene, area.name, area.color, area.opacity); // Highlight the area

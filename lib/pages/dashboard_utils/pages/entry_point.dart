@@ -1,44 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
-import 'package:wmssimulator/pages/categories/cyclecount.dart';
-import 'package:wmssimulator/pages/categories/qualitycheck.dart';
-import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/activity_area_dashboard.dart';
-import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/dock_area_dashboard.dart';
-import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/inspection_area_dashboard.dart';
-import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/receiving_area_dashboard.dart';
-import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/staging_area_dashboard.dart';
-import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/storage_area_dashboard.dart';
 
-import '../responsive.dart';
-import '../shared/constants/defaults.dart';
-import '../shared/widgets/header.dart';
-import '../shared/widgets/sidemenu/sidebar.dart';
-import '../shared/widgets/sidemenu/tab_sidebar.dart';
-import 'dashboards/yard_area_dashboard.dart';
+import 'sidebar.dart';
 
 final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
 class EntryPoint extends StatelessWidget {
-  EntryPoint({super.key, this.type = 'dashboards'});
-  String type;
-
-  List<Widget> dashboards = [
-    DockAreaDashboard(),
-    StorageAreaDashboard(),
-    YardAreaDashboard(),
-    StagingAreaDashboard(),
-    const ActivityAreaDashboard(),
-    ReceivingAreaDashboard(),
-    InspectionAreaDashboard(),
-  ];
-
-  List<String> dashboardTitles = ['Dock', 'Storage', 'Yard', 'Staging', 'Activity', 'Receiving', 'Inspection'];
-
-  List<Widget> tabs = [QualityCheck(), Cyclecount()];
-
-  List<String> tabTitles = ['Quality Check', 'Cycle Count'];
+  EntryPoint({super.key, this.titleIcon, required this.title, required this.titles, required this.tabs});
+  Widget? titleIcon;
+  String title;
+  List<String> titles;
+  List<Widget> tabs;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +26,8 @@ class EntryPoint extends StatelessWidget {
             children: [
               Sidebar(
                 lsize: lsize,
-                title: type == 'dashboards' ? 'Dashboards' : 'Workflow',
-                items: type == 'dashboards' ? dashboardTitles : tabTitles,
+                title: title,
+                items: titles,
               ),
               Align(
                 alignment: Alignment.centerRight,
@@ -67,7 +40,7 @@ class EntryPoint extends StatelessWidget {
                           borderRadius: const BorderRadius.only(topLeft: Radius.circular(50), bottomLeft: Radius.circular(50)),
                           boxShadow: [BoxShadow(color: Colors.grey.shade900, offset: const Offset(-1, 0), blurRadius: 5)]),
                       padding: EdgeInsets.all(size.height * 0.025),
-                      child: type == 'dashboards' ? dashboards[state.index!] : tabs[state.index!]);
+                      child: tabs[state.index!]);
                 }),
               )
             ],

@@ -1,5 +1,5 @@
 import { resetTrucksAnimation, playAnimations, stopAnimationsAndReset } from "animations";
-import { moveToBin, getPositionAndTarget } from "camera";
+import { moveToBin, getPositionAndTarget, switchCamera } from "camera";
 import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
 
@@ -374,7 +374,17 @@ export function localStorageSetup(scene, camera, controls) {
         } catch (e) {
           console.warn("binsStatus" + e);
         }
-
+        break;
+      case 'lpnLifeCycle':
+        if(event.newValue == 'true'){
+          document.getElementById("wms-bot").style.display = "none";
+          switchCamera(scene, "lpnLifeCycle", camera, controls);
+          // animateLPNLifeCycle(scene);
+        }else{
+          document.getElementById("wms-bot").style.display = "block";
+          // removeLPNLifeCycle(scene);
+        }
+        break;
       default:
         break;
     }

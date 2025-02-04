@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
-import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 
 class YardAreaDataSheet extends StatefulWidget {
@@ -39,7 +37,6 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
 
   @override
   Widget build(BuildContext context) {
-    print("rebuild");
     Size size = MediaQuery.of(context).size;
     return Customs.DataSheet(context: context, size: size, title: 'Yard Area', children: [
       BlocBuilder<YardBloc, YardState>(
