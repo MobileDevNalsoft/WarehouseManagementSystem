@@ -73,6 +73,7 @@ class AppConstants {
   static const CYCLECOUNT_TASKS = 'cyclecount_tasks';
   static const QUALITYCHECK_BULK_APPROVE = 'iblpn/bulk_qc_approve';
   static const QUALITYCHECK_BULK_REJECT = 'iblpn/bulk_qc_reject';
-  static const SHORTESTPATH_TASKS = 'shortest_path_tasks';
+  static const SHORTESTPATH_TASKS = 'get_tasks_with_bins';
+
    static const BINS_FOR_TASK = 'get_bins_for_task';
 }

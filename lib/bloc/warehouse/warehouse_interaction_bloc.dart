@@ -218,17 +218,18 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
   }
 
   Future<void> _onGetTasks(GetTasks event, Emitter<WarehouseInteractionState> emit) async {
+    emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.loading));
     try {
       await _customApi
           .get(
         AppConstants.SHORTESTPATH_TASKS,
       )
           .then((apiResponse) {
-        emit(state.copyWith(tasksForShoretestPath: List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["taskNbrs"])));
+           emit(state.copyWith(tasksForShoretestPath: (jsonDecode(apiResponse.response!.data)["data"]), getBinsForTaskStatus: GetBinsForTaskStatus.success));
         print("shortest path task  ${state.tasksForShoretestPath}");
       });
     } catch (e) {
-      print("error in shoretest path $e");
+      print("error in shortest path $e");
       Log.e(e);
       // emit(state.copyWith(getUsersState: GetUsers.failure));
     }
@@ -236,7 +237,6 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
 
   Future<void> _onGetBinsForTask(GetBinsForTask event, Emitter<WarehouseInteractionState> emit) async {
     emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.loading));
-   
     try {
       await 
       

@@ -51,7 +51,7 @@ final class WarehouseInteractionState {
       this.tasksForShoretestPath,
       this.alertsCount = 0,
       this.binsForTask,
-      getBinsForTaskStatus,
+      this.getBinsForTaskStatus,
       });
 
   Map<String, dynamic> dataFromJS;
@@ -77,7 +77,7 @@ final class WarehouseInteractionState {
   List<String>? taskIds;
   bool? intercepting;
   int alertsCount;
-  List<String>? tasksForShoretestPath;
+  Map<String,dynamic>? tasksForShoretestPath;
   List<String>? binsForTask;
   GetBinsForTaskStatus? getBinsForTaskStatus;
   // TextEditingController searchController;
@@ -111,7 +111,7 @@ final class WarehouseInteractionState {
         alerts: [],
         getAreasOveriviewDataState: AreasOverviewDataState.initial,
         alertsCount: 0,
-        tasksForShoretestPath: [],
+        tasksForShoretestPath: {},
         binsForTask: [],  
         taskIds: ["task1", "task2", "task3", "task4"],
         getBinsForTaskStatus: GetBinsForTaskStatus.initial,
@@ -140,11 +140,10 @@ final class WarehouseInteractionState {
       List<Alert>? alerts,
       AreasOverviewDataState? getAreasOveriviewDataState,
       String? selectedTaskId,
-      List<String>? tasksForShoretestPath,
+      Map<String,dynamic>? tasksForShoretestPath,
       List<String>? binsForTask,
       GetBinsForTaskStatus? getBinsForTaskStatus
       }) {
-        print("inside copywith ${getBinsForTaskStatus}");
     return WarehouseInteractionState(
         dataFromJS: dataFromJS ?? this.dataFromJS,
         isModelLoaded: isModelLoaded ?? this.isModelLoaded,

@@ -107,12 +107,12 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print("from build ${context.watch<WarehouseInteractionBloc>().state.getBinsForTaskStatus}");
     return Scaffold(
         body: Stack(
       children: [
         BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(
           listener: (context, state) {
-            print("from listener ${state.getBinsForTaskStatus}");
           },
           builder: (context, state) {
           return Column(
@@ -179,6 +179,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                             }
                                           }
                                           if (message.containsKey("openPathDialog") && message['openPathDialog'] == "true" ) {
+                                            print("from openPathDialog");
+                                            _warehouseInteractionBloc.add(GetTasks());
+                                           
                                             Customs.AnimatedDialog(
                                               context: context,
                                               header: IconButton(
@@ -192,65 +195,76 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                               },
                                               content: [
                                                 const Text("Please enter task Id"),
-                                                BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(listener: (context, state) {
-                                                  
-                                                }, builder: (context, state) {
-                                                  return TypeAheadField(
-                                                    focusNode: focusNode,
-                                                    controller: textEditingController,
-                                                    
-                                                    suggestionsController: suggestionsController,
-                                                    builder: (context, controller, focusNode) {
-                                                      print("taks ${state.tasksForShoretestPath}");
-                                                      // controller.clear();
-                                                      return TextField(
-                                                          controller: controller,
-                                                          focusNode: focusNode,
-                                                          // autofocus: true,
-                                                          decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
-                                                    },
-                                                    itemBuilder: (context, value) {
-                                                      return ListTile(
-                                                        title: Text(
-                                                          value.toString(),
-                                                          style: const TextStyle(fontSize: 14),
-                                                        ),
-                                                      );
-                                                    },
-                                                    suggestionsCallback: (pattern) {
-                                                      return state.tasksForShoretestPath!.where((element) => element.toLowerCase().contains(pattern.toLowerCase())).toList();
-                                                    },
-                                                    onSelected: (value) {
-                                                      state.selectedTaskId = value.toString();
-                                                      textEditingController.text = value;
-                                                      suggestionsController.refresh();
-                                                      focusNode.unfocus();
-                                                    },
-                                                  );
-                                                }),
                                                 StatefulBuilder(
-                                                  builder: (context,stfSetState) {
-                                                    return TextButton(
-                                                        onPressed: () {
-                                                    
-                                                          if (textEditingController.text.trim().isNotEmpty) {
-                                                            
-                                                            _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
-                                                            
-                                                          }
-                                                          Navigator.pop(context);
-                                                          {
-                                                            stfSetState(() {
-                                                              _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
-                                                            });
-                                                          // _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
-                                                          }
+                                                  builder: (context,sts) {
+                                                    return BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(listener: (context, state) {
+                                                      print("from listener ${state.getBinsForTaskStatus}");
+                                                    }, builder: (context, state) {
+                                                      return TypeAheadField(
+                                                        focusNode: focusNode,
+                                                        controller: textEditingController,
+                                                        suggestionsController: suggestionsController,
+                                                        builder: (context, controller, focusNode) {
+                                                          print("taks ${state.tasksForShoretestPath}");
+                                                          // controller.clear();
+                                                          return TextField(
+                                                              controller: controller,
+                                                              focusNode: focusNode,
+                                                              // autofocus: true,
+                                                              decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
                                                         },
-                                                        child: PointerInterceptor(child: const Text("Done")));
+                                                        
+                                                        itemBuilder: (context, value) {
+                                                        
+                                                          
+                                                        return ListTile(
+                                                            title: Text(
+                                                              value.toString(),
+                                                              style: const TextStyle(fontSize: 14),
+                                                            ),
+                                                          );
+                                                          
+                                                        },
+                                                        suggestionsCallback: (pattern) { 
+                                                          
+                                                           return state.tasksForShoretestPath!.keys.where((element) => element.toLowerCase().contains(pattern.toLowerCase())).toList();
+                                                        },
+                                                        onSelected: (value) {
+                                                          state.selectedTaskId = value.toString();
+                                                          textEditingController.text = value;
+                                                          suggestionsController.refresh();
+                                                          focusNode.unfocus();
+                                                        },
+                                                      );
+                                                    });
+                                                  }
+                                                ),
+                                                BlocBuilder<WarehouseInteractionBloc,WarehouseInteractionState>(
+                                                  builder: (context,state) {
+                                                    return TextButton(
+                                                            onPressed: () {
+                                                        print("tasks ${state.tasksForShoretestPath}   ${state.tasksForShoretestPath![textEditingController.text.trim()]}"); 
+                                                              if (textEditingController.text.trim().isNotEmpty && state.tasksForShoretestPath!.keys.contains(textEditingController.text.trim())) {
+                                                                
+                                                                     getIt<JsInteropService>().getShoretestPathForTask(state.tasksForShoretestPath![textEditingController.text.trim()]);
+                                                                // _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
+                                                              }
+                                                              Navigator.pop(context);
+                                                              // {
+                                                              //   stfSetState(() {
+                                                              //     _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
+                                                              //   });
+                                                              // // _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
+                                                              // }
+                                                            },
+                                                            child: PointerInterceptor(child: const Text("Done")) 
+                                                    );
                                                   }
                                                 )
+                                             
                                               ],
                                             );
+                                         
                                           }
                                         }
                                       } catch (e) {
@@ -451,17 +465,18 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     sliderAnimationController: sliderAnimationController,
                   )));
             }),
-        if(context.watch<WarehouseInteractionBloc>().state.getBinsForTaskStatus == GetBinsForTaskStatus.loading)
-          Positioned(
-            top: size.height * 0.1,
-            child: Center(
-              child: Container(
-                color: Colors.green,
-                  width: 50,
-                  height: 50,
-                  child: Lottie.asset('assets/lottie/path.json')),
-            ),
-          ),
+          // if(context.watch<WarehouseInteractionBloc>().state.getBinsForTaskStatus == GetBinsForTaskStatus.loading)
+          //   Positioned(
+          //     top: 0,
+          //     left: 0,
+          //     child: Center(
+          //       child: Container(
+          //           color: Colors.white10,
+          //           width: size.width,
+          //           height: size.height,
+          //           child: Lottie.asset('assets/lottie/path.json', height: size.height * 0.2, width: size.width * 0.2)),
+          //     ),
+          //   ),
       ],
     ));
   }
