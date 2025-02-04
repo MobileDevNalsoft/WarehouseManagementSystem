@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
 import 'package:wmssimulator/inits/init.dart';
@@ -13,6 +14,7 @@ import 'package:wmssimulator/local_network_calls.dart';
 import 'package:wmssimulator/logger/logger.dart';
 import 'package:wmssimulator/models/area_response.dart';
 import 'package:wmssimulator/models/company_model.dart';
+import 'package:wmssimulator/models/container_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
 import 'package:wmssimulator/models/overview_model.dart';
 import 'package:wmssimulator/models/user_model.dart';
@@ -43,12 +45,14 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<Rendering>(_onRendering);
     on<Intercepting>(_onIntercepting);
     on<ResetAlertsCount>(_onClearAlerts);
+    on<GetLPNLifeCycle>(_onGetLPNLifeCycle);
     _fetchAlerts(); // Initial fetch'
     Timer.periodic(const Duration(seconds: 5), (timer) {
       _fetchAlerts(); // Subsequent fetches every 10 seconds
     });
     on<GetTasks>(_onGetTasks);
     on<GetBinsForTask>(_onGetBinsForTask);
+
   }
   final NetworkCalls _customApi;
   final NetworkCalls _companyApi =
@@ -83,6 +87,19 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
         selectedSearchArea: searchArea ?? state.selectedSearchArea,
         searchText: event.clearSearchText == false ? state.searchText : "",
       ));
+    }
+  }
+
+   Future<void> _onGetLPNLifeCycle(GetLPNLifeCycle event, Emitter<WarehouseInteractionState> emit) async {
+    try {
+      emit(state.copyWith(getLpnLifeCycleStatus: LPNLifeCycleStatus.loading));
+      // await _customApi.getLPNLifeCycle(event.lpn).then((apiResponse) {
+      // LPNLifeCycleResponse lpnLifeCycleResponse = LPNLifeCycleResponse.fromJson(jsonDecode(apiResponse.response!.data));
+      emit(state.copyWith(lpnLifeCycle: state.lpnLifeCycle, getLpnLifeCycleStatus: LPNLifeCycleStatus.success));
+      // });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getLpnLifeCycleStatus: LPNLifeCycleStatus.failure));
     }
   }
 
@@ -262,4 +279,6 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     }
     emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.initial));
   }
+
+ 
 }

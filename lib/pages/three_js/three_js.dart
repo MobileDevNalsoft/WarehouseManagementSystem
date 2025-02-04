@@ -252,7 +252,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                             onPressed: () {
                                                         print("tasks ${state.tasksForShoretestPath}   ${state.tasksForShoretestPath![textEditingController.text.trim()]}"); 
                                                               if (textEditingController.text.trim().isNotEmpty && state.tasksForShoretestPath!.keys.contains(textEditingController.text.trim())) {
-                                                                
+                                                                    getIt<JsInteropService>().getShoretestPathForTask([]);
                                                                      getIt<JsInteropService>().getShoretestPathForTask(state.tasksForShoretestPath![textEditingController.text.trim()]);
                                                                 // _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
                                                               }
