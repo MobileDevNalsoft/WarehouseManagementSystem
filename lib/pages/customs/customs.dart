@@ -13,6 +13,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel; // Ensure you have this package
+import 'package:wmssimulator/bloc/container_management/container_bloc.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
@@ -757,6 +758,210 @@ class Customs {
             ),
           ),
         );
+      },
+    );
+  }
+
+  static void LocateContainerDialog({
+    required BuildContext context,
+  }) {
+    Size size = MediaQuery.of(context).size;
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black45,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.bounceInOut.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        FocusNode containerNbrFocusNode = FocusNode();
+        FocusNode toLocationFocusNode = FocusNode();
+        SuggestionsController containerNbrSuggestionsController = SuggestionsController();
+        SuggestionsController toLocationSuggestionsController = SuggestionsController();
+        TextEditingController containerNbrTextEditingController = TextEditingController(text: context.read<ContainerBloc>().state.containerNbr);
+        TextEditingController toLocationTextEditingController = TextEditingController(text: context.read<ContainerBloc>().state.toLocation);
+        return BlocConsumer<ContainerBloc, ContainerState>(listener: (context, state) {
+          containerNbrTextEditingController.text = state.containerNbr ?? '';
+          toLocationTextEditingController.text = state.toLocation.toString();
+        }, builder: (context, state) {
+          List<int> availableLots = List.generate(
+            48,
+            (index) => index + 1,
+          ).toList().where((e) => !state.containers!.map((e) => e.lotNbr!).toList().contains(e)).toList();
+          return Container(
+            margin: EdgeInsets.only(top: size.height * 0.35),
+            alignment: Alignment.topCenter,
+            child: Material(
+              color: Colors.transparent,
+              child: SizedBox(
+                height: size.height * 0.30,
+                width: size.width * 0.2,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(top: size.height * 0.015, left: size.height * 0.015, right: size.height * 0.015, bottom: size.height * 0.01),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                "Container                 :   ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                child: TypeAheadField(
+                                  focusNode: containerNbrFocusNode,
+                                  controller: containerNbrTextEditingController,
+                                  suggestionsController: containerNbrSuggestionsController,
+                                  builder: (context, controller, focusNode) {
+                                    return SizedBox(
+                                      height: size.height * 0.04,
+                                      child: TextFormField(
+                                          controller: controller,
+                                          focusNode: focusNode,
+                                          autofocus: true,
+                                          decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.only(left: size.width * 0.005),
+                                              focusedBorder: OutlineInputBorder(),
+                                              enabledBorder: OutlineInputBorder())),
+                                    );
+                                  },
+                                  itemBuilder: (context, value) {
+                                    return ListTile(
+                                      title: Text(
+                                        value.toString(),
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    );
+                                  },
+                                  suggestionsCallback: (pattern) {
+                                    return state.containers!
+                                        .where((e) => e.containerNbr!.contains(pattern))
+                                        .map(
+                                          (e) => e.containerNbr,
+                                        )
+                                        .toList();
+                                  },
+                                  onSelected: (value) {
+                                    context.read<ContainerBloc>().add(SelectedContainer(containerNbr: value));
+                                    containerNbrSuggestionsController.close();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(size.height * 0.01),
+                          Row(
+                            children: [
+                              const Text(
+                                "Current Location     :   ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                child: containerNbrTextEditingController.text.isNotEmpty
+                                    ? Text(state.containers!.where((e) => e.containerNbr == state.containerNbr).first.lotNbr!.toString())
+                                    : SizedBox(),
+                              ),
+                            ],
+                          ),
+                          Gap(size.height * 0.01),
+                          Row(
+                            children: [
+                              const Text(
+                                "To Location              :   ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                child: TypeAheadField(
+                                  focusNode: toLocationFocusNode,
+                                  controller: toLocationTextEditingController,
+                                  suggestionsController: toLocationSuggestionsController,
+                                  builder: (context, controller, focusNode) {
+                                    return SizedBox(
+                                      height: size.height * 0.04,
+                                      child: TextFormField(
+                                          controller: controller,
+                                          focusNode: focusNode,
+                                          onChanged: (value) => state.toLocation = value,
+                                          decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.only(left: size.width * 0.005),
+                                              focusedBorder: OutlineInputBorder(),
+                                              enabledBorder: OutlineInputBorder())),
+                                    );
+                                  },
+                                  itemBuilder: (context, value) {
+                                    return ListTile(
+                                      title: Text(
+                                        value.toString(),
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    );
+                                  },
+                                  suggestionsCallback: (pattern) {
+                                    return availableLots.where((e) => e.toString().contains(pattern)).toList();
+                                  },
+                                  onSelected: (value) {
+                                    context.read<ContainerBloc>().add(SelectedToLocation(toLocation: value.toString()));
+                                    toLocationSuggestionsController.close();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(size.height * 0.02),
+                          TextButton(
+                              onPressed: () {
+                                if (toLocationTextEditingController.text != '' && availableLots.contains(int.parse(state.toLocation!))) {
+                                  context.read<ContainerBloc>().add(RelocateContainer(containerNbr: state.containerNbr!, toLocation: state.toLocation!));
+                                  Navigator.pop(context);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text('Please Select Available Slot!'),
+                                    backgroundColor: Colors.red,
+                                  ));
+                                }
+                              },
+                              child: PointerInterceptor(child: const Text("Done"))),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
+                        child: PointerInterceptor(
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              size: 20,
+                              weight: 1,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
       },
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,7 +40,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
     bottomHeight = widget.size.height * 0.08;
     maxHeight = widget.size.height * 0.08 +
         widget.size.height * (Set.from(localAccessTypes).intersection(Set.from(widget.accessTypes)).length * 0.061) +
-        widget.size.height * 0.061 * 4;
+        widget.size.height * 0.061 * 5;
   }
 
   @override
@@ -88,7 +89,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
 
-                                Navigator.pushNamed(context, '/dashboards'); // it will navigate to the dashboards page
+                                Navigator.pushNamed(context, '/dashboards');
                               },
                               child: const ForHover(text: "Dashboards")),
                         if (widget.accessTypes.contains('Workflow'))
@@ -101,7 +102,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
 
-                                Navigator.pushNamed(context, '/workflow'); // it will navigate to the workflow page
+                                Navigator.pushNamed(context, '/workflow');
                               },
                               child: const ForHover(text: "Workflow")),
                         if (widget.accessTypes.contains('Containers'))
@@ -114,21 +115,22 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
 
-                                Navigator.pushNamed(context, '/containerManagement'); // it will navigate to the workflow page
+                                Navigator.pushNamed(context, '/containerManagement');
                               },
                               child: const ForHover(text: "Containers")),
-                        InkWell(
-                            onTap: () {
-                              setState(() {
-                                height = height == maxHeight
-                                    ? size.height * 0.08
-                                    : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                                bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
-                              });
+                        if (widget.accessTypes.contains('LPN LifeCycle'))
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  height = height == maxHeight
+                                      ? size.height * 0.08
+                                      : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                  bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
+                                });
 
-                              Customs.LPNSelection(context: context);
-                            },
-                            child: const ForHover(text: "LPN LifeCycle")),
+                                Customs.LPNSelection(context: context);
+                              },
+                              child: const ForHover(text: "LPN LifeCycle")),
                         if (widget.accessTypes.contains('WMS Cloud'))
                           InkWell(
                               onTap: () {

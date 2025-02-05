@@ -38,9 +38,9 @@ class _HoverOverlayState extends State<HoverOverlay> {
                       Text('Container Nbr : ${state.hoveredContainer!.containerNbr}'),
                       Text('Customer : ${state.hoveredContainer!.customer}'),
                       Text('Arrival Date : ${state.hoveredContainer!.arrivalDate.toString().split(' ')[0]}'),
-                      if (DateTime.now().difference(state.hoveredContainer!.arrivalDate!).inDays > 3)
+                      if (DateTime(2025, 1, 31).difference(state.hoveredContainer!.arrivalDate!).inDays > 3)
                         Text('Detention Days : ${DateTime.now().difference(state.hoveredContainer!.arrivalDate!).inDays - 3}'),
-                      if (DateTime.now().difference(state.hoveredContainer!.arrivalDate!).inDays > 3)
+                      if (DateTime(2025, 1, 31).difference(state.hoveredContainer!.arrivalDate!).inDays > 3)
                         Text('Detention Cost : ${(DateTime.now().difference(state.hoveredContainer!.arrivalDate!).inDays - 3) * 500}Rs'),
                     ],
                   ),

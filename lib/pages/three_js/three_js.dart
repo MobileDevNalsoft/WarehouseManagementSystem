@@ -71,7 +71,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-
+    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
     _warehouseInteractionBloc.add(GetUsersData());
     _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
     _warehouseInteractionBloc.add(Intercepting(intercepting: false));
