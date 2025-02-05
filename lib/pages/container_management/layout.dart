@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:wmssimulator/bloc/container_management/container_bloc.dart';
 import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
 import 'package:wmssimulator/models/container_model.dart';
+import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/pages/customs/hover_card.dart';
 import 'package:wmssimulator/pages/customs/hover_dialog.dart';
 
@@ -16,7 +17,9 @@ class ContainerLayout extends StatefulWidget {
 
 class _ContainerLayoutState extends State<ContainerLayout> {
   late final ContainerBloc _containerBloc;
-  DateTime now = DateTime.now();
+  DateTime now = DateTime(2025, 1, 31)
+      // DateTime.now()
+      ;
   List<Status> statuses = [
     Status(status: 'Empty', color: const Color.fromRGBO(192, 208, 230, 1)),
     Status(status: 'Loaded', color: Colors.lightBlueAccent.shade200),
@@ -206,8 +209,14 @@ class _ContainerLayoutState extends State<ContainerLayout> {
                                 children: [
                                   Container(
                                     height: size.height * 0.045,
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
                                     margin: EdgeInsets.only(left: size.width * 0.01, right: size.width * 0.01),
                                     decoration: BoxDecoration(color: statuses[4].color, borderRadius: BorderRadius.circular(10)),
+                                    child: Text(
+                                      statuses[4].text!,
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                   Gap(size.height * 0.01),
                                   Expanded(child: Text(statuses[4].status, style: const TextStyle(color: Colors.white, fontSize: 10)))
@@ -292,7 +301,20 @@ class _ContainerLayoutState extends State<ContainerLayout> {
                             ),
                             Gap(size.width * 0.02)
                           ],
-                        ))
+                        )),
+                    Transform.translate(
+                      offset: Offset(-size.width * 0.01, -size.height * 0.008),
+                      child: TextButton(
+                          onPressed: () {
+                            state.containerNbr = '';
+                            state.toLocation = '';
+                            Customs.LocateContainerDialog(context: context);
+                          },
+                          style: TextButton.styleFrom(backgroundColor: Colors.white, foregroundColor: Colors.black),
+                          child: Text(
+                            'Locate',
+                          )),
+                    )
                   ],
                 ),
               )),
@@ -320,8 +342,8 @@ class _ContainerLayoutState extends State<ContainerLayout> {
                                   Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: List.generate(12, (index) {
-                                      bool isOccupied = state.containers!.where((e) => e.lotNbr == index).isNotEmpty;
-                                      ContainerData? container = isOccupied ? state.containers!.where((e) => e.lotNbr == index).first : null;
+                                      bool isOccupied = state.containers!.where((e) => e.lotNbr == index + 1).isNotEmpty;
+                                      ContainerData? container = isOccupied ? state.containers!.where((e) => e.lotNbr == index + 1).first : null;
                                       bool inDetention = container != null ? now.difference(container.arrivalDate!).inDays > 3 : false;
                                       bool isPriorOrDetention = container != null ? container.priority! || inDetention : false;
                                       return Column(

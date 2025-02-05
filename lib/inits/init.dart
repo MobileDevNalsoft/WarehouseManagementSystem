@@ -18,7 +18,7 @@ Future<void> init() async {
       connectTimeout: 30, receiveTimeout: 30, username: AppConstants.APIUSERNAME, password: AppConstants.APIPASSWORD));
 
   // Navigator Service
-  getIt.registerLazySingleton<NavigatorService>(() => NavigatorService());
+  getIt.registerSingleton<NavigatorService>(NavigatorService());
 
   //js interop service
   getIt.registerFactory(() => JsInteropService());

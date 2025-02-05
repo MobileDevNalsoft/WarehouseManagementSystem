@@ -13,6 +13,9 @@ class ContainerBloc extends Bloc<ContainerEvent, ContainerState> {
         super(ContainerState.initial()) {
     on<GetContainers>(_onGetConatainers);
     on<OnHover>(_onOnHover);
+    on<SelectedContainer>(_onSelectedContainer);
+    on<SelectedToLocation>(_onSelectedToLocation);
+    on<RelocateContainer>(_onRelocateContainer);
   }
 
   final NetworkCalls _customApi;
@@ -31,6 +34,19 @@ class ContainerBloc extends Bloc<ContainerEvent, ContainerState> {
   }
 
   void _onOnHover(OnHover event, Emitter<ContainerState> emit) {
-    emit(state.copyWith(isHovering: event.isHovering, hoveredContainer: event.hoveredContainer));
+    emit(state.copyWith(isHovering: event.isHovering, hoveredContainer: event.hoveredContainer, containerNbr: state.containerNbr));
+  }
+
+  void _onSelectedContainer(SelectedContainer event, Emitter<ContainerState> emit) {
+    emit(state.copyWith(containerNbr: event.containerNbr));
+  }
+
+  void _onSelectedToLocation(SelectedToLocation event, Emitter<ContainerState> emit) {
+    emit(state.copyWith(toLocation: event.toLocation));
+  }
+
+  void _onRelocateContainer(RelocateContainer event, Emitter<ContainerState> emit) {
+    state.containers!.where((e) => e.containerNbr == event.containerNbr).first.lotNbr = int.parse(event.toLocation);
+    emit(state.copyWith(containerNbr: '', toLocation: ''));
   }
 }

@@ -3,9 +3,11 @@ part of 'container_bloc.dart';
 enum ContainerStatus { initial, loading, success, failure }
 
 class ContainerState {
-  ContainerState({this.containers, this.getContainerStatus, this.isHovering, this.hoveredContainer});
+  ContainerState({this.containers, this.getContainerStatus, this.isHovering, this.hoveredContainer, this.containerNbr, this.toLocation});
 
   List<ContainerData>? containers;
+  String? containerNbr;
+  String? toLocation;
   ContainerData? hoveredContainer;
   ContainerStatus? getContainerStatus;
   bool? isHovering;
@@ -13,6 +15,8 @@ class ContainerState {
   factory ContainerState.initial() {
     return ContainerState(
         isHovering: false,
+        containerNbr: '',
+        toLocation: '',
         containers: [
           ContainerData(
               lotNbr: 1,
@@ -117,11 +121,19 @@ class ContainerState {
         getContainerStatus: ContainerStatus.initial);
   }
 
-  ContainerState copyWith({List<ContainerData>? containers, ContainerStatus? getContainerStatus, bool? isHovering, ContainerData? hoveredContainer}) {
+  ContainerState copyWith(
+      {List<ContainerData>? containers,
+      ContainerStatus? getContainerStatus,
+      String? containerNbr,
+      bool? isHovering,
+      ContainerData? hoveredContainer,
+      String? toLocation}) {
     return ContainerState(
         containers: containers ?? this.containers,
+        containerNbr: containerNbr ?? this.containerNbr,
         getContainerStatus: getContainerStatus ?? this.getContainerStatus,
         hoveredContainer: hoveredContainer ?? this.hoveredContainer,
+        toLocation: toLocation ?? this.toLocation,
         isHovering: isHovering ?? this.isHovering);
   }
 }

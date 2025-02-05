@@ -210,6 +210,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
 
   void _onClearAlerts(ResetAlertsCount event, Emitter<WarehouseInteractionState> emit) {
     _alertsCountController.sink.add(0);
+    state.alertsCount = 0;
   }
 
   Future<void> _onGetAreasOverviewData(GetAreasOverviewData event, Emitter<WarehouseInteractionState> emit) async {
