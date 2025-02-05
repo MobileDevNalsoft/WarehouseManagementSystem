@@ -73,6 +73,7 @@ class AppConstants {
   static const CONTAINERS = 'get_containers';
   static const QUALITYCHECK_BULK_APPROVE = 'iblpn/bulk_qc_approve';
   static const QUALITYCHECK_BULK_REJECT = 'iblpn/bulk_qc_reject';
-  static const SHORTESTPATH_TASKS = 'shortest_path_tasks';
-  static const BINS_FOR_TASK = 'get_bins_for_task';
+  static const SHORTESTPATH_TASKS = 'get_tasks_with_bins';
+
+   static const BINS_FOR_TASK = 'get_bins_for_task';
 }

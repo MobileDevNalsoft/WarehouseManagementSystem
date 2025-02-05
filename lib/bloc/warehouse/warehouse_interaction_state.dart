@@ -54,7 +54,7 @@ final class WarehouseInteractionState {
     this.tasksForShoretestPath,
     this.alertsCount = 0,
     this.binsForTask,
-    getBinsForTaskStatus,
+    this.getBinsForTaskStatus,
   });
 
   Map<String, dynamic> dataFromJS;
@@ -82,7 +82,7 @@ final class WarehouseInteractionState {
   List<String>? taskIds;
   bool? intercepting;
   int alertsCount;
-  List<String>? tasksForShoretestPath;
+  Map<String,dynamic>? tasksForShoretestPath;
   List<String>? binsForTask;
   GetBinsForTaskStatus? getBinsForTaskStatus;
   // TextEditingController searchController;
@@ -142,7 +142,7 @@ final class WarehouseInteractionState {
         LPNStatus(
             status: 'Shipped', user: 'User 9', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-31T19:01:36.653880-04:00').toLocal())),
       ],
-      tasksForShoretestPath: [],
+      tasksForShoretestPath: {},
       binsForTask: [],
       getBinsForTaskStatus: GetBinsForTaskStatus.initial,
     );
@@ -171,7 +171,7 @@ final class WarehouseInteractionState {
       AreasOverviewDataState? getAreasOveriviewDataState,
       String? selectedTaskId,
       LPNLifeCycleStatus? getLpnLifeCycleStatus,
-      List<String>? tasksForShoretestPath,
+      Map<String,dynamic>? tasksForShoretestPath,
       int? alertsCount,
       List<String>? binsForTask,
       GetBinsForTaskStatus? getBinsForTaskStatus}) {

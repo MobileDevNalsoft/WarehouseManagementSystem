@@ -92,8 +92,8 @@ class RouteGenerator {
           pageBuilder: (context, animation, secondaryAnimation) => HoverOverlay(
             child: EntryPoint(
               title: 'Container Management',
-              titles: const ['Layout', 'Statistics'],
-              tabs: const [ContainerLayout(), ContainerStatistics()],
+              titles: const ['Layout'],
+              tabs: const [ContainerLayout()],
             ),
           ),
           transitionDuration: const Duration(seconds: 1),

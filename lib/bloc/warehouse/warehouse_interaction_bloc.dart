@@ -52,13 +52,15 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     });
     on<GetTasks>(_onGetTasks);
     on<GetBinsForTask>(_onGetBinsForTask);
+
   }
   final NetworkCalls _customApi;
-  final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
-      connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5, username: 'nalsoft_adm', password: 'P@s\$w0rd2024');
+  final NetworkCalls _companyApi =
+      NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5, username: 'nalsoft_adm', password: 'P@s\$w0rd2024');
   final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
   void _onSelectedObject(SelectedObject event, Emitter<WarehouseInteractionState> emit) {
+    print('event ${event.dataFromJS}');
     String? searchArea;
     if (event.dataFromJS.containsKey("area") && !event.dataFromJS["area"].toString().contains('compound')) {
       searchArea = event.dataFromJS["area"].toString()[0].toUpperCase() + event.dataFromJS["area"].toString().substring(1);
@@ -71,10 +73,10 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
 
     if (areaContainsStorage && !selectedAreaContainsStorage) {
       emit(state.copyWith(
-          dataFromJS: {"object": "storagearea"},
-          selectedSearchArea: searchArea ?? state.selectedSearchArea,
-          searchText: event.clearSearchText == false ? state.searchText : "",
-          alertsCount: state.alertsCount));
+        dataFromJS: {"object": "storagearea"},
+        selectedSearchArea: searchArea ?? state.selectedSearchArea,
+        searchText: event.clearSearchText == false ? state.searchText : "",
+      ));
     } else if (areaContainsStorage) {
       emit(state.copyWith(
         selectedSearchArea: searchArea ?? state.selectedSearchArea,
@@ -88,7 +90,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     }
   }
 
-  Future<void> _onGetLPNLifeCycle(GetLPNLifeCycle event, Emitter<WarehouseInteractionState> emit) async {
+   Future<void> _onGetLPNLifeCycle(GetLPNLifeCycle event, Emitter<WarehouseInteractionState> emit) async {
     try {
       emit(state.copyWith(getLpnLifeCycleStatus: LPNLifeCycleStatus.loading));
       // await _customApi.getLPNLifeCycle(event.lpn).then((apiResponse) {
@@ -119,9 +121,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       await _companyApi.get(AppConstants.COMPANY).then((value) {
         CompanyModel companyModel = CompanyModel.fromJson(value.response!.data);
         emit(state.copyWith(
-            companyModel: companyModel,
-            getState: GetCompanyDataState.success,
-            selectedCompanyVal: companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
+            companyModel: companyModel, getState: GetCompanyDataState.success, selectedCompanyVal: companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
         // add(GetFaclityData(company_id: companyModel.results!.where((e) => e.name! == 'M10 Company').first.id!));
       });
     } catch (e) {
@@ -134,8 +134,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     try {
       await _companyApi.get(AppConstants.FACILITY, queryParameters: {'parent_company_id': event.company_id}).then((value) {
         FacilityModel facilityModel = FacilityModel.fromJson(value.response!.data);
-        emit(state.copyWith(
-            facilityModel: facilityModel, facilityDataState: GetFacilityDataState.success, selectedFacilityVal: facilityModel.results![0].name!));
+        emit(state.copyWith(facilityModel: facilityModel, facilityDataState: GetFacilityDataState.success, selectedFacilityVal: facilityModel.results![0].name!));
       });
     } catch (e) {
       print("error $e");
@@ -174,8 +173,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       newFilteredUsers = state.users!.map((user) => user.copy()).toList();
     } else {
       // Filter and create a new list with copies of the filtered users
-      newFilteredUsers =
-          state.users!.where((user) => user.username!.toLowerCase().contains(event.searchText.toLowerCase())).map((user) => user.copy()).toList();
+      newFilteredUsers = state.users!.where((user) => user.username!.toLowerCase().contains(event.searchText.toLowerCase())).map((user) => user.copy()).toList();
     }
     emit(state.copyWith(filteredUsers: newFilteredUsers));
   }
@@ -238,17 +236,18 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
   }
 
   Future<void> _onGetTasks(GetTasks event, Emitter<WarehouseInteractionState> emit) async {
+    emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.loading));
     try {
       await _customApi
           .get(
         AppConstants.SHORTESTPATH_TASKS,
       )
           .then((apiResponse) {
-        emit(state.copyWith(tasksForShoretestPath: List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["taskNbrs"])));
+           emit(state.copyWith(tasksForShoretestPath: (jsonDecode(apiResponse.response!.data)["data"]), getBinsForTaskStatus: GetBinsForTaskStatus.success));
         print("shortest path task  ${state.tasksForShoretestPath}");
       });
     } catch (e) {
-      print("error in shoretest path $e");
+      print("error in shortest path $e");
       Log.e(e);
       // emit(state.copyWith(getUsersState: GetUsers.failure));
     }
@@ -256,29 +255,31 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
 
   Future<void> _onGetBinsForTask(GetBinsForTask event, Emitter<WarehouseInteractionState> emit) async {
     emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.loading));
-
     try {
-      await Future.delayed(
-          Duration(seconds: 2),
-          () async => {
-                await _customApi.get(AppConstants.BINS_FOR_TASK, queryParameters: {"facility_id": "243", "task_nbr": event.taskNbr}).then((apiResponse) {
-                  if (apiResponse.response!.statusCode == 200) {
-                    List<String> bins = List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["bins"]);
-                    emit(state.copyWith(binsForTask: bins, getBinsForTaskStatus: GetBinsForTaskStatus.success));
-                    print("bins for task  ${state.binsForTask}");
+      await 
+      
+      Future.delayed(Duration(seconds: 2),() async =>{
+      await _customApi.get(AppConstants.BINS_FOR_TASK, queryParameters: {"facility_id": "243", "task_nbr": event.taskNbr}).then((apiResponse) {
+        if (apiResponse.response!.statusCode == 200) {
+          List<String> bins = List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["bins"]);
+          emit(state.copyWith(binsForTask: bins, getBinsForTaskStatus: GetBinsForTaskStatus.success));
+          print("bins for task  ${state.binsForTask}");
 
-                    state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
-                    getIt<JsInteropService>().getShoretestPathForTask(state.binsForTask!);
-                  } else {
-                    emit(state.copyWith(binsForTask: [], getBinsForTaskStatus: GetBinsForTaskStatus.failure));
-                  }
-                })
-              });
+          state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
+          getIt<JsInteropService>().getShoretestPathForTask(state.binsForTask!);
+        }
+        else{
+          emit(state.copyWith(binsForTask: [],  getBinsForTaskStatus: GetBinsForTaskStatus.failure));
+          
+        }
+      })});
     } catch (e) {
       print("error in bin for task $e");
       Log.e(e);
-      emit(state.copyWith(binsForTask: [], getBinsForTaskStatus: GetBinsForTaskStatus.failure));
+      emit(state.copyWith(binsForTask: [],  getBinsForTaskStatus: GetBinsForTaskStatus.failure));
     }
     emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.initial));
   }
+
+ 
 }

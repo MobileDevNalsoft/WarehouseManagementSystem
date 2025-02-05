@@ -968,7 +968,9 @@ class Customs {
 
   static void AnimatedDialog({required BuildContext context, required Widget header, required List<Widget> content, Function? onClose}) {
     Size size = MediaQuery.of(context).size;
+    
     showGeneralDialog(
+
       context: context,
       barrierColor: Colors.black45,
       transitionBuilder: (context, animation, secondaryAnimation, child) {
@@ -985,61 +987,66 @@ class Customs {
       barrierDismissible: true,
       barrierLabel: '',
       pageBuilder: (context, animation, secondaryAnimation) {
-        return PointerInterceptor(
-          child: Container(
-            margin: EdgeInsets.only(top: size.height * 0.4),
-            alignment: Alignment.topCenter,
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Material(
-                  color: Colors.transparent,
+            return StatefulBuilder(
+              
+              builder: (context,state) {
+                return PointerInterceptor(
                   child: Container(
-                    margin: EdgeInsets.only(top: size.height * 0.035),
-                    width: size.width * 0.16,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    margin: EdgeInsets.only(top: size.height * 0.4),
+                    alignment: Alignment.topCenter,
+                    child: Stack(
+                      alignment: Alignment.topCenter,
                       children: [
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Padding(
-                            padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
-                            child: PointerInterceptor(
-                              child: InkWell(
-                                onTap: () {
-                                  if (onClose != null) {
-                                    onClose();
-                                  }
-                                  Navigator.pop(context);
-                                },
-                                child: const Icon(
-                                  Icons.close,
-                                  size: 20,
-                                  weight: 1,
+                        Material(
+                          color: Colors.transparent,
+                          child: Container(
+                            margin: EdgeInsets.only(top: size.height * 0.035),
+                            width: size.width * 0.16,
+                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
+                                    child: PointerInterceptor(
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (onClose != null) {
+                                            onClose();
+                                          }
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Icon(
+                                          Icons.close,
+                                          size: 20,
+                                          weight: 1,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                ...content,
+                                Gap(size.height * 0.01),
+                              ],
                             ),
                           ),
                         ),
-                        ...content,
-                        Gap(size.height * 0.01),
+                        ClipPath(
+                          clipper: DialogTopClipper(),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 35,
+                            child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
+                          ),
+                        )
                       ],
                     ),
                   ),
-                ),
-                ClipPath(
-                  clipper: DialogTopClipper(),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 35,
-                    child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
+                );
+              }
+            );
       },
     );
   }
