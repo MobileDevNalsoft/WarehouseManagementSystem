@@ -746,8 +746,7 @@ class Customs {
                     TextButton(
                         onPressed: () {
                           context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"lpn": textEditingController.text}, clearSearchText: true));
-                          context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.removeItem(key: 'lpnLifeCycle');
-                          getIt<JsInteropService>().lpnLifeCycle('true');
+                          context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.evaluateJavascript(source: "showLPNLifecycle(true);");
                           Navigator.pop(context);
                         },
                         child: PointerInterceptor(child: const Text("Done"))),
@@ -766,6 +765,7 @@ class Customs {
     required BuildContext context,
   }) {
     Size size = MediaQuery.of(context).size;
+    final ContainerBloc _containerBloc = context.read<ContainerBloc>();
     showGeneralDialog(
       context: context,
       barrierColor: Colors.black45,
@@ -787,8 +787,15 @@ class Customs {
         FocusNode toLocationFocusNode = FocusNode();
         SuggestionsController containerNbrSuggestionsController = SuggestionsController();
         SuggestionsController toLocationSuggestionsController = SuggestionsController();
-        TextEditingController containerNbrTextEditingController = TextEditingController(text: context.read<ContainerBloc>().state.containerNbr);
-        TextEditingController toLocationTextEditingController = TextEditingController(text: context.read<ContainerBloc>().state.toLocation);
+        TextEditingController containerNbrTextEditingController = TextEditingController(text: _containerBloc.state.containerNbr);
+        TextEditingController toLocationTextEditingController = TextEditingController(text: _containerBloc.state.toLocation);
+        // containerNbrFocusNode.addListener(
+        //   () {
+        //     if (!containerNbrFocusNode.hasFocus) {
+        //       _containerBloc.add(SelectedContainer(containerNbr: _containerBloc.state.containerNbr!));
+        //     }
+        //   },
+        // );
         return BlocConsumer<ContainerBloc, ContainerState>(listener: (context, state) {
           containerNbrTextEditingController.text = state.containerNbr ?? '';
           toLocationTextEditingController.text = state.toLocation.toString();
@@ -797,6 +804,7 @@ class Customs {
             48,
             (index) => index + 1,
           ).toList().where((e) => !state.containers!.map((e) => e.lotNbr!).toList().contains(e)).toList();
+          List<String> containerNbrs = state.containers!.map((e) => e.containerNbr!).toList();
           return Container(
             margin: EdgeInsets.only(top: size.height * 0.35),
             alignment: Alignment.topCenter,
@@ -832,6 +840,9 @@ class Customs {
                                           controller: controller,
                                           focusNode: focusNode,
                                           autofocus: true,
+                                          onChanged: (value) {
+                                            state.containerNbr = value;
+                                          },
                                           decoration: InputDecoration(
                                               contentPadding: EdgeInsets.only(left: size.width * 0.005),
                                               focusedBorder: OutlineInputBorder(),
@@ -855,7 +866,7 @@ class Customs {
                                         .toList();
                                   },
                                   onSelected: (value) {
-                                    context.read<ContainerBloc>().add(SelectedContainer(containerNbr: value));
+                                    _containerBloc.add(SelectedContainer(containerNbr: value));
                                     containerNbrSuggestionsController.close();
                                   },
                                 ),
@@ -863,6 +874,7 @@ class Customs {
                             ],
                           ),
                           Gap(size.height * 0.01),
+                          // if (containerNbrs.contains(state.containerNbr!))
                           Row(
                             children: [
                               const Text(
@@ -913,7 +925,7 @@ class Customs {
                                     return availableLots.where((e) => e.toString().contains(pattern)).toList();
                                   },
                                   onSelected: (value) {
-                                    context.read<ContainerBloc>().add(SelectedToLocation(toLocation: value.toString()));
+                                    _containerBloc.add(SelectedToLocation(toLocation: value.toString()));
                                     toLocationSuggestionsController.close();
                                   },
                                 ),
@@ -924,7 +936,7 @@ class Customs {
                           TextButton(
                               onPressed: () {
                                 if (toLocationTextEditingController.text != '' && availableLots.contains(int.parse(state.toLocation!))) {
-                                  context.read<ContainerBloc>().add(RelocateContainer(containerNbr: state.containerNbr!, toLocation: state.toLocation!));
+                                  _containerBloc.add(RelocateContainer(containerNbr: state.containerNbr!, toLocation: state.toLocation!));
                                   Navigator.pop(context);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -968,9 +980,8 @@ class Customs {
 
   static void AnimatedDialog({required BuildContext context, required Widget header, required List<Widget> content, Function? onClose}) {
     Size size = MediaQuery.of(context).size;
-    
-    showGeneralDialog(
 
+    showGeneralDialog(
       context: context,
       barrierColor: Colors.black45,
       transitionBuilder: (context, animation, secondaryAnimation, child) {
@@ -987,66 +998,63 @@ class Customs {
       barrierDismissible: true,
       barrierLabel: '',
       pageBuilder: (context, animation, secondaryAnimation) {
-            return StatefulBuilder(
-              
-              builder: (context,state) {
-                return PointerInterceptor(
-                  child: Container(
-                    margin: EdgeInsets.only(top: size.height * 0.4),
-                    alignment: Alignment.topCenter,
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Material(
-                          color: Colors.transparent,
-                          child: Container(
-                            margin: EdgeInsets.only(top: size.height * 0.035),
-                            width: size.width * 0.16,
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
-                                    child: PointerInterceptor(
-                                      child: InkWell(
-                                        onTap: () {
-                                          if (onClose != null) {
-                                            onClose();
-                                          }
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Icon(
-                                          Icons.close,
-                                          size: 20,
-                                          weight: 1,
-                                        ),
-                                      ),
-                                    ),
+        return StatefulBuilder(builder: (context, state) {
+          return PointerInterceptor(
+            child: Container(
+              margin: EdgeInsets.only(top: size.height * 0.4),
+              alignment: Alignment.topCenter,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      margin: EdgeInsets.only(top: size.height * 0.035),
+                      width: size.width * 0.16,
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: size.height * 0.005, right: size.width * 0.002),
+                              child: PointerInterceptor(
+                                child: InkWell(
+                                  onTap: () {
+                                    if (onClose != null) {
+                                      onClose();
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 20,
+                                    weight: 1,
                                   ),
                                 ),
-                                ...content,
-                                Gap(size.height * 0.01),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                        ClipPath(
-                          clipper: DialogTopClipper(),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 35,
-                            child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
-                          ),
-                        )
-                      ],
+                          ...content,
+                          Gap(size.height * 0.01),
+                        ],
+                      ),
                     ),
                   ),
-                );
-              }
-            );
+                  ClipPath(
+                    clipper: DialogTopClipper(),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 35,
+                      child: Transform.translate(offset: Offset(0, -size.height * 0.01), child: header),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
       },
     );
   }

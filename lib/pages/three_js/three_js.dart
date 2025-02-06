@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
-import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
@@ -44,49 +41,91 @@ class ThreeJsWebView extends StatefulWidget {
 }
 
 class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStateMixin {
-  final jsIteropService = JsInteropService();
-  late InAppWebViewController webViewController;
-  late WarehouseInteractionBloc _warehouseInteractionBloc;
+  // services
+  final JsInteropService jsIteropService = JsInteropService();
+  final NavigatorService navigator = getIt<NavigatorService>();
   final SharedPreferences sharedPreferences = getIt();
-  List objectNames = [];
-  FocusNode focusNode = FocusNode();
+
+  // bloc declarations
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
+
+  // controllers
+  late InAppWebViewController webViewController;
+  TextEditingController textEditingController = TextEditingController();
   SuggestionsController suggestionsController = SuggestionsController();
 
-  // for animation
+  // focus nodes
+  FocusNode focusNode = FocusNode();
+
+  // variables
+  List<String> accessTypes = getIt<SharedPreferences>().getStringList('access_types') ?? [];
+
+  // side sheet animation utils
   late AnimationController animationController;
-  late AnimationController sliderAnimationController;
   late Animation<double> widthAnimation;
   late Animation<double> positionAnimation;
+
+  // alerts slider animation utils
+  late AnimationController sliderAnimationController;
   late Animation<double> sliderPositionAnimation;
-  final StreamController<String?> _storageStreamController = StreamController<String?>();
-  // late Stream<String> localStorageStream;
-  late StreamSubscription<String> _subscription;
 
-  // Service to handle navigation within the app
-  final NavigatorService navigator = getIt<NavigatorService>();
-
-  List<String> accessTypes = getIt<SharedPreferences>().getStringList('access_types') ?? [];
-  late TextEditingController textEditingController;
   @override
   void initState() {
     super.initState();
-    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
-    _warehouseInteractionBloc.add(GetUsersData());
-    _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
-    _warehouseInteractionBloc.add(Intercepting(intercepting: false));
-    _warehouseInteractionBloc.add(GetTasks());
-    textEditingController = TextEditingController(text: _warehouseInteractionBloc.state.selectedTaskId ?? "");
+    initBloc();
+    initControllers();
+    reRouteModel();
+
+    window.onMessage.listen((event) {
+      // Handle the message sent from JavaScript
+      print('event data ${event.data}');
+    });
+  }
+
+  void initControllers() {
+    // data sheet animation controller
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
-    sliderAnimationController =
-        AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 100), vsync: this);
+
+    // width animation for three js webview
     widthAnimation =
         Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+
+    // position animation for data sheet
     positionAnimation =
         Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+
+    // alerts slide animation controller
+    sliderAnimationController =
+        AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 100), vsync: this);
+
+    // position animation for alerts slide
     sliderPositionAnimation = Tween<double>(begin: -450, end: 10)
         .animate(CurvedAnimation(parent: sliderAnimationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-    // Listen for changes in the state
+  }
+
+  void initBloc() {
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+
+    // always reset model loaded to false when we open app for first time or refresh page to get progress bar screen.
+    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
+
+    // preload all the areas overview data to send it to js code for model onhover dialog data.
+    _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
+
+    // gets user access details based on the logged username to restrict user from certain features in the application.
+    _warehouseInteractionBloc.add(GetUsersData());
+
+    // when we try to logout and relogin in same session we need to make intercepting false to get rid of invisible container user for closing hover dropdowns purpose
+    // so that user can interact with model without interruption.
+    _warehouseInteractionBloc.add(Intercepting(intercepting: false));
+
+    // load the tasks at start of the application to get rid of delay between task selection and shortest path visibility.
+    _warehouseInteractionBloc.add(GetTasks());
+
+    // always dataFromJS should start with object : null so that it closes any opened sheets while we relogin in same session.
+    _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
+
+    // register for warehouse bloc stream of state changes to execute block of code base on state data.
     _warehouseInteractionBloc.stream.listen((state) {
       if (!state.dataFromJS.keys.contains('object') && state.dataFromJS.keys.first != 'percentComplete') {
         animationController.forward(); // Start animation when data sheet is visible
@@ -94,19 +133,15 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         animationController.reverse(); // Reverse when not visible
       }
     });
-    _storageStreamController.onListen = () {
-      print("messageFromJS");
-    };
-    _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
+  }
+
+  void reRouteModel() {
+    // rerouting model based on user access types
     if (accessTypes.contains('Warehouse') && accessTypes.contains('Storage Area')) {
       getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"storageArea"}');
-      context.read<StorageBloc>().add(GetBinsStatus());
     } else {
       getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"warehouse"}');
     }
-    // _warehouseInteractionBloc.add(GetCompanyData());
-    // just for debugging
-    // animationController.forward();
   }
 
   @override
@@ -115,10 +150,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     return Scaffold(
         body: Stack(
       children: [
-        BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(
-          listener: (context, state) {
-          },
-          builder: (context, state) {
+        BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
           return Column(
             children: [
               Container(
@@ -185,10 +217,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                               }
                                             }
                                           }
-                                          if (message.containsKey("openPathDialog") && message['openPathDialog'] == "true" ) {
+                                          if (message.containsKey("openPathDialog") && message['openPathDialog'] == "true") {
                                             print("from openPathDialog");
                                             _warehouseInteractionBloc.add(GetTasks());
-                                           
+
                                             Customs.AnimatedDialog(
                                               context: context,
                                               header: IconButton(
@@ -202,76 +234,69 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                               },
                                               content: [
                                                 const Text("Please enter task Id"),
-                                                StatefulBuilder(
-                                                  builder: (context,sts) {
-                                                    return BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(listener: (context, state) {
-                                                      print("from listener ${state.getBinsForTaskStatus}");
-                                                    }, builder: (context, state) {
-                                                      return TypeAheadField(
-                                                        focusNode: focusNode,
-                                                        controller: textEditingController,
-                                                        suggestionsController: suggestionsController,
-                                                        builder: (context, controller, focusNode) {
-                                                          print("taks ${state.tasksForShoretestPath}");
-                                                          // controller.clear();
-                                                          return TextField(
-                                                              controller: controller,
-                                                              focusNode: focusNode,
-                                                              // autofocus: true,
-                                                              decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
-                                                        },
-                                                        
-                                                        itemBuilder: (context, value) {
-                                                        
-                                                          
+                                                StatefulBuilder(builder: (context, sts) {
+                                                  return BlocConsumer<WarehouseInteractionBloc, WarehouseInteractionState>(listener: (context, state) {
+                                                    print("from listener ${state.getBinsForTaskStatus}");
+                                                  }, builder: (context, state) {
+                                                    return TypeAheadField(
+                                                      focusNode: focusNode,
+                                                      controller: textEditingController,
+                                                      suggestionsController: suggestionsController,
+                                                      builder: (context, controller, focusNode) {
+                                                        print("taks ${state.tasksForShoretestPath}");
+                                                        // controller.clear();
+                                                        return TextField(
+                                                            controller: controller,
+                                                            focusNode: focusNode,
+                                                            // autofocus: true,
+                                                            decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
+                                                      },
+                                                      itemBuilder: (context, value) {
                                                         return ListTile(
-                                                            title: Text(
-                                                              value.toString(),
-                                                              style: const TextStyle(fontSize: 14),
-                                                            ),
-                                                          );
-                                                          
-                                                        },
-                                                        suggestionsCallback: (pattern) { 
-                                                          
-                                                           return state.tasksForShoretestPath!.keys.where((element) => element.toLowerCase().contains(pattern.toLowerCase())).toList();
-                                                        },
-                                                        onSelected: (value) {
-                                                          state.selectedTaskId = value.toString();
-                                                          textEditingController.text = value;
-                                                          suggestionsController.refresh();
-                                                          focusNode.unfocus();
-                                                        },
-                                                      );
-                                                    });
-                                                  }
-                                                ),
-                                                BlocBuilder<WarehouseInteractionBloc,WarehouseInteractionState>(
-                                                  builder: (context,state) {
-                                                    return TextButton(
-                                                            onPressed: () {
-                                                        print("tasks ${state.tasksForShoretestPath}   ${state.tasksForShoretestPath![textEditingController.text.trim()]}"); 
-                                                              if (textEditingController.text.trim().isNotEmpty && state.tasksForShoretestPath!.keys.contains(textEditingController.text.trim())) {
-                                                                    getIt<JsInteropService>().getShoretestPathForTask([]);
-                                                                     getIt<JsInteropService>().getShoretestPathForTask(state.tasksForShoretestPath![textEditingController.text.trim()]);
-                                                                // _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
-                                                              }
-                                                              Navigator.pop(context);
-                                                              // {
-                                                              //   stfSetState(() {
-                                                              //     _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
-                                                              //   });
-                                                              // // _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
-                                                              // }
-                                                            },
-                                                            child: PointerInterceptor(child: const Text("Done")) 
+                                                          title: Text(
+                                                            value.toString(),
+                                                            style: const TextStyle(fontSize: 14),
+                                                          ),
+                                                        );
+                                                      },
+                                                      suggestionsCallback: (pattern) {
+                                                        return state.tasksForShoretestPath!.keys
+                                                            .where((element) => element.toLowerCase().contains(pattern.toLowerCase()))
+                                                            .toList();
+                                                      },
+                                                      onSelected: (value) {
+                                                        state.selectedTaskId = value.toString();
+                                                        textEditingController.text = value;
+                                                        suggestionsController.refresh();
+                                                        focusNode.unfocus();
+                                                      },
                                                     );
-                                                  }
-                                                )
-                                             
+                                                  });
+                                                }),
+                                                BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
+                                                  return TextButton(
+                                                      onPressed: () {
+                                                        print(
+                                                            "tasks ${state.tasksForShoretestPath}   ${state.tasksForShoretestPath![textEditingController.text.trim()]}");
+                                                        if (textEditingController.text.trim().isNotEmpty &&
+                                                            state.tasksForShoretestPath!.keys.contains(textEditingController.text.trim())) {
+                                                          getIt<JsInteropService>().getShoretestPathForTask([]);
+                                                          getIt<JsInteropService>()
+                                                              .getShoretestPathForTask(state.tasksForShoretestPath![textEditingController.text.trim()]);
+                                                          // _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
+                                                        }
+                                                        Navigator.pop(context);
+                                                        // {
+                                                        //   stfSetState(() {
+                                                        //     _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
+                                                        //   });
+                                                        // // _warehouseInteractionBloc.state.getBinsForTaskStatus = GetBinsForTaskStatus.loading;
+                                                        // }
+                                                      },
+                                                      child: PointerInterceptor(child: const Text("Done")));
+                                                })
                                               ],
                                             );
-                                         
                                           }
                                         }
                                       } catch (e) {
@@ -280,20 +305,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                     },
                                     onWebViewCreated: (controller) async {
                                       _warehouseInteractionBloc.state.inAppWebViewController = controller;
-                                      Timer.periodic(
-                                        const Duration(milliseconds: 500),
-                                        (timer) async {
-                                          // ignore: prefer_conditional_assignment
-                                          if (objectNames.isEmpty) {
-                                            objectNames = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
-                                                    .getItem(key: "modelObjectNames") ??
-                                                [];
-                                          }
-                                          timer.cancel();
-                                        },
-                                      );
                                     },
-                                    onLoadStop: (controller, url) async {},
                                   )
                                 : Container(
                                     height: size.height * 0.92,
@@ -429,6 +441,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                   onTap: () {
                     sliderAnimationController.forward();
                     _warehouseInteractionBloc.add(ResetAlertsCount());
+                    // _warehouseInteractionBloc.state.inAppWebViewController!.evaluateJavascript(source: "testFromFlutter();");
                   },
                   child: SizedBox(
                     height: size.height * 0.08,
@@ -475,18 +488,18 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                     sliderAnimationController: sliderAnimationController,
                   )));
             }),
-          // if(context.watch<WarehouseInteractionBloc>().state.getBinsForTaskStatus == GetBinsForTaskStatus.loading)
-          //   Positioned(
-          //     top: 0,
-          //     left: 0,
-          //     child: Center(
-          //       child: Container(
-          //           color: Colors.white10,
-          //           width: size.width,
-          //           height: size.height,
-          //           child: Lottie.asset('assets/lottie/path.json', height: size.height * 0.2, width: size.width * 0.2)),
-          //     ),
-          //   ),
+        // if(context.watch<WarehouseInteractionBloc>().state.getBinsForTaskStatus == GetBinsForTaskStatus.loading)
+        //   Positioned(
+        //     top: 0,
+        //     left: 0,
+        //     child: Center(
+        //       child: Container(
+        //           color: Colors.white10,
+        //           width: size.width,
+        //           height: size.height,
+        //           child: Lottie.asset('assets/lottie/path.json', height: size.height * 0.2, width: size.width * 0.2)),
+        //     ),
+        //   ),
       ],
     ));
   }
@@ -498,9 +511,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
     print("getDataSheetFor $objectName $objectValue");
     switch (objectName.toLowerCase()) {
       case 'rack':
-        return RackDataSheet(
-          objectNames: objectNames,
-        );
+        return RackDataSheet();
       case 'bin':
         return const BinDataSheet();
       case 'lpn':

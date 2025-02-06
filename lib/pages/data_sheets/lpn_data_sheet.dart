@@ -73,7 +73,7 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
                     context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: const {"object": "null"}, clearSearchText: true));
 
                     getIt<JsInteropService>().resetTrucks();
-                    getIt<JsInteropService>().lpnLifeCycle('false');
+                    context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.evaluateJavascript(source: "showLPNLifecycle(false);");
                   },
                   child: const Icon(Icons.cancel_rounded, color: Colors.white))
             ],

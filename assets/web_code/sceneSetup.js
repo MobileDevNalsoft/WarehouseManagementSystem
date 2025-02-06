@@ -10,7 +10,7 @@ import { addSkyDome } from "skyDome";
 import { initNodes, getShortestPath } from "navPath";
 import * as GLTFLoader from "gltfLoader";
 import { highlightArea } from "highlight";
-import { switchCamera } from "camera";
+import { globalState } from "globalState";
 
 export async function initScene(renderer) {
   const container = document.getElementById("container");
@@ -229,34 +229,6 @@ export async function initScene(renderer) {
   let pathLine;
   let clock;
   let bins = [];
-  let forkLiftbins =
-    data.model === "storageArea"
-      ? [
-          "p26",
-          "5RB30102",
-          "5RB10102",
-          "5LB30102",
-          "4LB30102",
-          "3LB20102",
-          "3LB10102",
-          "4LB20102",
-          "2LB30103",
-          "p80",
-        ]
-      : [
-          "p4",
-          "4RB30602",
-          "4LB30102",
-          "1RB30602",
-          "3RB20602",
-          "2RB10601",
-          "2RB30602",
-          "3RB10102",
-          "2LB20501",
-          "2RB10601",
-          "2LB20201",
-          "stagingArea",
-        ];
 
   let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(
     THREE,
@@ -272,7 +244,7 @@ export async function initScene(renderer) {
       return;
     }
     digitalTwin.classList.add("focused");
-
+    window.parent.postMessage('test from js to flutter');
     stopAnimation();
     document.getElementById("path").classList.remove("focused");
     bins = agvTask;
@@ -289,7 +261,6 @@ export async function initScene(renderer) {
       agv,
       renderer,
       2000,
-      agvTask[agvTask.length - 1],
       0xffff00,
       0x0099ff,
       "digitalTwin"
@@ -395,7 +366,7 @@ export async function initScene(renderer) {
       
       console.warn( localStorage.getItem("getShoretestPathForTask"));
      
-      bins=["p4",...localStorage.getItem("getShoretestPathForTask").split(","),"p1"];
+      bins= data.model === "storageArea" ?  ["p26",...localStorage.getItem("getShoretestPathForTask").split(","),"p80"] : ["p4",...localStorage.getItem("getShoretestPathForTask").split(","),"p1"];
       
       localStorage.setItem("highlightBins", bins.toString());
       
@@ -412,7 +383,6 @@ export async function initScene(renderer) {
         forkLift,
         renderer,
         1500,
-        bins[bins.length - 1],
         0xffff00,
         0xcc0066,
         "path"
@@ -529,6 +499,10 @@ export async function initScene(renderer) {
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
   });
+
+  globalThis.scene = scene;
+
+  globalState.setSceneCameraControls(scene, camera, controls);
 
   return { scene, camera, mixer, controls };
 }

@@ -27,7 +27,7 @@ export function createCamera() {
   return camera;
 }
 
-export function switchCamera(scene, name, camera, controls) {
+window.switchCamera = function(scene, name, camera, controls) {
   if (name == "storageArea") {
     window.localStorage.setItem("rack_cam", "null");
   }
@@ -103,7 +103,7 @@ export function switchCamera(scene, name, camera, controls) {
     controls.enabled = true; // Re-enable controls after animation
     controls.enableDamping = true; // Re-enable damping after animation
     if (name.includes("compound")) {
-      globalState.setAreaFocused(false);
+      globalThis.areaFocused = false;
     }
   });
 }

@@ -397,7 +397,6 @@ export function getShortestPath(
   agentGroup,
   renderer,
   waitPeriodAtPoints,
-  endBin,
   color,
   lineColor,
   pathButtonId
@@ -410,9 +409,7 @@ export function getShortestPath(
   let pathLine = [];
 
   const checkpoints = setupCheckpoints(bins);
-  const endCheckpoints = setupCheckpoints([endBin]);
   const nodesToVisit = findNodeNamesForPoints(checkpoints, nodes);
-  const endpoints = findNodeNamesForPoints([endCheckpoints[0]], nodes);
 
   console.warn("nodesToVisit", nodesToVisit);
   const { distMatrix, pathMatrix } = computeDistanceMatrix(

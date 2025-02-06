@@ -1,9 +1,8 @@
 import * as THREE from "three";
-import { switchCamera, moveToBin } from "camera";
+import { moveToBin } from "camera";
 import { resetTrucksAnimation, playAnimations } from "animations";
 import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
-import { removeLPNLifeCycle } from "lpnLifeCycle";
 
 const data = JSON.parse(window.localStorage.getItem("facilityData"));
 export function highlightBinsFromSearch(bins) {
@@ -29,22 +28,8 @@ export function addInteractions(scene, model, camera, controls) {
   let prevNav = "warehouse";
   let prevBin;
   let prevBinColor;
-  let objectNames = [];
 
-  // Traverse the model and collect object names
-  model.traverse((child) => {
-    if (
-      child.isMesh &&
-      child.name &&
-      ((child.name.includes("r") && child.name.includes("b")) ||
-        child.name.includes("rack"))
-    ) {
-      objectNames.push(child.name);
-    }
-  });
-
-  // Store the list in localStorage
-  window.localStorage.setItem("modelObjectNames", JSON.stringify(objectNames));
+  globalThis.areaFocused = false;
 
   const tooltip = document.getElementById("tooltip");
   function onMouseMove(e) {
@@ -66,7 +51,7 @@ export function addInteractions(scene, model, camera, controls) {
         if (
           targetObject.name.toString().includes("nav") ||
           (targetObject.name.toString().includes("Area") &&
-            globalState.areaFocused == false) ||
+            globalThis.areaFocused == false) ||
           targetObject.name.toString().includes("box")
         ) {
           let name = toCamelCase(targetObject.name);
@@ -216,7 +201,7 @@ export function addInteractions(scene, model, camera, controls) {
               tooltip.style.top = `${e.clientY + 10}px`;
               tooltip.classList.add("hide-speech-bubble");
           }
-        } else if (globalState.areaFocused == true) {
+        } else if (globalThis.areaFocused == true) {
           const trucksData = JSON.parse(
             window.localStorage.getItem("trucksData")
           );
@@ -335,7 +320,7 @@ export function addInteractions(scene, model, camera, controls) {
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")
         ) {
-          globalState.setAreaFocused(true);
+          globalThis.areaFocused = true;
           removeLPNLifeCycle(scene);
           tooltip.style.display = "none";
           if (name.includes("rack")) {
@@ -376,11 +361,11 @@ export function addInteractions(scene, model, camera, controls) {
       }
     } else {
       document.getElementById("wms-bot").style.display = "block";
-      if (globalState.areaFocused == true) {
+      if (globalThis.areaFocused == true) {
         resetAreas(scene);
         console.log('{"object":"null"}');
       }
-      globalState.setAreaFocused(false);
+      globalThis.areaFocused = false;
       if (scene.getObjectByName("truck_Y10")) {
         resetTrucksAnimation(scene);
         playAnimations();

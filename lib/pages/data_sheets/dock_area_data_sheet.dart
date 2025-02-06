@@ -5,7 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:wmssimulator/bloc/dock_area/dock_area_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
-import 'package:wmssimulator/pages/customs/expandable_list_view.dart';
+import 'package:wmssimulator/pages/customs/three_level_dropdown.dart';
 
 class DockAreaDataSheet extends StatefulWidget {
   const DockAreaDataSheet({super.key});
@@ -46,7 +46,7 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Customs.DataSheet(context: context, size: size, title: 'Dock Area', children: [
+    return Customs.DataSheet(context: context, size: size, title: 'Dock IN', children: [
       BlocBuilder<DockAreaBloc, DockAreaState>(
         builder: (context, state) {
           bool isEnabled = state.getDataState != GetDataState.success;
@@ -68,12 +68,121 @@ class _DockAreaDataSheetState extends State<DockAreaDataSheet> {
                       ? const Center(
                           child: CircularProgressIndicator(),
                         )
-                      : ExpandableListView(
-                          data: state.dockAreaItems!,
-                          l1StyleData: L1StyleData(height: 60, width: 400, color: Colors.white, dropDownColor: Colors.white),
-                          l2StyleData:
-                              L2StyleData(height: 60, color: const Color.fromRGBO(43, 79, 122, 1), dropDownColor: const Color.fromRGBO(43, 79, 122, 1)),
-                          l3StyleData: L3StyleData(height: lsize.maxHeight * 0.19, color: const Color.fromRGBO(127, 161, 202, 1)),
+                      : ThreeLevelDropdown(
+                          l1StyleData: L1StyleData(
+                            height: 60,
+                            width: 400,
+                            color: Colors.white,
+                            dropDownColor: Colors.white,
+                            itemCount: state.dockAreaItems!.length,
+                            iconPath: 'assets/images/truck.png',
+                            title: (index) => state.dockAreaItems![index].truckNum!,
+                          ),
+                          l2StyleData: L2StyleData(
+                            height: 60,
+                            color: const Color.fromRGBO(43, 79, 122, 1),
+                            dropDownColor: const Color.fromRGBO(43, 79, 122, 1),
+                            itemCount: (index) => state.dockAreaItems![index].vendors!.length,
+                            iconPath: 'assets/images/businessman.png',
+                            title: (l1Index, l2Index) => state.dockAreaItems![l1Index].vendors![l2Index].vendorName!,
+                          ),
+                          l3StyleData: L3StyleData(
+                            height: lsize.maxHeight * 0.19,
+                            color: const Color.fromRGBO(127, 161, 202, 1),
+                            itemCount: (l1Index, l2Index) => state.dockAreaItems![l1Index].vendors![l2Index].items!.length,
+                            builder: (lsize, l1Index, l2Index, l3Index) => Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                        width: lsize.maxWidth * 0.16,
+                                        child: Text(
+                                          'DNO',
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                        )),
+                                    Gap(lsize.maxWidth * 0.01),
+                                    Text(
+                                      state.dockAreaItems![l1Index].vendors![l2Index].items![l3Index].dockNbr!,
+                                      style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                        width: lsize.maxWidth * 0.16,
+                                        child: Text(
+                                          'ASN',
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                        )),
+                                    Gap(lsize.maxWidth * 0.01),
+                                    Text(
+                                      state.dockAreaItems![l1Index].vendors![l2Index].items![l3Index].asn!,
+                                      style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                        width: lsize.maxWidth * 0.16,
+                                        child: Text(
+                                          'PO',
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                        )),
+                                    Gap(lsize.maxWidth * 0.01),
+                                    Text(
+                                      state.dockAreaItems![l1Index].vendors![l2Index].items![l3Index].poNbr!,
+                                      style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                            width: lsize.maxWidth * 0.16,
+                                            child: Text(
+                                              'ITEM',
+                                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                            )),
+                                        Gap(lsize.maxWidth * 0.01),
+                                        Text(
+                                          state.dockAreaItems![l1Index].vendors![l2Index].items![l3Index].itemKey!.toString(),
+                                          style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                            width: lsize.maxWidth * 0.16,
+                                            child: Text(
+                                              'QTY',
+                                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.045),
+                                            )),
+                                        Gap(lsize.maxWidth * 0.01),
+                                        Text(
+                                          state.dockAreaItems![l1Index].vendors![l2Index].items![l3Index].qty!.toString(),
+                                          style: TextStyle(fontSize: lsize.maxWidth * 0.042, fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      state.dockAreaItems![l1Index].vendors![l2Index].items![l3Index].checkinTS!,
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxWidth * 0.04),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         );
             }),
           );

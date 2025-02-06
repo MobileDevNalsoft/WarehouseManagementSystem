@@ -1,5 +1,5 @@
 import { resetTrucksAnimation, playAnimations, stopAnimationsAndReset } from "animations";
-import { moveToBin, getPositionAndTarget, switchCamera } from "camera";
+import { moveToBin, getPositionAndTarget } from "camera";
 import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
 
@@ -125,7 +125,7 @@ export function localStorageSetup(scene, camera, controls) {
           timeline.call(() => {
             controls.enabled = true; // Re-enable controls after animation
             controls.enableDamping = true; // Re-enable damping after animation
-            globalState.setAreaFocused(false);
+            globalThis.areaFocused = false;
           });
         }
         break;
@@ -375,18 +375,13 @@ export function localStorageSetup(scene, camera, controls) {
           console.warn("binsStatus" + e);
         }
         break;
-      case 'lpnLifeCycle':
-        if(event.newValue == 'true'){
-          document.getElementById("wms-bot").style.display = "none";
-          switchCamera(scene, "lpnLifeCycle", camera, controls);
-          // animateLPNLifeCycle(scene);
-        }else{
-          document.getElementById("wms-bot").style.display = "block";
-          // removeLPNLifeCycle(scene);
-        }
-        break;
       default:
         break;
     }
   });
 }
+
+
+// window.testFromFlutter = function () {
+//   console.log('working from flutter');
+// }
