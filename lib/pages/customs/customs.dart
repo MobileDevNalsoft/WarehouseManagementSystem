@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -16,10 +17,12 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel; // Ensure you hav
 import 'package:wmssimulator/bloc/container_management/container_bloc.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
+import 'package:wmssimulator/bloc/work_queue/work_queue_bloc.dart';
 import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/task_model.dart';
+import 'package:wmssimulator/pages/customs/hover_dropdown.dart';
 import 'package:wmssimulator/pages/customs/users_builder.dart';
 
 class Customs {
@@ -29,10 +32,8 @@ class Customs {
       children: [
         Container(
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: const Color.fromRGBO(12, 46, 87, 1),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          decoration:
+              BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.02),
           margin: EdgeInsets.only(top: size.height * 0.02, bottom: size.height * 0.004, right: size.height * 0.01),
           height: size.height * 0.06,
@@ -49,8 +50,7 @@ class Customs {
                   onTap: () async {
                     getIt<JsInteropService>().switchToMainCam("");
                     getIt<JsInteropService>().switchToMainCam(
-                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") ==
-                                "storageArea"
+                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea"
                             ? "storageArea"
                             : "compoundArea");
                     getIt<JsInteropService>().resetBoxColors();
@@ -67,10 +67,8 @@ class Customs {
           height: size.height * 0.86,
           width: size.width * 0.22,
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: const Color.fromRGBO(12, 46, 87, 1),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          decoration:
+              BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.all(size.height * 0.012),
           child: LayoutBuilder(builder: (context, layout) {
             return Column(
@@ -87,8 +85,7 @@ class Customs {
     return Container(
       margin: EdgeInsets.all(margin ?? 0),
       height: height,
-      decoration: decoration ??
-          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+      decoration: decoration ?? BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
       padding: EdgeInsets.all(height * 0.035),
       alignment: Alignment.center,
       child: LayoutBuilder(builder: (context, lsize) {
@@ -182,8 +179,7 @@ class Customs {
     );
   }
 
-  static Widget WorkflowLayout(
-      {required Size size, required int buttonIndex, required Widget child, required void Function()? onApproved, required void Function()? onRejected}) {
+  static Widget WorkflowLayout({required Size size, required int buttonIndex, required Widget child, required void Function()? onApproved, required void Function()? onRejected}) {
     List<String> buttons = ['Pending', 'Completed'];
 
     return Column(
@@ -346,8 +342,7 @@ class Customs {
     });
   }
 
-  static Widget WMSPieChart(
-      {required String title, List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
+  static Widget WMSPieChart({required String title, List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
     return SfCircularChart(
         title: ChartTitle(
             text: title,
@@ -388,8 +383,7 @@ class Customs {
       Color axisLineColor = const Color.fromARGB(255, 86, 185, 152),
       double markerValue = 0}) {
     return Gauges.SfRadialGauge(
-      title:
-          Gauges.GaugeTitle(text: title, alignment: Gauges.GaugeAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
+      title: Gauges.GaugeTitle(text: title, alignment: Gauges.GaugeAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
       axes: [
         Gauges.RadialAxis(
           maximum: 100,
@@ -488,8 +482,7 @@ class Customs {
                 xValueMapper: (PieData data, _) => data.xData,
                 yValueMapper: (PieData data, _) => data.yData,
                 onPointTap: props.onPointTap,
-                dataLabelSettings: DataLabelSettings(
-                    isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
+                dataLabelSettings: DataLabelSettings(isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
                 radius: props.radius ?? '${lsize.maxWidth * 0.18}%', // Adjust the radius as needed
                 innerRadius: props.innerRadius ?? '${lsize.maxWidth * 0.15}%', // Optional: adjust for a thinner ring
                 pointColorMapper: props.pointColorMapper,
@@ -713,10 +706,7 @@ class Customs {
                       builder: (context, controller, focusNode) {
                         controller.clear();
                         return TextField(
-                            controller: controller,
-                            focusNode: focusNode,
-                            autofocus: true,
-                            decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
+                            controller: controller, focusNode: focusNode, autofocus: true, decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
                       },
                       itemBuilder: (context, value) {
                         return ListTile(
@@ -844,9 +834,7 @@ class Customs {
                                             state.containerNbr = value;
                                           },
                                           decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.only(left: size.width * 0.005),
-                                              focusedBorder: OutlineInputBorder(),
-                                              enabledBorder: OutlineInputBorder())),
+                                              contentPadding: EdgeInsets.only(left: size.width * 0.005), focusedBorder: OutlineInputBorder(), enabledBorder: OutlineInputBorder())),
                                     );
                                   },
                                   itemBuilder: (context, value) {
@@ -908,9 +896,7 @@ class Customs {
                                           focusNode: focusNode,
                                           onChanged: (value) => state.toLocation = value,
                                           decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.only(left: size.width * 0.005),
-                                              focusedBorder: OutlineInputBorder(),
-                                              enabledBorder: OutlineInputBorder())),
+                                              contentPadding: EdgeInsets.only(left: size.width * 0.005), focusedBorder: OutlineInputBorder(), enabledBorder: OutlineInputBorder())),
                                     );
                                   },
                                   itemBuilder: (context, value) {
@@ -1154,6 +1140,234 @@ class Customs {
     // Clean up
     html.Url.revokeObjectUrl(url);
   }
+
+  static void PendigDialog({required BuildContext context, Widget? content}) {
+    Size size = MediaQuery.of(context).size;
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black45,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.bounceInOut.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return StatefulBuilder(builder: (context, state) {
+          return PointerInterceptor(
+            child: BlocBuilder<WorkQueueBloc, WorkQueueState>(builder: (context, state) {
+              print("state change ${state.workQueueStatus}");
+              return Container(
+                  height: size.height * 0.6,
+                  width: size.width * 0.54,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    color: const Color(0xFFF2F2F2),
+                  ),
+                  child: LayoutBuilder(builder: (context, parent) {
+                    return Column(
+                      children: [
+                        Gap(parent.maxHeight * 0.024),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Gap(parent.maxWidth * 0.33),
+                            SizedBox(
+                              width: parent.maxWidth * 0.33,
+                              child: Text(
+                                "Warehouse Work Queue",
+                                style: TextStyle(fontSize: size.height * 0.032, color: Colors.black, decoration: TextDecoration.none, letterSpacing: 0.4),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Container(
+                              width: parent.maxWidth * 0.33,
+                              alignment: Alignment.centerRight,
+                              padding: EdgeInsets.only(right: 8),
+                              child: IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(
+                                    Icons.close_rounded,
+                                    size: size.height * 0.032,
+                                  )),
+                            )
+                          ],
+                        ),
+                        Gap(parent.maxHeight * 0.048),
+                        Skeletonizer(
+                          enabled: state.workQueueStatus == WorkQueueStatus.loading,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Wrap(
+                                spacing: parent.maxWidth * 0.02,
+                                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                runSpacing: parent.maxWidth * 0.02,
+                                children: [
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 120, 154, 95),
+                                      contentValue: state.workQueueData != null ? state.workQueueData!.ordersAwaitingReceiving.toString() : " null value",
+                                      imagePath: "assets/images/orders_awaiting_receiving.png",
+                                      heading: "Orders Awaiting Receiving"),
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 236, 178, 102),
+                                      contentValue: state.workQueueData!.ordersAwaitingFulfilment.toString(),
+                                      imagePath: "assets/images/order_awaiting_fulfilment.png",
+                                      heading: "Orders Awaiting Fulfilment"),
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 10, 162, 222),
+                                      contentValue: state.workQueueData!.openPickingTask.toString(),
+                                      imagePath: "assets/images/open_picking_tasks.png",
+                                      heading: "Open Picking Task"),
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 120, 154, 95),
+                                      contentValue: state.workQueueData!.pendingAsn.toString(),
+                                      imagePath: "assets/images/asn_awaiting_receipt.png",
+                                      heading: "ASNs Awaiting Receipt"),
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 236, 178, 102),
+                                      contentValue: state.workQueueData!.loadingQueue.toString(),
+                                        imagePath: "assets/images/loading_queue.png",
+                                      heading: "Loading Queue"),
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 10, 162, 222),
+                                      contentValue: state.workQueueData!.pendingCycleCounts.toString(),
+                                        imagePath: "assets/images/cycle_count.png",
+                                      heading: "Pending Cycle Counts"),
+                                      
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 120, 154, 95),
+                                      contentValue: state.workQueueData!.pendingPutaways.toString(),
+                                        imagePath: "assets/images/pending_putaway.png",
+                                      heading: "Pending Putaways"),
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 236, 178, 102),
+                                      contentValue: state.workQueueData!.ordersToBeShipped.toString(),
+                                      imagePath: "assets/images/orders_to_be_shipped.png",
+                                      heading: "Orders To Be Shipped"),
+                                  PendingDialogChildContianer(
+                                      parent: parent,
+                                      iconBgColor: Color.fromARGB(255, 10, 162, 222),
+                                      contentValue: state.workQueueData!.openWorkOrders.toString(),
+                                        imagePath: "assets/images/open_work_orders.png",
+                                      heading: "Open Work Orders"),
+                                ]),
+                          ),
+                        ),
+                        Gap(parent.maxHeight * 0.032),
+                        Padding(
+                          padding: EdgeInsets.only(right: parent.maxHeight * 0.04),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: ElevatedButton(
+                              
+                                onPressed: () {
+                                            UrlNavigator().launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
+                                              Navigator.pop(context);
+                                },                                style: ButtonStyle(
+                                  minimumSize: WidgetStatePropertyAll(Size(parent.maxWidth*0.064, parent.maxHeight * 0.088)), // Set the desired size
+
+                                  foregroundColor:  WidgetStateColor.resolveWith((state){
+                                    if (state.contains(WidgetState.hovered)) {
+                                    return Colors.black;
+                                  } 
+                                  return Colors.white;
+                                }),
+                                  backgroundColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
+                                  if (states.contains(WidgetState.hovered)) {
+                                    return Colors.white;
+                                  } 
+                                  return Color.fromRGBO(68, 98, 136, 1);
+                                })),
+                                
+                                child: Text("Take Action",style: TextStyle(),)),
+                          ),
+                        )
+                      ],
+                    );
+                  }));
+            }),
+          );
+        });
+      },
+    );
+  }
+
+  static Widget PendingDialogChildContianer({required BoxConstraints parent, String? imagePath, Color? iconBgColor, String? contentValue, required String heading}) {
+    return Container(
+      alignment: Alignment.center,
+      height: parent.maxHeight * 0.21,
+      width: parent.maxWidth * 0.3,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.blue.shade900, spreadRadius: 2, blurRadius: 2, blurStyle: BlurStyle.outer)],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Flex(
+            direction: Axis.horizontal,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: constraints.maxWidth * 0.3,
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(constraints.maxHeight * 0.08),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: iconBgColor,
+                  ),
+                  height: constraints.maxHeight * 0.5,
+                  child: Image.asset(
+                    color: Colors.white,
+                    imagePath ?? "assets/images/status.png",
+                    // fit: BoxFit.cover,
+                    height: constraints.maxHeight * 0.3,
+                  ),
+                ),
+              ),
+              Container(
+                width: constraints.maxWidth * 0.7,
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      heading,
+                      style: TextStyle(decoration: TextDecoration.none, fontSize: constraints.maxWidth * 0.054, color: Colors.black, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      contentValue ?? "NA",
+                      style: TextStyle(decoration: TextDecoration.none, fontSize: constraints.maxWidth * 0.1, color: Colors.black, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
 }
 
 // this class is used to add shadow along the clipped path
@@ -1294,6 +1508,10 @@ class DrillDownDataSource extends DataGridSource {
       );
     }).toList());
   }
+  
+  @override
+  List<DataGridRow> get effectiveRows => super.effectiveRows;
+
 }
 
 class DataSource {
@@ -1353,6 +1571,10 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
 
   @override
   List<DataGridRow> get rows => _data;
+
+  @override
+  // TODO: implement effectiveRows
+  List<DataGridRow> get effectiveRows => super.effectiveRows;
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {

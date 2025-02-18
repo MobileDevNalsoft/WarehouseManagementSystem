@@ -6,12 +6,8 @@ abstract class YardEvent extends Equatable {
   List<Object> get props => [];
 }
 
+// To get the data of the yard area. SearchText is only useful when it is passed else whole data is fetched
 class GetYardData extends YardEvent {
   String? searchText;
   GetYardData({this.searchText});
-}
-
-class YardTruckExpanded extends YardEvent {
-  int index;
-  YardTruckExpanded({required this.index});
 }

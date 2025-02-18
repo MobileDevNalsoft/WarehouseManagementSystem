@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
-import 'package:responsive_builder/responsive_builder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/navigations/navigator_service.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
-import 'package:wmssimulator/pages/dashboard_utils/pages/entry_point.dart';
 import 'dart:html' as html;
 
 class HoverDropdown extends StatefulWidget {
@@ -90,6 +86,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 });
 
                                 Navigator.pushNamed(context, '/dashboards');
+                                // GoRouterService.router.go('/dashboards');
                               },
                               child: const ForHover(text: "Dashboards")),
                         if (widget.accessTypes.contains('Workflow'))
@@ -115,7 +112,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
 
-                                Navigator.pushNamed(context, '/containerManagement');
+                                urlNavigator.launchOrFocusUrl('https://cmsweb-4c66c.web.app');
                               },
                               child: const ForHover(text: "Containers")),
                         if (widget.accessTypes.contains('LPN LifeCycle'))
@@ -155,7 +152,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 Customs.UsersDialog(context: context);
                               },
                               child: const ForHover(text: "Manage Users")),
-                        InkWell(
+                       InkWell(
                             onTap: () {
                               setState(() {
                                 height = height == maxHeight
@@ -163,9 +160,12 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                     : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                                 bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                               });
+                              getIt<SharedPreferences>().remove("username");
                               getIt<NavigatorService>().pushAndRemoveUntil('/login', '/');
+                              // context.go('/login');
                             },
                             child: const ForHover(text: "Log Out")),
+                     
                       ],
                     ),
                   ),

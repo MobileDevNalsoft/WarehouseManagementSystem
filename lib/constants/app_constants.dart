@@ -76,4 +76,5 @@ class AppConstants {
   static const SHORTESTPATH_TASKS = 'get_tasks_with_bins';
 
    static const BINS_FOR_TASK = 'get_bins_for_task';
+   static const WORK_QUEUE = 'get_work_queue';
 }

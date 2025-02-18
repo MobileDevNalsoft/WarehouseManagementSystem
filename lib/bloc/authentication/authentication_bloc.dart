@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/local_network_calls.dart';
+import 'package:wmssimulator/navigations/go_router_service.dart';
 
 import '../../constants/app_constants.dart';
 import '../../inits/init.dart';
@@ -28,6 +30,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   final NetworkCalls _authApi = NetworkCalls(AppConstants.IDCS_URL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5);
   final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
+  // Step 1: Fetch access token using the OCI Token and Authorization provided or the IDCS instance
+  // Step 2: Fetch request state using the acces token from above.
+  // Step 3: Using access token and request state authenticate the user.
   Future<void> _onLoginButtonPressed(LoginButtonPressed event, Emitter<AuthenticationState> emit) async {
     emit(state.copyWith(authenticationStatus: AuthenticationStatus.loading));
     String token = '';
@@ -57,7 +62,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
               emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
               await sharedPreferences.setStringList("access_types", jsonDecode(value.response!.data)['data']['access_types'].split(','));
               await sharedPreferences.setString("username", event.username);
-              navigator!.pushReplacement('/warehouse');
+              navigator!.popAndPush('/warehouse');
+              // GoRouterService.router.pushReplacement('/warehouse');
+              
             },
           ).onError(
             (error, stackTrace) {

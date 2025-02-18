@@ -19,11 +19,10 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
   WorkflowBloc({required NetworkCalls customApi})
       : _customApi = customApi,
         super(WorkflowState.initial()) {
-    on<QualityCheckStatusUpdated>(_onQualityCheckStatusUpdated);
+    on<QualityCheckStatusUpdate>(_onQualityCheckStatusUpdate);
     
     on<GetCompletedQualityCheckTasks>(_onGetCompletedQualityCheckTasks);
     on<CycleCountStatusUpdated>(_onCycleCountStatusUpdated);
-    on<SelectAllQualityCheckTasks>(_onSelectAllQualityCheckTasks);
     on<SelectAllCycleCountTasks>(_onSelectAllCycleCountTasks);
     on<ButtonClicked>(_onButtonClicked);
     on<QualityCheckTasksUpdated>(_onQualityCheckTasksUpdated);
@@ -68,7 +67,7 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
 
   void _onGetCycleCountTasks(GetCycleCountTasks event, Emitter<WorkflowState> emit) {}
 
-  void _onQualityCheckStatusUpdated(QualityCheckStatusUpdated event, Emitter<WorkflowState> emit) {
+  void _onQualityCheckStatusUpdate(QualityCheckStatusUpdate event, Emitter<WorkflowState> emit) {
     if (event.isChecked) {
       state.selectedQaulityCheckTasks!.addAll(event.lpnNbr);
     } else {
@@ -82,13 +81,6 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
   void _onCycleCountStatusUpdated(CycleCountStatusUpdated event, Emitter<WorkflowState> emit) {
     state.cycleCountTasks.where((task) => task.task == event.task).first.isChecked = event.isChecked;
     emit(state.copyWith(cycleCountTasks: state.cycleCountTasks));
-  }
-
-  void _onSelectAllQualityCheckTasks(SelectAllQualityCheckTasks event, Emitter<WorkflowState> emit) {
-    state.qualityCheckTasks.forEach((task) {
-      task.isChecked = event.isChecked;
-    });
-    emit(state.copyWith(selectedAllQualityCheckTasks: event.isChecked));
   }
 
   void _onSelectAllCycleCountTasks(SelectAllCycleCountTasks event, Emitter<WorkflowState> emit) {

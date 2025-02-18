@@ -340,7 +340,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                         SizedBox(
                             width: size.width * 0.38,
                             child: Customs.WMSCartesianChart(
-                                title: 'Avg Time Taken by Employee',
+                                title: 'Number of tasks by an employee',
                                 titleFontSize: 13,
                                 xlabelFontSize: 12,
                                 ylabelFontSize: 12,

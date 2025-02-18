@@ -41,7 +41,6 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<FilterUsers>(_onFilterUsers);
     on<UpdateUserAccess>(_onUpdateUserAccess);
     on<GetAreasOverviewData>(_onGetAreasOverviewData);
-    on<UpdateTaskId>(_onUpdateTaskId);
     on<Rendering>(_onRendering);
     on<Intercepting>(_onIntercepting);
     on<ResetAlertsCount>(_onClearAlerts);
@@ -51,7 +50,6 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       _fetchAlerts(); // Subsequent fetches every 10 seconds
     });
     on<GetTasks>(_onGetTasks);
-    on<GetBinsForTask>(_onGetBinsForTask);
 
   }
   final NetworkCalls _customApi;
@@ -225,10 +223,6 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     }
   }
 
-  void _onUpdateTaskId(UpdateTaskId event, Emitter<WarehouseInteractionState> emit) {
-    emit(state.copyWith(selectedTaskId: event.taskId));
-  }
-
   @override
   Future<void> close() {
     _alertController.close(); // Close the stream controller when bloc is closed
@@ -251,34 +245,6 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       Log.e(e);
       // emit(state.copyWith(getUsersState: GetUsers.failure));
     }
-  }
-
-  Future<void> _onGetBinsForTask(GetBinsForTask event, Emitter<WarehouseInteractionState> emit) async {
-    emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.loading));
-    try {
-      await 
-      
-      Future.delayed(Duration(seconds: 2),() async =>{
-      await _customApi.get(AppConstants.BINS_FOR_TASK, queryParameters: {"facility_id": "243", "task_nbr": event.taskNbr}).then((apiResponse) {
-        if (apiResponse.response!.statusCode == 200) {
-          List<String> bins = List<String>.from(jsonDecode(apiResponse.response!.data)["data"]["bins"]);
-          emit(state.copyWith(binsForTask: bins, getBinsForTaskStatus: GetBinsForTaskStatus.success));
-          print("bins for task  ${state.binsForTask}");
-
-          state.inAppWebViewController!.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
-          getIt<JsInteropService>().getShoretestPathForTask(state.binsForTask!);
-        }
-        else{
-          emit(state.copyWith(binsForTask: [],  getBinsForTaskStatus: GetBinsForTaskStatus.failure));
-          
-        }
-      })});
-    } catch (e) {
-      print("error in bin for task $e");
-      Log.e(e);
-      emit(state.copyWith(binsForTask: [],  getBinsForTaskStatus: GetBinsForTaskStatus.failure));
-    }
-    emit(state.copyWith(getBinsForTaskStatus: GetBinsForTaskStatus.initial));
   }
 
  

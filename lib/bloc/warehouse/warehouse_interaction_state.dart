@@ -31,7 +31,7 @@ final class WarehouseInteractionState {
     this.inAppWebViewController,
     this.isModelLoaded = false,
     this.intercepting = true,
-    this.isRendered = true,
+    this.isRendered,
     this.selectedSearchArea = "Storagearea",
     this.searchText,
     this.getState = GetCompanyDataState.initial,
@@ -60,7 +60,7 @@ final class WarehouseInteractionState {
   Map<String, dynamic> dataFromJS;
   InAppWebViewController? inAppWebViewController;
   bool isModelLoaded;
-  bool isRendered;
+  bool? isRendered;
   String selectedSearchArea;
   LPNLifeCycleStatus? getLpnLifeCycleStatus;
   List<LPNStatus>? lpnLifeCycle;

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/pages/container_management/layout.dart';
 import 'package:wmssimulator/pages/container_management/statistics.dart';
 import 'package:wmssimulator/pages/customs/hover_dialog.dart';
@@ -18,10 +20,16 @@ import '../pages/login.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case '/': 
+        return PageRouteBuilder(
+          barrierDismissible: false,
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) =>getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),
+        );
       case '/login':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) => const LoginPage(),
+          pageBuilder: (context, animation, secondaryAnimation) =>getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),
         );
       case '/warehouse':
         return PageRouteBuilder(
@@ -110,11 +118,7 @@ class RouteGenerator {
       default:
         return MaterialPageRoute(
             settings: settings,
-            builder: (_) => Scaffold(
-                  body: Center(
-                    child: Text('No route defined for ${settings.name}'),
-                  ),
-                ));
+            builder: (_) => getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),);
     }
   }
 }

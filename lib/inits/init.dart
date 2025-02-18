@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 
 import '../constants/app_constants.dart';
@@ -27,4 +28,7 @@ Future<void> init() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
   getIt.registerFactory(() => Dio());
+
+  //webService
+   getIt.registerLazySingleton<WebService>(() => WebService());
 }
