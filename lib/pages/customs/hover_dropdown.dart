@@ -112,7 +112,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
 
-                                Navigator.pushNamed(context, '/containerManagement');
+                                urlNavigator.launchOrFocusUrl('https://cmsweb-4c66c.web.app');
                               },
                               child: const ForHover(text: "Containers")),
                         if (widget.accessTypes.contains('LPN LifeCycle'))
