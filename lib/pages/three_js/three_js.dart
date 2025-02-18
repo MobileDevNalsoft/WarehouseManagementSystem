@@ -72,8 +72,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
   @override
   void initState() {
     super.initState();
-    initBloc();
     initControllers();
+    initBloc();
     reRouteModel();
 
     window.onMessage.listen((event) {
@@ -133,6 +133,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         animationController.reverse(); // Reverse when not visible
       }
     });
+    animationController.forward();
   }
 
   void reRouteModel() {
@@ -180,7 +181,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                           return SizedBox(
                             height: size.height * 0.92,
                             width: size.width * widthAnimation.value,
-                            child: accessTypes.contains('Warehouse')
+                            child: accessTypes.contains('Warehous')
                                 ? InAppWebView(
                                     initialFile: 'assets/web_code/model.html',
                                     onConsoleMessage: (controller, consoleMessage) {
@@ -336,33 +337,33 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                       builder: (context, child) {
                         return Positioned(
                           right: positionAnimation.value,
-                          child: PointerInterceptor(
-                            child: getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS.keys.first,
-                                    context.watch<WarehouseInteractionBloc>().state.dataFromJS.values.first.toString()) ??
-                                const SizedBox(),
-                          ),
+                          child: PointerInterceptor(child: YardAreaDataSheet()
+                              // getDataSheetFor(context.watch<WarehouseInteractionBloc>().state.dataFromJS.keys.first,
+                              //         context.watch<WarehouseInteractionBloc>().state.dataFromJS.values.first.toString()) ??
+                              //     const SizedBox(),
+                              ),
                         );
                       }),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded &&
-                      accessTypes.contains('Warehouse') &&
-                      !accessTypes.contains('Storage Area'))
-                    Align(
-                        alignment: Alignment.bottomCenter,
-                        child: CustomProgressBar(
-                            height: size.height * 0.92,
-                            width: size.width,
-                            progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
-                  if (!context.watch<WarehouseInteractionBloc>().state.isRendered && accessTypes.contains('Warehouse'))
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: size.height * 0.92,
-                        width: size.width * widthAnimation.value,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
-                        child: Lottie.asset('assets/lottie/rendering.json'),
-                      ),
-                    ),
+                  // if (!context.watch<WarehouseInteractionBloc>().state.isModelLoaded &&
+                  //     accessTypes.contains('Warehouse') &&
+                  //     !accessTypes.contains('Storage Area'))
+                  //   Align(
+                  //       alignment: Alignment.bottomCenter,
+                  //       child: CustomProgressBar(
+                  //           height: size.height * 0.92,
+                  //           width: size.width,
+                  //           progress: double.parse(context.watch<WarehouseInteractionBloc>().state.dataFromJS['percentComplete'] ?? '0') / 100)),
+                  // if (!context.watch<WarehouseInteractionBloc>().state.isRendered && accessTypes.contains('Warehouse'))
+                  //   Align(
+                  //     alignment: Alignment.bottomCenter,
+                  //     child: Container(
+                  //       height: size.height * 0.92,
+                  //       width: size.width * widthAnimation.value,
+                  //       alignment: Alignment.center,
+                  //       decoration: const BoxDecoration(color: Color.fromRGBO(192, 208, 230, 1)),
+                  //       child: Lottie.asset('assets/lottie/rendering.json'),
+                  //     ),
+                  //   ),
                 ],
               ),
             ],
