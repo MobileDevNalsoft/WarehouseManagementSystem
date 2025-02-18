@@ -5,6 +5,8 @@ abstract class WarehouseInteractionEvent extends Equatable {
   List<Object> get props => [];
 }
 
+
+// this event is called when an object is selected in the warehouse
 class SelectedObject extends WarehouseInteractionEvent {
   final Map<String, dynamic> dataFromJS;
   bool? clearSearchText;
@@ -44,6 +46,7 @@ class SelectedFacilityValue extends WarehouseInteractionEvent {
   List<Object> get props => [facilityVal];
 }
 
+// Emitted when the model is loaded 100%
 class ModelLoaded extends WarehouseInteractionEvent {
   final bool isLoaded;
   ModelLoaded({required this.isLoaded});
@@ -52,7 +55,9 @@ class ModelLoaded extends WarehouseInteractionEvent {
   List<Object> get props => [isLoaded];
 }
 
+// Gets the users data
 class GetUsersData extends WarehouseInteractionEvent {}
+
 
 class FilterUsers extends WarehouseInteractionEvent {
   final String searchText;
@@ -80,13 +85,7 @@ class GetAreasOverviewData extends WarehouseInteractionEvent {
   List<Object> get props => [facilityID];
 }
 
-class UpdateTaskId extends WarehouseInteractionEvent {
-  String taskId;
-  UpdateTaskId({required this.taskId});
 
-  @override
-  List<Object> get props => [taskId];
-}
 
 class Rendering extends WarehouseInteractionEvent {
   bool isRendered;
@@ -96,6 +95,8 @@ class Rendering extends WarehouseInteractionEvent {
   List<Object> get props => [isRendered];
 }
 
+
+// To enable PointerInterceptor when the dropdowns are hovered
 class Intercepting extends WarehouseInteractionEvent {
   final bool intercepting;
   Intercepting({required this.intercepting});
@@ -104,6 +105,7 @@ class Intercepting extends WarehouseInteractionEvent {
   List<Object> get props => [intercepting];
 }
 
+// To get LPN Lifecycle data based on the lpn number
 class GetLPNLifeCycle extends WarehouseInteractionEvent {
   int facilityID;
   int companyID;
@@ -114,14 +116,7 @@ class GetLPNLifeCycle extends WarehouseInteractionEvent {
   List<Object> get props => [facilityID, companyID, lpnNbr];
 }
 
+// To get the tasks along with the bins to calculate the shortest path.
 class GetTasks extends WarehouseInteractionEvent {
   GetTasks();
-}
-
-class GetBinsForTask extends WarehouseInteractionEvent {
-  String taskNbr;
-  GetBinsForTask({required this.taskNbr});
-
-  @override
-  List<Object> get props => [taskNbr];
 }

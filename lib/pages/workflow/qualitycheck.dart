@@ -85,37 +85,27 @@ class _QualityCheckState extends State<QualityCheck> {
                   return;
                 }
                 _workflowBloc.add(PostQualityCheckTasks(approveStatus: true));
-                // _workflowBloc.add(QualityCheckTasksUpdated(
-                //     tasks: _workflowBloc.state.qualityCheckTasks
-                //         .where((e) => e.isChecked == true)
-                //         .map(
-                //           (e) => e.lpnNbr!,
-                //         ).toList(),
-                //     qcStatus: 'QC Approved'));
-                // _workflowBloc.add(SelectAllQualityCheckTasks(isChecked: false));
+           
               },
               onRejected: () {
-                // if(state.selectedQaulityCheckTasks!.isEmpty){
-                //   Customs.AnimatedDialog(
-                //     context: context,
-                //     header: const Icon(
-                //       Icons.warning_amber_rounded,
-                //       size: 30,
-                //     ),
-                //     content: const [
-                //       Text(
-                //         'Please select atleast one task',
-                //         textAlign: TextAlign.center,
-                //         style: TextStyle(fontSize: 18),
-                //       )
-                //     ],
-                //   );
-                //   return;
-                // }
+                if(state.selectedQaulityCheckTasks!.isEmpty){
+                  Customs.AnimatedDialog(
+                    context: context,
+                    header: const Icon(
+                      Icons.warning_amber_rounded,
+                      size: 30,
+                    ),
+                    content: const [
+                      Text(
+                        'Please select atleast one task',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18),
+                      )
+                    ],
+                  );
+                  return;
+                }
                 _workflowBloc.add(PostQualityCheckTasks(approveStatus: false));
-                // _workflowBloc.add(
-                //     QualityCheckTasksUpdated(tasks: _workflowBloc.state.qualityCheckTasks.where((e) => e.isChecked == true).map((e) => e.lpnNbr!).toList(), qcStatus: 'QC Rejected'));
-                // _workflowBloc.add(SelectAllQualityCheckTasks(isChecked: false));
               },
               child: Expanded(
                   child: Skeletonizer(
@@ -158,11 +148,14 @@ class _QualityCheckState extends State<QualityCheck> {
                         // : state.qualityCheckTasks.where((task) => task.qcStatus == 'QC Approved' || task.qcStatus == 'QC Rejected').toList(),
                         isCompleted: state.buttonIndex == 0 ? false : true,
                         onChanged: (value, row) {
-                          context.read<WorkflowBloc>().add(QualityCheckStatusUpdated(lpnNbr: [row.getCells()[2].value], isChecked: value!));
+                          
+                          context.read<WorkflowBloc>().add(QualityCheckStatusUpdate(lpnNbr: [row.getCells()[2].value], isChecked: value!));
                         },
+                        
                       ),
                       columns: [
                         if (state.buttonIndex == 0)
+                          // Select all check box
                           GridColumn(
                               columnName: '',
                               allowFiltering: false,
@@ -176,9 +169,10 @@ class _QualityCheckState extends State<QualityCheck> {
                                     return Checkbox(
                                         value: state.selectedQaulityCheckTasks!.isNotEmpty && state.qualityCheckTasks.length == state.selectedQaulityCheckTasks!.length,
                                         onChanged: (value) {
+                                        
                                           context
                                               .read<WorkflowBloc>()
-                                              .add(QualityCheckStatusUpdated(lpnNbr: state.qualityCheckTasks.map((e) => e.lpnNbr!).toList(), isChecked: value!));
+                                              .add(QualityCheckStatusUpdate(lpnNbr: state.qualityCheckTasks.map((e) => e.lpnNbr!).toList(), isChecked: value!));
                                         });
                                   }))),
                         GridColumn(

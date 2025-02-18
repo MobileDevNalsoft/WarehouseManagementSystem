@@ -89,8 +89,6 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
           binsStatus: jsonDecode(value.response!.data)["data"],
         ));
         getIt<JsInteropService>().binsStatus(jsonEncode(state.binsStatus!));
-        // getIt<JsInteropService>().redBins(state.binsStatus!["red"]);
-        // getIt<JsInteropService>().orangeBins(state.binsStatus!["orange"]);
       });
     } catch (e) {
       print("error $e");

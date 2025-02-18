@@ -19,6 +19,7 @@ class WorkflowState {
   PostQualityCheckStatus? postQualityCheckStatus;
   int? pendingQualityCheckPageCount;
   int? completedQualityCheckPageCount;
+  
 
   WorkflowState(
       {this.getQualityCheckStatus,

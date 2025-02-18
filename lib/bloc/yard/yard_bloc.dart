@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:wmssimulator/constants/app_constants.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/yard_area_model.dart';
 
@@ -22,6 +23,7 @@ class YardBloc extends Bloc<YardEvent, YardState> {
   }
   final NetworkCalls _customApi;
 
+  
   void _onGetYardData(GetYardData event, Emitter<YardState> emit) async {
     try {
       await _customApi
@@ -37,13 +39,13 @@ class YardBloc extends Bloc<YardEvent, YardState> {
         } else {
           state.yardAreaItems!.addAll(dockAreaResponse.data!);
         }
-        print(jsonDecode(apiResponse.response!.data)['data']);
         if (apiResponse.response?.data != null) {
           getIt<JsInteropService>().sendTrucksData(jsonEncode(jsonDecode(apiResponse.response!.data)['data']));
         }
         emit(state.copyWith(yardAreaItems: state.yardAreaItems, yardAreaStatus: YardAreaStatus.success));
         getIt<JsInteropService>().setNumberOfTrucks("Y_0");
         getIt<JsInteropService>().setNumberOfTrucks('Y_${state.yardAreaItems!.length.toString()}');
+        // getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'setNumberofTrucks("Y_${state.yardAreaItems!.length.toString()}")');
       });
     } catch (e) {
       Log.e(e.toString());
