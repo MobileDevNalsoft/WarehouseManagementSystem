@@ -205,8 +205,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                         ),
                                                         onPressed: () {}),
                                                     onClose: () {
-                                                      controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
-                                                      getIt<JsInteropService>().getShoretestPathForTask([]);
+                                                      // controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
+                                                      // getIt<JsInteropService>().getShoretestPathForTask([]);
                                                     },
                                                     content: [
                                                       const Text("Please enter task Id"),
@@ -255,8 +255,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                               print("tasks ${state.tasksForShoretestPath}   ${state.tasksForShoretestPath![textEditingController.text.trim()]}");
                                                               if (textEditingController.text.trim().isNotEmpty &&
                                                                   state.tasksForShoretestPath!.keys.contains(textEditingController.text.trim())) {
-                                                                getIt<JsInteropService>().getShoretestPathForTask([]);
-                                                                getIt<JsInteropService>().getShoretestPathForTask(state.tasksForShoretestPath![textEditingController.text.trim()]);
+                                                                getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: "getShoretestPathForTask('${state.tasksForShoretestPath![textEditingController.text.trim()].toString().replaceFirst('[','').replaceAll(']','').replaceAll(' ', '')}')");
+                                                                // getIt<JsInteropService>().getShoretestPathForTask();
                                                                 // _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
                                                               }
                                                               Navigator.pop(context);
@@ -283,7 +283,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                           ),
                                           onWebViewCreated: (controller) async {
                                             _warehouseInteractionBloc.state.inAppWebViewController = controller;
-                                           
+                                           getIt<WebService>().setController(controller);
                                             Timer.periodic(
                                               const Duration(milliseconds: 500),
                                               (timer) async {

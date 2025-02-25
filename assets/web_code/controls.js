@@ -38,6 +38,7 @@ export function addControls(camera, renderer) {
   }
 
   // Function to clamp target position
+  // Restrictions for max and min pan
   function clampTarget() {
     controls.target.x = Math.max(
       minPan.x,

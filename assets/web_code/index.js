@@ -1,36 +1,46 @@
 import * as THREE from "three";
 import { createRenderer } from "renderer";
 import { initScene } from "scene";
+import { initCamera } from "camera";
+import { intiGlobalFunctions } from "initFunctions";
 
 const data = JSON.parse(window.localStorage.getItem('facilityData'));
 document.addEventListener("DOMContentLoaded", async function () {
+  await initCamera(); 
   window.localStorage.setItem("isLoaded", false);
-  const renderer = createRenderer();
+  const renderer = createRenderer();  
 
 
   if(data.facilityID == 2){
     document.getElementById('leftPanel').display = "none";
   }
+  
+  //starting point for the 3d model
+ await initScene(renderer);
+ const clock = new THREE.Clock();
+ window.globalThis.threeDProps = {
+   ...window.globalThis.threeDProps, // Preserve existing properties
+   "clock": clock,
+   renderer:renderer
+};
+ intiGlobalFunctions();
+ load3dObjects();
+ intiatePathProperties();
 
-  const {scene, camera, mixer, controls, agvModel} = await initScene(renderer);
 
-  const clock = new THREE.Clock();
+
+const { scene, camera, controls,mixer } = window.globalThis.threeDProps;
 
   let tooltip = document.getElementById('agvtooltip');
 
 // Create a Vector3 to store AGV's world position
 let agvPosition = new THREE.Vector3();
 
-// Assuming you have your AGV model and it's named `agvModel`
-// and the AGV's position is updated with animation
 
 function updateTooltip() {
   // Get AGV's position in world space (you may need to use an animation callback for updates)
   let truck = scene.getObjectByName('agvModel');
   truck.getWorldPosition(agvPosition);
-
-  // camera.position.set(agvPosition.x,agvPosition.y,agvPosition.z);
-  // camera.lookAt(agvPosition);
 
   // Convert the 3D world position to 2D screen coordinates
   let vector = new THREE.Vector3();
@@ -49,8 +59,7 @@ function updateTooltip() {
   tooltip.style.top = `${y}px`;
   tooltip.style.display = 'block';
 }
-
-  // Step 4: Render loop
+// to animate each frame in the model : a recursive call to animate function.
   function animate() {
     requestAnimationFrame(() => {
       animate(renderer, scene, camera);
@@ -63,6 +72,7 @@ function updateTooltip() {
     mixer.update(delta); // Update the animation mixer
     controls.update();
     renderer.render(scene, camera);
+    // window.parent.postMessage({"isLoaded": true});
     window.localStorage.setItem("isLoaded", true);
   }
 
@@ -71,7 +81,9 @@ function updateTooltip() {
 
 });
 
+// operation done after the model is loaded and ready to render. 
 function initAfterModelLoaded(){
+ 
   const pathButton = document.getElementById('path');
   pathButton.style.display = "flex";
   if(data.model === 'warehouse'){
@@ -82,4 +94,22 @@ function initAfterModelLoaded(){
   localStorage.setItem("red","0xff0000");
   localStorage.setItem("green","0x10ff04");
   window.localStorage.removeItem('lpnLifeCycle');
+
+
+
+  let isEmitted =  window.dispatchEvent(new CustomEvent("chatChannel", { detail: "Hello from JavaScript!" }));
+  console.warn("event emmitted "+isEmitted);
+   // Listen for events coming from Dart
+  //  window.addEventListener("chatChannel", (event) => {
+  //   console.log(" JavaScript received from Dart:", event.detail);
+  // });
+
+  // Send an event to Dart after 3 seconds
+  // setTimeout(() => {
+  //  
+  // }, 3000);
 }
+
+// window.parent.postMessage({"testingEvent":"test"});
+
+// window.parent.postMessage("Hello from JavaScript!");

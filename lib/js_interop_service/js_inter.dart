@@ -6,8 +6,6 @@ import 'dart:js_util';
 
 import 'package:js/js.dart';
 
-@JS()
-external _switchToMainCam(String camName);
 
 @JS()
 external _lpnLifeCycle(String show);
@@ -18,17 +16,6 @@ external _isRackDataLoaded(bool value);
 @JS()
 external _setNumberOfTrucks(String message);
 
-@JS()
-external _resetTrucks();
-
-@JS()
-external _highlightBins(String bins);
-
-@JS()
-external _navigateToBin(String message);
-
-@JS()
-external _resetBoxColors();
 
 @JS()
 external _sendOverviewData(String json);
@@ -44,12 +31,6 @@ external _getShoretestPathForTask(List task);
 
 @JS()
 external _showAlert(String message);
-
-@JS()
-external _binsStatus(String bins);
-
-@JS()
-external _orangeBins(List bins);
 
 @JS()
 external _requestFullScreen();
@@ -83,9 +64,6 @@ class JsInteropService {
     _sendTrucksData(data);
   }
 
-  switchToMainCam(String camName) {
-    _switchToMainCam(camName);
-  }
 
   isRackDataLoaded(value) {
     _isRackDataLoaded(value);
@@ -95,37 +73,13 @@ class JsInteropService {
     _setNumberOfTrucks(message);
   }
 
-  resetTrucks() {
-    _resetTrucks();
-  }
-
-  navigateToBin(String message) {
-    _navigateToBin(message);
-  }
-
-  getShoretestPathForTask(List message) {
-    _getShoretestPathForTask(message);
-  }
-
-  resetBoxColors() {
-    _resetBoxColors();
-  }
+  
 
   showAlert(String message) {
     _showAlert(message);
   }
 
-  highlightBins(String bins) {
-    _highlightBins(bins);
-  }
 
-  binsStatus(String bins) {
-    _binsStatus(bins);
-  }
-
-  orangeBins(List bins) {
-    _orangeBins(bins);
-  }
 
   requestFullScreen() {
     _requestFullScreen();

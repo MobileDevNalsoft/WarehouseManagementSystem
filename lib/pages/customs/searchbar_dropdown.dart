@@ -13,6 +13,7 @@ import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 
 class SearchBarDropdown extends StatefulWidget {
@@ -59,8 +60,8 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
     if (!_warehouseInteractionBloc.state.dataFromJS.containsKey("area") && !_warehouseInteractionBloc.state.dataFromJS.containsKey("bin")) {
       if (_warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().contains("storage")) {
         _warehouseInteractionBloc.add(SelectedObject(dataFromJS: const {"bin": ""}, clearSearchText: false));
-        getIt<JsInteropService>().switchToMainCam("");
-        getIt<JsInteropService>().switchToMainCam("storageArea");
+        
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("storageArea")');
       } else {
         _warehouseInteractionBloc.add(SelectedObject(
             dataFromJS: {"area": _warehouseInteractionBloc.state.selectedSearchArea.toLowerCase().replaceAll(' ', '').replaceAll('-', '')},
@@ -97,8 +98,8 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
           context.read<YardBloc>().add(GetYardData(searchText: _warehouseInteractionBloc.state.searchText));
         case 'storagearea' || 'storage':
           if (_warehouseInteractionBloc.state.searchText != null && _warehouseInteractionBloc.state.searchText != "") {
-            getIt<JsInteropService>().switchToMainCam("");
-            getIt<JsInteropService>().switchToMainCam("storageArea");
+          
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("storageArea")');
             context.read<StorageBloc>().state.pageNum = 0;
             context.read<StorageBloc>().add(GetBinData(searchText: _warehouseInteractionBloc.state.searchText));
           }
@@ -170,41 +171,49 @@ class _SearchBarDropdownState extends State<SearchBarDropdown> {
                             }
                             switch (item.replaceAll(" ", "").toLowerCase()) {
                               case "storagearea":
-                                getIt<JsInteropService>().switchToMainCam("storageArea");
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("storageArea")');
                                 _warehouseInteractionBloc.state.searchText = "";
                                 break;
                               case "storagebin":
-                                getIt<JsInteropService>().switchToMainCam("storageArea");
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("storageArea")');
                                 _warehouseInteractionBloc.state.searchText = "";
                                 break;
                               case "inspectionarea":
-                                getIt<JsInteropService>().switchToMainCam("inspectionArea");
+                              
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("inspectionArea")');
                                 _warehouseInteractionBloc.state.searchText = "";
 
                                 break;
                               case "stagingarea":
-                                getIt<JsInteropService>().switchToMainCam("stagingArea");
+                              
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("stagingArea")');
                                 _warehouseInteractionBloc.state.searchText = "";
                                 break;
                               case "activityarea":
-                                getIt<JsInteropService>().switchToMainCam("activityArea");
+                              
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("activityArea")');
                                 _warehouseInteractionBloc.state.searchText = "";
                                 break;
                               case "receivingarea":
-                                getIt<JsInteropService>().switchToMainCam("receivingArea");
+                              
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("receivingArea")');
                                 _warehouseInteractionBloc.state.searchText = "";
                                 break;
                               case "yardarea":
-                                getIt<JsInteropService>().switchToMainCam("yardArea");
+                              
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("yardArea")');
+                            
                                 _warehouseInteractionBloc.state.searchText = "";
 
                                 break;
                               case "dockareain":
-                                getIt<JsInteropService>().switchToMainCam("dockArea-IN");
+                              
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("dockArea-IN")');
                                 _warehouseInteractionBloc.state.searchText = "";
                                 break;
                               case "dockareaout":
-                                getIt<JsInteropService>().switchToMainCam("dockArea-OUT");
+                              
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source:'switchToMainCam("dockArea-OUT")');
                                 _warehouseInteractionBloc.state.searchText = "";
                                 break;
                               default:

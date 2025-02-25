@@ -1,5 +1,8 @@
 import * as THREE from "three";
 
+
+
+//highlighting the selected area block with the given color and opacity
 export function highlightArea(scene, objectName, rgbColor, opacity = 1.0) {
   const object = scene.getObjectByName(objectName);
   
@@ -50,50 +53,6 @@ export function highlightArea(scene, objectName, rgbColor, opacity = 1.0) {
   } else {
     console.error("No mesh found with the name '" + objectName + "'");
   }
-
-
- 
-  // if (object) {
-  //   const geometry = object.geometry;
-
-  //   if (geometry && geometry.attributes.position) {
-  //     geometry.computeBoundingBox();
-
-  //     const minX = geometry.boundingBox.min.x;
-  //     const maxX = geometry.boundingBox.max.x;
-
-  //     const position = geometry.attributes.position;
-  //     const colors = [];
-
-  //     for (let i = 0; i < position.count; i++) {
-  //       const x = position.getX(i); // Get the X-coordinate of the vertex
-  //       const normalizedX = (x - minX) / (maxX - minX); // Normalize X to range [0, 1]
-
-  //       // Define gradient color: rgbColor with varying alpha
-  //       colors.push(
-  //         rgbColor.r / 255, // Red
-  //         rgbColor.g / 255, // Green
-  //         rgbColor.b / 255, // Blue
-  //         normalizedX       // Alpha (gradient effect)
-  //       );
-  //     }
-
-  //     geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 4)); // RGBA
-
-  //     const material = new THREE.MeshBasicMaterial({
-  //       vertexColors: true,
-  //       transparent: true,
-  //       side: THREE.DoubleSide,
-  //       opacity: opacity
-  //     });
-
-  //     object.material = material;
-  //   } else {
-  //     console.error("The geometry of the object does not have position attributes.");
-  //   }
-  // } else {
-  //   console.error("No mesh found with the name '" + objectName + "'");
-  // }
 }
 
 export function resetAreas(scene){

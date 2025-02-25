@@ -20,6 +20,7 @@ import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/bloc/work_queue/work_queue_bloc.dart';
 import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/task_model.dart';
 import 'package:wmssimulator/pages/customs/hover_dropdown.dart';
@@ -48,16 +49,14 @@ class Customs {
               const Spacer(),
               InkWell(
                   onTap: () async {
-                    getIt<JsInteropService>().switchToMainCam("");
-                    getIt<JsInteropService>().switchToMainCam(
-                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea"
-                            ? "storageArea"
-                            : "compoundArea");
-                    getIt<JsInteropService>().resetBoxColors();
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(
+                        source:
+                            'switchToMainCam("${await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea" ? "storageArea" : "compoundArea"}")');
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'resetBinColors()');
 
                     context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: const {"object": "null"}, clearSearchText: true));
 
-                    getIt<JsInteropService>().resetTrucks();
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'resetTrucksAnimation()');
                   },
                   child: const Icon(Icons.cancel_rounded, color: Colors.white))
             ],
@@ -737,7 +736,7 @@ class Customs {
                         onPressed: () {
                           context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"lpn": textEditingController.text}, clearSearchText: true));
                           context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.removeItem(key: 'lpnLifeCycle');
-                          getIt<JsInteropService>().lpnLifeCycle('true');
+                          getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: "lpnLifeCycle('true')");
                           Navigator.pop(context);
                         },
                         child: PointerInterceptor(child: const Text("Done"))),
@@ -1228,20 +1227,19 @@ class Customs {
                                       parent: parent,
                                       iconBgColor: Color.fromARGB(255, 236, 178, 102),
                                       contentValue: state.workQueueData!.loadingQueue.toString(),
-                                        imagePath: "assets/images/loading_queue.png",
+                                      imagePath: "assets/images/loading_queue.png",
                                       heading: "Loading Queue"),
                                   PendingDialogChildContianer(
                                       parent: parent,
                                       iconBgColor: Color.fromARGB(255, 10, 162, 222),
                                       contentValue: state.workQueueData!.pendingCycleCounts.toString(),
-                                        imagePath: "assets/images/cycle_count.png",
+                                      imagePath: "assets/images/cycle_count.png",
                                       heading: "Pending Cycle Counts"),
-                                      
                                   PendingDialogChildContianer(
                                       parent: parent,
                                       iconBgColor: Color.fromARGB(255, 120, 154, 95),
                                       contentValue: state.workQueueData!.pendingPutaways.toString(),
-                                        imagePath: "assets/images/pending_putaway.png",
+                                      imagePath: "assets/images/pending_putaway.png",
                                       heading: "Pending Putaways"),
                                   PendingDialogChildContianer(
                                       parent: parent,
@@ -1253,7 +1251,7 @@ class Customs {
                                       parent: parent,
                                       iconBgColor: Color.fromARGB(255, 10, 162, 222),
                                       contentValue: state.workQueueData!.openWorkOrders.toString(),
-                                        imagePath: "assets/images/open_work_orders.png",
+                                      imagePath: "assets/images/open_work_orders.png",
                                       heading: "Open Work Orders"),
                                 ]),
                           ),
@@ -1264,27 +1262,29 @@ class Customs {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: ElevatedButton(
-                              
                                 onPressed: () {
-                                            UrlNavigator().launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
-                                              Navigator.pop(context);
-                                },                                style: ButtonStyle(
-                                  minimumSize: WidgetStatePropertyAll(Size(parent.maxWidth*0.064, parent.maxHeight * 0.088)), // Set the desired size
+                                  UrlNavigator().launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
+                                  Navigator.pop(context);
+                                },
+                                style: ButtonStyle(
+                                    minimumSize: WidgetStatePropertyAll(Size(parent.maxWidth * 0.064, parent.maxHeight * 0.088)), // Set the desired size
 
-                                  foregroundColor:  WidgetStateColor.resolveWith((state){
-                                    if (state.contains(WidgetState.hovered)) {
-                                    return Colors.black;
-                                  } 
-                                  return Colors.white;
-                                }),
-                                  backgroundColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
-                                  if (states.contains(WidgetState.hovered)) {
-                                    return Colors.white;
-                                  } 
-                                  return Color.fromRGBO(68, 98, 136, 1);
-                                })),
-                                
-                                child: Text("Take Action",style: TextStyle(),)),
+                                    foregroundColor: WidgetStateColor.resolveWith((state) {
+                                      if (state.contains(WidgetState.hovered)) {
+                                        return Colors.black;
+                                      }
+                                      return Colors.white;
+                                    }),
+                                    backgroundColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
+                                      if (states.contains(WidgetState.hovered)) {
+                                        return Colors.white;
+                                      }
+                                      return Color.fromRGBO(68, 98, 136, 1);
+                                    })),
+                                child: Text(
+                                  "Take Action",
+                                  style: TextStyle(),
+                                )),
                           ),
                         )
                       ],
@@ -1496,10 +1496,9 @@ class DrillDownDataSource extends DataGridSource {
       );
     }).toList());
   }
-  
+
   @override
   List<DataGridRow> get effectiveRows => super.effectiveRows;
-
 }
 
 class DataSource {

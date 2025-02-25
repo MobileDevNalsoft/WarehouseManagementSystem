@@ -2,15 +2,13 @@ import * as THREE from "three";
 import { loadModel } from "loader";
 import { setupLights } from "lights";
 import { animationMixer } from "animations";
-import { createCamera } from "camera";
 import { addControls } from "controls";
 import { addInteractions } from "interactions";
-import { localStorageSetup } from "localStorage";
-import { addSkyDome } from "skyDome";
+
 import { initNodes, getShortestPath } from "navPath";
-import * as GLTFLoader from "gltfLoader";
 import { highlightArea } from "highlight";
-import { switchCamera } from "camera";
+
+import { playAnimations, stopAnimationsAndReset } from "animations";
 
 export async function initScene(renderer) {
   const container = document.getElementById("container");
@@ -34,413 +32,35 @@ export async function initScene(renderer) {
   const mixer = animationMixer(gltf);
 
   // Camera setup
-  const camera = createCamera();
+  const camera = window.createCamera();
   scene.add(camera);
 
-  // Add controls
+  // Add controls (for panning, zooming limits )
   const controls = addControls(camera, renderer);
 
-  // Local storage setup
-  localStorageSetup(scene, camera, controls);
-
   // Add interactions
+  window.areaFocused = false;
   addInteractions(scene, model, camera, controls);
 
   scene.add(model);
   scene.add(camera);
   scene.updateMatrixWorld(true);
 
-  const forkLift = new THREE.Group();
-  const agv = new THREE.Group();
-  const box = new THREE.Group();
 
-  const box2 = new THREE.Group();
-  const box3 = new THREE.Group();
-
-  const loader = new GLTFLoader.GLTFLoader();
-  //fork lift model
-  loader.load(
-    "../glbs/forkLift_final_pro.glb",
-    (gltf) => {
-      const model = gltf.scene;
-
-      model.scale.set(3.5, 2.5, 2.5);
-
-      model.rotation.y = -(Math.PI / 2);
-      forkLift.add(model);
-      console.warn("fork lift model loaded");
-    },
-    (xhr) => {
-      console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
-    },
-    (error) => {
-      console.warn("An error occurred while loading the model:", error);
-    }
-  );
-
-  //agv model
-  loader.load(
-    "../glbs/agv_with_boxes.glb",
-    (gltf) => {
-      const model = gltf.scene;
-      model.scale.set(3.5, 3.5, 3.5);
-      model.rotation.y = -Math.PI;
-      agv.add(model);
-      model.name = "agvModel";
-      console.warn("agv model loaded");
-    },
-    (xhr) => {
-      console.warn(`Loading progress: ${(xhr.loaded / xhr.total) * 100}%`);
-    },
-    (error) => {
-      console.warn("An error occurred while loading the model:", error);
-    }
-  );
-
-  if (data.model === "warehouse") {
-    // Add skydome
-    addSkyDome(scene);
-    //box model
-    loader.load("../glbs/box.glb", (gltf) => {
-      const model = gltf.scene;
-      model.scale.set(10.5, 10.5, 3.5);
-      model.rotation.y = -Math.PI;
-      let box2Model = model.clone();
-      let box3Model = model.clone();
-      let box4Model = model.clone();
-      let box5Model = model.clone();
-      let box6Model = model.clone();
-      let box7Model = model.clone();
-
-      model.name = "boxA1_";
-      scene.add(model);
-      model.position.set(
-        12.812496810374281,
-        11.155107021331787,
-        -54.67921206610449
-      );
-
-      model.traverse((child) => {
-        if (child.isMesh) {
-          child.name = "boxA1_";
-          child.material = child.material.clone();
-          child.material.transparent = true; // Enable transparency
-          child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
-        }
-      });
-      box2Model.traverse((child) => {
-        if (child.isMesh) {
-          child.name = "boxA2_";
-          child.material = child.material.clone();
-          child.material.transparent = true; // Enable transparency
-          child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
-        }
-      });
-      box3Model.traverse((child) => {
-        if (child.isMesh) {
-          child.name = "boxA3_";
-          child.material = child.material.clone();
-          child.material.transparent = true; // Enable transparency
-          child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
-        }
-      });
-      box4Model.traverse((child) => {
-        if (child.isMesh) {
-          child.name = "boxA4_";
-          child.material = child.material.clone();
-          child.material.transparent = true; // Enable transparency
-          child.material.opacity = 1; // Set opacity (0 is fully transparent, 1 is fully opaque)
-        }
-      });
-
-      box5Model.traverse((child) => {
-        if (child.isMesh) {
-          child.name = "boxA5_";
-          child.material = child.material.clone();
-          child.material.transparent = true; // Enable transparency
-          child.material.opacity = 1; // Set opacity (0 is fully transparent, 1 is fully opaque)
-        }
-      });
-
-      box6Model.traverse((child) => {
-        if (child.isMesh) {
-          child.name = "boxA6_";
-          child.material = child.material.clone();
-          child.material.transparent = true; // Enable transparency
-          child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
-        }
-      });
-
-      box7Model.traverse((child) => {
-        if (child.isMesh) {
-          child.name = "boxA7_";
-          child.material = child.material.clone();
-          child.material.transparent = true; // Enable transparency
-          child.material.opacity = 0; // Set opacity (0 is fully transparent, 1 is fully opaque)
-        }
-      });
-      box2.add(box2Model);
-      scene.add(box2);
-      box2.position.set(
-        12.812496810374281,
-        11.155107021331787,
-        -49.061114295086436
-      );
-
-      box3.add(box3Model);
-      scene.add(box3);
-      box3.position.set(
-        12.812496810374281,
-        11.155107021331787,
-        -46.80325333229198
-      );
-
-      scene.add(box4Model);
-      box4Model.scale.set(8.5, 20.5, 5.5);
-      box4Model.position.set(32.45690885576458, 10, -63.375218967468555);
-
-      scene.add(box5Model);
-      box5Model.scale.set(8.5, 20.5, 5.5);
-      box5Model.position.set(40.45690885576458, 10, -63.375218967468555);
-
-      scene.add(box6Model);
-      box6Model.scale.set(10.5, 11, 15.5);
-      box6Model.position.set(
-        10.034054594205543,
-        11.155107021331787,
-        -130.33101405425458
-      );
-
-      scene.add(box7Model);
-      box7Model.scale.set(10.5, 11, 15.5);
-      box7Model.position.set(
-        9.028635267710587,
-        11.155107021331787,
-        -105.6580355896106
-      );
-
-      console.warn("box models loaded");
-    });
-  }
-
-  let combinedPath = [];
-  let checkpointCircles = [];
-  let highlightedBins = [];
-  let pathLine;
-  let clock;
-  let bins = [];
-  let forkLiftbins =
-    data.model === "storageArea"
-      ? [
-          "p26",
-          "5RB30102",
-          "5RB10102",
-          "5LB30102",
-          "4LB30102",
-          "3LB20102",
-          "3LB10102",
-          "4LB20102",
-          "2LB30103",
-          "p80",
-        ]
-      : [
-          "p4",
-          "4RB30602",
-          "4LB30102",
-          "1RB30602",
-          "3RB20602",
-          "2RB10601",
-          "2RB30602",
-          "3RB10102",
-          "2LB20501",
-          "2RB10601",
-          "2LB20201",
-          "stagingArea",
-        ];
-
-  let { nodeMap, nodes, aisleBayPoints, intermediatePoints } = initNodes(
-    THREE,
-    scene
-  );
-
-  let agvTask = ["receivingArea", "5RB30602", "3RB20602"];
-  let digitalTwin = document.getElementById("digitalTwin");
-  document.getElementById("digitalTwin").addEventListener("click", (e) => {
-    if (digitalTwin.classList.contains("focused")) {
-      digitalTwin.classList.remove("focused");
-      stopAnimation();
-      return;
-    }
-    digitalTwin.classList.add("focused");
-
-    stopAnimation();
-    document.getElementById("path").classList.remove("focused");
-    bins = agvTask;
-    ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
-      agvTask,
-      nodeMap,
-      nodes,
-      aisleBayPoints,
-      intermediatePoints,
-      THREE,
-      scene,
-      camera,
-      controls,
-      agv,
-      renderer,
-      2000,
-      agvTask[agvTask.length - 1],
-      0xffff00,
-      0x0099ff,
-      "digitalTwin"
-    ));
-    bins.forEach((bin) => {
-      if (!bin.toLowerCase().includes("area")) {
-        try {
-          scene.getObjectByName(bin).material.color.set(0x65543e);
-        } catch (e) {
-          console.warn("error in setting color to bins");
-        }
-      }
-    });
-
-    switchCamera(scene, "warehouse_wall", camera, controls);
-  });
-
-  console.warn("nodes", nodes);
-
-  const pathButton = document.getElementById("path");  
   const areasButton = document.getElementById("areas");
-  const digitalTwinButton = document.getElementById("digitalTwin");
 
-  document.getElementById("path").addEventListener("click", (e) =>  {
-    console.warn("got inside path click");
-    if (areasButton.classList.contains("focused")) {
-      areasButton.classList.remove("focused");
-      areas.forEach((area) => {
-        const obj = scene.getObjectByName(area.name);
-        if (obj) {
-          obj.visible = false;
-        }
-      });
-    }
-    if( digitalTwin.classList.contains("focused")){
-      digitalTwin.classList.toggle("focused");
-    }
-
-
-    // Toggle the visibility of the input field and text
-    if (!pathButton.classList.contains("focused")) {
-      if (combinedPath.length != 0) {
-       stopAnimation();
-      }
-      console.log('{"openPathDialog":"true","object":"null"}');
-    } else {
-      stopAnimation();
-      pathButton.classList.remove("focused");
-    }
-    // pathButton.classList.toggle("focused");
-  });
-
-  function stopAnimation() {
-    combinedPath = [];
-    checkpointCircles.forEach((circle) => scene.remove(circle));
-    
-    try {
-      pathLine.forEach((line) => scene.remove(line));
-    } catch (e) {
-      console.warn("error in removing path line");
-    }
-
-   try{
-    scene.remove(forkLift);
-   }
-   catch(e){
-    console.warn("error in removing fork lift");
-   }
-   try{
-    scene.remove(agv);
-   }
-   catch(e){
-    console.warn("error in removing agv");
-   }
-
-    document.getElementById("agvtooltip").style.display = "none";
-
-    try {
-      bins.forEach((e) => {
-        if (
-          !e.toLowerCase().includes("area") &&
-          !e.toLowerCase().startsWith("p")
-        ) {
-          scene.getObjectByName(e).material.color.set(0xfaf3e2);
-        }
-      });
-    } catch (e) {
-      console.warn("error in setting color back to original");
-    }
-    if (clock) {
-      clock.stop();
-    }
-    return 
-  }
-
-  document.getElementById("showPath").addEventListener("click", (e) => {
-    try{
-      if(!pathButton.classList.contains("focused")){
-        
-        pathButton.classList.add("focused");
-      }
-      digitalTwin.classList.remove("focused");
-      
-      console.warn( localStorage.getItem("getShoretestPathForTask"));
-     
-      bins=["p4",...localStorage.getItem("getShoretestPathForTask").split(","),"p1"];
-      
-      localStorage.setItem("highlightBins", bins.toString());
-      
-      ({ combinedPath, checkpointCircles, pathLine, clock } = getShortestPath(
-        bins,
-        nodeMap,
-        nodes,
-        aisleBayPoints,
-        intermediatePoints,
-        THREE,
-        scene,
-        camera,
-        controls,
-        forkLift,
-        renderer,
-        1500,
-        bins[bins.length - 1],
-        0xffff00,
-        0xcc0066,
-        "path"
-      ));
   
-    }catch(e){
-      console.warn("error in removing fork lift");
-    }
-   
-    bins.forEach((bin) => {
-      if (!bin.toLowerCase().includes("area")) {
-        try {
-          scene.getObjectByName(bin).material.color.set(0x65543e);
-        } catch (e) {
-          console.warn("error in setting color to bins");
-        }
-      }
-    });
-
-    if (data.model === "warehouse") {
-      switchCamera(scene, "warehouse_wall", camera, controls);
-    }
+  // on clicking the digitalTwin button in left panel 
+  digitalTwin.addEventListener("click", (e) => {
+    startDigitalTwin();
   });
 
-  document.getElementById("stopAnimation").addEventListener("click", (e) => {
-    stopAnimation();
+  // on clicking the shortest path button in left panel 
+  document.getElementById("path").addEventListener("click", (e) =>  {
+    startStopForkLiftPath();
   });
 
+  // initially all the blocks are hidden.
   if (scene.getObjectByName("storageArea_block")) {
     scene.getObjectByName("storageArea_block").visible = false;
     scene.getObjectByName("yardArea_block").visible = false;
@@ -449,7 +69,7 @@ export async function initScene(renderer) {
     scene.getObjectByName("inspectionArea_block").visible = false;
     scene.getObjectByName("receivingArea_block").visible = false;
   }
-
+// colors for the area blocks.
   const areas = [
     {
       name: "storageArea_block",
@@ -479,10 +99,11 @@ export async function initScene(renderer) {
     },
   ];
 
+  // Button click function to highlight or hide all the area blocks.
   areasButton.addEventListener("click", () => {
     const isFocused = areasButton.classList.contains("focused");
     if (!isFocused) {
-      switchCamera(scene, "compoundArea", camera, controls);
+      window.switchCamera( "compoundArea");
     }
     areas.forEach((area) => {
       const obj = scene.getObjectByName(area.name);
@@ -499,36 +120,22 @@ export async function initScene(renderer) {
     areasButton.classList.toggle("focused");
   });
 
-  // areasButton.addEventListener("click", (e) => {
-
-  //   if(!(areasButton.classList.contains('focused'))){
-  //     highlightArea(scene,`storageArea_block`, {"r":50,"g":205,"b":50},0.4);
-  //     highlightArea(scene,`yardArea_block`, {"r":255,"g":159,"b":10},0.4);
-  //     highlightArea(scene,`stagingArea_block`, {"r":255,"g":214,"b":10},0.4);
-  //     highlightArea(scene,`activityArea_block`, {"r":0,"g":128,"b":128},0.4);
-  //     highlightArea(scene,`inspectionArea_block`, {"r":138,"g":46,"b":226},0.4);
-  //     highlightArea(scene,`receivingArea_block`, {"r":255,"g":105,"b":180},0.4);
-  // }
-  // else {
-  //   scene.getObjectByName("storageArea_block").visible=false;
-  //   scene.getObjectByName("yardArea_block").visible=false;
-  //   scene.getObjectByName("stagingArea_block").visible=false;
-  //   scene.getObjectByName("activityArea_block").visible=false;
-  //   scene.getObjectByName("inspectionArea_block").visible=false;
-  //   scene.getObjectByName("receivingArea_block").visible=false;
-
-  // }
-
-  // areasButton.classList.toggle('focused');
-
-  // });
-
   // Resize listener
   window.addEventListener("resize", () => {
     renderer.setSize(container.clientWidth, container.clientHeight);
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
   });
+ 
+  window.globalThis.threeDProps = {
+    scene: scene || null,        
+    THREE: THREE || null,        
+    clock: THREE?.Clock || null, 
+    mixer: mixer || null,        
+    camera: camera || null,      
+    controls: controls || null   
+};
 
-  return { scene, camera, mixer, controls };
+  
+
 }
