@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 
+// 
 export function createRenderer(){
     const renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
+        antialias: true, // Enables smoother edges (reduces jaggedness in rendering).
+        alpha: true, //Allows the background to be transparent.
         logarithmicDepthBuffer: true,
         preserveDrawingBuffer: true,
       });

@@ -7,6 +7,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 
@@ -132,7 +133,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                               child: IconButton(
                                                 onPressed: () {
                                                   // if(_warehouseInteractionBloc.state.dataFromJS.containsKey('bin')=="" ){
-                                                  getIt<JsInteropService>().navigateToBin(state.storageBinItems![index].locationKey.toString().replaceAll('-', '').substring(2));
+                                                  getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'navigateToBin("${state.storageBinItems![index].locationKey.toString().replaceAll('-', '').substring(2)}")');
                                                   _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage.setItem(key: "rack_cam", value: "storageArea");
                                                   // }
                                                 },

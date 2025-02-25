@@ -465,6 +465,7 @@ export function getShortestPath(
     });
   }
 
+  // breath-first-search is used to find the target node and its distance
   function bfs(startNode, targetNode) {
     const queue = [[startNode, [startNode.name]]]; // [currentNode, path] (path is an array of node names)
     const visited = new Set();
@@ -489,6 +490,7 @@ export function getShortestPath(
     return { distance: Infinity, path: [] }; // No path found
   }
 
+ // calculates the distance between two nodes and maintains distnace and path matrices  
   function computeDistanceMatrix(nodesToVisit, nodeMap) {
     const distMatrix = {};
     const pathMatrix = {}; // To store paths
@@ -564,6 +566,9 @@ export function getShortestPath(
 
   //   return { minDist, path: finalPath };
   // }
+
+  // Main function to fetch the shoretest path with all the values set(distMatrix, nodes, startnode and endnode)  
+  
   function findShortestPath(
     nodesToVisit,
     distMatrix,
@@ -634,6 +639,8 @@ export function getShortestPath(
     return { minDist, path: finalPath };
   }
 
+
+  // mapping the binnames to the nodes
   function setupCheckpoints(binNames) {
     let binPoints = [];
 
@@ -684,6 +691,7 @@ export function getShortestPath(
     return validBinPoints;
   }
 
+  // to load the circles that are to be highlighted
   function createBlinkingCircles(points, intermediatePoints) {
     checkpointCircles = [];
     const circleMaterial = new THREE.MeshBasicMaterial({
@@ -739,6 +747,7 @@ export function getShortestPath(
     }
   }
 
+    //animating the checkpoint circles 
   function animateCircles(delta) {
     const time = clock.getElapsedTime();
 
@@ -751,30 +760,31 @@ export function getShortestPath(
       circle.material.opacity = 0.5 + 0.5 * Math.sin(time * 2);
     });
   }
-  function drawArrowsForPath(path) {
-    // Remove existing arrows
-    arrows.forEach((arrow) => scene.remove(arrow));
-    arrows.length = 0;
+  // function drawArrowsForPath(path) {
+  //   // Remove existing arrows
+  //   arrows.forEach((arrow) => scene.remove(arrow));
+  //   arrows.length = 0;
 
-    // Iterate through the path to create arrows
-    for (let i = 0; i < path.length - 1; i++) {
-      const start = path[i].clone(); // Use cloned objects
-      const end = path[i + 1].clone();
+  //   // Iterate through the path to create arrows
+  //   for (let i = 0; i < path.length - 1; i++) {
+  //     const start = path[i].clone(); // Use cloned objects
+  //     const end = path[i + 1].clone();
 
-      // Calculate the direction vector
-      const dir = new THREE.Vector3().subVectors(end, start).normalize();
+  //     // Calculate the direction vector
+  //     const dir = new THREE.Vector3().subVectors(end, start).normalize();
 
-      // Length of the arrow
-      const length = start.distanceTo(end);
+  //     // Length of the arrow
+  //     const length = start.distanceTo(end);
 
-      // Create the arrow
-      const arrow = new THREE.ArrowHelper(dir, start, length, 0xff0000, 2.5, 1); // Red arrow
-      scene.add(arrow);
-      arrows.push(arrow);
-    }
-  }
+  //     // Create the arrow
+  //     const arrow = new THREE.ArrowHelper(dir, start, length, 0xff0000, 2.5, 1); // Red arrow
+  //     scene.add(arrow);
+  //     arrows.push(arrow);
+  //   }
+  // }
 
   let waiting = false;
+  // moving the object from one to another
   async function move(delta, waitPeriodAtPoints) {
     let SPEED = 5;
     if (!combinedPath || combinedPath.length <= 0 || waiting) {
@@ -815,10 +825,7 @@ export function getShortestPath(
     }
   }
 
-  function wait(ms) {
-    return;
-  }
-
+  // point is considered to be required if it is a bay point
   function isRequierdPoints(point, agentGroup) {
     for (const nodeName of nodesToVisit) {
       const p = nodeMap.get(nodeName).point;
@@ -835,6 +842,7 @@ export function getShortestPath(
   const clock = new THREE.Clock();
   const delta = clock.getDelta();
   const gameLoop = () => {
+    // Stopping the game loop when the button to which gameLoop is associated is not focused.
     if(!document.getElementById(pathButtonId).classList.contains("focused")){
       return;
     }

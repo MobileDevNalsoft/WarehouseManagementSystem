@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:wmssimulator/constants/app_constants.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/storage_aisle_list_model.dart';
 import 'package:wmssimulator/models/storage_aisle_model.dart';
@@ -59,8 +60,8 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
           state.storageBinItems!.addAll(storageBinResponse.data!);
         }
         emit(state.copyWith(storageBinItems: state.storageBinItems, storageBinStatus: StorageBinStatus.success));
-        getIt<JsInteropService>().highlightBins("");
-        getIt<JsInteropService>().highlightBins(state.storageBinItems!.map((e) => e.locationKey!.replaceAll('-', '').substring(2)).toSet().toString());
+       
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'highlightBins("${state.storageBinItems!.map((e) => e.locationKey!.replaceAll('-', '').substring(2)).toSet().toString()}")');
       });
     } catch (e) {
       print("error $e");
@@ -84,11 +85,10 @@ class StorageBloc extends Bloc<StorageEvent, StorageState> {
   void _onGetBinsStatus(GetBinsStatus event, Emitter<StorageState> emit) async {
     try {
       await _customApi.get(AppConstants.BINS_STATUS, queryParameters: {"facility_id": "243"}).then((value) {
-        print("bins status ${jsonDecode(value.response!.data)["data"]}");
         emit(state.copyWith(
           binsStatus: jsonDecode(value.response!.data)["data"],
         ));
-        getIt<JsInteropService>().binsStatus(jsonEncode(state.binsStatus!));
+        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: "binsStatus('${jsonEncode(state.binsStatus!).toString()}')");
       });
     } catch (e) {
       print("error $e");

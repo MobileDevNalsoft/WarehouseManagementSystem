@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,86 +46,49 @@ class ThreeJsWebView extends StatefulWidget {
 }
 
 class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStateMixin {
-  // services
-  final JsInteropService jsIteropService = JsInteropService();
-  final NavigatorService navigator = getIt<NavigatorService>();
-  final SharedPreferences sharedPreferences = getIt();
-
-  // bloc declarations
-  late WarehouseInteractionBloc _warehouseInteractionBloc;
-
-  // controllers
+  final jsIteropService = JsInteropService();
   late InAppWebViewController webViewController;
-  TextEditingController textEditingController = TextEditingController();
+  late WarehouseInteractionBloc _warehouseInteractionBloc;
+  final SharedPreferences sharedPreferences = getIt();
+  List objectNames = [];
+  FocusNode focusNode = FocusNode();
   SuggestionsController suggestionsController = SuggestionsController();
 
-  // focus nodes
-  FocusNode focusNode = FocusNode();
-
-  // variables
-  List<String> accessTypes = getIt<SharedPreferences>().getStringList('access_types') ?? [];
-
-  // side sheet animation utils
+  // for animation
   late AnimationController animationController;
+  late AnimationController sliderAnimationController;
   late Animation<double> widthAnimation;
   late Animation<double> positionAnimation;
-
-  // alerts slider animation utils
-  late AnimationController sliderAnimationController;
   late Animation<double> sliderPositionAnimation;
+  final StreamController<String?> _storageStreamController = StreamController<String?>();
+  // late Stream<String> localStorageStream;
+  late StreamSubscription<String> _subscription;
 
+  // Service to handle navigation within the app
+  final NavigatorService navigator = getIt<NavigatorService>();
+
+  List<String> accessTypes = getIt<SharedPreferences>().getStringList('access_types') ?? [];
+  late TextEditingController textEditingController;
   @override
   void initState() {
     super.initState();
-    initControllers();
-    initBloc();
-    reRouteModel();
-  }
-
-  void initControllers() {
-    // data sheet animation controller
+    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
+    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
+    _warehouseInteractionBloc.add(GetUsersData());
+    _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
+    _warehouseInteractionBloc.add(Intercepting(intercepting: false));
+    _warehouseInteractionBloc.add(GetTasks());
+    textEditingController = TextEditingController(text: _warehouseInteractionBloc.state.selectedTaskId ?? "");
     animationController = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 100), vsync: this);
-
-    // width animation for three js webview
-    widthAnimation =
-        Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-
-    // position animation for data sheet
-    positionAnimation =
-        Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-
-    // alerts slide animation controller
     sliderAnimationController =
         AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 100), vsync: this);
-
-    // position animation for alerts slide
+    widthAnimation =
+        Tween<double>(begin: 1, end: 0.82).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
+    positionAnimation =
+        Tween<double>(begin: -350, end: 0).animate(CurvedAnimation(parent: animationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
     sliderPositionAnimation = Tween<double>(begin: -450, end: 10)
         .animate(CurvedAnimation(parent: sliderAnimationController, curve: Curves.easeIn, reverseCurve: Curves.easeIn.flipped));
-  }
-
-  void initBloc() {
-    _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-
-    // always reset model loaded to false when we open app for first time or refresh page to get progress bar screen.
-    _warehouseInteractionBloc.add(ModelLoaded(isLoaded: false));
-
-    // preload all the areas overview data to send it to js code for model onhover dialog data.
-    _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
-
-    // gets user access details based on the logged username to restrict user from certain features in the application.
-    _warehouseInteractionBloc.add(GetUsersData());
-
-    // when we try to logout and relogin in same session we need to make intercepting false to get rid of invisible container user for closing hover dropdowns purpose
-    // so that user can interact with model without interruption.
-    _warehouseInteractionBloc.add(Intercepting(intercepting: false));
-
-    // load the tasks at start of the application to get rid of delay between task selection and shortest path visibility.
-    _warehouseInteractionBloc.add(GetTasks());
-
-    // always dataFromJS should start with object : null so that it closes any opened sheets while we relogin in same session.
-    _warehouseInteractionBloc.state.dataFromJS = {"object": "null"};
-
-    // register for warehouse bloc stream of state changes to execute block of code base on state data.
+    // Listen for changes in the state
     _warehouseInteractionBloc.stream.listen((state) {
       if (!state.dataFromJS.keys.contains('object') && state.dataFromJS.keys.first != 'percentComplete') {
         animationController.forward(); // Start animation when data sheet is visible
@@ -130,16 +96,19 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         animationController.reverse(); // Reverse when not visible
       }
     });
-    animationController.forward();
-  }
-
-  void reRouteModel() {
-    // rerouting model based on user access types
+    _storageStreamController.onListen = () {
+      print("messageFromJS");
+    };
+    _warehouseInteractionBloc.add(GetAreasOverviewData(facilityID: 243));
     if (accessTypes.contains('Warehouse') && accessTypes.contains('Storage Area')) {
       getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"storageArea"}');
+      context.read<StorageBloc>().add(GetBinsStatus());
     } else {
       getIt<JsInteropService>().changeFacility('{"companyID":1, "facilityID":1, "model":"warehouse"}');
     }
+    // _warehouseInteractionBloc.add(GetCompanyData());
+    // just for debugging
+    // animationController.forward();
   }
 
   @override
@@ -239,8 +208,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                     ),
                                                     onPressed: () {}),
                                                 onClose: () {
-                                                  controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
-                                                  getIt<JsInteropService>().getShoretestPathForTask([]);
+                                                  // controller.webStorage.localStorage.removeItem(key: "getShoretestPathForTask");
+                                                  // getIt<JsInteropService>().getShoretestPathForTask([]);
                                                 },
                                                 content: [
                                                   const Text("Please enter task Id"),
@@ -290,9 +259,10 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                               "tasks ${state.tasksForShoretestPath}   ${state.tasksForShoretestPath![textEditingController.text.trim()]}");
                                                           if (textEditingController.text.trim().isNotEmpty &&
                                                               state.tasksForShoretestPath!.keys.contains(textEditingController.text.trim())) {
-                                                            getIt<JsInteropService>().getShoretestPathForTask([]);
-                                                            getIt<JsInteropService>()
-                                                                .getShoretestPathForTask(state.tasksForShoretestPath![textEditingController.text.trim()]);
+                                                            getIt<WebService>().inAppWebViewController!.evaluateJavascript(
+                                                                source:
+                                                                    "getShoretestPathForTask('${state.tasksForShoretestPath![textEditingController.text.trim()].toString().replaceFirst('[', '').replaceAll(']', '').replaceAll(' ', '')}')");
+                                                            // getIt<JsInteropService>().getShoretestPathForTask();
                                                             // _warehouseInteractionBloc.add(GetBinsForTask(taskNbr: textEditingController.text.trim()));
                                                           }
                                                           Navigator.pop(context);
@@ -319,6 +289,19 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                       ),
                                       onWebViewCreated: (controller) async {
                                         _warehouseInteractionBloc.state.inAppWebViewController = controller;
+                                        getIt<WebService>().setController(controller);
+                                        Timer.periodic(
+                                          const Duration(milliseconds: 500),
+                                          (timer) async {
+                                            // ignore: prefer_conditional_assignment
+                                            if (objectNames.isEmpty) {
+                                              objectNames = await _warehouseInteractionBloc.state.inAppWebViewController!.webStorage.localStorage
+                                                      .getItem(key: "modelObjectNames") ??
+                                                  [];
+                                            }
+                                            timer.cancel();
+                                          },
+                                        );
                                       },
                                       onLoadStop: (controller, url) async {},
                                     )

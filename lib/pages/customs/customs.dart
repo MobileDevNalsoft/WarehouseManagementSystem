@@ -20,6 +20,7 @@ import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/bloc/work_queue/work_queue_bloc.dart';
 import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/task_model.dart';
 import 'package:wmssimulator/pages/customs/hover_dropdown.dart';
@@ -32,8 +33,10 @@ class Customs {
       children: [
         Container(
           alignment: Alignment.center,
-          decoration:
-              BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          decoration: BoxDecoration(
+              color: const Color.fromRGBO(12, 46, 87, 1),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.02),
           margin: EdgeInsets.only(top: size.height * 0.02, bottom: size.height * 0.004, right: size.height * 0.01),
           height: size.height * 0.06,
@@ -48,16 +51,14 @@ class Customs {
               const Spacer(),
               InkWell(
                   onTap: () async {
-                    getIt<JsInteropService>().switchToMainCam("");
-                    getIt<JsInteropService>().switchToMainCam(
-                        await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea"
-                            ? "storageArea"
-                            : "compoundArea");
-                    getIt<JsInteropService>().resetBoxColors();
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(
+                        source:
+                            'switchToMainCam("${await context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.getItem(key: "rack_cam") == "storageArea" ? "storageArea" : "compoundArea"}")');
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'resetBinColors()');
 
                     context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: const {"object": "null"}, clearSearchText: true));
 
-                    getIt<JsInteropService>().resetTrucks();
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'resetTrucksAnimation()');
                   },
                   child: const Icon(Icons.cancel_rounded, color: Colors.white))
             ],
@@ -67,8 +68,10 @@ class Customs {
           height: size.height * 0.86,
           width: size.width * 0.22,
           alignment: Alignment.center,
-          decoration:
-              BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          decoration: BoxDecoration(
+              color: const Color.fromRGBO(12, 46, 87, 1),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.all(size.height * 0.012),
           child: LayoutBuilder(builder: (context, layout) {
             return Column(
@@ -85,7 +88,8 @@ class Customs {
     return Container(
       margin: EdgeInsets.all(margin ?? 0),
       height: height,
-      decoration: decoration ?? BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+      decoration: decoration ??
+          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
       padding: EdgeInsets.all(height * 0.035),
       alignment: Alignment.center,
       child: LayoutBuilder(builder: (context, lsize) {
@@ -179,7 +183,8 @@ class Customs {
     );
   }
 
-  static Widget WorkflowLayout({required Size size, required int buttonIndex, required Widget child, required void Function()? onApproved, required void Function()? onRejected}) {
+  static Widget WorkflowLayout(
+      {required Size size, required int buttonIndex, required Widget child, required void Function()? onApproved, required void Function()? onRejected}) {
     List<String> buttons = ['Pending', 'Completed'];
 
     return Column(
@@ -342,7 +347,8 @@ class Customs {
     });
   }
 
-  static Widget WMSPieChart({required String title, List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
+  static Widget WMSPieChart(
+      {required String title, List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
     return SfCircularChart(
         title: ChartTitle(
             text: title,
@@ -383,7 +389,8 @@ class Customs {
       Color axisLineColor = const Color.fromARGB(255, 86, 185, 152),
       double markerValue = 0}) {
     return Gauges.SfRadialGauge(
-      title: Gauges.GaugeTitle(text: title, alignment: Gauges.GaugeAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
+      title:
+          Gauges.GaugeTitle(text: title, alignment: Gauges.GaugeAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
       axes: [
         Gauges.RadialAxis(
           maximum: 100,
@@ -482,7 +489,8 @@ class Customs {
                 xValueMapper: (PieData data, _) => data.xData,
                 yValueMapper: (PieData data, _) => data.yData,
                 onPointTap: props.onPointTap,
-                dataLabelSettings: DataLabelSettings(isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
+                dataLabelSettings: DataLabelSettings(
+                    isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
                 radius: props.radius ?? '${lsize.maxWidth * 0.18}%', // Adjust the radius as needed
                 innerRadius: props.innerRadius ?? '${lsize.maxWidth * 0.15}%', // Optional: adjust for a thinner ring
                 pointColorMapper: props.pointColorMapper,
@@ -706,7 +714,10 @@ class Customs {
                       builder: (context, controller, focusNode) {
                         controller.clear();
                         return TextField(
-                            controller: controller, focusNode: focusNode, autofocus: true, decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
+                            controller: controller,
+                            focusNode: focusNode,
+                            autofocus: true,
+                            decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
                       },
                       itemBuilder: (context, value) {
                         return ListTile(
@@ -736,7 +747,8 @@ class Customs {
                     TextButton(
                         onPressed: () {
                           context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"lpn": textEditingController.text}, clearSearchText: true));
-                          context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.evaluateJavascript(source: "showLPNLifecycle(true);");
+                          context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.removeItem(key: 'lpnLifeCycle');
+                          getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: "lpnLifeCycle('true')");
                           Navigator.pop(context);
                         },
                         child: PointerInterceptor(child: const Text("Done"))),
@@ -834,7 +846,9 @@ class Customs {
                                             state.containerNbr = value;
                                           },
                                           decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.only(left: size.width * 0.005), focusedBorder: OutlineInputBorder(), enabledBorder: OutlineInputBorder())),
+                                              contentPadding: EdgeInsets.only(left: size.width * 0.005),
+                                              focusedBorder: OutlineInputBorder(),
+                                              enabledBorder: OutlineInputBorder())),
                                     );
                                   },
                                   itemBuilder: (context, value) {
@@ -896,7 +910,9 @@ class Customs {
                                           focusNode: focusNode,
                                           onChanged: (value) => state.toLocation = value,
                                           decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.only(left: size.width * 0.005), focusedBorder: OutlineInputBorder(), enabledBorder: OutlineInputBorder())),
+                                              contentPadding: EdgeInsets.only(left: size.width * 0.005),
+                                              focusedBorder: OutlineInputBorder(),
+                                              enabledBorder: OutlineInputBorder())),
                                     );
                                   },
                                   itemBuilder: (context, value) {
@@ -1240,20 +1256,19 @@ class Customs {
                                       parent: parent,
                                       iconBgColor: Color.fromARGB(255, 236, 178, 102),
                                       contentValue: state.workQueueData!.loadingQueue.toString(),
-                                        imagePath: "assets/images/loading_queue.png",
+                                      imagePath: "assets/images/loading_queue.png",
                                       heading: "Loading Queue"),
                                   PendingDialogChildContianer(
                                       parent: parent,
                                       iconBgColor: Color.fromARGB(255, 10, 162, 222),
                                       contentValue: state.workQueueData!.pendingCycleCounts.toString(),
-                                        imagePath: "assets/images/cycle_count.png",
+                                      imagePath: "assets/images/cycle_count.png",
                                       heading: "Pending Cycle Counts"),
-                                      
                                   PendingDialogChildContianer(
                                       parent: parent,
                                       iconBgColor: Color.fromARGB(255, 120, 154, 95),
                                       contentValue: state.workQueueData!.pendingPutaways.toString(),
-                                        imagePath: "assets/images/pending_putaway.png",
+                                      imagePath: "assets/images/pending_putaway.png",
                                       heading: "Pending Putaways"),
                                   PendingDialogChildContianer(
                                       parent: parent,
@@ -1265,7 +1280,7 @@ class Customs {
                                       parent: parent,
                                       iconBgColor: Color.fromARGB(255, 10, 162, 222),
                                       contentValue: state.workQueueData!.openWorkOrders.toString(),
-                                        imagePath: "assets/images/open_work_orders.png",
+                                      imagePath: "assets/images/open_work_orders.png",
                                       heading: "Open Work Orders"),
                                 ]),
                           ),
@@ -1276,27 +1291,29 @@ class Customs {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: ElevatedButton(
-                              
                                 onPressed: () {
-                                            UrlNavigator().launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
-                                              Navigator.pop(context);
-                                },                                style: ButtonStyle(
-                                  minimumSize: WidgetStatePropertyAll(Size(parent.maxWidth*0.064, parent.maxHeight * 0.088)), // Set the desired size
+                                  UrlNavigator().launchOrFocusUrl('https://tg1.wms.ocs.oraclecloud.com/emg_test/index/');
+                                  Navigator.pop(context);
+                                },
+                                style: ButtonStyle(
+                                    minimumSize: WidgetStatePropertyAll(Size(parent.maxWidth * 0.064, parent.maxHeight * 0.088)), // Set the desired size
 
-                                  foregroundColor:  WidgetStateColor.resolveWith((state){
-                                    if (state.contains(WidgetState.hovered)) {
-                                    return Colors.black;
-                                  } 
-                                  return Colors.white;
-                                }),
-                                  backgroundColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
-                                  if (states.contains(WidgetState.hovered)) {
-                                    return Colors.white;
-                                  } 
-                                  return Color.fromRGBO(68, 98, 136, 1);
-                                })),
-                                
-                                child: Text("Take Action",style: TextStyle(),)),
+                                    foregroundColor: WidgetStateColor.resolveWith((state) {
+                                      if (state.contains(WidgetState.hovered)) {
+                                        return Colors.black;
+                                      }
+                                      return Colors.white;
+                                    }),
+                                    backgroundColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
+                                      if (states.contains(WidgetState.hovered)) {
+                                        return Colors.white;
+                                      }
+                                      return Color.fromRGBO(68, 98, 136, 1);
+                                    })),
+                                child: Text(
+                                  "Take Action",
+                                  style: TextStyle(),
+                                )),
                           ),
                         )
                       ],
@@ -1309,7 +1326,8 @@ class Customs {
     );
   }
 
-  static Widget PendingDialogChildContianer({required BoxConstraints parent, String? imagePath, Color? iconBgColor, String? contentValue, required String heading}) {
+  static Widget PendingDialogChildContianer(
+      {required BoxConstraints parent, String? imagePath, Color? iconBgColor, String? contentValue, required String heading}) {
     return Container(
       alignment: Alignment.center,
       height: parent.maxHeight * 0.21,
@@ -1353,7 +1371,8 @@ class Customs {
                   children: [
                     Text(
                       heading,
-                      style: TextStyle(decoration: TextDecoration.none, fontSize: constraints.maxWidth * 0.054, color: Colors.black, fontWeight: FontWeight.w500),
+                      style:
+                          TextStyle(decoration: TextDecoration.none, fontSize: constraints.maxWidth * 0.054, color: Colors.black, fontWeight: FontWeight.w500),
                     ),
                     Text(
                       contentValue ?? "NA",
@@ -1508,10 +1527,9 @@ class DrillDownDataSource extends DataGridSource {
       );
     }).toList());
   }
-  
+
   @override
   List<DataGridRow> get effectiveRows => super.effectiveRows;
-
 }
 
 class DataSource {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:gap/gap.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/container_model.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
@@ -66,14 +68,13 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
               const Spacer(),
               InkWell(
                   onTap: () async {
-                    getIt<JsInteropService>().switchToMainCam("");
-                    getIt<JsInteropService>().switchToMainCam("compoundArea");
-                    getIt<JsInteropService>().resetBoxColors();
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'switchToMainCam("compoundArea")');
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'resetBinColors()');
 
                     context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: const {"object": "null"}, clearSearchText: true));
 
-                    getIt<JsInteropService>().resetTrucks();
-                    context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.evaluateJavascript(source: "showLPNLifecycle(false);");
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'resetTrucksAnimation()');
+                    getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: "lpnLifeCycle('false')");
                   },
                   child: const Icon(Icons.cancel_rounded, color: Colors.white))
             ],

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-
+// lights fot the the 3d model.
 export function setupLights(scene) {
     // Add ambient light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);

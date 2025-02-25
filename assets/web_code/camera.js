@@ -1,9 +1,11 @@
 import * as THREE from "three";
-import { globalState } from "globalState";
 import { highlightArea, resetAreas } from "highlight";
 
+export function initCamera(){
+
+
 const data = JSON.parse(window.localStorage.getItem("facilityData"));
-export function createCamera() {
+ window.createCamera = function(){
   const container = document.getElementById("container");
 
   const fov = 30; // Field of view
@@ -27,7 +29,10 @@ export function createCamera() {
   return camera;
 }
 
-window.switchCamera = function(scene, name, camera, controls) {
+
+// switching camera to particular area 
+window.switchCamera = function(name) {
+  const {scene,camera,controls} = window.globalThis.threeDProps;
   if (name == "storageArea") {
     window.localStorage.setItem("rack_cam", "null");
   }
@@ -36,18 +41,13 @@ window.switchCamera = function(scene, name, camera, controls) {
   if (document.getElementById("areas").classList.contains("focused")) {
     document.getElementById("areas").classList.toggle("focused");
   }
-
+  //highlighting the area when switching the camera to areas. 
   switch (name.toString().split("_")[0]) {
     case "storageArea":
       highlightArea(scene, "storageArea_block", { r: 50, g: 205, b: 50 }, 0.4);
       break;
     case "inspectionArea":
-      highlightArea(
-        scene,
-        "inspectionArea_block",
-        { r: 138, g: 46, b: 226 },
-        0.4
-      );
+      highlightArea(scene,"inspectionArea_block",{ r: 138, g: 46, b: 226 },0.4);
       break;
     case "stagingArea":
       highlightArea(scene, "stagingArea_block", { r: 255, g: 214, b: 10 }, 0.4);
@@ -56,12 +56,7 @@ window.switchCamera = function(scene, name, camera, controls) {
       highlightArea(scene, "activityArea_block", { r: 0, g: 128, b: 128 }, 0.4);
       break;
     case "receivingArea":
-      highlightArea(
-        scene,
-        "receivingArea_block",
-        { r: 166, g: 20, b: 93 },
-        0.4
-      );
+      highlightArea( scene, "receivingArea_block", { r: 166, g: 20, b: 93 },0.4);
       break;
     case "yardArea":
       highlightArea(scene, "yardArea_block", { r: 255, g: 99, b: 99 }, 0.4);
@@ -103,16 +98,17 @@ window.switchCamera = function(scene, name, camera, controls) {
     controls.enabled = true; // Re-enable controls after animation
     controls.enableDamping = true; // Re-enable damping after animation
     if (name.includes("compound")) {
-      globalThis.areaFocused = false;
+      areaFocused=false;
     }
   });
 }
 
-export function moveToBin(object, camera, controls) {
-  var aabb = new THREE.Box3().setFromObject(object);
-  var center = aabb.getCenter(new THREE.Vector3());
-  var size = aabb.getSize(new THREE.Vector3());
-  const regex = /^[0-9][R]B\d{5}$/;
+// moving camera to bin in the rack by fetching its center and size 
+window.moveToBin = function(object, camera, controls) {
+  var threeBox = new THREE.Box3().setFromObject(object);
+  var center = threeBox.getCenter(new THREE.Vector3());
+  var size = threeBox.getSize(new THREE.Vector3());
+  const regex = /^[0-9][R]B\d{5}$/; // validations to identify a bin in the right rack (R) .
   if (document.getElementById("path").classList.contains("focused")) {
     document.querySelector("#path").click();
   }
@@ -127,8 +123,8 @@ export function moveToBin(object, camera, controls) {
     .to(camera.position, {
       duration: 1,
       x: regex.test(object.name.toString())
-        ? center.x + size.x * 2
-        : center.x - size.x * 2,
+        ? center.x + size.x * 2 //for bins in right rack
+        : center.x - size.x * 2, // for bins in left rack
       y: center.y,
       z: center.z,
       ease: "power1.out",
@@ -136,7 +132,7 @@ export function moveToBin(object, camera, controls) {
         camera.lookAt(center);
       },
     })
-    .to(
+    .to( // animating rotation 
       controls.target,
       {
         duration: 1,
@@ -157,41 +153,8 @@ export function moveToBin(object, camera, controls) {
     ); // Start rotation animation at the same time as position animation
 }
 
-export function moveCam(controls, camera, target) {
-  controls.enabled = false;
-  const offset = {
-    x: controls.target.x - camera.position.x - 10,
-    y: controls.target.y - camera.position.y,
-    z: controls.target.z - camera.position.z - 10,
-  };
-
-  const new_pos = { ...target };
-  new_pos.y = camera.position.y;
-
-  gsap.to(camera.position, {
-    duration: 3,
-    x: new_pos.x,
-    y: new_pos.y,
-    z: new_pos.z,
-
-    onComplete: () => {
-      offset.x = controls.target.x - camera.position.x;
-      offset.y = controls.target.y - camera.position.y;
-      offset.z = controls.target.z - camera.position.z;
-      controls.enabled = true;
-    },
-  });
-  gsap.to(controls.target, {
-    duration: 3,
-    x: offset.x + new_pos.x,
-    z: offset.z + new_pos.z,
-    onUpdate: () => {
-      camera.lookAt(target);
-    },
-  });
-}
-
-export function getPositionAndTarget(scene, name) {
+//fetching the position and target for the object
+window.getPositionAndTarget = function(scene, name) {
   let position = new THREE.Vector3();
   let target = new THREE.Vector3(0, 0, 0);
   let object = new THREE.Object3D();
@@ -201,7 +164,7 @@ export function getPositionAndTarget(scene, name) {
   if (!["compoundArea", "storageArea", "warehouse"].includes(view)) {
     document.getElementById("wms-bot").style.display = "none";
   }
-
+  
   switch (data.model) {
     case "warehouse":
       switch (view) {
@@ -354,4 +317,5 @@ export function getPositionAndTarget(scene, name) {
   }
 
   return { position, target };
+}
 }
