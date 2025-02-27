@@ -1,5 +1,5 @@
 
-import { playAnimations, stopAnimationsAndReset } from "animations";
+import { playAnimations } from "animations";
 import * as THREE from 'three';
 import { highlightArea, resetAreas } from "highlight";
 import { initNodes, getShortestPath } from "navPath";
@@ -311,7 +311,7 @@ window.binsStatus = function(data){
 
 window.switchToMainCam = function(data){
 try{
- 
+ areaFocused = true;
   document.getElementById("wms-bot").style.display = "none";
     const { position, target } = window.getPositionAndTarget(
       scene,
@@ -421,7 +421,6 @@ try{
     timeline.call(() => {
       controls.enabled = true; // Re-enable controls after animation
       controls.enableDamping = true; // Re-enable damping after animation
-      areaFocused=false;
     });
   }
   catch(e){
@@ -784,10 +783,10 @@ window.lpnLifeCycle = function(data){
   if(data == 'true'){
     document.getElementById("wms-bot").style.display = "none";
     switchCamera("lpnLifeCycle");
-    // animateLPNLifeCycle(scene);
+    animateLPNLifeCycle(scene);
   }else{
     document.getElementById("wms-bot").style.display = "block";
-    // removeLPNLifeCycle(scene);
+    removeLPNLifeCycle(scene);
   }
 }
 

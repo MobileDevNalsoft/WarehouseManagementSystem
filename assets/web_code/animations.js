@@ -16,7 +16,7 @@ export function animationMixer(gltf) {
   return mixer;
 }
 
-export function stopAnimationsAndReset() {
+window.stopAnimationsAndReset = function() {
   actions.forEach((action) => {
     action.stop(); // Stop the animation completely
     action.reset(); // Reset it to the starting position

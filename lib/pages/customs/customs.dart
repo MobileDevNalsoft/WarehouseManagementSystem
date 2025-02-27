@@ -23,6 +23,7 @@ import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/task_model.dart';
+import 'package:wmssimulator/models/trip_model.dart';
 import 'package:wmssimulator/pages/customs/hover_dropdown.dart';
 import 'package:wmssimulator/pages/customs/users_builder.dart';
 
@@ -707,48 +708,44 @@ class Customs {
                       ),
                     ),
                     const Text("Please select LPN"),
-                    TypeAheadField(
-                      focusNode: focusNode,
-                      controller: textEditingController,
-                      suggestionsController: suggestionsController,
-                      builder: (context, controller, focusNode) {
-                        controller.clear();
-                        return TextField(
-                            controller: controller,
-                            focusNode: focusNode,
-                            autofocus: true,
-                            decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
-                      },
-                      itemBuilder: (context, value) {
-                        return ListTile(
-                          title: Text(
-                            value.toString(),
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        );
-                      },
-                      suggestionsCallback: (pattern) {
-                        return [
-                          "IBLPN12345678901",
-                          "IBLPN12345678902",
-                          "IBLPN12345678903",
-                          "IBLPN12345678904",
-                          "IBLPN12345678905",
-                          "IBLPN12345678906",
-                          "IBLPN12345678907",
-                        ].where((element) => element.contains(pattern)).toList();
-                      },
-                      onSelected: (value) {
-                        textEditingController.text = value;
-                        focusNode.unfocus();
-                      },
-                    ),
+                    BlocBuilder<WarehouseInteractionBloc, WarehouseInteractionState>(builder: (context, state) {
+                      print(state.getLPNSStatus);
+                      return state.getLPNSStatus != LPNSStatus.success
+                          ? CircularProgressIndicator()
+                          : TypeAheadField(
+                              focusNode: focusNode,
+                              controller: textEditingController,
+                              suggestionsController: suggestionsController,
+                              builder: (context, controller, focusNode) {
+                                controller.clear();
+                                return TextField(
+                                    controller: controller,
+                                    focusNode: focusNode,
+                                    autofocus: true,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.only(left: size.width * 0.005)));
+                              },
+                              itemBuilder: (context, value) {
+                                return ListTile(
+                                  title: Text(
+                                    value.toString(),
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                );
+                              },
+                              suggestionsCallback: (pattern) {
+                                return state.lpns!.where((element) => element.contains(pattern)).toList();
+                              },
+                              onSelected: (value) {
+                                textEditingController.text = value;
+                                focusNode.unfocus();
+                              },
+                            );
+                    }),
                     Gap(size.height * 0.01),
                     TextButton(
                         onPressed: () {
                           context.read<WarehouseInteractionBloc>().add(SelectedObject(dataFromJS: {"lpn": textEditingController.text}, clearSearchText: true));
-                          context.read<WarehouseInteractionBloc>().state.inAppWebViewController!.webStorage.localStorage.removeItem(key: 'lpnLifeCycle');
-                          getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: "lpnLifeCycle('true')");
+                          context.read<WarehouseInteractionBloc>().add(GetLPNLifeCycle(facilityID: 243, companyID: 1, lpnNbr: textEditingController.text));
                           Navigator.pop(context);
                         },
                         child: PointerInterceptor(child: const Text("Done"))),
@@ -1527,9 +1524,6 @@ class DrillDownDataSource extends DataGridSource {
       );
     }).toList());
   }
-
-  @override
-  List<DataGridRow> get effectiveRows => super.effectiveRows;
 }
 
 class DataSource {
@@ -1589,10 +1583,6 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
 
   @override
   List<DataGridRow> get rows => _data;
-
-  @override
-  // TODO: implement effectiveRows
-  List<DataGridRow> get effectiveRows => super.effectiveRows;
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
@@ -1668,8 +1658,44 @@ class WorkflowCycleCountDataSource extends DataGridSource {
             });
     }).toList());
   }
-  // @override
-  // handleLoadMoreRows() async {
-  //   if
-  // }
+}
+
+class TripsDataSource extends DataGridSource {
+  TripsDataSource({required List<Trip> data}) {
+    _data = List.generate(
+      data.length,
+      (index) => DataGridRow(cells: [
+        DataGridCell(columnName: 'Shipment Nbr', value: index < data.length ? data[index].shipmentNbr : ''),
+        DataGridCell(columnName: 'Status', value: index < data.length ? data[index].status : ''),
+        DataGridCell(columnName: 'Vehicle Nbr', value: index < data.length ? data[index].vehicleNbr : ''),
+        DataGridCell(columnName: 'Driver', value: index < data.length ? data[index].driver : ''),
+        DataGridCell(columnName: 'Start Location', value: index < data.length ? data[index].startLoc!.location : ''),
+        DataGridCell(columnName: 'Start Latitude', value: index < data.length ? data[index].startLoc!.latitude : ''),
+        DataGridCell(columnName: 'Start Longitude', value: index < data.length ? data[index].startLoc!.longitude : ''),
+        DataGridCell(columnName: 'End Location', value: index < data.length ? data[index].endLoc!.location : ''),
+        DataGridCell(columnName: 'End Latitude', value: index < data.length ? data[index].endLoc!.latitude : ''),
+        DataGridCell(columnName: 'End Longitude', value: index < data.length ? data[index].endLoc!.longitude : ''),
+        DataGridCell(columnName: 'Carrier', value: index < data.length ? data[index].carrier : ''),
+        DataGridCell(columnName: 'Trailer Type', value: index < data.length ? data[index].trailerType : ''),
+        DataGridCell(columnName: 'Estimated Start Date', value: index < data.length ? data[index].estStartDate : ''),
+        DataGridCell(columnName: 'z', value: index < data.length ? data[index].estEndDate : '')
+      ]),
+    );
+  }
+
+  List<DataGridRow> _data = [];
+
+  @override
+  List<DataGridRow> get rows => _data;
+
+  @override
+  DataGridRowAdapter? buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((dataGridCell) {
+      return Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(dataGridCell.value.toString()),
+      );
+    }).toList());
+  }
 }

@@ -8,8 +8,6 @@ import { addInteractions } from "interactions";
 import { initNodes, getShortestPath } from "navPath";
 import { highlightArea } from "highlight";
 
-import { playAnimations, stopAnimationsAndReset } from "animations";
-
 export async function initScene(renderer) {
   const container = document.getElementById("container");
   const scene = new THREE.Scene();

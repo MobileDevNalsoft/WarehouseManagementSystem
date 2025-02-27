@@ -3,10 +3,10 @@ import * as THREE from "three";
 import { playAnimations } from "animations";
 import { highlightArea, resetAreas } from "highlight";
 
-
 const data = JSON.parse(window.localStorage.getItem("facilityData"));
 
-export function highlightBinsFromSearch(bins) { // highlighting the bins fetched from search
+export function highlightBinsFromSearch(bins) {
+  // highlighting the bins fetched from search
   let listOfBins = bins.toString().split(",");
   for (let i = 0; i < listOfBins; i++) {
     changeColor({ name: listOfBins[i] });
@@ -32,7 +32,7 @@ export function addInteractions(scene, model, camera, controls) {
   globalThis.areaFocused = false;
 
   const tooltip = document.getElementById("tooltip");
- 
+
   function onMouseMove(e) {
     if (e.target.classList.contains("ignoreRaycast")) {
       return;
@@ -203,9 +203,6 @@ export function addInteractions(scene, model, camera, controls) {
               tooltip.classList.add("hide-speech-bubble");
           }
         } else if (areaFocused == true) {
-          const trucksData = JSON.parse(
-            window.localStorage.getItem("trucksData")
-          );
           const name = targetObject.parent.name;
           if (name.includes("truck_Y")) {
             for (let i = 1; i <= trucksData.length; i++) {
@@ -308,10 +305,10 @@ export function addInteractions(scene, model, camera, controls) {
     tooltip.style.display = "none";
   }
 
-
-  // interactions on mouse left click 
+  // interactions on mouse left click
   function onMouseUp(e) {
-    if ((lastPos.distanceTo(mouse) <= 0.05) & (e.button === 0)) { // for clicking 
+    if ((lastPos.distanceTo(mouse) <= 0.05) & (e.button === 0)) {
+      // for clicking
       if (e.target.classList.contains("ignoreRaycast")) return;
 
       raycaster.setFromCamera(mouse, camera);
@@ -319,12 +316,19 @@ export function addInteractions(scene, model, camera, controls) {
       const intersects = raycaster.intersectObjects(scene.children, true);
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
+        console.log(
+          intersects[0].point.x +
+            " " +
+            intersects[0].point.y +
+            " " +
+            intersects[0].point.z
+        );
         const name = targetObject.name.toString().split("_")[0];
         if (
           targetObject.name.toString().includes("nav") ||
           targetObject.name.toString().includes("Area")
         ) {
-          areaFocused = true; 
+          areaFocused = true;
           removeLPNLifeCycle(scene);
           tooltip.style.display = "none";
           if (name.includes("rack")) {
@@ -361,13 +365,14 @@ export function addInteractions(scene, model, camera, controls) {
           prevNav = name;
         }
       }
-    } else {// for panning 
+    } else {
+      // for panning
       document.getElementById("wms-bot").style.display = "block";
       if (areaFocused == true) {
         resetAreas(scene);
         console.log('{"object":"null"}');
       }
-      areaFocused=false;
+      areaFocused = false;
       if (scene.getObjectByName("truck_Y10")) {
         resetTrucksAnimation(scene);
         playAnimations();
@@ -391,7 +396,6 @@ export function addInteractions(scene, model, camera, controls) {
       }
       try {
         if (localStorage.getItem("prevBin")) {
-          
           let bin = localStorage.getItem("prevBin").trim();
 
           if (redBins.includes(bin)) {
@@ -417,9 +421,7 @@ export function addInteractions(scene, model, camera, controls) {
     tooltip.style.display = "none";
   });
 
-
-
-  // changing the color of the bin 
+  // changing the color of the bin
   function changeColor(object) {
     let objectName = object.name.toString();
     if (prevBin != null) {
@@ -474,7 +476,6 @@ export function addInteractions(scene, model, camera, controls) {
     prevBin = object;
   }
 
-  
   function toCamelCase(str) {
     var words = str.split("_")[0].split("A");
     return (
@@ -484,7 +485,45 @@ export function addInteractions(scene, model, camera, controls) {
       words[1]
     );
   }
+
+  window.dockTrucksData = function (type, trucksDataFromFlutter) {
+    const dockIntrucks = ["truck_R1", "truck_R2", "truck_R3"];
+    const dockOuttrucks = ["truck_D_L1", "truck_A2", "truck_D_L3"];
+
+    globalThis.trucksData = JSON.parse(trucksDataFromFlutter);
+
+    stopAnimationsAndReset();
+    if (type === "IN") {
+      for (let i = 0; i < dockIntrucks.length; i++) {
+        if (i < trucksData.length) {
+          scene.getObjectByName(dockIntrucks[i]).visible = true;
+        } else {
+          scene.getObjectByName(dockIntrucks[i]).visible = false;
+        }
+      }
+    } else {
+      for (let i = 0; i < dockOuttrucks.length; i++) {
+        if (i < trucksData.length) {
+          scene.getObjectByName(dockOuttrucks[i]).visible = true;
+        } else {
+          scene.getObjectByName(dockOuttrucks[i]).visible = false;
+        }
+      }
+    }
+  };
+
+  window.yardTrucksData = function (trucksDataFromFlutter) {
+    globalThis.trucksData = JSON.parse(trucksDataFromFlutter);
+
+    stopAnimationsAndReset();
+    for (let i = 1; i <= trucksData.length; i++) {
+      scene.getObjectByName("truck_Y" + i).visible = true;
+    }
+    for (let i = trucksData.length + 1; i <= 20; i++) {
+      scene.getObjectByName("truck_Y" + i).visible = false;
+    }
+    scene.getObjectByName("truck_A1").visible = false;
+    scene.getObjectByName("truck_A2").visible = false;
+    scene.getObjectByName("truck_A3").visible = false;
+  };
 }
-
-
-

@@ -4,6 +4,7 @@ import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/pages/container_management/layout.dart';
 import 'package:wmssimulator/pages/container_management/statistics.dart';
 import 'package:wmssimulator/pages/customs/hover_dialog.dart';
+import 'package:wmssimulator/pages/trips/trips.dart';
 import 'package:wmssimulator/pages/workflow/cyclecount.dart';
 import 'package:wmssimulator/pages/workflow/qualitycheck.dart';
 import 'package:wmssimulator/pages/dashboard_utils/pages/dashboards/activity_area_dashboard.dart';
@@ -20,16 +21,18 @@ import '../pages/login.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/': 
+      case '/':
         return PageRouteBuilder(
           barrierDismissible: false,
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),
         );
       case '/login':
         return PageRouteBuilder(
           settings: settings,
-          pageBuilder: (context, animation, secondaryAnimation) =>getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),
         );
       case '/warehouse':
         return PageRouteBuilder(
@@ -94,6 +97,25 @@ class RouteGenerator {
             );
           },
         );
+      case '/tripstrack':
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => EntryPoint(
+            title: 'Trips',
+            titles: const ['Trips Track'],
+            tabs: const [TripsTrack()],
+          ),
+          transitionDuration: const Duration(seconds: 1),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
+            final fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
       case '/containerManagement':
         return PageRouteBuilder(
           settings: settings,
@@ -117,8 +139,9 @@ class RouteGenerator {
         );
       default:
         return MaterialPageRoute(
-            settings: settings,
-            builder: (_) => getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),);
+          settings: settings,
+          builder: (_) => getIt<SharedPreferences>().containsKey('username') ? const ThreeJsWebView() : const LoginPage(),
+        );
     }
   }
 }

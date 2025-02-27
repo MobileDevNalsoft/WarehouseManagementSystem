@@ -36,7 +36,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
     bottomHeight = widget.size.height * 0.08;
     maxHeight = widget.size.height * 0.08 +
         widget.size.height * (Set.from(localAccessTypes).intersection(Set.from(widget.accessTypes)).length * 0.061) +
-        widget.size.height * 0.061 * 5;
+        widget.size.height * 0.061 * 6;
   }
 
   @override
@@ -115,7 +115,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 urlNavigator.launchOrFocusUrl('https://cmsweb-4c66c.web.app');
                               },
                               child: const ForHover(text: "Containers")),
-                        if (widget.accessTypes.contains('LPN LifeCycle'))
+                        if (widget.accessTypes.contains('Trips'))
                           InkWell(
                               onTap: () {
                                 setState(() {
@@ -125,6 +125,19 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
 
+                                Navigator.pushNamed(context, '/tripstrack');
+                              },
+                              child: const ForHover(text: "Trips")),
+                        if (widget.accessTypes.contains('LPN LifeCycle'))
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  height = height == maxHeight
+                                      ? size.height * 0.08
+                                      : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                                  bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
+                                });
+                                _warehouseInteractionBloc.add(GetLPNS(facilityID: 243));
                                 Customs.LPNSelection(context: context);
                               },
                               child: const ForHover(text: "LPN LifeCycle")),
@@ -152,7 +165,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 Customs.UsersDialog(context: context);
                               },
                               child: const ForHover(text: "Manage Users")),
-                       InkWell(
+                        InkWell(
                             onTap: () {
                               setState(() {
                                 height = height == maxHeight
@@ -165,7 +178,6 @@ class _HoverDropdownState extends State<HoverDropdown> {
                               // context.go('/login');
                             },
                             child: const ForHover(text: "Log Out")),
-                     
                       ],
                     ),
                   ),

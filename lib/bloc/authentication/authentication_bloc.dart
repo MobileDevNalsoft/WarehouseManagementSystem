@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/local_network_calls.dart';
-import 'package:wmssimulator/navigations/go_router_service.dart';
 
 import '../../constants/app_constants.dart';
 import '../../inits/init.dart';
@@ -64,7 +63,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
               await sharedPreferences.setString("username", event.username);
               navigator!.popAndPush('/warehouse');
               // GoRouterService.router.pushReplacement('/warehouse');
-              
             },
           ).onError(
             (error, stackTrace) {

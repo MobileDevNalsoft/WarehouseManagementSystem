@@ -45,7 +45,10 @@ class _DockOutAreaDataSheetState extends State<DockOutAreaDataSheet> {
                                 : "",
                             style: TextStyle(fontWeight: FontWeight.w600, fontSize: lsize.maxWidth * 0.044),
                           ),
-                          Text("Data not found")
+                          Text(
+                            "Data not found",
+                            style: TextStyle(color: Colors.white),
+                          )
                         ],
                       )
                     : ListView.builder(

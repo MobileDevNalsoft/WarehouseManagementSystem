@@ -169,6 +169,7 @@ window.getPositionAndTarget = function(scene, name) {
     case "warehouse":
       switch (view) {
         case "compoundArea":
+          areaFocused = false;
           position.set(0, 550, 220);
           target.set(0, 0, -60);
           target.z = target.z + 50;

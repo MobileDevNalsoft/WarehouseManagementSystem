@@ -5,7 +5,6 @@ abstract class WarehouseInteractionEvent extends Equatable {
   List<Object> get props => [];
 }
 
-
 // this event is called when an object is selected in the warehouse
 class SelectedObject extends WarehouseInteractionEvent {
   final Map<String, dynamic> dataFromJS;
@@ -58,7 +57,6 @@ class ModelLoaded extends WarehouseInteractionEvent {
 // Gets the users data
 class GetUsersData extends WarehouseInteractionEvent {}
 
-
 class FilterUsers extends WarehouseInteractionEvent {
   final String searchText;
   FilterUsers({required this.searchText});
@@ -85,8 +83,6 @@ class GetAreasOverviewData extends WarehouseInteractionEvent {
   List<Object> get props => [facilityID];
 }
 
-
-
 class Rendering extends WarehouseInteractionEvent {
   bool isRendered;
   Rendering({required this.isRendered});
@@ -94,7 +90,6 @@ class Rendering extends WarehouseInteractionEvent {
   @override
   List<Object> get props => [isRendered];
 }
-
 
 // To enable PointerInterceptor when the dropdowns are hovered
 class Intercepting extends WarehouseInteractionEvent {
@@ -114,6 +109,14 @@ class GetLPNLifeCycle extends WarehouseInteractionEvent {
 
   @override
   List<Object> get props => [facilityID, companyID, lpnNbr];
+}
+
+class GetLPNS extends WarehouseInteractionEvent {
+  int facilityID;
+  GetLPNS({required this.facilityID});
+
+  @override
+  List<Object> get props => [facilityID];
 }
 
 // To get the tasks along with the bins to calculate the shortest path.

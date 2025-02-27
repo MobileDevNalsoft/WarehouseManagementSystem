@@ -23,7 +23,6 @@ class YardBloc extends Bloc<YardEvent, YardState> {
   }
   final NetworkCalls _customApi;
 
-  
   void _onGetYardData(GetYardData event, Emitter<YardState> emit) async {
     try {
       await _customApi
@@ -40,10 +39,11 @@ class YardBloc extends Bloc<YardEvent, YardState> {
           state.yardAreaItems!.addAll(dockAreaResponse.data!);
         }
         if (apiResponse.response?.data != null) {
-          getIt<JsInteropService>().sendTrucksData(jsonEncode(jsonDecode(apiResponse.response!.data)['data']));
+          getIt<WebService>()
+              .inAppWebViewController!
+              .evaluateJavascript(source: "yardTrucksData('${jsonEncode(jsonDecode(apiResponse.response!.data)['data'])}');");
         }
         emit(state.copyWith(yardAreaItems: state.yardAreaItems, yardAreaStatus: YardAreaStatus.success));
-        getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: 'setNumberofTrucks("Y_${state.yardAreaItems!.length.toString()}")');
       });
     } catch (e) {
       Log.e(e.toString());

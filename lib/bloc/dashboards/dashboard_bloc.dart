@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
-import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/logger/logger.dart';
 import 'package:wmssimulator/models/activity_area_model.dart';
 import 'package:wmssimulator/models/area_response.dart';
@@ -22,7 +21,6 @@ part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
-  JsInteropService? jsInteropService;
   DashboardsBloc({required NetworkCalls customApi})
       : _customApi = customApi,
         super(DashboardsState.initial()) {

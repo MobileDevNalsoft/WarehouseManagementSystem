@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:wmssimulator/constants/app_constants.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/logger/logger.dart';
 import 'package:wmssimulator/models/dock_area_model.dart';
@@ -15,7 +16,6 @@ part 'dock_area_event.dart';
 part 'dock_area_state.dart';
 
 class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
-  JsInteropService? jsInteropService;
   DockAreaBloc({required NetworkCalls customApi})
       : _customApi = customApi,
         super(DockAreaState.initial()) {
@@ -44,11 +44,9 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
           trucksData.add({'truck_no': e.keys.first, 'vendor': e.values.first.first.keys.first, 'asn': e.values.first.first.values.first.first['asn']});
         });
         if (apiResponse.response?.data != null) {
-          getIt<JsInteropService>().sendTrucksData(jsonEncode(trucksData));
+          getIt<WebService>().inAppWebViewController!.evaluateJavascript(source: "dockTrucksData('IN','${jsonEncode(trucksData)}');");
         }
         emit(state.copyWith(dockAreaItems: state.dockAreaItems, getDataState: GetDataState.success));
-        getIt<JsInteropService>().setNumberOfTrucks("DI_0");
-        getIt<JsInteropService>().setNumberOfTrucks('DI_${state.dockAreaItems!.length.toString()}');
       });
     } catch (e) {
       Log.e(e.toString());
@@ -67,11 +65,11 @@ class DockAreaBloc extends Bloc<DockEvent, DockAreaState> {
           .then((apiResponse) {
         AreaResponse<DockOutItem> dockOutResponse = AreaResponse.fromJson(jsonDecode(apiResponse.response!.data), (json) => DockOutItem.fromJson(json));
         if (apiResponse.response?.data != null) {
-          getIt<JsInteropService>().sendTrucksData(jsonEncode(jsonDecode(apiResponse.response!.data)['data']));
+          getIt<WebService>()
+              .inAppWebViewController!
+              .evaluateJavascript(source: "dockTrucksData('OUT','${jsonEncode(jsonDecode(apiResponse.response!.data)['data'])}');");
         }
         emit(state.copyWith(dockOutItems: dockOutResponse.data!, getDataState: GetDataState.success));
-        getIt<JsInteropService>().setNumberOfTrucks("DO_0");
-        getIt<JsInteropService>().setNumberOfTrucks('DO_${state.dockOutItems!.length.toString()}');
       });
     } catch (e) {
       Log.e(e.toString());

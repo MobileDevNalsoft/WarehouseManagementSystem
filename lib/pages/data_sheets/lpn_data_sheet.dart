@@ -20,17 +20,6 @@ class LPNLifeCycleDataSheet extends StatefulWidget {
 class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
   late WarehouseInteractionBloc _warehouseInteractionBloc;
   final ScrollController _controller = ScrollController();
-  final List<String> prefixes = [
-    'Created by ',
-    'Quality Checked by ',
-    'Received by ',
-    'Located by ',
-    'Allocated by ',
-    'Picked by ',
-    'Packed by ',
-    'Loaded by ',
-    'Shipped by '
-  ];
 
   final List<String> icons = ['created', 'quality_check', 'received', 'located', 'allocated', 'picked', 'packed', 'loaded', 'shipped'];
 
@@ -38,7 +27,6 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
   void initState() {
     super.initState();
     _warehouseInteractionBloc = context.read<WarehouseInteractionBloc>();
-    _warehouseInteractionBloc.add(GetLPNLifeCycle(facilityID: 243, companyID: 2, lpnNbr: _warehouseInteractionBloc.state.dataFromJS['lpn']));
   }
 
   @override
@@ -154,7 +142,7 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
                                                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                                         ),
                                                         Text(
-                                                          '${prefixes[index]}${lpnStatuses[index].user!}',
+                                                          lpnStatuses[index].user!,
                                                           style: TextStyle(fontSize: 13),
                                                         ),
                                                         Text(
@@ -181,7 +169,7 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
                                                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                                         ),
                                                         Text(
-                                                          '${prefixes[index]}${lpnStatuses[index].user!}',
+                                                          lpnStatuses[index].user!,
                                                           style: TextStyle(fontSize: 13),
                                                         ),
                                                         Text(
@@ -202,7 +190,7 @@ class _LPNLifeCycleDataSheetState extends State<LPNLifeCycleDataSheet> {
                                             ),
                                             padding: EdgeInsets.all(lsize.maxHeight * 0.01),
                                             child: Image.asset(
-                                              'assets/images/${icons[index]}.png',
+                                              'assets/images/${lpnStatuses[index].status!.split(' ')[0].toLowerCase()}.png',
                                               color: Colors.white,
                                             ),
                                           )

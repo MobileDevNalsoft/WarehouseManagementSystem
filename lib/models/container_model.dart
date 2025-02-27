@@ -26,13 +26,11 @@ class ContainerData {
 
 class LPNStatus {
   String? status;
+  String? area;
   String? user;
   String? date;
-  LPNStatus({this.status, this.user, this.date});
+  LPNStatus({this.status, this.user, this.date, this.area});
   factory LPNStatus.fromJson(Map<String, dynamic> json) {
-    return LPNStatus(
-        status: json['status'] as String?,
-        user: json['user'] as String?,
-        date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse(json['date']).toLocal()));
+    return LPNStatus(status: json['status'] as String?, user: json['user'] as String?, date: json['ts'] as String?, area: json['area'] as String?);
   }
 }

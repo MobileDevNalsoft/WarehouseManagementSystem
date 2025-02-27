@@ -22,6 +22,8 @@ enum GetUserInfo { initial, loading, success, failure }
 
 enum LPNLifeCycleStatus { initial, loading, success, failure }
 
+enum LPNSStatus { initial, loading, success, failure }
+
 enum GetBinsForTaskStatus { initial, loading, success, failure }
 
 // ignore: must_be_immutable
@@ -52,6 +54,8 @@ final class WarehouseInteractionState {
     this.selectedTaskId,
     this.taskIds,
     this.tasksForShoretestPath,
+    this.getLPNSStatus,
+    this.lpns,
     this.alertsCount = 0,
     this.binsForTask,
     this.getBinsForTaskStatus,
@@ -64,6 +68,8 @@ final class WarehouseInteractionState {
   String selectedSearchArea;
   LPNLifeCycleStatus? getLpnLifeCycleStatus;
   List<LPNStatus>? lpnLifeCycle;
+  LPNSStatus? getLPNSStatus;
+  List<String>? lpns;
   String? searchText;
   CompanyModel? companyModel;
   FacilityModel? facilityModel;
@@ -82,7 +88,7 @@ final class WarehouseInteractionState {
   List<String>? taskIds;
   bool? intercepting;
   int alertsCount;
-  Map<String,dynamic>? tasksForShoretestPath;
+  Map<String, dynamic>? tasksForShoretestPath;
   List<String>? binsForTask;
   GetBinsForTaskStatus? getBinsForTaskStatus;
   // TextEditingController searchController;
@@ -111,37 +117,16 @@ final class WarehouseInteractionState {
       selectedFacilityVal: "Duty-Paid Warehouse",
       getUserInfoState: GetUserInfo.initial,
       getUsersState: GetUsers.initial,
+      getLPNSStatus: LPNSStatus.initial,
       users: [],
       filteredUsers: [],
+      lpns: [],
       alerts: [],
       getAreasOveriviewDataState: AreasOverviewDataState.initial,
       alertsCount: 0,
       taskIds: ["task1", "task2", "task3", "task4"],
       getLpnLifeCycleStatus: LPNLifeCycleStatus.initial,
-      lpnLifeCycle: [
-        LPNStatus(
-            status: 'Created', user: 'User 1', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-24T12:45:36.653880-04:00').toLocal())),
-        LPNStatus(
-            status: 'Quality Check',
-            user: 'User 2',
-            date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-25T04:00:36.653880-04:00').toLocal())),
-        LPNStatus(
-            status: 'Received', user: 'User 3', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-26T09:31:36.653880-04:00').toLocal())),
-        LPNStatus(
-            status: 'Located', user: 'User 4', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-27T13:45:36.653880-04:00').toLocal())),
-        LPNStatus(
-            status: 'Allocated',
-            user: 'User 5',
-            date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-27T17:42:36.653880-04:00').toLocal())),
-        LPNStatus(
-            status: 'Picked', user: 'User 6', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-28T10:55:36.653880-04:00').toLocal())),
-        LPNStatus(
-            status: 'Packed', user: 'User 7', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-29T11:09:36.653880-04:00').toLocal())),
-        LPNStatus(
-            status: 'Loaded', user: 'User 8', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-30T15:15:36.653880-04:00').toLocal())),
-        LPNStatus(
-            status: 'Shipped', user: 'User 9', date: DateFormat("yyyy-MM-dd hh:mm:ss a").format(DateTime.parse('2024-08-31T19:01:36.653880-04:00').toLocal())),
-      ],
+      lpnLifeCycle: [],
       tasksForShoretestPath: {},
       binsForTask: [],
       getBinsForTaskStatus: GetBinsForTaskStatus.initial,
@@ -161,17 +146,19 @@ final class WarehouseInteractionState {
       String? selectedCompanyVal,
       FacilityModel? facilityModel,
       GetFacilityDataState? facilityDataState,
+      LPNSStatus? getLPNSStatus,
       String? selectedFacilityVal,
       GetUserInfo? getUserInfoState,
       GetUsers? getUsersState,
       User? userInfo,
       List<User>? users,
       List<User>? filteredUsers,
+      List<String>? lpns,
       List<Alert>? alerts,
       AreasOverviewDataState? getAreasOveriviewDataState,
       String? selectedTaskId,
       LPNLifeCycleStatus? getLpnLifeCycleStatus,
-      Map<String,dynamic>? tasksForShoretestPath,
+      Map<String, dynamic>? tasksForShoretestPath,
       int? alertsCount,
       List<String>? binsForTask,
       GetBinsForTaskStatus? getBinsForTaskStatus}) {
@@ -183,6 +170,8 @@ final class WarehouseInteractionState {
       selectedSearchArea: selectedSearchArea ?? this.selectedSearchArea,
       searchText: searchText ?? this.searchText,
       // searchController: searchController,
+      getLPNSStatus: getLPNSStatus ?? this.getLPNSStatus,
+      lpns: lpns ?? this.lpns,
       getState: getState ?? this.getState,
       companyModel: companyModel ?? this.companyModel,
       selectedCompanyVal: selectedCompanyVal ?? this.selectedCompanyVal,
