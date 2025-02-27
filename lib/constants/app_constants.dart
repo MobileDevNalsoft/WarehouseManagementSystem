@@ -23,6 +23,9 @@ class AppConstants {
     'Content-Type': 'application/x-www-form-urlencoded'
   };
 
+  static const GOOGLE_MAPS_API_KEY = "AIzaSyAVj-M7IeRW2u9xndAMvqxg94Luwalip38";
+  static const GOOGLE_MAP_API = "https://maps.googleapis.com/maps/api/directions/json";
+
   // api credentials
   static const String APIUSERNAME = "NALSOFT";
   static const String APIPASSWORD = "Nalsoft@123";
