@@ -102,8 +102,8 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => EntryPoint(
-            title: 'Trips',
-            titles: const ['Trips Track'],
+            title: '',
+            titles: const ['Shipment'],
             tabs: const [TripsTrack()],
           ),
           transitionDuration: const Duration(seconds: 1),

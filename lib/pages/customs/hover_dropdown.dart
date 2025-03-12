@@ -127,7 +127,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
 
                                 Navigator.pushNamed(context, '/tripstrack');
                               },
-                              child: const ForHover(text: "Trips")),
+                              child: const ForHover(text: "Shipment Tracking")),
                         if (widget.accessTypes.contains('LPN LifeCycle'))
                           InkWell(
                               onTap: () {
