@@ -9,7 +9,6 @@ import 'package:wmssimulator/bloc/authentication/authentication_bloc.dart';
 import 'package:wmssimulator/bloc/container_management/container_bloc.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/dock_area/dock_area_bloc.dart';
-import 'package:wmssimulator/bloc/geo_location/geo_location_bloc.dart';
 import 'package:wmssimulator/bloc/receiving/receiving_bloc.dart';
 import 'package:wmssimulator/bloc/staging/staging_bloc.dart';
 import 'package:wmssimulator/bloc/storage/storage_bloc.dart';
@@ -46,7 +45,7 @@ main() async {
       BlocProvider(create: (_) => ContainerBloc(customApi: getIt())),
       BlocProvider(create: (_) => WorkQueueBloc(customApi: getIt())),
       BlocProvider(create: (_) => TripsBloc(customApi: getIt())),
-      BlocProvider(create: (_) => GeoLocationBloc())
+     
     ],
     child: MaterialApp(
       navigatorKey: getIt<NavigatorService>().navigatorkey,

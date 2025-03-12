@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -16,6 +17,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart' as Gauges;
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel; // Ensure you have this package
 import 'package:wmssimulator/bloc/container_management/container_bloc.dart';
 import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
+import 'package:wmssimulator/bloc/trips/trips_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/bloc/work_queue/work_queue_bloc.dart';
 import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
@@ -24,6 +26,7 @@ import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
 import 'package:wmssimulator/models/task_model.dart';
 import 'package:wmssimulator/models/trip_model.dart';
+import 'package:wmssimulator/navigations/navigator_service.dart';
 import 'package:wmssimulator/pages/customs/hover_dropdown.dart';
 import 'package:wmssimulator/pages/customs/users_builder.dart';
 
@@ -34,10 +37,8 @@ class Customs {
       children: [
         Container(
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: const Color.fromRGBO(12, 46, 87, 1),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          decoration:
+              BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.symmetric(vertical: size.height * 0.01, horizontal: size.height * 0.02),
           margin: EdgeInsets.only(top: size.height * 0.02, bottom: size.height * 0.004, right: size.height * 0.01),
           height: size.height * 0.06,
@@ -69,10 +70,8 @@ class Customs {
           height: size.height * 0.86,
           width: size.width * 0.22,
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: const Color.fromRGBO(12, 46, 87, 1),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
+          decoration:
+              BoxDecoration(color: const Color.fromRGBO(12, 46, 87, 1), borderRadius: BorderRadius.circular(16), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 10)]),
           padding: EdgeInsets.all(size.height * 0.012),
           child: LayoutBuilder(builder: (context, layout) {
             return Column(
@@ -85,13 +84,20 @@ class Customs {
   }
 
   static Widget DashboardWidget(
-      {double height = 150, double? margin, Decoration? decoration, bool loaderEnabled = true, required Widget Function(BoxConstraints lsize) chartBuilder}) {
+      {double height = 150,
+      double? width,
+      double? margin,
+      EdgeInsetsGeometry? padding,
+      EdgeInsetsGeometry? customMargin,
+      Decoration? decoration,
+      bool loaderEnabled = true,
+      required Widget Function(BoxConstraints lsize) chartBuilder}) {
     return Container(
-      margin: EdgeInsets.all(margin ?? 0),
+      margin: customMargin ?? EdgeInsets.all(margin ?? 0),
       height: height,
-      decoration: decoration ??
-          BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
-      padding: EdgeInsets.all(height * 0.035),
+      width: width,
+      decoration: decoration ?? BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 5)]),
+      padding: padding ?? EdgeInsets.all(height * 0.035),
       alignment: Alignment.center,
       child: LayoutBuilder(builder: (context, lsize) {
         return loaderEnabled ? DashboardLoader(lsize: lsize) : chartBuilder(lsize);
@@ -184,8 +190,7 @@ class Customs {
     );
   }
 
-  static Widget WorkflowLayout(
-      {required Size size, required int buttonIndex, required Widget child, required void Function()? onApproved, required void Function()? onRejected}) {
+  static Widget WorkflowLayout({required Size size, required int buttonIndex, required Widget child, required void Function()? onApproved, required void Function()? onRejected}) {
     List<String> buttons = ['Pending', 'Completed'];
 
     return Column(
@@ -348,8 +353,7 @@ class Customs {
     });
   }
 
-  static Widget WMSPieChart(
-      {required String title, List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
+  static Widget WMSPieChart({required String title, List<PieData>? dataSource, Color? Function(PieData, int)? pointColorMapper, bool legendVisibility = false}) {
     return SfCircularChart(
         title: ChartTitle(
             text: title,
@@ -390,8 +394,7 @@ class Customs {
       Color axisLineColor = const Color.fromARGB(255, 86, 185, 152),
       double markerValue = 0}) {
     return Gauges.SfRadialGauge(
-      title:
-          Gauges.GaugeTitle(text: title, alignment: Gauges.GaugeAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
+      title: Gauges.GaugeTitle(text: title, alignment: Gauges.GaugeAlignment.center, textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: titleFontSize)),
       axes: [
         Gauges.RadialAxis(
           maximum: 100,
@@ -490,8 +493,7 @@ class Customs {
                 xValueMapper: (PieData data, _) => data.xData,
                 yValueMapper: (PieData data, _) => data.yData,
                 onPointTap: props.onPointTap,
-                dataLabelSettings: DataLabelSettings(
-                    isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
+                dataLabelSettings: DataLabelSettings(isVisible: enableAnnotation ? false : true, textStyle: TextStyle(fontSize: props.labelFontSize, fontWeight: FontWeight.bold)),
                 radius: props.radius ?? '${lsize.maxWidth * 0.18}%', // Adjust the radius as needed
                 innerRadius: props.innerRadius ?? '${lsize.maxWidth * 0.15}%', // Optional: adjust for a thinner ring
                 pointColorMapper: props.pointColorMapper,
@@ -843,9 +845,7 @@ class Customs {
                                             state.containerNbr = value;
                                           },
                                           decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.only(left: size.width * 0.005),
-                                              focusedBorder: OutlineInputBorder(),
-                                              enabledBorder: OutlineInputBorder())),
+                                              contentPadding: EdgeInsets.only(left: size.width * 0.005), focusedBorder: OutlineInputBorder(), enabledBorder: OutlineInputBorder())),
                                     );
                                   },
                                   itemBuilder: (context, value) {
@@ -907,9 +907,7 @@ class Customs {
                                           focusNode: focusNode,
                                           onChanged: (value) => state.toLocation = value,
                                           decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.only(left: size.width * 0.005),
-                                              focusedBorder: OutlineInputBorder(),
-                                              enabledBorder: OutlineInputBorder())),
+                                              contentPadding: EdgeInsets.only(left: size.width * 0.005), focusedBorder: OutlineInputBorder(), enabledBorder: OutlineInputBorder())),
                                     );
                                   },
                                   itemBuilder: (context, value) {
@@ -1323,8 +1321,7 @@ class Customs {
     );
   }
 
-  static Widget PendingDialogChildContianer(
-      {required BoxConstraints parent, String? imagePath, Color? iconBgColor, String? contentValue, required String heading}) {
+  static Widget PendingDialogChildContianer({required BoxConstraints parent, String? imagePath, Color? iconBgColor, String? contentValue, required String heading}) {
     return Container(
       alignment: Alignment.center,
       height: parent.maxHeight * 0.21,
@@ -1368,8 +1365,7 @@ class Customs {
                   children: [
                     Text(
                       heading,
-                      style:
-                          TextStyle(decoration: TextDecoration.none, fontSize: constraints.maxWidth * 0.054, color: Colors.black, fontWeight: FontWeight.w500),
+                      style: TextStyle(decoration: TextDecoration.none, fontSize: constraints.maxWidth * 0.054, color: Colors.black, fontWeight: FontWeight.w500),
                     ),
                     Text(
                       contentValue ?? "NA",
@@ -1382,6 +1378,82 @@ class Customs {
           );
         },
       ),
+    );
+  }
+
+  static Widget WMSTemperatureWidget({required BoxConstraints lsize, required String title, Color? color,double? value}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: lsize.maxHeight * 0.054),
+        ),
+        SizedBox(
+          height: lsize.maxHeight * 0.88,
+          child: Gauges.SfLinearGauge(
+            orientation: Gauges.LinearGaugeOrientation.vertical,
+            tickPosition: Gauges.LinearElementPosition.cross,
+            // isMirrored: true,
+            maximum: 100,
+            minimum: 0,
+            interval: 20,
+            labelFormatterCallback: (label) {
+              // double celsius = double.tryParse(label) ?? 0;
+              // double fahrenheit = (celsius * 9 / 5) + 32;
+              // if(label=='0') return
+              return "$label°C";
+            },
+            showLabels: true,
+            barPointers: [
+              Gauges.LinearBarPointer(
+                value: value??32,
+                color: color??const Color.fromARGB(255, 246, 101, 101),
+                edgeStyle: Gauges.LinearEdgeStyle.bothCurve,
+                thickness: 8,
+              )
+            ],
+            axisTrackStyle: Gauges.LinearAxisTrackStyle(
+              thickness: 15,
+              edgeStyle: Gauges.LinearEdgeStyle.bothCurve,
+            ),
+
+            markerPointers: [
+              Gauges.LinearWidgetPointer(
+                value: 0,
+                position: Gauges.LinearElementPosition.cross,
+                child: Container(
+                  width: 20,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: color??Colors.red,
+                  ),
+                ),
+              ),
+              Gauges.LinearWidgetPointer(
+                value: value??32,
+                position: Gauges.LinearElementPosition.inside,
+                child: IntrinsicWidth(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Icon(
+                        Icons.arrow_left_rounded,
+                        size: lsize.maxWidth * 0.32,
+                      ),
+                      Text(
+                        "${value??32}°C",
+                        style: TextStyle(fontSize: lsize.maxHeight * 0.06, fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -1661,7 +1733,8 @@ class WorkflowCycleCountDataSource extends DataGridSource {
 }
 
 class TripsDataSource extends DataGridSource {
-  TripsDataSource({required List<Trip> data}) {
+  TripsDataSource({required List<Trip> data, void Function(bool?, DataGridRow)? onChanged}) {
+    _onPressed = onChanged;
     _data = List.generate(
       data.length,
       (index) => DataGridRow(cells: [
@@ -1678,12 +1751,14 @@ class TripsDataSource extends DataGridSource {
         DataGridCell(columnName: 'Carrier', value: index < data.length ? data[index].carrier : ''),
         DataGridCell(columnName: 'Trailer Type', value: index < data.length ? data[index].trailerType : ''),
         DataGridCell(columnName: 'Estimated Start Date', value: index < data.length ? data[index].estStartDate : ''),
-        DataGridCell(columnName: 'z', value: index < data.length ? data[index].estEndDate : '')
+        DataGridCell(columnName: 'Estimated Delivery Date', value: index < data.length ? data[index].estDeliveryDate : ''),
+        DataGridCell(columnName: 'Map', value: index < data.length ? data[index].status : ''),
       ]),
     );
   }
 
   List<DataGridRow> _data = [];
+  void Function(bool?, DataGridRow)? _onPressed;
 
   @override
   List<DataGridRow> get rows => _data;
@@ -1692,10 +1767,41 @@ class TripsDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
-      return Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(dataGridCell.value.toString()),
-      );
+      return dataGridCell.columnName == 'Map'
+          ? BlocBuilder<TripsBloc, TripsState>(builder: (context, state) {
+              return IconButton(
+                splashRadius: 1,
+                icon: Icon(
+                  dataGridCell.value.toString().toLowerCase() == "delivered" ? Icons.play_arrow_rounded : Icons.remove_red_eye_rounded,
+                ),
+                onPressed: () {
+                  _onPressed;
+                  state.selectedTrip = state.trips!.where((element) => element.shipmentNbr == row.getCells()[0].value).first;
+                  if (state.selectedTrip!.status!.toLowerCase() == "created") {
+                    state.isDriverAnimated = false;
+                  } else {
+                    state.isDriverAnimated = true;
+                  }
+
+                  getIt<NavigatorService>().push(
+                    '/map',
+                    // arguments: {
+                    //   "start":LatLng(double.parse(row.getCells()[5].value.toString()) ,double.parse(row.getCells()[6].value.toString())),
+                    //  "end":LatLng(double.parse(row.getCells()[8].value.toString()),double.parse(row.getCells()[9].value.toString())),
+                    //  if(state.trips!.where((element) => element.shipmentNbr == row.getCells()[0].value).first.waypoints != null)
+                    //  "waypoints":
+                    //   state.trips!.where((element) => element.shipmentNbr == row.getCells()[0].value).first.waypoints!.map((e) => LatLng(e.latitude!, e.longitude!)).toList()
+
+                    //  }
+                  );
+                },
+                visualDensity: VisualDensity.compact,
+              );
+            })
+          : Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(dataGridCell.value.toString()),
+            );
     }).toList());
   }
 }
