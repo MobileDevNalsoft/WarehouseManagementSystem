@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/local_network_calls.dart';
 
@@ -62,7 +60,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
               await sharedPreferences.setStringList("access_types", jsonDecode(value.response!.data)['data']['access_types'].split(','));
               await sharedPreferences.setString("username", event.username);
               navigator!.popAndPush('/warehouse');
-              // GoRouterService.router.pushReplacement('/warehouse');
             },
           ).onError(
             (error, stackTrace) {

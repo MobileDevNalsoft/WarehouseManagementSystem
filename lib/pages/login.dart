@@ -93,22 +93,24 @@ class _LoginPageState extends State<LoginPage> {
                                   current.authenticationStatus == AuthenticationStatus.failure ||
                                   current.authenticationStatus == AuthenticationStatus.accessDenied) &&
                               previous.authenticationStatus != current.authenticationStatus,
-                          listener: (context, state) => Customs.AnimatedDialog(
-                                  context: context,
-                                  header: const Icon(
-                                    Icons.error,
-                                    size: 35,
-                                  ),
-                                  content: [
-                                    Text(
-                                      state.authenticationStatus == AuthenticationStatus.invalidCredentials
-                                          ? 'Invalid Credentials'
-                                          : state.authenticationStatus == AuthenticationStatus.accessDenied
-                                              ? 'Access Denied'
-                                              : 'Error',
-                                      style: const TextStyle(fontSize: 18),
-                                    )
-                                  ]),
+                          listener: (context, state) {
+                            return Customs.AnimatedDialog(
+                                context: context,
+                                header: const Icon(
+                                  Icons.error,
+                                  size: 35,
+                                ),
+                                content: [
+                                  Text(
+                                    state.authenticationStatus == AuthenticationStatus.invalidCredentials
+                                        ? 'Invalid Credentials'
+                                        : state.authenticationStatus == AuthenticationStatus.accessDenied
+                                            ? 'Access Denied'
+                                            : 'Error',
+                                    style: const TextStyle(fontSize: 18),
+                                  )
+                                ]);
+                          },
                           builder: (context, state) {
                             return CustomTextFormField(
                               hintText: 'password',

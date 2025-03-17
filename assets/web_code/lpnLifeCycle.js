@@ -7,7 +7,6 @@ let lines = [];
 let animations = [];
 let sprites = [];
 let dummyPoints = [];
-let targetPoints = [];
 
 const areaPoints = {
   receiving: new THREE.Vector3(10, 6.19, -60),
@@ -25,6 +24,7 @@ window.setAreaPoints = function (areas) {
   .split(",")
   .map((item) => item.trim());
   
+  let targetPoints = [];
   list.forEach((item) => {
     targetPoints.push(areaPoints[item.toLowerCase()]);
   });
