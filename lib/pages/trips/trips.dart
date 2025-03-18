@@ -172,6 +172,7 @@ class _TripsTrackState extends State<TripsTrack> {
                                             'Carrier',
                                             style: const TextStyle(fontWeight: FontWeight.bold),
                                           ))),
+                                        
                                   GridColumn(
                                       columnName: 'Trailer Type',
                                       filterPopupMenuOptions: const FilterPopupMenuOptions(canShowSortingOptions: false),
@@ -201,7 +202,19 @@ class _TripsTrackState extends State<TripsTrack> {
                                           child: Text(
                                             'Estimated Delivery Date',
                                             style: const TextStyle(fontWeight: FontWeight.bold),
-                                          )))
+                                          ))),
+                                            GridColumn(
+                                      columnName: 'Map',
+                                      filterPopupMenuOptions: const FilterPopupMenuOptions(canShowSortingOptions: false),
+                                      label: Container(
+                                          padding: EdgeInsets.all(size.width * 0.002),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            'Map',
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                          )),
+                                          
+                                          )
                                 ],
                               ),
                             ],

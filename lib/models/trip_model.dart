@@ -8,7 +8,10 @@ class Trip {
   String? carrier;
   String? trailerType;
   String? estStartDate;
-  String? estEndDate;
+  String? estDeliveryDate;
+  List<Location>? waypoints;
+  Location? coveredEnd;
+  VehicleInfo? vehicleInfo;
 
   Trip({
     this.shipmentNbr,
@@ -20,7 +23,10 @@ class Trip {
     this.carrier,
     this.trailerType,
     this.estStartDate,
-    this.estEndDate,
+    this.estDeliveryDate,
+    this.waypoints,
+    this.coveredEnd,
+    this.vehicleInfo
   });
 
   factory Trip.fromJson(Map<String, dynamic> json) {
@@ -34,7 +40,9 @@ class Trip {
       carrier: json['carrier'],
       trailerType: json['trailerType'],
       estStartDate: json['estStartDate'],
-      estEndDate: json['estEndDate'],
+      estDeliveryDate: json['estEndDate'],
+      waypoints: json['waypoints'] != null ? (json['waypoints'] as List).map((e) => Location.fromJson(e)).toList() : null,
+      coveredEnd: json['coveredEnd'] != null ? Location.fromJson(json['coveredEnd']) : null,
     );
   }
 }
@@ -50,6 +58,29 @@ class Location {
       location: json['location'],
       latitude: json['latitude'],
       longitude: json['longitude'],
+    );
+  }
+}
+
+class VehicleInfo {
+  double? speed;
+  double? odometerValue;
+  double? engineTemp;
+  double? containerTemp;
+  double? fuel;
+  bool? ignition;
+  double? containerWeight;
+
+  VehicleInfo({this.speed, this.odometerValue, this.engineTemp, this.containerTemp, this.fuel, this.ignition, this.containerWeight});
+  factory VehicleInfo.fromJson(Map<String, dynamic> json) {
+    return VehicleInfo(
+      speed: json['speed'],
+      odometerValue: json['odometerValue'],
+      engineTemp: json['engineTemp'],
+      containerTemp: json['containerTemp'],
+      fuel: json['fuel'],
+      ignition: json['ignition'],
+      containerWeight: json['containerWeight']
     );
   }
 }

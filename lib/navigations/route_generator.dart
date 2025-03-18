@@ -4,6 +4,7 @@ import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/pages/container_management/layout.dart';
 import 'package:wmssimulator/pages/container_management/statistics.dart';
 import 'package:wmssimulator/pages/customs/hover_dialog.dart';
+import 'package:wmssimulator/pages/maps.dart';
 import 'package:wmssimulator/pages/trips/trips.dart';
 import 'package:wmssimulator/pages/workflow/cyclecount.dart';
 import 'package:wmssimulator/pages/workflow/qualitycheck.dart';
@@ -101,8 +102,8 @@ class RouteGenerator {
         return PageRouteBuilder(
           settings: settings,
           pageBuilder: (context, animation, secondaryAnimation) => EntryPoint(
-            title: 'Trips',
-            titles: const ['Trips Track'],
+            title: '',
+            titles: const ['Shipment'],
             tabs: const [TripsTrack()],
           ),
           transitionDuration: const Duration(seconds: 1),
@@ -126,6 +127,23 @@ class RouteGenerator {
               tabs: const [ContainerLayout()],
             ),
           ),
+          transitionDuration: const Duration(seconds: 1),
+          reverseTransitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final tween = Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: Curves.easeInOut));
+            final fadeAnimation = animation.drive(tween);
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: child,
+            );
+          },
+        );
+        case '/map':
+        return PageRouteBuilder(
+          settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) {
+            return Maps();
+            },
           transitionDuration: const Duration(seconds: 1),
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
