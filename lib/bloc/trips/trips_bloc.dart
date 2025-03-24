@@ -336,7 +336,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
 
   /// Generates a correctly rotated BitmapDescriptor
   Future<BitmapDescriptor> _getCustomIcon(double? rotation) async {
-    final ByteData data = await rootBundle.load('images/map_truck3.png');
+    final ByteData data = await rootBundle.load('assets/images/map_truck3.png');
     final Uint8List bytes = data.buffer.asUint8List();
     final Uint8List rotatedBytes;
     if (rotation != null) {
@@ -375,7 +375,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
         "optimizeWaypoints=true&"
         "key=${AppConstants.GOOGLE_MAPS_API_KEY}";
     try {
-      Response response = await Dio().get(url);
+      Response response = await Dio().get(AppConstants.FIREBASE_FUNCTION_DURECTIONS,queryParameters: {'origin':origin,'destination':destination,'waypoints':combinedWayPoints});
 
       if (response.statusCode == 200) {
         final jsonData = response.data;
@@ -414,7 +414,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     // );
 // double bearing = _calculateBearing(start, end); // Calculate bearing
     BitmapDescriptor icon = await _getCustomIcon(null); // Default orientation
-    const double speedKmh = 1000; // Speed in km/h
+    const double speedKmh = 15000; // Speed in km/h
     const double speedMps = (speedKmh * 1000) / 3600; // Convert to meters per second
 
     for (int i = 0; i < routeSegment.length - 1; i++) {

@@ -25,6 +25,7 @@ class AppConstants {
 
   static const GOOGLE_MAPS_API_KEY = "AIzaSyAVj-M7IeRW2u9xndAMvqxg94Luwalip38";
   static const GOOGLE_MAP_API = "https://maps.googleapis.com/maps/api/directions/json";
+  static const FIREBASE_FUNCTION_DURECTIONS = "https://app-zcx33l2yiq-uc.a.run.app/directions";
 
   // api credentials
   static const String APIUSERNAME = "NALSOFT";

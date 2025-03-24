@@ -45,7 +45,7 @@ class ThreeJsWebView extends StatefulWidget {
   State<ThreeJsWebView> createState() => _ThreeJsWebViewState();
 }
 
-class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStateMixin {
+class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStateMixin,AutomaticKeepAliveClientMixin  {
   final jsIteropService = JsInteropService();
   late InAppWebViewController webViewController;
   late WarehouseInteractionBloc _warehouseInteractionBloc;
@@ -113,6 +113,7 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); 
     Size size = MediaQuery.of(context).size;
     return PopScope(
       canPop: false,
@@ -278,6 +279,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                 ],
                                               );
                                             }
+                                            // if(message.containsKey("openCameraDialog") && message['openCameraDialog'] == "true"){
+                                            // //  Customs.CameraDialog(context: context);
+                                            // }
                                           }
                                         } catch (e) {
                                           print("error $e");
@@ -549,4 +553,8 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
         return null;
     }
   }
+  
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

@@ -647,7 +647,6 @@ window.startDigitalTwin = function(){
     agv,
     renderer,
     2000,
-    agvTask[agvTask.length - 1],
     0xffff00,
     0x0099ff,
     "digitalTwin"
@@ -722,7 +721,6 @@ window.getShoretestPathForTask = function(data){
           forkLift,
           renderer,
           1500,
-          bins[bins.length - 1],
           0xffff00,
           0xcc0066,
           "path"
@@ -790,6 +788,10 @@ window.lpnLifeCycle = function(data){
   }
 }
 
+// document.getElementById('camera').addEventListener("click", function (e) {
+//   console.log('{"openCameraDialog":"true","object":"null"}');
+
+// });
 }
 
 

@@ -20,8 +20,11 @@ class _TripsTrackState extends State<TripsTrack> {
 
   @override
   void initState() {
+    
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +60,7 @@ class _TripsTrackState extends State<TripsTrack> {
                                 gridLinesVisibility: GridLinesVisibility.both,
                                 headerGridLinesVisibility: GridLinesVisibility.both,
                                 columnWidthMode: ColumnWidthMode.auto,
+                                isScrollbarAlwaysShown: true,
                                 source: TripsDataSource(
                                   data: state.trips!,
                                 ),

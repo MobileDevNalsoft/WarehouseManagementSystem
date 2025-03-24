@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
@@ -24,6 +25,7 @@ import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/inits/web_service.dart';
 import 'package:wmssimulator/js_interop_service/js_inter.dart';
+import 'package:wmssimulator/main.dart';
 import 'package:wmssimulator/models/task_model.dart';
 import 'package:wmssimulator/models/trip_model.dart';
 import 'package:wmssimulator/navigations/navigator_service.dart';
@@ -1456,6 +1458,47 @@ class Customs {
       ],
     );
   }
+
+  static void CameraDialog ({required BuildContext context, Widget? content}) {
+    Size size = MediaQuery.of(context).size;
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black45,
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedValue = Curves.bounceInOut.transform(animation.value);
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: animation.value,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return StatefulBuilder(builder: (context, state) {
+          return PointerInterceptor(
+            child: BlocBuilder<WorkQueueBloc, WorkQueueState>(builder: (context, state) {
+              print("state change ${state.workQueueStatus}");
+              return Container(
+                  height: size.height * 0.6,
+                  width: size.width * 0.54,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    color: const Color(0xFFF2F2F2),
+                  ),
+                  child: LayoutBuilder(builder: (context, parent) {
+                    return SizedBox();  }));
+            }),
+          );
+        });
+      },
+    );
+  }
+
+
 }
 
 // this class is used to add shadow along the clipped path
@@ -1782,18 +1825,11 @@ class TripsDataSource extends DataGridSource {
                   } else {
                     state.isDriverAnimated = true;
                   }
-
-                  getIt<NavigatorService>().push(
-                    '/map',
-                    // arguments: {
-                    //   "start":LatLng(double.parse(row.getCells()[5].value.toString()) ,double.parse(row.getCells()[6].value.toString())),
-                    //  "end":LatLng(double.parse(row.getCells()[8].value.toString()),double.parse(row.getCells()[9].value.toString())),
-                    //  if(state.trips!.where((element) => element.shipmentNbr == row.getCells()[0].value).first.waypoints != null)
-                    //  "waypoints":
-                    //   state.trips!.where((element) => element.shipmentNbr == row.getCells()[0].value).first.waypoints!.map((e) => LatLng(e.latitude!, e.longitude!)).toList()
-
-                    //  }
-                  );
+                  // context.pushNamed('maps');
+                   Get.rootDelegate.toNamed(Routes.maps);
+                  // getIt<NavigatorService>().push(
+                  //   '/map',
+                  // );
                 },
                 visualDensity: VisualDensity.compact,
               );

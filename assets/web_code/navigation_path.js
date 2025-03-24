@@ -842,6 +842,7 @@ export function getShortestPath(
   const clock = new THREE.Clock();
   const delta = clock.getDelta();
   const gameLoop = () => {
+    console.warn("button id "+pathButtonId);
     // Stopping the game loop when the button to which gameLoop is associated is not focused.
     if(!document.getElementById(pathButtonId).classList.contains("focused")){
       return;

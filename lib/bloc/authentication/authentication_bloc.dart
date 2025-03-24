@@ -1,12 +1,15 @@
 import 'dart:convert';
-
+import 'dart:html' as html;
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/local_network_calls.dart';
+import 'package:wmssimulator/main.dart';
 
 import '../../constants/app_constants.dart';
 import '../../inits/init.dart';
@@ -61,13 +64,19 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
               emit(state.copyWith(authenticationStatus: AuthenticationStatus.success));
               await sharedPreferences.setStringList("access_types", jsonDecode(value.response!.data)['data']['access_types'].split(','));
               await sharedPreferences.setString("username", event.username);
-              navigator!.popAndPush('/warehouse');
+//             Get.rootDelegate.offNamed(Routes.warehouse);
+// Get.rootDelegate.history.clear(); // Completely resets history
+
+              print("history ${Get.rootDelegate.history}");
+              Get.rootDelegate.offNamed(Routes.warehouse);
+              //  Get.offAllNamed(Routes.warehouse);
+              // navigator!.popAndPush('/warehouse');
               // GoRouterService.router.pushReplacement('/warehouse');
             },
           ).onError(
             (error, stackTrace) {
               emit(state.copyWith(authenticationStatus: AuthenticationStatus.accessDenied));
-              Log.e("no data found in DB to get access details");
+              Log.e("no data found in DB to get access details $error");
             },
           );
         } else {

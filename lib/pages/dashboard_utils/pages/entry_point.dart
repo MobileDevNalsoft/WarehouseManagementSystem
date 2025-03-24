@@ -12,7 +12,8 @@ class EntryPoint extends StatelessWidget {
   String title;
   List<String> titles;
   List<Widget> tabs;
-
+ 
+  
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

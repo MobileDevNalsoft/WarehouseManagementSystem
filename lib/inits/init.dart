@@ -18,6 +18,10 @@ Future<void> init() async {
   getIt.registerLazySingleton<NetworkCalls>(() => NetworkCalls(AppConstants.APEX_URL, getIt<Dio>(),
       connectTimeout: 30, receiveTimeout: 30, username: AppConstants.APIUSERNAME, password: AppConstants.APIPASSWORD));
 
+    // getIt.registerLazySingleton<NetworkCalls>(() => NetworkCalls(AppConstants.FIREBASE_FUNCTION_DURECTIONS, getIt<Dio>(),
+    //   connectTimeout: 30, receiveTimeout: 30));
+
+
   // Navigator Service
   getIt.registerSingleton<NavigatorService>(NavigatorService());
 

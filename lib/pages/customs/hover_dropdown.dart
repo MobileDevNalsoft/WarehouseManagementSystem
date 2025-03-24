@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wmssimulator/bloc/dashboards/dashboard_bloc.dart';
 import 'package:wmssimulator/bloc/warehouse/warehouse_interaction_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
+import 'package:wmssimulator/main.dart';
 import 'package:wmssimulator/navigations/navigator_service.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 import 'dart:html' as html;
@@ -41,6 +45,7 @@ class _HoverDropdownState extends State<HoverDropdown> {
 
   @override
   Widget build(BuildContext context) {
+     html.document.body?.focus();
     Size size = MediaQuery.of(context).size;
     return MouseRegion(
       onExit: (value) {
@@ -85,7 +90,9 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
 
-                                Navigator.pushNamed(context, '/dashboards');
+                                // getIt<NavigatorService>().push('/dashboards');
+                                  context.read<DashboardsBloc>().state.index = 0;
+                                  Get.rootDelegate.toNamed(Routes.dashboards);
                                 // GoRouterService.router.go('/dashboards');
                               },
                               child: const ForHover(text: "Dashboards")),
@@ -99,22 +106,26 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
 
-                                Navigator.pushNamed(context, '/workflow');
+                                // getIt<NavigatorService>().push('/workflow');
+                                
+                                  context.read<DashboardsBloc>().state.index = 0;
+                                 Get.rootDelegate.toNamed(Routes.workflow);
                               },
                               child: const ForHover(text: "Workflow")),
-                        if (widget.accessTypes.contains('Containers'))
-                          InkWell(
-                              onTap: () {
-                                setState(() {
-                                  height = height == maxHeight
-                                      ? size.height * 0.08
-                                      : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
-                                  bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
-                                });
+                        // if (widget.accessTypes.contains('Containers'))
+                        //   InkWell(
+                        //       onTap: () {
+                        //         setState(() {
+                        //           height = height == maxHeight
+                        //               ? size.height * 0.08
+                        //               : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
+                        //           bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
+                        //         });
 
-                                urlNavigator.launchOrFocusUrl('https://cmsweb-4c66c.web.app');
-                              },
-                              child: const ForHover(text: "Containers")),
+                        //         urlNavigator.launchOrFocusUrl('https://cmsweb-4c66c.web.app');
+                        //       },
+                        //       child: const ForHover(text: "Containers")),
+                       
                         if (widget.accessTypes.contains('Trips'))
                           InkWell(
                               onTap: () {
@@ -124,8 +135,11 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                       : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                                   bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                                 });
-
-                                Navigator.pushNamed(context, '/tripstrack');
+                                // getIt<NavigatorService>().push('/tripstrack');
+                                // context.pushNamed('tripstrack');  
+                                //
+                                  context.read<DashboardsBloc>().state.index = 0;    
+                                 Get.rootDelegate.toNamed(Routes.tripstrack);
                               },
                               child: const ForHover(text: "Shipment Tracking")),
                         if (widget.accessTypes.contains('LPN LifeCycle'))
@@ -174,7 +188,8 @@ class _HoverDropdownState extends State<HoverDropdown> {
                                 bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                               });
                               getIt<SharedPreferences>().remove("username");
-                              getIt<NavigatorService>().pushAndRemoveUntil('/login', '/');
+                              // getIt<NavigatorService>().pushAndRemoveUntil('/login', '/');
+                               Get.rootDelegate.offAndToNamed(Routes.login);
                               // context.go('/login');
                             },
                             child: const ForHover(text: "Log Out")),

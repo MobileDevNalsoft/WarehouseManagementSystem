@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/bloc/authentication/authentication_bloc.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 import 'package:wmssimulator/responsive/responsive.dart';
@@ -88,6 +90,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       // Custom text field for password
                       BlocConsumer<AuthenticationBloc, AuthenticationState>(
+                        // buildWhen: (previous, current) {
+                        //   if(getIt<SharedPreferences>().getString('username')!=null||current.authenticationStatus== AuthenticationStatus.success){
+                        //     context.pushNamed('warehouse');
+                        //     return false;
+                        //   }
+                        //   return true;
+                        // },
                           listenWhen: (previous, current) =>
                               (current.authenticationStatus == AuthenticationStatus.invalidCredentials ||
                                   current.authenticationStatus == AuthenticationStatus.failure ||
@@ -110,6 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                                     )
                                   ]),
                           builder: (context, state) {
+
                             return CustomTextFormField(
                               hintText: 'password',
                               controller: _passwordController,
