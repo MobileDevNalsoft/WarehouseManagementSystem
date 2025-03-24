@@ -779,17 +779,6 @@ function stopAnimation() {
   return 
 }
 
-window.lpnLifeCycle = function(data){
-  if(data == 'true'){
-    document.getElementById("wms-bot").style.display = "none";
-    switchCamera("lpnLifeCycle");
-    animateLPNLifeCycle(scene);
-  }else{
-    document.getElementById("wms-bot").style.display = "block";
-    removeLPNLifeCycle(scene);
-  }
-}
-
 }
 
 
