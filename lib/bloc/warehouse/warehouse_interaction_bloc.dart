@@ -45,16 +45,16 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     on<Intercepting>(_onIntercepting);
     on<ResetAlertsCount>(_onClearAlerts);
     on<GetLPNLifeCycle>(_onGetLPNLifeCycle);
+    on<GetLPNS>(_onGetLPNS);
     _fetchAlerts(); // Initial fetch'
     Timer.periodic(const Duration(seconds: 5), (timer) {
       _fetchAlerts(); // Subsequent fetches every 10 seconds
     });
     on<GetTasks>(_onGetTasks);
-
   }
   final NetworkCalls _customApi;
-  final NetworkCalls _companyApi =
-      NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(), connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5, username: 'nalsoft_adm', password: 'P@s\$w0rd2024');
+  final NetworkCalls _companyApi = NetworkCalls(AppConstants.WMS_URL, getIt<Dio>(),
+      connectTimeout: 30, receiveTimeout: 30, maxRedirects: 5, username: 'nalsoft_adm', password: 'P@s\$w0rd2024');
   final SharedPreferences sharedPreferences = getIt<SharedPreferences>();
 
   void _onSelectedObject(SelectedObject event, Emitter<WarehouseInteractionState> emit) {
@@ -88,16 +88,34 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     }
   }
 
-   Future<void> _onGetLPNLifeCycle(GetLPNLifeCycle event, Emitter<WarehouseInteractionState> emit) async {
+  Future<void> _onGetLPNLifeCycle(GetLPNLifeCycle event, Emitter<WarehouseInteractionState> emit) async {
     try {
       emit(state.copyWith(getLpnLifeCycleStatus: LPNLifeCycleStatus.loading));
-      // await _customApi.getLPNLifeCycle(event.lpn).then((apiResponse) {
-      // LPNLifeCycleResponse lpnLifeCycleResponse = LPNLifeCycleResponse.fromJson(jsonDecode(apiResponse.response!.data));
-      emit(state.copyWith(lpnLifeCycle: state.lpnLifeCycle, getLpnLifeCycleStatus: LPNLifeCycleStatus.success));
-      // });
+      await _customApi.get(AppConstants.LPN_LIFECYCLE, queryParameters: {"facility_id": event.facilityID, "container_nbr": event.lpnNbr}).then((apiResponse) {
+        AreaResponse<LPNStatus> lpnLifeCycleResponse = AreaResponse.fromJson(
+          jsonDecode(apiResponse.response!.data),
+          (p0) => LPNStatus.fromJson(p0),
+        );
+        print(jsonDecode(apiResponse.response!.data));
+        emit(state.copyWith(lpnLifeCycle: lpnLifeCycleResponse.data!, getLpnLifeCycleStatus: LPNLifeCycleStatus.success));
+        state.inAppWebViewController!.evaluateJavascript(source: 'setAreaPoints("${state.lpnLifeCycle!.map((e) => e.area).toList()}");');
+      });
     } catch (e) {
       Log.e(e.toString());
       emit(state.copyWith(getLpnLifeCycleStatus: LPNLifeCycleStatus.failure));
+    }
+  }
+
+  Future<void> _onGetLPNS(GetLPNS event, Emitter<WarehouseInteractionState> emit) async {
+    try {
+      emit(state.copyWith(getLPNSStatus: LPNSStatus.loading));
+      await _customApi.get(AppConstants.GET_LPNS, queryParameters: {"facility_id": event.facilityID}).then((apiResponse) {
+        List<String> lpns = (jsonDecode(apiResponse.response!.data)['data'] as List<dynamic>).map((e) => e.toString()).toList();
+        emit(state.copyWith(lpns: lpns, getLPNSStatus: LPNSStatus.success));
+      });
+    } catch (e) {
+      Log.e(e.toString());
+      emit(state.copyWith(getLPNSStatus: LPNSStatus.failure));
     }
   }
 
@@ -119,7 +137,9 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       await _companyApi.get(AppConstants.COMPANY).then((value) {
         CompanyModel companyModel = CompanyModel.fromJson(value.response!.data);
         emit(state.copyWith(
-            companyModel: companyModel, getState: GetCompanyDataState.success, selectedCompanyVal: companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
+            companyModel: companyModel,
+            getState: GetCompanyDataState.success,
+            selectedCompanyVal: companyModel.results!.where((e) => e.name! == 'M10 Company').first.name!));
         // add(GetFaclityData(company_id: companyModel.results!.where((e) => e.name! == 'M10 Company').first.id!));
       });
     } catch (e) {
@@ -132,7 +152,8 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
     try {
       await _companyApi.get(AppConstants.FACILITY, queryParameters: {'parent_company_id': event.company_id}).then((value) {
         FacilityModel facilityModel = FacilityModel.fromJson(value.response!.data);
-        emit(state.copyWith(facilityModel: facilityModel, facilityDataState: GetFacilityDataState.success, selectedFacilityVal: facilityModel.results![0].name!));
+        emit(state.copyWith(
+            facilityModel: facilityModel, facilityDataState: GetFacilityDataState.success, selectedFacilityVal: facilityModel.results![0].name!));
       });
     } catch (e) {
       print("error $e");
@@ -171,7 +192,8 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       newFilteredUsers = state.users!.map((user) => user.copy()).toList();
     } else {
       // Filter and create a new list with copies of the filtered users
-      newFilteredUsers = state.users!.where((user) => user.username!.toLowerCase().contains(event.searchText.toLowerCase())).map((user) => user.copy()).toList();
+      newFilteredUsers =
+          state.users!.where((user) => user.username!.toLowerCase().contains(event.searchText.toLowerCase())).map((user) => user.copy()).toList();
     }
     emit(state.copyWith(filteredUsers: newFilteredUsers));
   }
@@ -237,7 +259,7 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
         AppConstants.SHORTESTPATH_TASKS,
       )
           .then((apiResponse) {
-           emit(state.copyWith(tasksForShoretestPath: (jsonDecode(apiResponse.response!.data)["data"]), getBinsForTaskStatus: GetBinsForTaskStatus.success));
+        emit(state.copyWith(tasksForShoretestPath: (jsonDecode(apiResponse.response!.data)["data"]), getBinsForTaskStatus: GetBinsForTaskStatus.success));
         print("shortest path task  ${state.tasksForShoretestPath}");
       });
     } catch (e) {
@@ -246,6 +268,4 @@ class WarehouseInteractionBloc extends Bloc<WarehouseInteractionEvent, Warehouse
       // emit(state.copyWith(getUsersState: GetUsers.failure));
     }
   }
-
- 
 }

@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/local_network_calls.dart';

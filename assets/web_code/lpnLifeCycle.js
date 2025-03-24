@@ -7,7 +7,6 @@ let lines = [];
 let animations = [];
 let sprites = [];
 let dummyPoints = [];
-let targetPoints = [];
 
 const areaPoints = {
   receiving: new THREE.Vector3(10, 6.19, -60),
@@ -18,6 +17,17 @@ const areaPoints = {
   dockin: new THREE.Vector3(-111, 4, 0),
 };
 
+window.lpnLifeCycle = function(data){
+  if(data == 'true'){
+    document.getElementById("wms-bot").style.display = "none";
+    switchCamera("lpnLifeCycle");
+    animateLPNLifeCycle();
+  }else{
+    document.getElementById("wms-bot").style.display = "block";
+    removeLPNLifeCycle();
+  }
+}
+
 window.setAreaPoints = function (areas) {
   let list = areas
   .replace("[", "")
@@ -25,6 +35,7 @@ window.setAreaPoints = function (areas) {
   .split(",")
   .map((item) => item.trim());
   
+  globalThis.targetPoints = [];
   list.forEach((item) => {
     targetPoints.push(areaPoints[item.toLowerCase()]);
   });
@@ -35,7 +46,7 @@ window.setAreaPoints = function (areas) {
   lpnLifeCycle("true");
 };
 
-window.animateLPNLifeCycle = function (scene) {
+window.animateLPNLifeCycle = function () {
 
   // Define a list of points
   const points = [
@@ -147,7 +158,7 @@ window.animateLPNLifeCycle = function (scene) {
   animateSegment(0);
 };
 
-window.removeLPNLifeCycle = function (scene) {
+window.removeLPNLifeCycle = function () {
   animations.forEach((animation) => animation.kill()); // Stop all animations
   animations = []; // Clear animations array
   lines.forEach((line) => {

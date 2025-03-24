@@ -12,6 +12,7 @@ export async function initScene(renderer) {
   const container = document.getElementById("container");
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
+  globalThis.scene = scene;
 
   // Set up renderer
   renderer.setSize(container.clientWidth, container.clientHeight);
