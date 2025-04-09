@@ -351,7 +351,7 @@ class _ActivityAreaDashboardState extends State<ActivityAreaDashboard> {
                                 dataSources: [
                                   selectedEmployees
                                       .map((e) => BarData(
-                                          xLabel: e.replaceAll('_', ' '),
+                                          xLabel: e.split('_').first,
                                           yValue: state.activityDashboardData!.avgTimeTakenByEmp!.firstWhere((test) => test.status == e).count!,
                                           abbreviation: e))
                                       .toList()

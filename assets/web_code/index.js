@@ -89,7 +89,7 @@ function initAfterModelLoaded(){
   if(data.model === 'warehouse'){
     document.getElementById("areas").style.display = "flex";
     document.getElementById("digitalTwin").style.display = "flex";
-    // document.getElementById("camera").style.display = "flex";
+    document.getElementById("camera").style.display = "flex";
     
   }
   localStorage.setItem("orange","0x5e99ff");

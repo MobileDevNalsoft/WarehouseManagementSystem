@@ -165,6 +165,7 @@ class DashboardsBloc extends Bloc<DashboardsEvent, DashboardsState> {
     } catch (e) {
       Log.e(e.toString());
       emit(state.copyWith(getStagingDashboardState: StagingDashboardState.failure));
+      
     }
   }
 

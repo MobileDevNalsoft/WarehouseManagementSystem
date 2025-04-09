@@ -27,7 +27,7 @@ window.lpnLifeCycle = function(data){
     removeLPNLifeCycle();
   }
 }
-
+globalThis.targetPoints = [];
 window.setAreaPoints = function (areas) {
   let list = areas
   .replace("[", "")
@@ -35,7 +35,7 @@ window.setAreaPoints = function (areas) {
   .split(",")
   .map((item) => item.trim());
   
-  globalThis.targetPoints = [];
+ 
   list.forEach((item) => {
     targetPoints.push(areaPoints[item.toLowerCase()]);
   });
@@ -173,6 +173,9 @@ window.removeLPNLifeCycle = function () {
     sprite.material.dispose();
   });
   sprites = [];
+  targetPoints = [];
+  dummyPoints = [];
+ 
 };
 
 window.showLPNLifecycle = function (show) {

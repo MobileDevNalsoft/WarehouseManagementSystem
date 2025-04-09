@@ -181,13 +181,14 @@ class _HoverDropdownState extends State<HoverDropdown> {
                               child: const ForHover(text: "Manage Users")),
                         InkWell(
                             onTap: () {
+                              getIt<SharedPreferences>().remove("username");
                               setState(() {
                                 height = height == maxHeight
                                     ? size.height * 0.08
                                     : maxHeight; // it means when we click on this icon it height is expand from 150 to 400 otherwise it is 150
                                 bottomHeight = bottomHeight == maxHeight ? size.height * 0.08 : maxHeight;
                               });
-                              getIt<SharedPreferences>().remove("username");
+                              
                               // getIt<NavigatorService>().pushAndRemoveUntil('/login', '/');
                                Get.rootDelegate.offAndToNamed(Routes.login);
                               // context.go('/login');

@@ -31,16 +31,6 @@ class _MapsState extends State<Maps> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    context.read<TripsBloc>().state.routeCoords = [];
-    context.read<TripsBloc>().state.coveredPath = [];
-    context.read<TripsBloc>().state.polylines = {};
-    context.read<TripsBloc>().state.coveredEnd = null;
-    context.read<TripsBloc>().state.markers = {};
-    context.read<TripsBloc>().add(LoadRoute(
-        start: LatLng(context.read<TripsBloc>().state.selectedTrip!.startLoc!.latitude!, context.read<TripsBloc>().state.selectedTrip!.startLoc!.longitude!),
-        end: LatLng(context.read<TripsBloc>().state.selectedTrip!.endLoc!.latitude!, context.read<TripsBloc>().state.selectedTrip!.endLoc!.longitude!),
-        waypoints: context.read<TripsBloc>().state.selectedTrip!.waypoints?.map((e) => LatLng(e.latitude!, e.longitude!)).toList(),
-        context: context));
   }
 
   // @override

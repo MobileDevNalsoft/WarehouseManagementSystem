@@ -176,9 +176,15 @@ class _ThreeLevelDropdownState extends State<ThreeLevelDropdown> {
                                                 color: Colors.white,
                                               ),
                                               Gap(lsize.maxWidth * 0.01),
-                                              Text(
-                                                widget.l2StyleData.title(oindex, index),
-                                                style: const TextStyle(color: Colors.white),
+                                              SizedBox(
+                                                width: lsize.maxWidth * 0.6,
+                                                child: SingleChildScrollView(
+                                                  scrollDirection: Axis.horizontal,
+                                                  child: Text(
+                                                    widget.l2StyleData.title(oindex, index),
+                                                    style:  TextStyle(color: Colors.white,fontSize: lsize.maxHeight * 0.36 ),
+                                                  ),
+                                                ),
                                               ),
                                               const Spacer(),
                                               Container(

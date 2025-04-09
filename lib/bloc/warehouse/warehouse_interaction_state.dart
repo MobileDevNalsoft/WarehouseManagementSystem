@@ -126,10 +126,20 @@ final class WarehouseInteractionState {
       alertsCount: 0,
       taskIds: ["task1", "task2", "task3", "task4"],
       getLpnLifeCycleStatus: LPNLifeCycleStatus.initial,
-      lpnLifeCycle: [],
+   lpnLifeCycle: [
+        LPNStatus(status: 'Received', user: 'Rohith', date: '2025-03-10 06:28:01 AM', area: 'RECEIVING'),
+        LPNStatus(status: 'Quality Check', user: 'Sravan', date: '2025-03-10 11:26:01 AM', area: 'INSPECTION'),
+        LPNStatus(status: 'Located', user: 'Madhan', date: '2025-03-10 01:00:01 PM', area: 'STORAGE'),
+        LPNStatus(status: 'Allocated', user: 'Sanjit', date: '2025-03-14 09:28:01 AM', area: 'ACTIVITY'),
+        LPNStatus(status: 'Picked', user: 'Mani', date: '2025-03-14 10:40:21 AM', area: 'ACTIVITY'),
+        LPNStatus(status: 'Packed', user: 'Sravan', date: '2025-03-14 11:40:01 AM', area: 'STAGING'),
+        LPNStatus(status: 'Loaded', user: 'Sanjit', date: '2025-03-14 03:20:01 PM', area: 'STAGING'),
+        LPNStatus(status: 'Shipped', user: 'Arvind', date: '2025-03-14 05:28:01 PM', area: 'STAGING')
+      ],
       tasksForShoretestPath: {},
       binsForTask: [],
       getBinsForTaskStatus: GetBinsForTaskStatus.initial,
+
     );
   }
 
@@ -181,7 +191,8 @@ final class WarehouseInteractionState {
       getUserInfoState: getUserInfoState ?? this.getUserInfoState,
       getUsersState: getUsersState ?? this.getUsersState,
       getLpnLifeCycleStatus: getLpnLifeCycleStatus ?? this.getLpnLifeCycleStatus,
-      lpnLifeCycle: lpnLifeCycle ?? this.lpnLifeCycle,
+      // lpnLifeCycle: lpnLifeCycle ?? this.lpnLifeCycle,
+      lpnLifeCycle: this.lpnLifeCycle,
       userInfo: userInfo ?? this.userInfo,
       users: users ?? this.users,
       isRendered: isRendered ?? this.isRendered,

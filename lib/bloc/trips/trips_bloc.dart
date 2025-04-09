@@ -39,6 +39,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     on<AnimateDriver>(_animateDriver);
     on<ShowOverlay>(_onShowOverlay);
     on<HideOverlay>(_onHideOverlay);
+    on<UpdateMapProperties>(_onUpdateMapProperties);
     // on<UpdateActiveMarkerPosition>(_onUpdateActiveMarkerPosition);
   }
 
@@ -67,6 +68,21 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
 //   final Uint8List bytes = data.buffer.asUint8List();
 //   return BitmapDescriptor.fromBytes(bytes);
 // }
+
+  void _onUpdateMapProperties(UpdateMapProperties event, Emitter<TripsState> emit) {
+    state.routeCoords = [];
+    state.coveredPath = [];
+    state.polylines = {};
+    state.coveredEnd = null;
+    state.markers = {};
+    add(LoadRoute(
+        start: LatLng(state.selectedTrip!.startLoc!.latitude!, state.selectedTrip!.startLoc!.longitude!),
+        end: LatLng(state.selectedTrip!.endLoc!.latitude!, state.selectedTrip!.endLoc!.longitude!),
+        waypoints: state.selectedTrip!.waypoints?.map((e) => LatLng(e.latitude!, e.longitude!)).toList(),
+        context: event.context));
+    emit(state.copyWith());
+  }
+
 
   Future<void> _onGetTrips(GetTrips event, Emitter<TripsState> emit) async {
     try {

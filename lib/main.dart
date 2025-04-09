@@ -79,7 +79,7 @@ Future<void> main() async {
 abstract class AppPages {
   static final pages = [
     gt.GetPage(
-      name: getIt<SharedPreferences>().getString('username')==null?'/login':'/warehouse',
+      name: Routes.login,
       page: () => getIt<SharedPreferences>().getString('username') == null ? LoginPage() : ThreeJsWebView(),
       transition: gt.Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 1000),

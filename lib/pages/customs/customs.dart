@@ -1825,11 +1825,10 @@ class TripsDataSource extends DataGridSource {
                   } else {
                     state.isDriverAnimated = true;
                   }
-                  // context.pushNamed('maps');
+                  context.read<TripsBloc>().add(UpdateMapProperties(context: context));
                    Get.rootDelegate.toNamed(Routes.maps);
-                  // getIt<NavigatorService>().push(
-                  //   '/map',
-                  // );
+                  //  context.read<TripsBloc>().add(GetTrips());
+                
                 },
                 visualDensity: VisualDensity.compact,
               );

@@ -177,7 +177,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                             ),
                                           ),
                                           Text(
-                                            state.storageBinItems![index].refPoNbr ?? "po1",
+                                            (state.storageBinItems![index].refPoNbr!=null && state.storageBinItems![index].refPoNbr!="")?state.storageBinItems![index].refPoNbr!:"NA",
                                             style: TextStyle(fontSize: containerSize.maxWidth * 0.044, height: containerSize.maxHeight * 0.0016, fontWeight: FontWeight.bold),
                                           ),
                                         ],
@@ -232,7 +232,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                             ),
                                           ),
                                           Text(
-                                            state.storageBinItems![index].vendor ?? "oracle",
+                                           (state.storageBinItems![index].vendor!=null && state.storageBinItems![index].vendor!="")? state.storageBinItems![index].vendor! : "NA",
                                             style: TextStyle(
                                               fontSize: containerSize.maxWidth * 0.044,
                                               height: containerSize.maxHeight * 0.0016,
@@ -254,7 +254,7 @@ class _BinDataSheetState extends State<BinDataSheet> {
                                                 scrollDirection: Axis.horizontal,
                                                 child: Text(state.storageBinItems![index].putawaytypeKey ?? "001",
                                                     style:
-                                                        TextStyle(fontSize: containerSize.maxWidth * 0.044, height: containerSize.maxHeight * 0.004, fontWeight: FontWeight.bold)),
+                                                        TextStyle(fontSize: containerSize.maxWidth * 0.044, fontWeight: FontWeight.bold)),
                                               )),
                                         ],
                                       ),

@@ -89,7 +89,7 @@ class _YardAreaDataSheetState extends State<YardAreaDataSheet> {
                                                   ),
                                                 ),
                                                 SizedBox(
-                                                  width: containerSize.maxWidth * 0.24,
+                                                  width: containerSize.maxWidth * 0.25,
                                                   child: SingleChildScrollView(
                                                     scrollDirection: Axis.horizontal,
                                                     child: Text(

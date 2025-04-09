@@ -18,15 +18,15 @@ class StagingAreaDashboard extends StatefulWidget {
 class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
   late Map<String, List<String>> employeeSuggestionRange;
   var random = Random();
-  bool rangeSelection = true;
+  bool rangeSelection = false;
   String selectedUserRange = "";
   late List<String> userSuggestions;
   List<String> selectedUsers = [];
   List<BarData> userEfficiencyGraphData = [];
   SuggestionsController suggestionsController = SuggestionsController();
 
-  late TextEditingController typeAheadController;
-  late FocusNode typeAheadFocusNode;
+  // late TextEditingController typeAheadController;
+  // late FocusNode typeAheadFocusNode;
 
   final List<PieData> avgPieData = [
     PieData(xData: 'result', yData: 81),
@@ -282,8 +282,8 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                   ? userEfficiencyGraphData
                                   : selectedUsers
                                       .map((e) => BarData(
-                                          xLabel: e.replaceAll('_', ' '),
-                                          yValue: state.stagingDashboardData!.userwiseEfficiency!.firstWhere((test) => test.status == e).count!,
+                                          xLabel: e.split('_').first,
+                                          yValue: state.stagingDashboardData!.userwiseEfficiency?.firstWhere((test) => test.status.toString() == e).count??0,
                                           abbreviation: e))
                                       .toList()
                             ],
@@ -299,10 +299,10 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                               child: TypeAheadField(
                                 suggestionsController: suggestionsController,
                                 builder: (context, textController, focusNode) {
-                                  typeAheadController = textController;
-                                  typeAheadFocusNode = focusNode;
-                                  textController = textController;
-                                  focusNode = focusNode;
+                                  // typeAheadController = textController;
+                                  // typeAheadFocusNode = focusNode;
+                                  // textController = textController;
+                                  // focusNode = focusNode; 
                                   focusNode.addListener(() {
                                     if (!focusNode.hasFocus) {
                                       textController.clear();
@@ -327,8 +327,12 @@ class _StagingAreaDashboardState extends State<StagingAreaDashboard> {
                                 },
                                 suggestionsCallback: (pattern) {
                                   userSuggestions = [];
-                                  if (rangeSelection) {
-                                    userSuggestions = employeeSuggestionRange.keys.toList();
+                                  if (rangeSelection==false) {
+                                    // userSuggestions = employeeSuggestionRange.keys.toList();
+                                    for (var test in state.stagingDashboardData!.userwiseEfficiency!) {
+                                      if (test.status.toString().contains(pattern)) {
+                                        userSuggestions.add(test.status.toString());
+                                  }}
                                   } else {
                                     for (var empList in employeeSuggestionRange.values) {
                                       print(empList);

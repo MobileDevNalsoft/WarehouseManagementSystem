@@ -66,13 +66,9 @@ class ShowOverlay extends TripsEvent {
   List<Object> get props => [ activeMarkerPosition,context];
 }
 
-// class UpdateActiveMarkerPosition extends TripsEvent {
-//   final LatLng activeMarkerPosition;
-//     final BuildContext context;
+class UpdateMapProperties extends TripsEvent {
+  
+BuildContext context;
+  UpdateMapProperties({required this.context});
 
-
-//   UpdateActiveMarkerPosition({required this.activeMarkerPosition,required this.context});
-
-//   @override
-//   List<Object> get props => [activeMarkerPosition];
-// }
+}

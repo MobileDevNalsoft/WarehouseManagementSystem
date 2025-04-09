@@ -2,9 +2,9 @@ import * as THREE from "three";
 // import { switchCamera, moveToBin } from "camera";
 import { playAnimations } from "animations";
 import { highlightArea, resetAreas } from "highlight";
-
+ 
 const data = JSON.parse(window.localStorage.getItem("facilityData"));
-
+ 
 export function highlightBinsFromSearch(bins) {
   // highlighting the bins fetched from search
   let listOfBins = bins.toString().split(",");
@@ -12,27 +12,27 @@ export function highlightBinsFromSearch(bins) {
     changeColor({ name: listOfBins[i] });
   }
 }
-
+ 
 export function addInteractions(scene, model, camera, controls) {
   const container = document.getElementById("container");
-
+ 
   const raycaster = new THREE.Raycaster();
-
+ 
   const mouse = new THREE.Vector2();
   const lastPos = new THREE.Vector2();
-
+ 
   let areasOverviewData = JSON.parse(
     window.localStorage.getItem("areasOverviewData")
   );
-
+ 
   let prevNav = "warehouse";
   let prevBin;
   let prevBinColor;
-
+ 
   globalThis.areaFocused = false;
-
+ 
   const tooltip = document.getElementById("tooltip");
-
+ 
   function onMouseMove(e) {
     if (e.target.classList.contains("ignoreRaycast")) {
       return;
@@ -40,13 +40,13 @@ export function addInteractions(scene, model, camera, controls) {
     const rect = container.getBoundingClientRect();
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
+ 
     if (model != null && camera != null) {
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
       // we get the objects from the model as list that are intersected by the casted ray.
-
+ 
       if (intersects.length > 0) {
         const targetObject = intersects[0].object;
         if (
@@ -112,7 +112,7 @@ export function addInteractions(scene, model, camera, controls) {
             case "Box A1":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                          LPN: IBPAIDL00001676	<br>
+                                          LPN: IBPAIDL00001676  <br>
                                           Status: Received<br>
                                           Item: HP LAPTOP<br>
                                           Description: HP LAPTOP Series 7 1TB<br>
@@ -127,7 +127,7 @@ export function addInteractions(scene, model, camera, controls) {
                                            LPN: IBPAIDL00001677<br>
                                            LPN: Received<br>
                                            Item: ITEM1<br>
-                                           Description: ITEM1	<br>
+                                           Description: ITEM1 <br>
                                            Qty: 500 <br>
                                            UOM: units<br>
                                         </div>`;
@@ -148,10 +148,10 @@ export function addInteractions(scene, model, camera, controls) {
             case "Box A4":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                            LPN Number:IBPAIDL00001674	<br>
+                                            LPN Number:IBPAIDL00001674  <br>
                                             LPN Status:Received<br>
                                             Item: ROTHSCHILD<br>
-                                            Item Description: 	Chateau Mouton Rothschild 1945<br>
+                                            Item Description:   Chateau Mouton Rothschild 1945<br>
                                             Qty:45<br>
                                             UOM:units
                                           </div>`;
@@ -160,10 +160,10 @@ export function addInteractions(scene, model, camera, controls) {
             case "Box A5":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                             LPN Number:IBPAIDL00001673	<br>
+                                             LPN Number:IBPAIDL00001673 <br>
                                              LPN Status:Received<br>
                                              Item: ITEM1<br>
-                                             Item Description: ITEM1	<br>
+                                             Item Description: ITEM1  <br>
                                              Qty:500 <br>
                                              UOM:units
                                           </div>`;
@@ -172,11 +172,11 @@ export function addInteractions(scene, model, camera, controls) {
             case "Box A6":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                               LPN Number: IBPAIDL00001116	<br>
+                                               LPN Number: IBPAIDL00001116  <br>
                                                LPN Status: Quality Check<br>
                                                QC Status: Marked for QC<br>
                                                Item: OLD MONK-1-100<br>
-                                               Description: SAMs OLD MONK RUM	<br>
+                                               Description: SAMs OLD MONK RUM <br>
                                                Qty: 10 <br>
                                                UOM: units
                                           </div>`;
@@ -185,11 +185,11 @@ export function addInteractions(scene, model, camera, controls) {
             case "Box A7":
               tooltip.style.display = "block";
               tooltip.innerHTML = `<strong>${name}</strong><div class="tooltip-content">
-                                            LPN Number:IBPAIDL00001117	<br>
+                                            LPN Number:IBPAIDL00001117  <br>
                                             LPN Status:Quality Check<br>
                                             QC Status: Marked for QC<br>
                                             Item: ITEM1<br>
-                                            Item Description: ITEM1	<br>
+                                            Item Description: ITEM1 <br>
                                             Qty:5 <br>
                                             UOM:units                                          
                                           </div>`;
@@ -281,36 +281,36 @@ export function addInteractions(scene, model, camera, controls) {
       }
     }
   }
-
+ 
   // Tooltip for the target object when hovered
   function setToolTipPosition(targetObject, tooltip, camera) {
     // Position tooltip at the mouse location
     const objectPosition = new THREE.Vector3();
     targetObject.getWorldPosition(objectPosition);
-
+ 
     // Convert world position to screen coordinates
     const vector = objectPosition.project(camera);
     const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
     const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
-
+ 
     // Position tooltip at the center of the object's position
     tooltip.style.left = `${x}px`;
     tooltip.style.top = `${y - 60}px`;
     tooltip.classList.remove("hide-speech-bubble");
   }
-
+ 
   function onMouseDown(e) {
     lastPos.x = (e.clientX / container.clientWidth) * 2 - 1;
     lastPos.y = -(e.clientY / container.clientHeight) * 2 + 1;
     tooltip.style.display = "none";
   }
-
+ 
   // interactions on mouse left click
   function onMouseUp(e) {
-    if ((lastPos.distanceTo(mouse) <= 0.05) & (e.button === 0)) {
+    if ((lastPos.distanceTo(mouse) <= 0.1) & (e.button === 0)) {
       // for clicking
       if (e.target.classList.contains("ignoreRaycast")) return;
-
+ 
       raycaster.setFromCamera(mouse, camera);
       // This method sets up the raycaster to cast a ray from the camera into the 3D scene based on the current mouse position. It allows you to determine which objects in the scene are intersected by that ray.
       const intersects = raycaster.intersectObjects(scene.children, true);
@@ -325,8 +325,8 @@ export function addInteractions(scene, model, camera, controls) {
         );
         const name = targetObject.name.toString().split("_")[0];
         if (
-          targetObject.name.toString().includes("nav") ||
-          targetObject.name.toString().includes("Area")
+          (targetObject.name.toString().includes("nav") ||
+          targetObject.name.toString().includes("Area")) && targetObject.name.toString() != 'compoundArea'
         ) {
           areaFocused = true;
           removeLPNLifeCycle(scene);
@@ -363,6 +363,19 @@ export function addInteractions(scene, model, camera, controls) {
             resetTrucksAnimation(scene);
           }
           prevNav = name;
+          document.getElementById("wms-bot").style.display = "block";
+          areaFocused = false;
+          showLPNLifeCycle(false);
+          if (scene.getObjectByName("truck_Y10")) {
+            resetTrucksAnimation(scene);
+            playAnimations();
+            ["truck_R1", "truck_R2", "truck_R3"].forEach((truck) => {
+              scene.getObjectByName(truck).visible = true;
+            });
+            ["truck_D_L1", "truck_A2", "truck_D_L3"].forEach((truck) => {
+              scene.getObjectByName(truck).visible = true;
+            });
+          }
         }
       }
     } else {
@@ -397,7 +410,7 @@ export function addInteractions(scene, model, camera, controls) {
       try {
         if (localStorage.getItem("prevBin")) {
           let bin = localStorage.getItem("prevBin").trim();
-
+ 
           if (redBins.includes(bin)) {
             scene
               .getObjectByName(bin)
@@ -412,15 +425,15 @@ export function addInteractions(scene, model, camera, controls) {
       } catch (e) {}
     }
   }
-
+ 
   window.addEventListener("mousemove", onMouseMove); // triggered when mouse pointer is moved.
   window.addEventListener("mousedown", onMouseDown);
   window.addEventListener("mouseup", onMouseUp); // triggered when mouse pointer is clicked.
-
+ 
   document.addEventListener("wheel", (event) => {
     tooltip.style.display = "none";
   });
-
+ 
   // changing the color of the bin
   function changeColor(object) {
     let objectName = object.name.toString();
@@ -432,11 +445,11 @@ export function addInteractions(scene, model, camera, controls) {
       }
       // prevBin.material.color.set(0xfaf3e2);
     }
-
+ 
     // prevBinColor = object.material.color.clone();
-
+ 
     localStorage.setItem("prevBin", objectName);
-
+ 
     if (prevBin != object) {
       object.userData.active = true;
       // Set transparent blue color
@@ -453,7 +466,7 @@ export function addInteractions(scene, model, camera, controls) {
         object.material.color.set(0x65543e); // Blue color
         object.material.opacity = 0.5; // Adjust opacity for transparency
         console.log('{"bin":"' + objectName + '"}');
-
+ 
         window.moveToBin(object, camera, controls);
       } else {
         object.userData.active = false;
@@ -468,14 +481,14 @@ export function addInteractions(scene, model, camera, controls) {
               .toUpperCase() +
             '"}'
         );
-
+ 
         window.switchCamera(prevNav.split("_")[0]);
       }
     }
-
+ 
     prevBin = object;
   }
-
+ 
   function toCamelCase(str) {
     var words = str.split("_")[0].split("A");
     return (
@@ -485,13 +498,13 @@ export function addInteractions(scene, model, camera, controls) {
       words[1]
     );
   }
-
+ 
   window.dockTrucksData = function (type, trucksDataFromFlutter) {
     const dockIntrucks = ["truck_R1", "truck_R2", "truck_R3"];
     const dockOuttrucks = ["truck_D_L1", "truck_A2", "truck_D_L3"];
-
+ 
     globalThis.trucksData = JSON.parse(trucksDataFromFlutter);
-
+ 
     stopAnimationsAndReset();
     if (type === "IN") {
       for (let i = 0; i < dockIntrucks.length; i++) {
@@ -511,10 +524,10 @@ export function addInteractions(scene, model, camera, controls) {
       }
     }
   };
-
+ 
   window.yardTrucksData = function (trucksDataFromFlutter) {
     globalThis.trucksData = JSON.parse(trucksDataFromFlutter);
-
+ 
     stopAnimationsAndReset();
     for (let i = 1; i <= trucksData.length; i++) {
       scene.getObjectByName("truck_Y" + i).visible = true;
@@ -527,3 +540,4 @@ export function addInteractions(scene, model, camera, controls) {
     scene.getObjectByName("truck_A3").visible = false;
   };
 }
+ 
