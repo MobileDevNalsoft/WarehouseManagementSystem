@@ -182,6 +182,12 @@ class _HoverDropdownState extends State<HoverDropdown> {
                         InkWell(
                             onTap: () {
                               getIt<SharedPreferences>().remove("username");
+                              //  html.window.onPopState.listen((event) {
+                                // print("Browser back button pressed!");
+                                try{Get.back();}catch(e){
+                                  print(e);
+                                } // Sync with GetX
+                                // });
                               setState(() {
                                 height = height == maxHeight
                                     ? size.height * 0.08

@@ -75,11 +75,15 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
     state.polylines = {};
     state.coveredEnd = null;
     state.markers = {};
+    // state.mapStatus = MapStatus.loadingDone;
     add(LoadRoute(
         start: LatLng(state.selectedTrip!.startLoc!.latitude!, state.selectedTrip!.startLoc!.longitude!),
         end: LatLng(state.selectedTrip!.endLoc!.latitude!, state.selectedTrip!.endLoc!.longitude!),
         waypoints: state.selectedTrip!.waypoints?.map((e) => LatLng(e.latitude!, e.longitude!)).toList(),
         context: event.context));
+        // if(state.mapController!=null){
+          
+        // }
     emit(state.copyWith());
   }
 
@@ -135,7 +139,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
           ),
       };
       add(SetMarkers(context: event.context));
-      emit(state.copyWith(routeCoords: routeCoords, polylines: polylines, geoLocationStatus: GeoLocationStatus.success));
+      emit(state.copyWith(routeCoords: routeCoords, polylines: polylines, geoLocationStatus: GeoLocationStatus.success,mapStatus: MapStatus.loadingDone));
     } catch (e) {
       print("error $e");
       emit(state.copyWith(geoLocationStatus: GeoLocationStatus.failure));
@@ -415,6 +419,7 @@ class TripsBloc extends Bloc<TripsEvent, TripsState> {
   }
 
   void _animateDriver(AnimateDriver event, Emitter<TripsState> emit) async {
+    // state.mapStatus = MapStatus.loadingDone;
     if (state.isDriverAnimated == false || state.routeCoords.isEmpty) return;
 
     LatLng startPosition = LatLng(
@@ -518,8 +523,15 @@ state.displayTruckOverlay=true;
         );
         // carMarker.copyWith(rotationParam: bearing);
         state.markers.add(carMarker);
-        if (event.mapMarkerSC.isClosed) break;
-        event.mapMarkerSC.sink.add(state.markers.toList());
+          if (!event.mapMarkerSC.isClosed) {
+           event.mapMarkerSC.sink.add(state.markers.toList());
+
+      //  state.markers.removeWhere((marker) => marker.markerId.value == "driverMarker");
+      // return;
+    }
+    else{
+return;
+    }
           if(state.displayTruckOverlay==true){
         final screenPosition =
               await state.mapController!.getScreenCoordinate(newPos);

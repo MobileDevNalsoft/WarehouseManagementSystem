@@ -788,10 +788,10 @@ window.lpnLifeCycle = function(data){
   }
 }
 
-// document.getElementById('camera').addEventListener("click", function (e) {
-//   console.log('{"openCameraDialog":"true","object":"null"}');
+document.getElementById('camera').addEventListener("click", function (e) {
+  console.log('{"openCameraDialog":"true","object":"null"}');
 
-// });
+});
 }
 
 

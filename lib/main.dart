@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart' as gt;
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wmssimulator/bloc/activity_area/activity_area_bloc.dart';
 
@@ -20,7 +21,6 @@ import 'package:wmssimulator/bloc/work_queue/work_queue_bloc.dart';
 import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
 import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
-import 'package:wmssimulator/pages/container_management/layout.dart';
 import 'package:wmssimulator/pages/login.dart';
 import 'package:wmssimulator/pages/maps.dart';
 import 'package:wmssimulator/pages/three_js/three_js.dart';
@@ -76,6 +76,21 @@ Future<void> main() async {
   ));
 }
 
+class AuthMiddleware extends GetMiddleware {
+  @override
+  RouteSettings? redirect(String? route) {
+    final isUserLoggedIn = getIt<SharedPreferences>().getString('username') != null;
+    print("isUserLoggedIn $isUserLoggedIn");
+    if (!isUserLoggedIn) {
+      // Redirect to login if user is not logged in
+      print("has come inside");
+      Future.microtask(() => Get.rootDelegate.offNamed(Routes.login));
+    }
+
+    return null; 
+  }
+}
+
 abstract class AppPages {
   static final pages = [
     gt.GetPage(
@@ -89,6 +104,7 @@ abstract class AppPages {
       page: () => ThreeJsWebView(),
       transition: gt.Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 1000),
+      middlewares: [AuthMiddleware()],
     ),
     gt.GetPage(
       name: Routes.tripstrack,
@@ -130,32 +146,22 @@ abstract class AppPages {
       transition: gt.Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 1000),
     ),
-    // gt.GetPage(
-    //   name: Routes.containerManagement,
-    //   page: () => EntryPoint(
-    //     title: 'Container Management',
-    //     titles: const ['Layout'],
-    //     tabs: const [ContainerLayout()],
-    //   ),
-    //   transition: gt.Transition.fadeIn,
-    //   transitionDuration: Duration(milliseconds: 1000),
-    // ),
-    //  gt.GetPage(
-    //   name: Routes.camera,
-    //   page: () => CCTVScreen(),
-    //   transition: gt.Transition.fadeIn,
-    //   transitionDuration: Duration(milliseconds: 1000),
-    // ),
+     gt.GetPage(
+      name: Routes.camera,
+      page: () => CCTVScreen(),
+      transition: gt.Transition.fadeIn,
+      transitionDuration: Duration(milliseconds: 1000),
+    ),
   ];
 }
 
 abstract class Routes {
-  static String login = getIt<SharedPreferences>().getString('username')!=null?'/warehouse':'/login';
+  static String login = getIt<SharedPreferences>().getString('username') != null ? '/warehouse' : '/login';
   static const warehouse = '/warehouse';
   static const tripstrack = '/tripstrack';
   static const maps = '/maps';
   static const containerManagement = '/containerManagement';
   static const workflow = '/workflow';
   static const dashboards = '/dashboards';
-  // static const camera = '/camera';
+  static const camera = '/camera';
 }

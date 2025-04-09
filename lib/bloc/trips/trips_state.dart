@@ -3,6 +3,8 @@ part of 'trips_bloc.dart';
 enum TripsStatus { initial, loading, success, failure }
 
 enum GeoLocationStatus { initial, loading, success, failure }
+enum MapStatus { loadMap, loadingDone }
+
 
 class   TripsState {
   List<Trip>? trips;
@@ -27,6 +29,7 @@ class   TripsState {
   ScreenCoordinate? truckPosition;
   double? currentAngle;
   double? targetAngle;
+  MapStatus? mapStatus;
 
   TripsState(
       {this.trips,
@@ -50,8 +53,8 @@ class   TripsState {
       required this.overlayWidget,
       this.truckPosition,
       this.currentAngle,
-      this.targetAngle  
-
+      this.targetAngle,  
+      this.mapStatus
       });
 
   factory TripsState.initial() {
@@ -64,7 +67,7 @@ class   TripsState {
         markers: {},
         waypoints: [],
         locations: [],
-
+        mapStatus: MapStatus.loadMap,
         trips: [
           Trip(
             shipmentNbr: 'OSPAID00000081',
@@ -201,7 +204,7 @@ class   TripsState {
       ScreenCoordinate? truckPosition,
         double? currentAngle,
   double? targetAngle,
-
+  MapStatus? mapStatus
       }) {
     return TripsState(
         trips: trips ?? this.trips,
@@ -224,7 +227,8 @@ class   TripsState {
         overlayWidget: overlayWidget ?? this.overlayWidget,
         truckPosition: truckPosition,
         currentAngle: currentAngle ?? this.currentAngle,
-        targetAngle: targetAngle ?? this.targetAngle
+        targetAngle: targetAngle ?? this.targetAngle,
+        mapStatus: mapStatus ?? this.mapStatus
 
         );
   }

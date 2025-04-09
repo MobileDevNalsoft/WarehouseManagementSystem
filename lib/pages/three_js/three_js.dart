@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
@@ -15,6 +16,7 @@ import 'package:wmssimulator/bloc/work_queue/work_queue_bloc.dart';
 import 'package:wmssimulator/bloc/yard/yard_bloc.dart';
 import 'package:wmssimulator/inits/init.dart';
 import 'package:wmssimulator/inits/web_service.dart';
+import 'package:wmssimulator/main.dart';
 import 'package:wmssimulator/models/company_model.dart';
 import 'package:wmssimulator/models/facility_model.dart';
 import 'package:wmssimulator/pages/customs/alerts_slide.dart';
@@ -279,9 +281,9 @@ class _ThreeJsWebViewState extends State<ThreeJsWebView> with TickerProviderStat
                                                 ],
                                               );
                                             }
-                                            // if(message.containsKey("openCameraDialog") && message['openCameraDialog'] == "true"){
-                                            // //  Customs.CameraDialog(context: context);
-                                            // }
+                                            if(message.containsKey("openCameraDialog") && message['openCameraDialog'] == "true"){
+                                            Get.rootDelegate.toNamed(Routes.camera);
+                                            }
                                           }
                                         } catch (e) {
                                           print("error $e");
