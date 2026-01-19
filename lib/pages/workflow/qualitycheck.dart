@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:wmssimulator/bloc/workflow/workflow_bloc.dart';
-import 'package:wmssimulator/models/task_model.dart';
 import 'package:wmssimulator/pages/customs/customs.dart';
 
 class QualityCheck extends StatefulWidget {
@@ -193,16 +192,6 @@ class _QualityCheckState extends State<QualityCheck> {
                                 alignment: Alignment.center,
                                 child: Text(
                                   'LPN Nbr',
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
-                                ))),
-                        GridColumn(
-                            columnName: 'Status',
-                            filterPopupMenuOptions: const FilterPopupMenuOptions(canShowSortingOptions: false),
-                            label: Container(
-                                padding: EdgeInsets.all(size.width * 0.002),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Status',
                                   style: const TextStyle(fontWeight: FontWeight.bold),
                                 ))),
                         GridColumn(

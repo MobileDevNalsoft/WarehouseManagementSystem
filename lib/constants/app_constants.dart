@@ -33,7 +33,7 @@ class AppConstants {
 
   // api credentials
   static const String WMSUSERNAME = "nalsoft_adm";
-  static const String WMSPASSWORD = 'P@s\$w0rd2024';
+  static const String WMSPASSWORD = r'P@s\$w0rd2026';
   // urls
   static const APEX_URL = 'https://paas.nalsoft.net:4443/ords/xxwms/wms/';
 

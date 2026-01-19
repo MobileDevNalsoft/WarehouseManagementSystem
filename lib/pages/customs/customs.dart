@@ -1658,7 +1658,6 @@ class WorkflowQualityCheckDataSource extends DataGridSource {
         if (!isCompleted) DataGridCell(columnName: '', value: index < data.length ? data[index].isChecked : ''),
         DataGridCell(columnName: 'Facility', value: index < data.length ? data[index].facility : ''),
         DataGridCell(columnName: 'LPN Nbr', value: index < data.length ? data[index].lpnNbr : ''),
-        DataGridCell(columnName: 'Status', value: index < data.length ? data[index].status : ''),
         DataGridCell(
             columnName: 'QC Status',
             value: index < data.length
